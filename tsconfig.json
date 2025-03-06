@@ -5,7 +5,7 @@
     "module": "NodeNext",
     "noEmit": true,
     "paths": {
-      "~/*": ["./*"]
+      "./*": ["./*"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

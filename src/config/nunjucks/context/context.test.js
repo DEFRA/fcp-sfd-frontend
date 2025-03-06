@@ -5,7 +5,7 @@ jest.mock('node:fs', () => ({
   ...jest.requireActual('node:fs'),
   readFileSync: () => mockReadFileSync()
 }))
-jest.mock('~/src/server/common/helpers/logging/logger.js', () => ({
+jest.mock('./src/server/common/helpers/logging/logger.js', () => ({
   createLogger: () => ({ error: (...args) => mockLoggerError(...args) })
 }))
 
@@ -17,7 +17,7 @@ describe('#context', () => {
     let contextImport
 
     beforeAll(async () => {
-      contextImport = await import('~/src/config/nunjucks/context/context.js')
+      contextImport = await import('./src/config/nunjucks/context/context.js')
     })
 
     beforeEach(() => {
@@ -73,7 +73,7 @@ describe('#context', () => {
     let contextImport
 
     beforeAll(async () => {
-      contextImport = await import('~/src/config/nunjucks/context/context.js')
+      contextImport = await import('./src/config/nunjucks/context/context.js')
     })
 
     beforeEach(() => {
@@ -98,7 +98,7 @@ describe('#context cache', () => {
     let contextImport
 
     beforeAll(async () => {
-      contextImport = await import('~/src/config/nunjucks/context/context.js')
+      contextImport = await import('./src/config/nunjucks/context/context.js')
     })
 
     beforeEach(() => {

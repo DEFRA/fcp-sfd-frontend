@@ -1,8 +1,8 @@
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 
-import { getCacheEngine } from '~/src/server/common/helpers/session-cache/cache-engine.js'
-import { config } from '~/src/config/config.js'
+import { getCacheEngine } from './src/server/common/helpers/session-cache/cache-engine.js'
+import { config } from './src/config/config.js'
 
 const mockLoggerInfo = jest.fn()
 const mockLoggerError = jest.fn()
@@ -14,7 +14,7 @@ jest.mock('ioredis', () => ({
 }))
 jest.mock('@hapi/catbox-redis')
 jest.mock('@hapi/catbox-memory')
-jest.mock('~/src/server/common/helpers/logging/logger.js', () => ({
+jest.mock('./src/server/common/helpers/logging/logger.js', () => ({
   createLogger: () => ({
     info: (...args) => mockLoggerInfo(...args),
     error: (...args) => mockLoggerError(...args)

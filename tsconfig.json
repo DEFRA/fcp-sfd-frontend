@@ -13,6 +13,6 @@
     "strictNullChecks": true,
     "types": ["jest"]
   },
-  "exclude": [".cache", ".public", ".server", "coverage", "node_modules"],
+  "exclude": [".cache", ".public", ".sonarlint/.server", "coverage", "node_modules"],
   "include": ["**/*.cjs", "**/*.js", ".eslintrc.*", ".prettierrc.*"]
 }

@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'path'
 import CopyPlugin from 'copy-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
+import TerserPlugin from 'terser-webpack-plugin'
 import WebpackAssetsManifest from 'webpack-assets-manifest'
 
 const { NODE_ENV = 'development' } = process.env
@@ -23,8 +24,7 @@ export default {
   context: path.resolve(dirname, 'src/client'),
   entry: {
     application: {
-      import: ['./stylesheets/application.scss']
-      // JavaScript entry point removed
+      import: ['./javascripts/application.js', './stylesheets/application.scss']
     }
   },
   experiments: {
@@ -37,11 +37,16 @@ export default {
     poll: 1000
   },
   output: {
-    // Keep CSS output path configuration
     filename:
       NODE_ENV === 'production'
-        ? 'stylesheets/[name].[contenthash:7].min.css'
-        : 'stylesheets/[name].css',
+        ? 'javascripts/[name].[contenthash:7].min.js'
+        : 'javascripts/[name].js',
+
+    chunkFilename:
+      NODE_ENV === 'production'
+        ? 'javascripts/[name].[chunkhash:7].min.js'
+        : 'javascripts/[name].js',
+
     path: path.join(dirname, '.public'),
     publicPath: '/public/',
     libraryTarget: 'module',
@@ -49,15 +54,13 @@ export default {
   },
   resolve: {
     alias: {
-      '/public/assets': path.join(govukFrontendPath, 'dist/govuk/assets'),
-      // Add root alias to resolve '~' imports
-      '~': path.resolve(dirname, 'src')
+      '/public/assets': path.join(govukFrontendPath, 'dist/govuk/assets')
     }
   },
   module: {
     rules: [
       {
-        test: /\.scss$/,
+        test: /\.(js|mjs|scss)$/,
         loader: 'source-map-loader',
         enforce: 'pre'
       },
@@ -80,9 +83,8 @@ export default {
                 loadPaths: [
                   path.join(dirname, 'src/client/stylesheets'),
                   path.join(dirname, 'src/server/common/components'),
-                  path.join(dirname, 'src/server/common/templates/partials'),
-                  // Include node_modules to resolve '~' imports
-                  path.join(dirname, 'node_modules')
+                  path.join(dirname, 'src/server/common/templates/partials')
+                  // path.join(dirname, 'src/templates/common')
                 ],
                 quietDeps: true,
                 sourceMapIncludeSources: true,
@@ -118,6 +120,27 @@ export default {
   },
   optimization: {
     minimize: NODE_ENV === 'production',
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          // Use webpack default compress options
+          // https://webpack.js.org/configuration/optimization/#optimizationminimizer
+          compress: { passes: 2 },
+
+          // Allow Terser to remove @preserve comments
+          format: { comments: false },
+
+          // Include sources content from dependency source maps
+          sourceMap: {
+            includeSources: true
+          },
+
+          // Compatibility workarounds
+          safari10: true
+        }
+      })
+    ],
+
     // Skip bundling unused modules
     providedExports: true,
     sideEffects: true,
@@ -140,8 +163,7 @@ export default {
     loggingDebug: ['sass-loader'],
     preset: 'minimal'
   },
-  // Update target if needed
-  target: 'web'
+  target: 'browserslist:javascripts'
 }
 
 /**

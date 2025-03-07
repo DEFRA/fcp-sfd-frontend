@@ -1,8 +1,10 @@
 version: '3.4'
 services:
 
-  your-frontend:
-    build: ./
+  fcp-sfd-frontend:
+    build: 
+      context: .
+      target: development
     ports:
       - '3002:3002'
     environment:
@@ -10,6 +12,9 @@ services:
       NODE_ENV: development
     networks:
       - fcp-sfd
+    volumes:
+      - ./src:/home/node/src
+      - ./package.json:/home/node/package.json
 
 networks:
   fcp-sfd:

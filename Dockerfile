@@ -17,11 +17,8 @@ EXPOSE ${PORT} ${PORT_DEBUG}
 COPY --chown=node:node --chmod=755 package*.json ./
 RUN npm install --ignore-scripts
 COPY --chown=node:node --chmod=755 . .
-RUN npm run build
 
 CMD [ "npm", "run", "dev" ]
-
-FROM development AS production_build
 
 ENV NODE_ENV=production
 
@@ -43,14 +40,14 @@ USER node
 ARG PARENT_VERSION
 LABEL uk.gov.defra.ffc.parent-image=defradigital/node:${PARENT_VERSION}
 
-COPY --from=production_build /home/node/package*.json ./
-COPY --from=production_build /home/node/.server ./.server/
-COPY --from=production_build /home/node/.public/ ./.public/
+COPY --from=development /home/node/package*.json ./
+COPY --from=development /home/node/src ./src/
+COPY --from=development /home/node/.public/ ./.public/
 
-RUN npm ci --omit=dev  --ignore-scripts
+RUN npm ci --omit=dev --ignore-scripts
 
 ARG PORT
 ENV PORT=${PORT}
 EXPOSE ${PORT}
 
-CMD [ "node", "." ]
+CMD [ "node", "src" ]

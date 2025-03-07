@@ -15,7 +15,7 @@
     "dev:debug": "run-p frontend:watch server:debug",
     "frontend:watch": "NODE_ENV=development webpack --watch",
     "git:pre-commit-hook": "npm run test:lint && npm test",
-    "postinstall": "npm run setup:husky && npm run build",
+    "postinstall": "npm run build",
     "lint": "run-s test:lint lint:scss",
     "lint:fix": "standard . --fix",
     "lint:scss": "stylelint \"src/**/*.scss\" --cache --cache-location .cache/stylelint --cache-strategy content --color --ignore-path .gitignore",

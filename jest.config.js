@@ -28,7 +28,3 @@ export default {
     ].join('|')}/)`
   ]
 }
-
-/**
- * @import { Config } from 'jest'
- */

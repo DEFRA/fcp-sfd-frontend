@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
 import fs from 'node:fs'
-import { createLogger } from '../../../../src/utils/logger.js'
 
 const mockReadFileSync = jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
   return '{}'
@@ -8,9 +7,6 @@ const mockReadFileSync = jest.spyOn(fs, 'readFileSync').mockImplementation(() =>
 
 const mockLoggerError = jest.fn()
 jest.spyOn(console, 'error').mockImplementation(mockLoggerError)
-
-import { context } from '../../../../src/plugins/template-renderer/context.js'
-
 
 describe('#context', () => {
   const mockRequest = { path: '/' }
@@ -75,12 +71,10 @@ describe('#context cache', () => {
     let contextImport
 
     beforeAll(async () => {
-      // Use standard relative path instead of ~ alias
       contextImport = await import('../../../../src/plugins/template-renderer/context.js')
     })
 
     beforeEach(() => {
-      // Return JSON string
       mockReadFileSync.mockReturnValue(`{
         "application.js": "javascripts/application.js",
         "stylesheets/application.scss": "stylesheets/application.css"

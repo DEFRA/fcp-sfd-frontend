@@ -1,15 +1,12 @@
-import { StorageResolution, Unit } from 'aws-embedded-metrics'
 import { jest } from '@jest/globals'
 
 import { config } from '../../../../src/config/config.js'
 import { metricsCounter } from '../../../../src/utils/metrics.js'
 
-// Create spy functions that mimic the actual behavior more closely
 const mockPutMetric = jest.fn()
 const mockFlush = jest.fn().mockResolvedValue(undefined)
 const mockLoggerError = jest.fn()
 
-// Comprehensive mock of aws-embedded-metrics
 jest.mock('aws-embedded-metrics', () => {
   const originalModule = jest.requireActual('aws-embedded-metrics')
   return {
@@ -21,7 +18,6 @@ jest.mock('aws-embedded-metrics', () => {
   }
 })
 
-// Mock logger
 jest.mock('../../../../src/utils/logger.js', () => ({
   createLogger: () => ({ 
     error: (...args) => mockLoggerError(...args) 
@@ -33,7 +29,6 @@ const defaultMetricsValue = 1
 const mockValue = 200
 
 describe('#metrics', () => {
-  // Reset all mocks before each test
   beforeEach(() => {
     jest.clearAllMocks()
     mockPutMetric.mockClear()

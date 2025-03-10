@@ -1,15 +1,9 @@
 import convict from 'convict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isProduction, isTest, isDevelopment } from '../constants/environments.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
-
-const fourHoursMs = 14400000
-const oneWeekMs = 604800000
-
-const isProduction = process.env.NODE_ENV === 'production'
-const isTest = process.env.NODE_ENV === 'test'
-const isDevelopment = process.env.NODE_ENV === 'development'
 
 export const config = convict({
   serviceVersion: {
@@ -31,16 +25,10 @@ export const config = convict({
     default: 3000,
     env: 'PORT'
   },
-  staticCacheTimeout: {
-    doc: 'Static cache timeout in milliseconds',
-    format: Number,
-    default: oneWeekMs,
-    env: 'STATIC_CACHE_TIMEOUT'
-  },
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'btms-portal-frontend'
+    default: 'single-front-door frontend',
   },
   root: {
     doc: 'Project root',
@@ -120,49 +108,6 @@ export const config = convict({
     format: Boolean,
     default: isProduction,
     env: 'ENABLE_METRICS'
-  },
-  session: {
-    cache: {
-      engine: {
-        doc: 'backend cache is written to',
-        format: ['redis', 'memory'],
-        default: isProduction ? 'redis' : 'memory',
-        env: 'SESSION_CACHE_ENGINE'
-      },
-      name: {
-        doc: 'server side session cache name',
-        format: String,
-        default: 'session',
-        env: 'SESSION_CACHE_NAME'
-      },
-      ttl: {
-        doc: 'server side session cache ttl',
-        format: Number,
-        default: fourHoursMs,
-        env: 'SESSION_CACHE_TTL'
-      }
-    },
-    cookie: {
-      ttl: {
-        doc: 'Session cookie ttl',
-        format: Number,
-        default: fourHoursMs,
-        env: 'SESSION_COOKIE_TTL'
-      },
-      password: {
-        doc: 'session cookie password',
-        format: String,
-        default: 'the-password-must-be-at-least-32-characters-long',
-        env: 'SESSION_COOKIE_PASSWORD',
-        sensitive: true
-      },
-      secure: {
-        doc: 'set secure flag on cookie',
-        format: Boolean,
-        default: isProduction,
-        env: 'SESSION_COOKIE_SECURE'
-      }
-    }
   },
   nunjucks: {
     watch: {

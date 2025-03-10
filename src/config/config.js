@@ -1,15 +1,12 @@
 import convict from 'convict'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { isProduction, isTest, isDevelopment } from '../constants/environments.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const fourHoursMs = 14400000
 const oneWeekMs = 604800000
-
-const isProduction = process.env.NODE_ENV === 'production'
-const isTest = process.env.NODE_ENV === 'test'
-const isDevelopment = process.env.NODE_ENV === 'development'
 
 export const config = convict({
   serviceVersion: {
@@ -40,7 +37,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'fcp-sfd-frontend'
+    default: 'single-front-door frontend',
   },
   root: {
     doc: 'Project root',
@@ -95,12 +92,19 @@ export const config = convict({
         : []
     }
   },
-  httpProxy: /** @type {SchemaObj<string | null>} */ ({
+  httpProxy: ({
     doc: 'HTTP Proxy',
     format: String,
     nullable: true,
     default: null,
-    env: 'HTTP_PROXY'
+    env: 'CDP_HTTP_PROXY'
+  }),
+  httpsProxy: ({
+    doc: 'HTTPS Proxy',
+    format: String,
+    nullable: true,
+    default: null,
+    env: 'CDP_HTTPS_PROXY'
   }),
   isSecureContextEnabled: {
     doc: 'Enable Secure Context',
@@ -180,7 +184,7 @@ export const config = convict({
     keyPrefix: {
       doc: 'Redis cache key prefix name used to isolate the cached results across multiple clients',
       format: String,
-      default: 'fcp-sfd-frontend:',
+      default: 'btms-portal-frontend:',
       env: 'REDIS_KEY_PREFIX'
     },
     useSingleInstanceCache: {
@@ -219,8 +223,3 @@ export const config = convict({
 })
 
 config.validate({ allowed: 'strict' })
-
-/**
- * @import { Schema, SchemaObj } from 'convict'
- * @import { RedisConfig } from '~/src/server/common/helpers/redis-client.js'
- */

@@ -12,12 +12,8 @@ const manifestPath = path.join(
   '.public/assets-manifest.json'
 )
 
-/** @type {Record<string, string> | undefined} */
 let webpackManifest
 
-/**
- * @param {Request | null} request
- */
 export function context (request) {
   if (!webpackManifest) {
     try {
@@ -34,16 +30,9 @@ export function context (request) {
     breadcrumbs: [],
     navigation: getNavigationItems(request),
 
-    /**
-     * @param {string} asset
-     */
     getAssetPath (asset) {
       const webpackAssetPath = webpackManifest?.[asset]
       return `${assetPath}/${webpackAssetPath ?? asset}`
     }
   }
 }
-
-/**
- * @import { Request } from '@hapi/hapi'
- */

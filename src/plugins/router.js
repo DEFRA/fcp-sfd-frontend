@@ -4,9 +4,6 @@ import { health } from '../routes/health.js'
 import { staticAssetRoutes } from '../routes/static-assets.js'
 import { home } from '../routes/home.js'
 
-/**
- * @satisfies {ServerRegisterPluginObject<void>}
- */
 export const router = {
   plugin: {
     name: 'router',
@@ -19,7 +16,3 @@ export const router = {
     }
   }
 }
-
-/**
- * @import { ServerRegisterPluginObject } from '@hapi/hapi'
- */

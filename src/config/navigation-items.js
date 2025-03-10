@@ -1,6 +1,3 @@
-/**
- * @param {Partial<Request> | null} request
- */
 export function getNavigationItems (request) {
   return [
     {
@@ -10,7 +7,3 @@ export function getNavigationItems (request) {
     }
   ]
 }
-
-/**
- * @import { Request } from '@hapi/hapi'
- */

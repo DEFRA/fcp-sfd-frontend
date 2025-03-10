@@ -83,14 +83,14 @@ export const config = convict({
         : []
     }
   },
-  httpProxy: /** @type {SchemaObj<string | null>} */ ({
+  httpProxy: ({
     doc: 'HTTP Proxy',
     format: String,
     nullable: true,
     default: null,
     env: 'CDP_HTTP_PROXY'
   }),
-  httpsProxy: /** @type {SchemaObj<string | null>} */ ({
+  httpsProxy: ({
     doc: 'HTTPS Proxy',
     format: String,
     nullable: true,

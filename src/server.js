@@ -4,6 +4,7 @@ import hapi from '@hapi/hapi'
 import { config } from './config/config.js'
 import { plugins } from './plugins/index.js'
 import { catchAll } from './utils/errors.js'
+import { getCacheEngine } from './utils/caching/cache-engine.js'
 
 export async function createServer () {
   const server = hapi.server({
@@ -31,6 +32,14 @@ export async function createServer () {
     router: {
       stripTrailingSlash: true
     },
+    cache: [
+      {
+        name: config.get('session.cache.name'),
+        engine: getCacheEngine(
+          (config.get('session.cache.engine'))
+        )
+      }
+    ],
     state: {
       strictHeader: false
     }

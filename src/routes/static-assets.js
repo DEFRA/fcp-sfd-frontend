@@ -4,7 +4,11 @@ import { config } from '../config/config.js'
 export const staticAssetRoutes = [
   {
     options: {
-      auth: false
+      auth: false,
+      cache: {
+        expiresIn: config.get('staticCacheTimeout'),
+        privacy: 'private'
+      }
     },
     method: 'GET',
     path: '/favicon.ico',
@@ -17,7 +21,11 @@ export const staticAssetRoutes = [
   },
   {
     options: {
-      auth: false
+      auth: false,
+      cache: {
+        expiresIn: config.get('staticCacheTimeout'),
+        privacy: 'private'
+      }
     },
     method: 'GET',
     path: `${config.get('assetPath')}/{param*}`,

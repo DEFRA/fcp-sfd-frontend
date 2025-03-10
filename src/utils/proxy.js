@@ -6,18 +6,7 @@ import { config } from '../config/config.js'
 import { createLogger } from './logger.js'
 
 const logger = createLogger()
-/**
- * @typedef Proxy
- * @property {URL} url
- * @property {number} port
- * @property {ProxyAgent} proxyAgent
- * @property {HttpsProxyAgent<string>} httpAndHttpsProxyAgent
- */
 
-/**
- * Provide ProxyAgent and HttpsProxyAgent when http/s proxy url config has been set
- * @returns {Proxy|null}
- */
 function provideProxy () {
   const proxyUrl = config.get('httpsProxy') ?? config.get('httpProxy')
 
@@ -28,7 +17,7 @@ function provideProxy () {
   const url = new URL(proxyUrl)
   const httpPort = 80
   const httpsPort = 443
-  // The url.protocol value always has a colon at the end
+
   const port = url.protocol.toLowerCase() === 'http:' ? httpPort : httpsPort
 
   logger.debug(`Proxy set up using ${url.origin}:${port}`)
@@ -45,12 +34,6 @@ function provideProxy () {
   }
 }
 
-/**
- * Provide fetch with dispatcher ProxyAgent when http/s proxy url config has been set
- * @param {string | URL } url
- * @param {RequestInit} options
- * @returns {Promise}
- */
 function proxyFetch (url, options) {
   const proxy = provideProxy()
 
@@ -64,7 +47,6 @@ function proxyFetch (url, options) {
 
   return fetch(url, {
     ...options,
-    // @ts-expect-error dispatcher has not been added to types
     dispatcher: proxy.proxyAgent
   })
 }

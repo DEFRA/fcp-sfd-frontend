@@ -5,6 +5,9 @@ import { isProduction, isTest, isDevelopment } from '../constants/environments.j
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
+const fourHoursMs = 14400000
+const oneWeekMs = 604800000
+
 export const config = convict({
   serviceVersion: {
     doc: 'The service version, this variable is injected into your docker container in CDP environments',
@@ -24,6 +27,12 @@ export const config = convict({
     format: 'port',
     default: 3000,
     env: 'PORT'
+  },
+  staticCacheTimeout: {
+    doc: 'Static cache timeout in milliseconds',
+    format: Number,
+    default: oneWeekMs,
+    env: 'STATIC_CACHE_TIMEOUT'
   },
   serviceName: {
     doc: 'Applications Service Name',
@@ -109,6 +118,88 @@ export const config = convict({
     default: isProduction,
     env: 'ENABLE_METRICS'
   },
+  session: {
+    cache: {
+      engine: {
+        doc: 'backend cache is written to',
+        format: ['redis', 'memory'],
+        default: isProduction ? 'redis' : 'memory',
+        env: 'SESSION_CACHE_ENGINE'
+      },
+      name: {
+        doc: 'server side session cache name',
+        format: String,
+        default: 'session',
+        env: 'SESSION_CACHE_NAME'
+      },
+      ttl: {
+        doc: 'server side session cache ttl',
+        format: Number,
+        default: fourHoursMs,
+        env: 'SESSION_CACHE_TTL'
+      }
+    },
+    cookie: {
+      ttl: {
+        doc: 'Session cookie ttl',
+        format: Number,
+        default: fourHoursMs,
+        env: 'SESSION_COOKIE_TTL'
+      },
+      password: {
+        doc: 'session cookie password',
+        format: String,
+        default: 'the-password-must-be-at-least-32-characters-long',
+        env: 'SESSION_COOKIE_PASSWORD',
+        sensitive: true
+      },
+      secure: {
+        doc: 'set secure flag on cookie',
+        format: Boolean,
+        default: isProduction,
+        env: 'SESSION_COOKIE_SECURE'
+      }
+    }
+  },
+  redis: /** @type {Schema<RedisConfig>} */ ({
+    host: {
+      doc: 'Redis cache host',
+      format: String,
+      default: '127.0.0.1',
+      env: 'REDIS_HOST'
+    },
+    username: {
+      doc: 'Redis cache username',
+      format: String,
+      default: '',
+      env: 'REDIS_USERNAME'
+    },
+    password: {
+      doc: 'Redis cache password',
+      format: '*',
+      default: '',
+      sensitive: true,
+      env: 'REDIS_PASSWORD'
+    },
+    keyPrefix: {
+      doc: 'Redis cache key prefix name used to isolate the cached results across multiple clients',
+      format: String,
+      default: 'btms-portal-frontend:',
+      env: 'REDIS_KEY_PREFIX'
+    },
+    useSingleInstanceCache: {
+      doc: 'Connect to a single instance of redis instead of a cluster.',
+      format: Boolean,
+      default: !isProduction,
+      env: 'USE_SINGLE_INSTANCE_CACHE'
+    },
+    useTLS: {
+      doc: 'Connect to redis using TLS',
+      format: Boolean,
+      default: isProduction,
+      env: 'REDIS_TLS'
+    }
+  }),
   nunjucks: {
     watch: {
       doc: 'Reload templates when they are changed.',

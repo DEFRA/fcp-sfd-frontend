@@ -1,6 +1,3 @@
-/**
- * @type {Config}
- */
 export default {
   rootDir: '.',
   verbose: true,

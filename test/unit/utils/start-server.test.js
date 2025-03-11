@@ -55,7 +55,7 @@ const { config } = await import('../../../src/config/config.js')
 
 describe('#startServer', () => {
   const PROCESS_ENV = process.env
-  let server;
+  let server
 
   beforeAll(() => {
     process.env = { ...PROCESS_ENV }
@@ -79,7 +79,7 @@ describe('#startServer', () => {
     process.removeAllListeners('SIGTERM')
     process.removeAllListeners('uncaughtException')
     process.removeAllListeners('unhandledRejection')
-    
+
     jest.useRealTimers()
   })
 

@@ -1,7 +1,7 @@
 import { createServer } from '../../../src/server.js'
 import { constants as httpConstants } from 'http2'
 import { catchAll } from '../../../src/utils/errors.js'
-import { jest } from '@jest/globals'
+import { jest, beforeAll, describe, test, expect, afterAll } from '@jest/globals'
 
 describe('#errors', () => {
   let server
@@ -32,7 +32,7 @@ describe('#catchAll', () => {
   const mockErrorLogger = jest.fn()
   const mockStack = 'Mock error stack'
   const errorPage = 'error'
-  const mockRequest = ( statusCode ) => ({
+  const mockRequest = (statusCode) => ({
     response: {
       isBoom: true,
       stack: mockStack,

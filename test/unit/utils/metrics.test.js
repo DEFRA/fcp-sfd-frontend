@@ -20,8 +20,8 @@ jest.unstable_mockModule('aws-embedded-metrics', () => {
 })
 
 jest.unstable_mockModule('../../../src/utils/logger.js', () => ({
-  createLogger: () => ({ 
-    error: (...args) => mockLoggerError(...args) 
+  createLogger: () => ({
+    error: (...args) => mockLoggerError(...args)
   })
 }))
 
@@ -85,7 +85,7 @@ describe('#metrics', () => {
 
     test('Should call flush', async () => {
       await metricsCounter(mockMetricsName, mockValue)
-      
+
       expect(mockFlush).toHaveBeenCalledTimes(1)
     })
   })
@@ -95,7 +95,7 @@ describe('#metrics', () => {
 
     beforeEach(async () => {
       config.set('isMetricsEnabled', true)
-      
+
       mockFlush.mockRejectedValue(mockError)
 
       await metricsCounter(mockMetricsName, mockValue)
@@ -103,7 +103,7 @@ describe('#metrics', () => {
 
     test('Should log expected error', () => {
       expect(mockLoggerError).toHaveBeenCalledWith(
-        expect.any(Error), 
+        expect.any(Error),
         mockError.message
       )
     })

@@ -1,5 +1,5 @@
 import hapi from '@hapi/hapi'
-import { jest } from '@jest/globals'
+import { jest, beforeAll, beforeEach, describe, test, expect, afterAll, afterEach } from '@jest/globals'
 
 import { secureContext } from '../../../../src/plugins/secure-context/secure-context.js'
 import { config } from '../../../../src/config/config.js'
@@ -27,7 +27,7 @@ describe('secureContext plugin', () => {
     mockLoggerError.mockClear()
 
     server = hapi.server()
-    
+
     server.decorate('server', 'logger', {
       info: mockLoggerInfo,
       error: mockLoggerError

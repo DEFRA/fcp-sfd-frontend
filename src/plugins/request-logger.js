@@ -6,4 +6,3 @@ export const requestLogger = {
   plugin: hapiPino,
   options: loggerOptions
 }
-

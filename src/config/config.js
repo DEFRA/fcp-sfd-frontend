@@ -37,7 +37,7 @@ export const config = convict({
   serviceName: {
     doc: 'Applications Service Name',
     format: String,
-    default: 'single-front-door frontend',
+    default: 'single-front-door frontend'
   },
   root: {
     doc: 'Project root',

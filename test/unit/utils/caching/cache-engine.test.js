@@ -1,4 +1,4 @@
-import { jest, describe, beforeEach, afterEach, test, expect, afterAll } from '@jest/globals'
+import { jest, describe, beforeEach, afterEach, test, expect, afterAll, beforeAll } from '@jest/globals'
 
 const mockLoggerInfo = jest.fn()
 const mockLoggerError = jest.fn()
@@ -53,9 +53,9 @@ jest.unstable_mockModule('../../../../src/config/config.js', () => {
     }),
     set: jest.fn()
   }
-  
+
   originalConfigGet = mockConfig.get
-  
+
   return { config: mockConfig }
 })
 
@@ -64,7 +64,7 @@ let getCacheEngine, config
 const setup = async () => {
   const cacheEngineModule = await import('../../../../src/utils/caching/cache-engine.js')
   const configModule = await import('../../../../src/config/config.js')
-  
+
   getCacheEngine = cacheEngineModule.getCacheEngine
   config = configModule.config
 }
@@ -77,7 +77,7 @@ describe('#getCacheEngine', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
-  
+
   afterAll(() => {
     jest.restoreAllMocks()
   })

@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals'
+import { jest, beforeEach, describe, test, expect } from '@jest/globals'
 import { EventEmitter } from 'events'
 
 const mockLogger = {
@@ -7,14 +7,14 @@ const mockLogger = {
 }
 
 class MockRedis extends EventEmitter {
-  constructor(config) {
+  constructor (config) {
     super()
     this.config = config
   }
 }
 
 class MockCluster extends EventEmitter {
-  constructor(nodes, options) {
+  constructor (nodes, options) {
     super()
     this.nodes = nodes
     this.options = options
@@ -39,14 +39,14 @@ describe('buildRedisClient', () => {
   beforeEach(async () => {
     const redisModule = await import('ioredis')
     const loggerModule = await import('../../../../src/utils/logger.js')
-    
+
     const module = await import('../../../../src/utils/caching/redis-client.js')
-    
+
     buildRedisClient = module.buildRedisClient
     Redis = redisModule.Redis
     Cluster = redisModule.Cluster
     createLogger = loggerModule.createLogger
-    
+
     jest.clearAllMocks()
   })
 
@@ -109,7 +109,7 @@ describe('buildRedisClient', () => {
       useTLS: false
     }
 
-    const client = buildRedisClient(redisConfig)
+    const client = buildRedisClient(redisConfig) // eslint-disable-line no-unused-vars
 
     expect(Redis).toHaveBeenCalledWith({
       port: 6379,
@@ -131,7 +131,7 @@ describe('buildRedisClient', () => {
       useTLS: true
     }
 
-    const client = buildRedisClient(redisConfig)
+    const client = buildRedisClient(redisConfig) // eslint-disable-line no-unused-vars
 
     expect(Redis).toHaveBeenCalledWith({
       port: 6379,
@@ -185,10 +185,10 @@ describe('buildRedisClient', () => {
       useTLS: false
     }
 
-    const client = buildRedisClient(redisConfig)
+    const client = buildRedisClient(redisConfig) // eslint-disable-line no-unused-vars
     const dnsLookup = Cluster.mock.calls[0][1].dnsLookup
     const callbackMock = jest.fn()
-    
+
     dnsLookup('test.address', callbackMock)
 
     expect(callbackMock).toHaveBeenCalledWith(null, 'test.address')

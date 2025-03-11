@@ -1,13 +1,13 @@
 import { constants as httpConstants } from 'http2'
 import { health } from '../../../src/routes/health'
-import { jest } from '@jest/globals'
+import { jest, beforeEach, describe, test, expect } from '@jest/globals'
 
 const mockResponse = {
-  code: jest.fn().mockReturnThis(),
+  code: jest.fn().mockReturnThis()
 }
 
 const mockH = {
-  response: jest.fn().mockReturnValue(mockResponse),
+  response: jest.fn().mockReturnValue(mockResponse)
 }
 
 describe('Health endpoint', () => {

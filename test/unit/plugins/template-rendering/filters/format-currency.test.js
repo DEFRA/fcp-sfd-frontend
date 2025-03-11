@@ -1,4 +1,5 @@
 import { formatCurrency } from '../../../../../src/plugins/template-renderer/filters/format-currency.js'
+import { describe, test, expect } from '@jest/globals'
 
 describe('#formatCurrency', () => {
   describe('With defaults', () => {

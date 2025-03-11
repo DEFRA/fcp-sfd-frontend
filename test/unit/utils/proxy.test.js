@@ -1,11 +1,14 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
+import { config } from '../../../src/config/config.js'
+import { provideProxy, proxyFetch } from '../../../src/utils/proxy.js'
+
 const mockLogger = {
   debug: jest.fn()
 }
 
 class MockProxyAgent {
-  constructor(options) {
+  constructor (options) {
     this.options = options
   }
 }
@@ -35,9 +38,6 @@ jest.mock('https-proxy-agent', () => {
 
 global.fetch = jest.fn().mockResolvedValue(new Response(JSON.stringify({ success: true })))
 
-import { config } from '../../../src/config/config.js'
-import { provideProxy, proxyFetch } from '../../../src/utils/proxy.js'
-
 const httpProxyUrl = 'http://proxy.example.com'
 const httpsProxyUrl = 'https://proxy.example.com'
 const httpPort = 80
@@ -48,7 +48,7 @@ const testOptions = { method: 'GET', headers: { 'Content-Type': 'application/jso
 describe('#proxy', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    
+
     config.set('httpProxy', null)
     config.set('httpsProxy', null)
   })
@@ -111,20 +111,20 @@ describe('#proxy', () => {
 
       test('Should call fetch with the right URL and include a dispatcher', async () => {
         await proxyFetch(testUrl, testOptions)
-        
+
         expect(global.fetch).toHaveBeenCalled()
-        
+
         const fetchCall = global.fetch.mock.calls[0]
         const actualUrl = fetchCall[0]
         const actualOptions = fetchCall[1]
-        
+
         expect(actualUrl).toBe(testUrl)
-        
+
         expect(actualOptions.method).toBe(testOptions.method)
         expect(actualOptions.headers).toEqual(testOptions.headers)
-        
+
         expect(actualOptions).toHaveProperty('dispatcher')
-        
+
         expect(actualOptions.dispatcher).toBeTruthy()
       })
     })

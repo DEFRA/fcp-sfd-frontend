@@ -1,4 +1,5 @@
 import { getTrustStoreCerts } from '../../../../src/plugins/secure-context/get-trust-store-certs.js'
+import { describe, test, expect } from '@jest/globals'
 
 describe('#getTrustStoreCerts', () => {
   const mockProcessEnvWithCerts = {

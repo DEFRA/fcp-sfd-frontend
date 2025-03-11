@@ -1,8 +1,5 @@
 import { constants as httpConstants } from 'http2'
 
-/**
- * @param {number} statusCode
- */
 function statusCodeMessage (statusCode) {
   switch (statusCode) {
     case httpConstants.HTTP_STATUS_NOT_FOUND:
@@ -18,22 +15,16 @@ function statusCodeMessage (statusCode) {
   }
 }
 
-/**
- * @param { Request } request
- * @param { ResponseToolkit } h
- */
 export function catchAll (request, h) {
-  const { response } = request
-
-  if (!('isBoom' in response)) {
+  if (!request.response || !('isBoom' in request.response)) {
     return h.continue
   }
 
-  const statusCode = response.output.statusCode
+  const statusCode = request.response.output.statusCode
   const errorMessage = statusCodeMessage(statusCode)
 
   if (statusCode >= httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR) {
-    request.logger.error(response?.stack)
+    request.logger.error(request.response?.stack)
   }
 
   return h
@@ -44,7 +35,3 @@ export function catchAll (request, h) {
     })
     .code(statusCode)
 }
-
-/**
- * @import { Request, ResponseToolkit } from '@hapi/hapi'
- */

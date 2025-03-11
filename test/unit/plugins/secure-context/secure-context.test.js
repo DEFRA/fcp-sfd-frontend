@@ -1,7 +1,6 @@
 import hapi from '@hapi/hapi'
 import { jest } from '@jest/globals'
 
-// Import the modules under test
 import { secureContext } from '../../../../src/plugins/secure-context/secure-context.js'
 import { config } from '../../../../src/config/config.js'
 
@@ -13,27 +12,22 @@ describe('secureContext plugin', () => {
   const mockLoggerError = jest.fn()
 
   beforeAll(() => {
-    // Store original environment and config
     originalProcessEnv = process.env
     originalConfigGet = config.get
   })
 
   afterAll(() => {
-    // Restore original config and environment
     config.get = originalConfigGet
     process.env = originalProcessEnv
   })
 
   beforeEach(() => {
-    // Reset mocks for each test
     jest.resetAllMocks()
     mockLoggerInfo.mockClear()
     mockLoggerError.mockClear()
 
-    // Create a test server
     server = hapi.server()
     
-    // Add the logger
     server.decorate('server', 'logger', {
       info: mockLoggerInfo,
       error: mockLoggerError
@@ -46,7 +40,6 @@ describe('secureContext plugin', () => {
 
   describe('when secure context is disabled', () => {
     beforeEach(async () => {
-      // Set up mock behavior
       config.get = jest.fn((key) => {
         if (key === 'isSecureContextEnabled') {
           return false
@@ -54,7 +47,6 @@ describe('secureContext plugin', () => {
         return originalConfigGet ? originalConfigGet(key) : undefined
       })
 
-      // Register the plugin
       await server.register(secureContext)
     })
 
@@ -69,7 +61,6 @@ describe('secureContext plugin', () => {
 
   describe('when secure context is enabled with certificates', () => {
     beforeEach(async () => {
-      // Mock the config
       config.get = jest.fn((key) => {
         if (key === 'isSecureContextEnabled') {
           return true
@@ -77,14 +68,12 @@ describe('secureContext plugin', () => {
         return originalConfigGet ? originalConfigGet(key) : undefined
       })
 
-      // Set up env vars that getTrustStoreCerts will use
       process.env = {
         ...originalProcessEnv,
         TRUSTSTORE_CERT1: 'cert1-content',
         TRUSTSTORE_CERT2: 'cert2-content'
       }
 
-      // Register the plugin
       await server.register(secureContext)
     })
 
@@ -92,7 +81,6 @@ describe('secureContext plugin', () => {
       expect(server.secureContext).toBeDefined()
     })
 
-    // Replace the problematic test with an alternative
     test('server should have a secureContext object with a context property', () => {
       expect(server.secureContext).toHaveProperty('context')
     })
@@ -100,7 +88,6 @@ describe('secureContext plugin', () => {
 
   describe('when secure context is enabled without certificates', () => {
     beforeEach(async () => {
-      // Mock the config
       config.get = jest.fn((key) => {
         if (key === 'isSecureContextEnabled') {
           return true
@@ -108,7 +95,6 @@ describe('secureContext plugin', () => {
         return originalConfigGet ? originalConfigGet(key) : undefined
       })
 
-      // Clear any TRUSTSTORE_ env vars
       process.env = { ...originalProcessEnv }
       Object.keys(process.env).forEach(key => {
         if (key.startsWith('TRUSTSTORE_')) {
@@ -116,7 +102,6 @@ describe('secureContext plugin', () => {
         }
       })
 
-      // Register the plugin
       await server.register(secureContext)
     })
 

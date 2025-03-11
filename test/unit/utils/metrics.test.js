@@ -1,28 +1,33 @@
-import { jest } from '@jest/globals'
-
-import { config } from '../../../../src/config/config.js'
-import { metricsCounter } from '../../../../src/utils/metrics.js'
+import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
 const mockPutMetric = jest.fn()
 const mockFlush = jest.fn().mockResolvedValue(undefined)
 const mockLoggerError = jest.fn()
 
-jest.mock('aws-embedded-metrics', () => {
-  const originalModule = jest.requireActual('aws-embedded-metrics')
+jest.unstable_mockModule('aws-embedded-metrics', () => {
   return {
-    ...originalModule,
     createMetricsLogger: () => ({
       putMetric: mockPutMetric,
       flush: mockFlush
-    })
+    }),
+    Unit: {
+      Count: 'Count'
+    },
+    StorageResolution: {
+      Standard: 'Standard'
+    }
   }
 })
 
-jest.mock('../../../../src/utils/logger.js', () => ({
+jest.unstable_mockModule('../../../src/utils/logger.js', () => ({
   createLogger: () => ({ 
     error: (...args) => mockLoggerError(...args) 
   })
 }))
+
+const { config } = await import('../../../src/config/config.js')
+const { metricsCounter } = await import('../../../src/utils/metrics.js')
+const { Unit, StorageResolution } = await import('aws-embedded-metrics')
 
 const mockMetricsName = 'mock-metrics-name'
 const defaultMetricsValue = 1
@@ -51,20 +56,13 @@ describe('#metrics', () => {
     })
   })
 
- /* describe('When metrics is enabled', () => {
+  describe('When metrics is enabled', () => {
     beforeEach(() => {
       config.set('isMetricsEnabled', true)
     })
 
     test('Should send metric with default value', async () => {
-      console.log('Config value:', config.get('isMetricsEnabled'))
-      
-      try {
-        await metricsCounter(mockMetricsName)
-      } catch (error) {
-        console.error('Error in metricsCounter:', error)
-      }
-      console.log('Metrics logger:', mockPutMetric)
+      await metricsCounter(mockMetricsName)
 
       expect(mockPutMetric).toHaveBeenCalledWith(
         mockMetricsName,
@@ -98,7 +96,6 @@ describe('#metrics', () => {
     beforeEach(async () => {
       config.set('isMetricsEnabled', true)
       
-      // Simulate an error during flush
       mockFlush.mockRejectedValue(mockError)
 
       await metricsCounter(mockMetricsName, mockValue)
@@ -110,5 +107,5 @@ describe('#metrics', () => {
         mockError.message
       )
     })
-  })*/
+  })
 })

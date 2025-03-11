@@ -30,6 +30,9 @@
     "start": "NODE_ENV=production node --use-strict ."
   },
   "author": "Defra DDTS",
+  "contributors": [
+    "Amirs Ishmuhametovs <amirs.ishmuhametovs@defra.gov.uk>"
+  ],
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@defra/hapi-tracing": "^1.0.0",

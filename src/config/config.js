@@ -161,7 +161,7 @@ export const config = convict({
       }
     }
   },
-  redis: /** @type {Schema<RedisConfig>} */ ({
+  redis: ({
     host: {
       doc: 'Redis cache host',
       format: String,

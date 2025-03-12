@@ -1,0 +1,34 @@
+version: '3.4'
+services:
+
+  fcp-sfd-frontend:
+    build: 
+      context: .
+      target: development
+    ports:
+      - '3002:3002'
+    links:
+      - 'redis:redis'
+    depends_on:
+      redis:
+        condition: service_started
+    environment:
+      PORT: 3002
+      NODE_ENV: development
+    networks:
+      - fcp-sfd
+    volumes:
+      - ./src:/home/node/src
+      - ./package.json:/home/node/package.json
+
+  redis:
+    image: redis:7.2.3-alpine3.18
+    ports:
+      - '6379:6379'
+    restart: always
+    networks:
+      - fcp-sfd
+
+networks:
+  fcp-sfd:
+    driver: bridge

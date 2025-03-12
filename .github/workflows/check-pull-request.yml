@@ -26,18 +26,20 @@ jobs:
           cache: npm
       - run: |
           npm ci
-          npm run build
-          npm run lint
-          npm test
 
       - name: Test Docker Image Build
         run: |
           set +e
-          docker build --no-cache --tag cdp-node-frontend-template .
+          docker build --no-cache --tag fcp-sfd-frontend .
           exit $?
 
+      - name: Run Tests
+        run: |
+          mkdir -p coverage
+          chmod -R a+rw ./coverage
+          docker compose -f docker-compose.yaml -f docker-compose.test.yaml run --rm "fcp-sfd-frontend"
+
       - name: SonarCloud Scan
-        if: github.actor != 'dependabot[bot]'
         uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

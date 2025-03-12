@@ -31,12 +31,8 @@ export function context (request) {
     navigation: getNavigationItems(request),
 
     getAssetPath (asset) {
-      console.log('Asset requested:', asset)
-      console.log('Webpack manifest:', webpackManifest)
       const webpackAssetPath = webpackManifest?.[asset]
-      console.log('Found path in manifest:', webpackAssetPath)
       const result = `${assetPath}/${webpackAssetPath ?? asset}`
-      console.log('Returning path:', result)
       return result
     }
   }

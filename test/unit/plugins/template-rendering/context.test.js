@@ -40,7 +40,7 @@ describe('#context', () => {
             url: '/'
           }
         ],
-        serviceName: 'single-front-door frontend',
+        serviceName: 'Single Front Door',
         serviceUrl: '/'
       })
     })
@@ -103,7 +103,7 @@ describe('#context cache', () => {
             url: '/'
           }
         ],
-        serviceName: 'single-front-door frontend',
+        serviceName: 'Single Front Door',
         serviceUrl: '/'
       })
     })

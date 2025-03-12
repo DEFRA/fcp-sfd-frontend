@@ -22,7 +22,7 @@ describe('#errors', () => {
     })
 
     expect(result).toEqual(
-      expect.stringContaining('Page not found | single-front-door frontend')
+      expect.stringContaining('Page not found | Single Front Door')
     )
     expect(statusCode).toBe(StatusCodes.NOT_FOUND)
   })

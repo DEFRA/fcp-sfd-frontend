@@ -16,9 +16,6 @@ services:
     networks:
       - fcp-sfd
 
-volumes:
-  mongodb-data:
-
 networks:
   fcp-sfd:
     driver: bridge

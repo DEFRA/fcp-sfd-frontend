@@ -11,7 +11,7 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 const nunjucksEnvironment = nunjucks.configure(
   [
     'node_modules/govuk-frontend/dist/',
-    path.resolve(dirname, '../../templates')
+    path.resolve(dirname, '../../views')
   ],
   {
     autoescape: true,
@@ -31,7 +31,7 @@ export const vision = {
   options: {
     engines: {
       njk: {
-        compile (src, options) {
+        compile: (src, options) => {
           const template = nunjucks.compile(src, options.environment)
           return (ctx) => template.render(ctx)
         }
@@ -41,7 +41,7 @@ export const vision = {
       environment: nunjucksEnvironment
     },
     relativeTo: path.resolve(dirname, '../..'),
-    path: 'templates',
+    path: 'views',
     isCached: config.get('isProduction'),
     context
   }

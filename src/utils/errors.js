@@ -1,14 +1,14 @@
-import { constants as httpConstants } from 'http2'
+import { StatusCodes } from 'http-status-codes'
 
 function statusCodeMessage (statusCode) {
   switch (statusCode) {
-    case httpConstants.HTTP_STATUS_NOT_FOUND:
+    case StatusCodes.NOT_FOUND:
       return 'Page not found'
-    case httpConstants.HTTP_STATUS_FORBIDDEN:
+    case StatusCodes.FORBIDDEN:
       return 'Forbidden'
-    case httpConstants.HTTP_STATUS_UNAUTHORIZED:
+    case StatusCodes.UNAUTHORIZED:
       return 'Unauthorized'
-    case httpConstants.HTTP_STATUS_BAD_REQUEST:
+    case StatusCodes.BAD_REQUEST:
       return 'Bad Request'
     default:
       return 'Something went wrong'
@@ -23,7 +23,7 @@ export function catchAll (request, h) {
   const statusCode = request.response.output.statusCode
   const errorMessage = statusCodeMessage(statusCode)
 
-  if (statusCode >= httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR) {
+  if (statusCode >= StatusCodes.INTERNAL_SERVER_ERROR) {
     request.logger.error(request.response?.stack)
   }
 

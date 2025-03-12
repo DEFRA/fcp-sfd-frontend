@@ -1,5 +1,5 @@
 import { createServer } from '../../../src/server.js'
-import { constants as httpConstants } from 'http2'
+import { StatusCodes } from 'http-status-codes'
 import { catchAll } from '../../../src/utils/errors.js'
 import { jest, beforeAll, describe, test, expect, afterAll } from '@jest/globals'
 
@@ -24,7 +24,7 @@ describe('#errors', () => {
     expect(result).toEqual(
       expect.stringContaining('Page not found | single-front-door frontend')
     )
-    expect(statusCode).toBe(httpConstants.HTTP_STATUS_NOT_FOUND)
+    expect(statusCode).toBe(StatusCodes.NOT_FOUND)
   })
 })
 
@@ -50,89 +50,89 @@ describe('#catchAll', () => {
   }
 
   test('Should provide expected "Not Found" page', () => {
-    catchAll(mockRequest(httpConstants.HTTP_STATUS_NOT_FOUND), mockToolkit)
+    catchAll(mockRequest(StatusCodes.NOT_FOUND), mockToolkit)
 
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
       pageTitle: 'Page not found',
-      heading: httpConstants.HTTP_STATUS_NOT_FOUND,
+      heading: StatusCodes.NOT_FOUND,
       message: 'Page not found'
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      httpConstants.HTTP_STATUS_NOT_FOUND
+      StatusCodes.NOT_FOUND
     )
   })
 
   test('Should provide expected "Forbidden" page', () => {
-    catchAll(mockRequest(httpConstants.HTTP_STATUS_FORBIDDEN), mockToolkit)
+    catchAll(mockRequest(StatusCodes.FORBIDDEN), mockToolkit)
 
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
       pageTitle: 'Forbidden',
-      heading: httpConstants.HTTP_STATUS_FORBIDDEN,
+      heading: StatusCodes.FORBIDDEN,
       message: 'Forbidden'
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      httpConstants.HTTP_STATUS_FORBIDDEN
+      StatusCodes.FORBIDDEN
     )
   })
 
   test('Should provide expected "Unauthorized" page', () => {
-    catchAll(mockRequest(httpConstants.HTTP_STATUS_UNAUTHORIZED), mockToolkit)
+    catchAll(mockRequest(StatusCodes.UNAUTHORIZED), mockToolkit)
 
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
       pageTitle: 'Unauthorized',
-      heading: httpConstants.HTTP_STATUS_UNAUTHORIZED,
+      heading: StatusCodes.UNAUTHORIZED,
       message: 'Unauthorized'
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      httpConstants.HTTP_STATUS_UNAUTHORIZED
+      StatusCodes.UNAUTHORIZED
     )
   })
 
   test('Should provide expected "Bad Request" page', () => {
-    catchAll(mockRequest(httpConstants.HTTP_STATUS_BAD_REQUEST), mockToolkit)
+    catchAll(mockRequest(StatusCodes.BAD_REQUEST), mockToolkit)
 
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
       pageTitle: 'Bad Request',
-      heading: httpConstants.HTTP_STATUS_BAD_REQUEST,
+      heading: StatusCodes.BAD_REQUEST,
       message: 'Bad Request'
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      httpConstants.HTTP_STATUS_BAD_REQUEST
+      StatusCodes.BAD_REQUEST
     )
   })
 
   test('Should provide expected default page', () => {
-    catchAll(mockRequest(httpConstants.HTTP_STATUS_TEAPOT), mockToolkit)
+    catchAll(mockRequest(StatusCodes.IM_A_TEAPOT), mockToolkit)
 
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
       pageTitle: 'Something went wrong',
-      heading: httpConstants.HTTP_STATUS_TEAPOT,
+      heading: StatusCodes.IM_A_TEAPOT,
       message: 'Something went wrong'
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      httpConstants.HTTP_STATUS_TEAPOT
+      StatusCodes.IM_A_TEAPOT
     )
   })
 
   test('Should provide expected "Something went wrong" page and log error for internalServerError', () => {
     catchAll(
-      mockRequest(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR),
+      mockRequest(StatusCodes.INTERNAL_SERVER_ERROR),
       mockToolkit
     )
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
       pageTitle: 'Something went wrong',
-      heading: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+      heading: StatusCodes.INTERNAL_SERVER_ERROR,
       message: 'Something went wrong'
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR
+      StatusCodes.INTERNAL_SERVER_ERROR
     )
   })
 })

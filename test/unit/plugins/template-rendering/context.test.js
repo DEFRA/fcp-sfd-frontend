@@ -16,15 +16,15 @@ describe('#context', () => {
     let contextImport
 
     beforeAll(async () => {
-      contextImport = await import('../../../../src/plugins/template-renderer/context.js')
-    })
-
-    beforeEach(() => {
       mockReadFileSync.mockReturnValue(`{
         "application.js": "javascripts/application.js",
         "stylesheets/application.scss": "stylesheets/application.css"
       }`)
+      jest.resetModules()
+      contextImport = await import('../../../../src/plugins/template-renderer/context.js')
+    })
 
+    beforeEach(() => {
       contextResult = contextImport.context(mockRequest)
     })
 
@@ -48,7 +48,7 @@ describe('#context', () => {
     describe('With valid asset path', () => {
       test('Should provide expected asset path', () => {
         expect(contextResult.getAssetPath('application.js')).toBe(
-          '/public/javascripts/application.e332a93.min.js'
+          '/public/javascripts/application.js'
         )
       })
     })

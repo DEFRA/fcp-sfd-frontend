@@ -17,9 +17,6 @@ const govukFrontendPath = path.dirname(
 
 const ruleTypeAssetResource = 'asset/resource'
 
-/**
- * @type {Configuration}
- */
 export default {
   context: path.resolve(dirname, 'src/client'),
   entry: {
@@ -65,34 +62,6 @@ export default {
         enforce: 'pre'
       },
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        options: {
-          browserslistEnv: 'javascripts',
-          cacheDirectory: true,
-          extends: path.join(dirname, 'babel.config.cjs'),
-          presets: [
-            [
-              '@babel/preset-env',
-              {
-                // Apply bug fixes to avoid transforms
-                bugfixes: true,
-
-                // Apply smaller "loose" transforms for browsers
-                loose: true,
-
-                // Skip CommonJS modules transform
-                modules: false
-              }
-            ]
-          ]
-        },
-
-        // Flag loaded modules as side effect free
-        sideEffects: false
-      },
-      {
         test: /\.scss$/,
         type: ruleTypeAssetResource,
         generator: {
@@ -110,8 +79,7 @@ export default {
               sassOptions: {
                 loadPaths: [
                   path.join(dirname, 'src/client/stylesheets'),
-                  path.join(dirname, 'src/server/common/components'),
-                  path.join(dirname, 'src/server/common/templates/partials')
+                  path.join(dirname, 'src/views/common')
                 ],
                 quietDeps: true,
                 sourceMapIncludeSources: true,
@@ -192,7 +160,3 @@ export default {
   },
   target: 'browserslist:javascripts'
 }
-
-/**
- * @import { Configuration } from 'webpack'
- */

@@ -1,0 +1,21 @@
+services:
+  fcp-sfd-frontend:
+    build:
+      target: development
+    image: fcp-sfd-frontend-development
+    container_name: fcp-sfd-frontend-test
+    command: npm run test
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./src/:/home/node/src
+      - ./test/:/home/node/test
+      - ./package.json:/home/node/package.json
+      - ./coverage:/home/node/coverage
+    networks:
+      - fcp-sfd
+
+networks:
+  fcp-sfd:
+    driver: bridge

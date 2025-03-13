@@ -21,7 +21,7 @@ Core delivery platform Node.js Frontend Template.
 - [Docker](#docker)
   - [Development image](#development-image)
   - [Production image](#production-image)
-  - [Docker Compose](#docker-compose)
+  - [Docker Compose](#compose)
   - [Dependabot](#dependabot)
   - [SonarCloud](#sonarcloud)
 - [Licence](#licence)

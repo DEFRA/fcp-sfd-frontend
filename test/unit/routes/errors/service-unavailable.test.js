@@ -17,7 +17,6 @@ describe('Service Unavailable Route', () => {
   })
 
   test('should return HTTP 200 when accessing the service unavailable page', () => {
-
     const result = serviceUnavailable.handler(null, mockH)
     expect(mockH.view).toHaveBeenCalled()
     expect(result).toBe(mockView)

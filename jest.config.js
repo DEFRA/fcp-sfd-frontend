@@ -9,8 +9,7 @@ export default {
   collectCoverageFrom: ['src/**/*.js'],
   coveragePathIgnorePatterns: [
     '<rootDir>/node_modules/',
-    '<rootDir>/.server',
-    'index.js'
+    '<rootDir>/.server'
   ],
   testEnvironment: 'node',
   coverageDirectory: '<rootDir>/coverage',

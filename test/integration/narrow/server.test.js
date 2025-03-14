@@ -1,67 +1,100 @@
-import { jest, describe, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { createServer } from '../../../src/server.js'
+import { config } from '../../../src/config/config.js'
 
-describe('Application startup', () => {
-  let originalEnv
-  let mockServer
-  let mockCreateServer
-  let mockLogger
-  let mockExit
+describe('Application Startup Integration Test', () => {
+  let server
+  let originalPort
 
   beforeEach(async () => {
-    originalEnv = { ...process.env }
-
-    mockServer = {
-      start: jest.fn().mockResolvedValue(undefined),
-      stop: jest.fn().mockResolvedValue(undefined),
-      info: { uri: 'http://localhost:3000' }
-    }
-
-    mockCreateServer = jest.fn().mockResolvedValue(mockServer)
-
-    await jest.unstable_mockModule('../../../src/server.js', () => ({
-      createServer: mockCreateServer
-    }))
-
-    mockLogger = {
-      info: jest.fn(),
-      error: jest.fn()
-    }
-
-    await jest.unstable_mockModule('../../../src/utils/logger.js', () => ({
-      createLogger: jest.fn().mockReturnValue(mockLogger)
-    }))
-
-    mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {})
-
-    jest.resetModules()
+    originalPort = config.get('port')
+    config.set('port', '3456')
   })
 
-  afterEach(() => {
-    process.env = originalEnv
-
-    jest.clearAllMocks()
-    mockExit.mockRestore()
-  })
-
-  test('server starts successfully', async () => {
-    process.env.PORT = '3000'
-
-    await import('../../../src/index.js')
-    expect(mockCreateServer).toHaveBeenCalled()
-    expect(mockServer.start).toHaveBeenCalled()
-  })
-
-  test('handles server startup errors', async () => {
-    mockCreateServer.mockRejectedValueOnce(new Error('Server creation error'))
-
-    try {
-      await import('../../../src/index.js')
-    } catch (error) {
-      // In case index.js doesn't handle the error
+  afterEach(async () => {
+    config.set('port', originalPort)
+    if (server) {
+      await server.stop()
     }
-    expect(
-      mockExit.mock.calls.some(call => call[0] === 1) ||
-      mockLogger.error.mock.calls.length > 0
-    ).toBe(true)
+  })
+
+  test('server creates and starts successfully', async () => {
+    server = await createServer()
+    expect(server).toBeDefined()
+    expect(server.info).toBeDefined()
+
+    await server.start()
+    expect(server.info.started).toBeGreaterThan(0)
+    expect(server.info.port).toBe(parseInt(config.get('port')))
+  })
+
+  test('server has essential functionality', async () => {
+    server = await createServer()
+
+    expect(server.views).toBeDefined()
+    expect(typeof server.views).toBe('function')
+    expect(server.plugins).toBeDefined()
+  })
+
+  test('server handles requests after startup', async () => {
+    server = await createServer()
+    await server.start()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/health'
+    })
+
+    expect(response.statusCode).toBe(200)
+  })
+})
+import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { createServer } from '../../../src/server.js'
+import { config } from '../../../src/config/config.js'
+
+describe('Application Startup Integration Test', () => {
+  let server
+  let originalPort
+
+  beforeEach(async () => {
+    originalPort = config.get('port')
+    config.set('port', '3456')
+  })
+
+  afterEach(async () => {
+    config.set('port', originalPort)
+    if (server) {
+      await server.stop()
+    }
+  })
+
+  test('server creates and starts successfully', async () => {
+    server = await createServer()
+    expect(server).toBeDefined()
+    expect(server.info).toBeDefined()
+
+    await server.start()
+    expect(server.info.started).toBeGreaterThan(0)
+    expect(server.info.port).toBe(parseInt(config.get('port')))
+  })
+
+  test('server has essential functionality', async () => {
+    server = await createServer()
+
+    expect(server.views).toBeDefined()
+    expect(typeof server.views).toBe('function')
+    expect(server.plugins).toBeDefined()
+  })
+
+  test('server handles requests after startup', async () => {
+    server = await createServer()
+    await server.start()
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/health'
+    })
+
+    expect(response.statusCode).toBe(200)
   })
 })

@@ -1,31 +1,12 @@
 import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
-import Hapi from '@hapi/hapi'
-
+import { createServer } from '../../../../../src/server.js'
 import { errors } from '../../../../../src/routes/errors/index.js'
 
-describe('Error Routes Registration', () => {
+describe('Error Routes Integration Test', () => {
   let server
 
   beforeEach(async () => {
-    server = Hapi.server()
-
-    await server.register([
-      await import('@hapi/vision')
-    ])
-
-    server.views({
-      engines: {
-        njk: {
-          compile: (src, options) => {
-            return (context) => 'Mocked template output'
-          }
-        }
-      },
-      path: 'src/views'
-    })
-
-    server.route(errors)
-
+    server = await createServer()
     await server.initialize()
   })
 
@@ -35,7 +16,6 @@ describe('Error Routes Registration', () => {
 
   test('errors module exports expected routes', () => {
     expect(Array.isArray(errors)).toBe(true)
-
     expect(errors.length).toBeGreaterThan(0)
 
     errors.forEach(route => {
@@ -51,35 +31,46 @@ describe('Error Routes Registration', () => {
     )
 
     expect(serviceUnavailableRoute).toBeDefined()
-
     expect(serviceUnavailableRoute.method).toBe('GET')
   })
 
-  test('service-unavailable route responds correctly', async () => {
+  test('service-unavailable route responds correctly on the server', async () => {
+    const table = server.table()
+    const serviceUnavailableRoute = table.find(route =>
+      route.path === '/service-unavailable' && route.method === 'get'
+    )
+    expect(serviceUnavailableRoute).toBeDefined()
     const response = await server.inject({
       method: 'GET',
       url: '/service-unavailable'
     })
-
     expect(response.statusCode).toBe(200)
+    expect(response.payload).toBeTruthy()
+    expect(response.payload.length).toBeGreaterThan(0)
+    if (response.headers['content-type'] && response.headers['content-type'].includes('text/html')) {
+      expect(response.payload).toContain('Service Unavailable | Single Front Door')
+      expect(response.payload).toMatch(/<title>[\s\S]*Service Unavailable \| Single Front Door[\s\S]*<\/title>/)
+    }
   })
 
-  test('all error routes respond with 2xx status codes', async () => {
+  test('all error routes respond with 2xx status codes on the server', async () => {
+    const errorPaths = errors
+      .filter(route => route.method === 'GET')
+      .map(route => route.path)
     const results = await Promise.all(
-      errors.map(route => {
-        if (route.method === 'GET') {
-          return server.inject({
-            method: 'GET',
-            url: route.path
-          })
-        }
-        return null
-      }).filter(Boolean)
+      errorPaths.map(path =>
+        server.inject({
+          method: 'GET',
+          url: path
+        })
+      )
     )
 
     results.forEach(response => {
       expect(response.statusCode).toBeGreaterThanOrEqual(200)
       expect(response.statusCode).toBeLessThan(300)
+      expect(response.payload).toBeTruthy()
+      expect(response.payload.length).toBeGreaterThan(0)
     })
   })
 })

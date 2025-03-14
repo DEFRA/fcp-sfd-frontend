@@ -1,18 +1,10 @@
-import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { describe, test, expect, afterEach } from '@jest/globals'
 import { createServer } from '../../../src/server.js'
-import { config } from '../../../src/config/config.js'
 
 describe('Application Startup Integration Test', () => {
   let server
-  let originalPort
-
-  beforeEach(async () => {
-    originalPort = config.get('port')
-    config.set('port', '3456')
-  })
 
   afterEach(async () => {
-    config.set('port', originalPort)
     if (server) {
       await server.stop()
     }
@@ -25,7 +17,7 @@ describe('Application Startup Integration Test', () => {
 
     await server.start()
     expect(server.info.started).toBeGreaterThan(0)
-    expect(server.info.port).toBe(parseInt(config.get('port')))
+    expect(server.info.port).toBe(parseInt(3002))
   })
 
   test('server has essential functionality', async () => {

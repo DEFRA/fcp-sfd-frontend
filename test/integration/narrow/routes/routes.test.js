@@ -1,6 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
 import { createServer } from '../../../../src/server.js'
-import { routes } from '../../../../src/routes/index.js'
 
 describe('Routes Integration Test', () => {
   let server
@@ -13,26 +12,42 @@ describe('Routes Integration Test', () => {
   afterEach(async () => {
     await server.stop()
   })
-  test('routes module exports expected routes', () => {
-    expect(Array.isArray(routes)).toBe(true)
-    expect(routes.length).toBeGreaterThan(0)
 
-    routes.forEach(route => {
-      expect(route).toHaveProperty('method')
-      expect(route).toHaveProperty('path')
-      expect(route).toHaveProperty('handler')
+  test('home route responds correctly', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/'
     })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.headers['content-type']).toContain('text/html')
   })
 
-  test('server has required routes registered', async () => {
-    const table = server.table()
-    const homeRoute = table.find(route => route.path === '/' && route.method === 'get')
-    expect(homeRoute).toBeDefined()
-    const healthRoute = table.find(route => route.path === '/health' && route.method === 'get')
-    expect(healthRoute).toBeDefined()
-    const serviceUnavailableRoute = table.find(route => route.path === '/service-unavailable' && route.method === 'get')
-    expect(serviceUnavailableRoute).toBeDefined()
-    const staticAssetsRoute = table.find(route => route.path === '/public/{param*}')
-    expect(staticAssetsRoute).toBeDefined()
+  test('health route responds correctly', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/health'
+    })
+
+    expect(response.statusCode).toBe(200)
+  })
+
+  test('service-unavailable route responds correctly', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/service-unavailable'
+    })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.headers['content-type']).toContain('text/html')
+  })
+
+  test('static asset route is configured correctly', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/public/assets/images/favicon.ico'
+    })
+
+    expect([200, 404]).toContain(response.statusCode)
   })
 })

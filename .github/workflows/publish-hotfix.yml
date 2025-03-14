@@ -23,15 +23,14 @@ jobs:
           fetch-depth: 0 # Depth 0 is required for branch-based versioning
 
       - name: Test code and Create Test Coverage Reports
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
       - run: |
           npm ci
-          npm run build
-          npm run lint
-          npm test
+
+      - name: Run Tests
+        run: |
+          mkdir -p coverage
+          chmod -R a+rw ./coverage
+          docker compose -f compose.yaml -f compose.test.yaml run --rm "fcp-sfd-frontend"
 
       - name: Publish Hot Fix
         uses: DEFRA/cdp-build-action/build-hotfix@main

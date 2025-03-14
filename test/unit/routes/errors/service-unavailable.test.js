@@ -37,13 +37,8 @@ describe('Service Unavailable Route', () => {
     mockH.view.mockImplementationOnce(() => {
       throw new Error('Template rendering failed')
     })
-    let result
-    let caughtError = false
-    try {
-      result = serviceUnavailable.handler(null, mockH) //eslint-disable-line
-    } catch (error) {
-      caughtError = true
-    }
-    expect(caughtError).toBe(true)
+    expect(() => {
+      serviceUnavailable.handler(null, mockH)
+    }).toThrow('Template rendering failed')
   })
 })

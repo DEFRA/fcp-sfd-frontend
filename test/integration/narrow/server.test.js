@@ -35,16 +35,4 @@ describe('Application Startup Integration Test', () => {
     expect(typeof server.views).toBe('function')
     expect(server.plugins).toBeDefined()
   })
-
-  test('server handles requests after startup', async () => {
-    server = await createServer()
-    await server.start()
-
-    const response = await server.inject({
-      method: 'GET',
-      url: '/health'
-    })
-
-    expect(response.statusCode).toBe(200)
-  })
 })

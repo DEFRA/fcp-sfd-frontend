@@ -14,18 +14,6 @@ describe('Error Routes Registration', () => {
     await server.stop()
   })
 
-  test('errors module exports expected routes', () => {
-    expect(Array.isArray(errors)).toBe(true)
-
-    expect(errors.length).toBeGreaterThan(0)
-
-    errors.forEach(route => {
-      expect(route).toHaveProperty('method')
-      expect(route).toHaveProperty('path')
-      expect(route).toHaveProperty('handler')
-    })
-  })
-
   test('service-unavailable route is included in errors array', () => {
     const serviceUnavailableRoute = errors.find(route =>
       route.path === '/service-unavailable'

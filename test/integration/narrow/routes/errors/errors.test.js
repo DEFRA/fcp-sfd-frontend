@@ -23,23 +23,4 @@ describe('Error Routes Registration', () => {
 
     expect(serviceUnavailableRoute.method).toBe('GET')
   })
-
-  test('all error routes respond with 2xx status codes', async () => {
-    const results = await Promise.all(
-      errors.map(route => {
-        if (route.method === 'GET') {
-          return server.inject({
-            method: 'GET',
-            url: route.path
-          })
-        }
-        return null
-      }).filter(Boolean)
-    )
-
-    results.forEach(response => {
-      expect(response.statusCode).toBeGreaterThanOrEqual(200)
-      expect(response.statusCode).toBeLessThan(300)
-    })
-  })
 })

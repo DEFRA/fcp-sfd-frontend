@@ -29,9 +29,12 @@ jobs:
           cache: npm
       - run: |
           npm ci
-          npm run build
-          npm run lint
-          npm test
+
+      - name: Run Tests
+        run: |
+          mkdir -p coverage
+          chmod -R a+rw ./coverage
+          docker compose -f compose.yaml -f compose.test.yaml run --rm "fcp-sfd-frontend"
 
       - name: Publish Hot Fix
         uses: DEFRA/cdp-build-action/build-hotfix@main

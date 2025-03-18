@@ -20,10 +20,11 @@ jobs:
     name: CDP-build-workflow
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Depth 0 is required for branch-based versioning
+          fetch-depth: 0
+
       - name: Create Test Coverage Reports
         run: |
           npm ci

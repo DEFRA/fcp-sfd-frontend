@@ -18,14 +18,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Test code and Create Test Coverage Reports
-        uses: actions/setup-node@v4
         with:
           fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
           node-version: 22
           cache: npm
-      - run: |
+          
+      - name: Install dependencies
+        run: |
           npm ci
 
       - name: Test Docker Image Build

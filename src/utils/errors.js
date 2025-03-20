@@ -16,12 +16,6 @@ function statusCodeMessage (statusCode) {
 }
 
 export function catchAll (request, h) {
-  console.log('catchAll running', {
-    responseType: request.response?.constructor?.name,
-    isBoom: request.response?.isBoom,
-    name: request.response?.name,
-    statusCode: request.response?.output?.statusCode
-  })
   if (!request.response || !('isBoom' in request.response)) {
     return h.continue
   }

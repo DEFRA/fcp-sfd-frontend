@@ -119,17 +119,15 @@ describe('#catchAll', () => {
     )
   })
 
-  test('Should provide expected "Something went wrong" page and log error for internalServerError', () => {
+  test('Should provide expected service problem page and log error for internalServerError', () => {
     catchAll(
       mockRequest(StatusCodes.INTERNAL_SERVER_ERROR),
       mockToolkit
     )
-
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
-    expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
-      pageTitle: 'Something went wrong',
-      heading: StatusCodes.INTERNAL_SERVER_ERROR,
-      message: 'Something went wrong'
+    expect(mockToolkitView).toHaveBeenCalledWith('errors/service-problem', {
+      pageTitle: 'Service Problem',
+      heading: 'Sorry, there is a problem with the service'
     })
     expect(mockToolkitCode).toHaveBeenCalledWith(
       StatusCodes.INTERNAL_SERVER_ERROR

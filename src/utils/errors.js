@@ -27,6 +27,13 @@ export function catchAll (request, h) {
     request.logger.error(request.response?.stack)
   }
 
+  if (statusCode === StatusCodes.NOT_FOUND) {
+    return h
+      .view('errors/page-not-found', {
+      })
+      .code(statusCode)
+  }
+
   return h
     .view('error', {
       pageTitle: errorMessage,

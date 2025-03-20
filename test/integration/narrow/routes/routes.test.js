@@ -42,6 +42,16 @@ describe('Routes Integration Test', () => {
     expect(response.headers['content-type']).toContain('text/html')
   })
 
+  test('service-unavailable route responds correctly', async () => {
+    const response = await server.inject({
+      method: 'GET',
+      url: '/errors/page-not-found'
+    })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.headers['content-type']).toContain('text/html')
+  })
+
   test('static asset route is configured correctly', async () => {
     const response = await server.inject({
       method: 'GET',

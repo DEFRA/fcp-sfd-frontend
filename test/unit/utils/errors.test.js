@@ -22,7 +22,7 @@ describe('#errors', () => {
     })
 
     expect(result).toEqual(
-      expect.stringContaining('Page not found | Single Front Door')
+      expect.stringContaining('Page not found')
     )
     expect(statusCode).toBe(StatusCodes.NOT_FOUND)
   })
@@ -53,11 +53,7 @@ describe('#catchAll', () => {
     catchAll(mockRequest(StatusCodes.NOT_FOUND), mockToolkit)
 
     expect(mockErrorLogger).not.toHaveBeenCalledWith(mockStack)
-    expect(mockToolkitView).toHaveBeenCalledWith(errorPage, {
-      pageTitle: 'Page not found',
-      heading: StatusCodes.NOT_FOUND,
-      message: 'Page not found'
-    })
+    expect(mockToolkitView).toHaveBeenCalledWith('errors/page-not-found', {})
     expect(mockToolkitCode).toHaveBeenCalledWith(
       StatusCodes.NOT_FOUND
     )

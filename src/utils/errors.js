@@ -25,6 +25,12 @@ export function catchAll (request, h) {
 
   if (statusCode >= StatusCodes.INTERNAL_SERVER_ERROR) {
     request.logger.error(request.response?.stack)
+    return h
+      .view('errors/service-problem', {
+        pageTitle: 'Service Problem',
+        heading: 'Sorry, there is a problem with the service'
+      })
+      .code(statusCode)
   }
 
   return h

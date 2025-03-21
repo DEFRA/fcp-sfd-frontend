@@ -1,6 +1,6 @@
 export const serviceUnavailable = {
   method: 'GET',
-  path: '/errors/service-unavailable',
+  path: '/service-unavailable',
   handler: (_request, h) => {
     return h.view('errors/service-unavailable', {
       pageTitle: 'Sorry, the service is unavailable - Manage your land and farm businesses - GOV.UK',

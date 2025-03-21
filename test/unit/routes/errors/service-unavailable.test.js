@@ -27,8 +27,8 @@ describe('Service Unavailable Route', () => {
     expect(mockH.view).toHaveBeenCalledWith(
       'errors/service-unavailable',
       expect.objectContaining({
-        pageTitle: 'Service Unavailable',
-        heading: 'Sorry, the service is unavailable'
+        pageTitle: 'Sorry, the service is unavailable - Manage your land and farm businesses - GOV.UK',
+        heading: 'The service is not currently available, but you can contact us.'
       })
     )
   })

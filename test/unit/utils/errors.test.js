@@ -67,7 +67,7 @@ describe('#catchAll', () => {
     catchAll(mockRequest(StatusCodes.SERVICE_UNAVAILABLE), mockToolkit)
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
-    expect(mockToolkitView).toHaveBeenCalledWith('service-unavailable', {})
+    expect(mockToolkitView).toHaveBeenCalledWith('errors/service-unavailable', {})
     expect(mockToolkitCode).toHaveBeenCalledWith(
       StatusCodes.SERVICE_UNAVAILABLE
     )

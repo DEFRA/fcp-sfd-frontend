@@ -27,6 +27,12 @@ export function catchAll (request, h) {
     request.logger.error(request.response?.stack)
   }
 
+  if (statusCode === StatusCodes.SERVICE_UNAVAILABLE) {
+    return h
+      .view('errors/service-unavailable', {})
+      .code(statusCode)
+  }
+
   return h
     .view('error', {
       pageTitle: errorMessage,

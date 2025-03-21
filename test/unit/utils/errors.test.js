@@ -67,7 +67,7 @@ describe('#catchAll', () => {
     catchAll(mockRequest(StatusCodes.SERVICE_UNAVAILABLE), mockToolkit)
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
-    expect(mockToolkitView).toHaveBeenCalledWith('errors/service-unavailable', {})
+    expect(mockToolkitView).toHaveBeenCalledWith('service-unavailable', {})
     expect(mockToolkitCode).toHaveBeenCalledWith(
       StatusCodes.SERVICE_UNAVAILABLE
     )
@@ -75,7 +75,7 @@ describe('#catchAll', () => {
   test('Should NOT render service-unavailable page for INTERNAL_SERVER_ERROR', () => {
     catchAll(mockRequest(StatusCodes.INTERNAL_SERVER_ERROR), mockToolkit)
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
-    expect(mockToolkitView).not.toHaveBeenCalledWith('errors/service-unavailable', expect.anything())
+    expect(mockToolkitView).not.toHaveBeenCalledWith('service-unavailable', expect.anything())
     expect(mockToolkitCode).toHaveBeenCalledWith(
       StatusCodes.INTERNAL_SERVER_ERROR
     )

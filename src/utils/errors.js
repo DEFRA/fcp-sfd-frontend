@@ -29,7 +29,7 @@ export function catchAll (request, h) {
 
   if (statusCode === StatusCodes.SERVICE_UNAVAILABLE) {
     return h
-      .view('errors/service-unavailable', {})
+      .view('service-unavailable', {})
       .code(statusCode)
   }
 

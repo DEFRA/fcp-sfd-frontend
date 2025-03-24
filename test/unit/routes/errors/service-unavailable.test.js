@@ -13,7 +13,7 @@ describe('Service Unavailable Route', () => {
 
   test('should have the correct method and path', () => {
     expect(serviceUnavailable.method).toBe('GET')
-    expect(serviceUnavailable.path).toBe('/errors/service-unavailable')
+    expect(serviceUnavailable.path).toBe('/service-unavailable')
   })
 
   test('should return HTTP 200 when accessing the service unavailable page', () => {

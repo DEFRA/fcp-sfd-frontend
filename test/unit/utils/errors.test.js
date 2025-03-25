@@ -1,7 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import { catchAll } from '../../../src/utils/errors.js'
 import { jest, describe, test, expect } from '@jest/globals'
-// import { createServer } from '../../../src/server.js'
 
 describe('#catchAll', () => {
   const mockErrorLogger = jest.fn()

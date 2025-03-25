@@ -1,6 +1,6 @@
 export const serviceProblem = {
   method: 'GET',
-  path: '/errors/service-problem',
+  path: '/service-problem',
   handler: (_request, h) => {
     return h.view('errors/service-problem', {
       pageTitle: 'Sorry, there is a problem with the service - Manage your land and farm businesses - GOV.UK',

@@ -23,21 +23,26 @@ export function catchAll (request, h) {
   const statusCode = request.response.output.statusCode
   const errorMessage = statusCodeMessage(statusCode)
 
-  if (statusCode >= StatusCodes.INTERNAL_SERVER_ERROR) {
-    request.logger.error(request.response?.stack)
-    return h
-      .view('errors/service-problem', {
-        pageTitle: 'Service Problem',
-        heading: 'Sorry, there is a problem with the service'
-      })
-      .code(statusCode)
-  }
+  switch (statusCode) {
+    case StatusCodes.SERVICE_UNAVAILABLE:
+      request.logger.error(request.response?.stack)
+      return h
+        .view('errors/service-unavailable', {})
+        .code(statusCode)
 
-  return h
-    .view('error', {
-      pageTitle: errorMessage,
-      heading: statusCode,
-      message: errorMessage
-    })
-    .code(statusCode)
+    case StatusCodes.INTERNAL_SERVER_ERROR:
+      request.logger.error(request.response?.stack)
+      return h
+        .view('errors/service-problem')
+        .code(statusCode)
+
+    default:
+      return h
+        .view('error', {
+          pageTitle: errorMessage,
+          heading: statusCode,
+          message: errorMessage
+        })
+        .code(statusCode)
+  }
 }

@@ -10,6 +10,9 @@
 
 {% block head %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
+  {% if heading %}
+    <meta name="description" content="{{ heading }}">
+  {% endif %}
 {% endblock %}
 
 {% block header %}

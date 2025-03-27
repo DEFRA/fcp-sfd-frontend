@@ -27,6 +27,9 @@ describe('Error Routes Registration', () => {
   test('page-not-found route is included in errors array', () => {
     const serviceUnavailableRoute = errors.find(route =>
       route.path === '/errors/page-not-found'
+  test('service-problem route is included in errors array', () => {
+    const serviceUnavailableRoute = errors.find(route =>
+      route.path === '/service-problem'
     )
 
     expect(serviceUnavailableRoute).toBeDefined()

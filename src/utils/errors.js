@@ -31,6 +31,10 @@ export function catchAll (request, h) {
     return h
       .view('errors/page-not-found', {
       })
+    }
+  if (statusCode === StatusCodes.SERVICE_UNAVAILABLE) {
+    return h
+      .view('errors/service-unavailable', {})
       .code(statusCode)
   }
 

@@ -13,7 +13,7 @@ describe('Service Unavailable Route', () => {
 
   test('should have the correct method and path', () => {
     expect(serviceUnavailable.method).toBe('GET')
-    expect(serviceUnavailable.path).toBe('/errors/service-unavailable')
+    expect(serviceUnavailable.path).toBe('/service-unavailable')
   })
 
   test('should return HTTP 200 when accessing the service unavailable page', () => {
@@ -27,8 +27,8 @@ describe('Service Unavailable Route', () => {
     expect(mockH.view).toHaveBeenCalledWith(
       'errors/service-unavailable',
       expect.objectContaining({
-        pageTitle: 'Service Unavailable',
-        heading: 'Sorry, the service is unavailable'
+        pageTitle: 'Sorry, the service is unavailable',
+        heading: 'The service is not currently available, but you can contact us.'
       })
     )
   })

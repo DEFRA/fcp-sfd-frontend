@@ -35,7 +35,7 @@ describe('Routes Integration Test', () => {
   test('service-unavailable route responds correctly', async () => {
     const response = await server.inject({
       method: 'GET',
-      url: '/errors/service-unavailable'
+      url: '/service-unavailable'
     })
 
     expect(response.statusCode).toBe(200)

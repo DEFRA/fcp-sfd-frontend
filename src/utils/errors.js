@@ -11,19 +11,15 @@ export function catchAll (request, h) {
     case StatusCodes.SERVICE_UNAVAILABLE:
       request.logger.error(request.response?.stack)
       return h
-        .view('errors/service-unavailable', {})
+        .view('errors/service-unavailable')
         .code(statusCode)
 
-  if (statusCode === StatusCodes.NOT_FOUND) {
-    return h
-      .view('errors/page-not-found', {
-      })
-    }
-  if (statusCode === StatusCodes.SERVICE_UNAVAILABLE) {
-    return h
-      .view('errors/service-unavailable', {})
-      .code(statusCode)
-  }
+    case StatusCodes.NOT_FOUND:
+      request.logger.error(request.response?.stack)
+      return h
+        .view('errors/page-not-found')
+        .code(statusCode)
+
     case StatusCodes.INTERNAL_SERVER_ERROR:
       request.logger.error(request.response?.stack)
       return h
@@ -31,8 +27,9 @@ export function catchAll (request, h) {
         .code(statusCode)
 
     default:
+      request.logger.error(request.response?.stack)
       return h
-        .view('errors/service-problem')
+        .view('errors/page-not-found')
         .code(statusCode)
   }
 }

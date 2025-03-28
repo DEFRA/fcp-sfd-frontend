@@ -1,10 +1,7 @@
 export const pageNotFound = {
   method: 'GET',
-  path: '/errors/page-not-found',
+  path: '/page-not-found',
   handler: (_request, h) => {
-    return h.view('errors/page-not-found', {
-      pageTitle: 'Page not found',
-      heading: 'We could not find this page. Check the web address is correct and try again.'
-    })
+    return h.view('errors/page-not-found')
   }
 }

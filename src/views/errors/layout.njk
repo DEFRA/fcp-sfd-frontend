@@ -1,5 +1,8 @@
 {% extends "common/layout.njk" %}
 
+{% set pageTitle = pageTitle | default("Error") %}
+{% set metaDescription = metaDescription | default("There was a problem") %}
+
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

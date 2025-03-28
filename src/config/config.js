@@ -22,6 +22,12 @@ export const config = convict({
     default: 'development',
     env: 'NODE_ENV'
   },
+  allowErrorViews: {
+    doc: 'Allow error views to be rendered',
+    format: Boolean,
+    default: false,
+    env: 'ALLOW_ERROR_VIEWS'
+  },
   port: {
     doc: 'The port to bind.',
     format: 'port',

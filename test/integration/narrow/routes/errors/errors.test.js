@@ -1,35 +1,94 @@
-import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
-import { createServer } from '../../../../../src/server.js'
-import { errors } from '../../../../../src/routes/errors/index.js'
+import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, jest } from '@jest/globals'
 
 describe('Error Routes Registration', () => {
-  let server
+  const originalEnv = process.env.ALLOW_ERROR_VIEWS
+  const SERVER_MODULE_PATH = '../../../../../src/server.js'
+  const ERRORS_MODULE_PATH = '../../../../../src/routes/errors/index.js'
 
-  beforeEach(async () => {
-    server = await createServer()
-    await server.initialize()
+  describe('With Error Views Enabled', () => {
+    let server
+    let errors
+
+    beforeAll(() => {
+      process.env.ALLOW_ERROR_VIEWS = 'true'
+    })
+
+    beforeEach(async () => {
+      jest.resetModules()
+
+      const errorsModule = await import(ERRORS_MODULE_PATH)
+      errors = errorsModule.errors
+
+      const { createServer } = await import(SERVER_MODULE_PATH)
+      server = await createServer()
+      await server.initialize()
+    })
+
+    afterEach(async () => {
+      await server.stop()
+    })
+
+    test('service-unavailable route is included in errors array', () => {
+      const serviceUnavailableRoute = errors.find(route =>
+        route.path === '/service-unavailable'
+      )
+
+      expect(serviceUnavailableRoute).toBeDefined()
+      expect(serviceUnavailableRoute.method).toBe('GET')
+    })
+
+    test('page-not-found route is included in errors array', () => {
+      const pageNotFoundRoute = errors.find(route =>
+        route.path === '/page-not-found'
+      )
+
+      expect(pageNotFoundRoute).toBeDefined()
+      expect(pageNotFoundRoute.method).toBe('GET')
+    })
+
+    test('service-problem route is included in errors array', () => {
+      const serviceProblemRoute = errors.find(route =>
+        route.path === '/service-problem'
+      )
+
+      expect(serviceProblemRoute).toBeDefined()
+      expect(serviceProblemRoute.method).toBe('GET')
+    })
   })
 
-  afterEach(async () => {
-    await server.stop()
-  })
+  describe('With Error Views Disabled', () => {
+    let server
+    let errors
 
-  test('service-unavailable route is included in errors array', () => {
-    const serviceUnavailableRoute = errors.find(route =>
-      route.path === '/service-unavailable'
-    )
+    beforeAll(() => {
+      process.env.ALLOW_ERROR_VIEWS = 'false'
+    })
 
-    expect(serviceUnavailableRoute).toBeDefined()
+    beforeEach(async () => {
+      jest.resetModules()
 
-    expect(serviceUnavailableRoute.method).toBe('GET')
-  })
-  test('service-problem route is included in errors array', () => {
-    const serviceUnavailableRoute = errors.find(route =>
-      route.path === '/service-problem'
-    )
+      const errorsModule = await import(ERRORS_MODULE_PATH)
+      errors = errorsModule.errors
 
-    expect(serviceUnavailableRoute).toBeDefined()
+      const { createServer } = await import(SERVER_MODULE_PATH)
+      server = await createServer()
+      await server.initialize()
+    })
 
-    expect(serviceUnavailableRoute.method).toBe('GET')
+    afterEach(async () => {
+      await server.stop()
+    })
+
+    afterAll(() => {
+      if (originalEnv === undefined) {
+        delete process.env.ALLOW_ERROR_VIEWS
+      } else {
+        process.env.ALLOW_ERROR_VIEWS = originalEnv
+      }
+    })
+
+    test('errors array should be empty when error views are disabled', () => {
+      expect(errors).toEqual([])
+    })
   })
 })

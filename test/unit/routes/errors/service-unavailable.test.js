@@ -25,11 +25,7 @@ describe('Service Unavailable Route', () => {
   test('should render the correct template with the right context', () => {
     serviceUnavailable.handler(null, mockH)
     expect(mockH.view).toHaveBeenCalledWith(
-      'errors/service-unavailable',
-      expect.objectContaining({
-        pageTitle: 'Sorry, the service is unavailable',
-        heading: 'The service is not currently available, but you can contact us.'
-      })
+      'errors/service-unavailable'
     )
   })
 

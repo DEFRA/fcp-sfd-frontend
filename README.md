@@ -180,6 +180,12 @@ A local environment with:
 docker compose up --build -d
 ```
 
+### .ENV variables 
+
+For the project to run correctly you must add .env file to the root of the project with following entries :
+
+- ALLOW_ERROR_VIEWS = true/false (Switch error routes in local development to inspect error views)
+
 ### Dependabot
 
 We have added an example dependabot configuration file to the repository. You can enable it by renaming

@@ -7,22 +7,16 @@ export function catchAll (request, h) {
 
   const statusCode = request.response.output.statusCode
 
-  switch (statusCode) {
-    case StatusCodes.SERVICE_UNAVAILABLE:
-      request.logger.error(request.response?.stack)
-      return h
-        .view('errors/service-unavailable', {})
-        .code(statusCode)
-
-    case StatusCodes.INTERNAL_SERVER_ERROR:
-      request.logger.error(request.response?.stack)
-      return h
-        .view('errors/service-problem')
-        .code(statusCode)
-
-    default:
-      return h
-        .view('errors/service-problem')
-        .code(statusCode)
+  const errorViewMap = {
+    [StatusCodes.SERVICE_UNAVAILABLE]: 'errors/service-unavailable',
+    [StatusCodes.NOT_FOUND]: 'errors/page-not-found',
+    [StatusCodes.INTERNAL_SERVER_ERROR]: 'errors/service-problem'
   }
+
+  const viewPath = errorViewMap[statusCode] || 'errors/page-not-found'
+
+  request.logger.error(request.response?.stack)
+  return h
+    .view(viewPath)
+    .code(statusCode)
 }

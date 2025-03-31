@@ -125,7 +125,7 @@ describe('Routes Integration Tests', () => {
     test('page-not-found route returns 404 when disabled', async () => {
       const response = await server.inject({
         method: 'GET',
-        url: '/errors/page-not-found'
+        url: '/page-not-found'
       })
 
       expect(response.statusCode).toBe(404)

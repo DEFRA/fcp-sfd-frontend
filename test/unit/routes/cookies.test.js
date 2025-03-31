@@ -21,7 +21,7 @@ describe('Cookies endpoint', () => {
     const result = cookies.handler(null, mockH)
 
     expect(mockH.view).toHaveBeenCalledWith('cookies', {
-      pageTitle: 'Cookies - Manage your land and farm businesses - GOV.UK',
+      pageTitle: 'Cookies',
       heading: 'How we use cookies to store information about how you use this service.'
     })
 

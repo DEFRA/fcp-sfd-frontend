@@ -1,10 +1,9 @@
 {% extends "govuk/template.njk" %}
 
-{# Import GOVUK components globally #}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
-{# Import custom components globally #}
 {% from "common/heading/macro.njk" import appHeading %}
+{% from "common/navigation/back-link.njk" import appBackLink %}
 
 {% set mainClasses = "app-main-wrapper" %}
 
@@ -29,16 +28,12 @@
   </div>
 {% endblock %}
 
-{% block pageTitle %}
-  {{ pageTitle }} | {{ serviceName }}
+{% block beforeContent %}
+  {{ appBackLink() }}
 {% endblock %}
 
-{% block beforeContent %}
-  {% if breadcrumbs.length > 1 %}
-    {{ govukBreadcrumbs({
-      items: breadcrumbs
-    }) }}
-  {% endif %}
+{% block pageTitle %}
+  {{ pageTitle }} | {{ serviceName }}
 {% endblock %}
 
 {% block content %}{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'common/layout.njk' %}
+
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% block content %}
+
+{{ govukInput({
+  label: {
+    text: "What is your business name?",
+    classes: "govuk-label--l",
+    isPageHeading: true
+  },
+  id: "business-name",
+  name: "businessName"
+}) }}
+
+<div class="govuk-button-group">
+  {{ govukButton({
+    text: "Continue"
+  }) }}
+
+  <a class="govuk-link" href="#">Cancel</a>
+</div>
+
+  {% endblock %}

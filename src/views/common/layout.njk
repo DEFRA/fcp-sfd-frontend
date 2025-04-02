@@ -1,9 +1,7 @@
 {% extends "govuk/template.njk" %}
 
-{# Import GOVUK components globally #}
 {% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
 
-{# Import custom components globally #}
 {% from "common/heading/macro.njk" import appHeading %}
 
 {% set mainClasses = "app-main-wrapper" %}
@@ -33,14 +31,6 @@
   {{ pageTitle }} | {{ serviceName }}
 {% endblock %}
 
-{% block beforeContent %}
-  {% if breadcrumbs.length > 1 %}
-    {{ govukBreadcrumbs({
-      items: breadcrumbs
-    }) }}
-  {% endif %}
-{% endblock %}
-
 {% block content %}{% endblock %}
 
 {% block footer %}
@@ -55,13 +45,9 @@
             rel: "noopener noreferrer"
           }
         },
-        {
-          href: "https://www.gov.uk/help/cookies",
-          text: "Cookies",
-          attributes: {
-            target: "_blank",
-            rel: "noopener noreferrer"
-          }
+         {
+          href: "/cookies",
+          text: "Cookies"
         },
         {
           href: "https://www.gov.uk/help/accessibility-statement",

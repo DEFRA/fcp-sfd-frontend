@@ -29,6 +29,15 @@ describe('Routes Integration Tests', () => {
     afterEach(async () => {
       await server.stop()
     })
+    test('cookies route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/cookies'
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
+    })
 
     test('home route responds correctly', async () => {
       const response = await server.inject({

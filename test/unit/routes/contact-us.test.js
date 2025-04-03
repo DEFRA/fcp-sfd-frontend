@@ -14,13 +14,13 @@ describe('Contact-us endpoint', () => {
 
   test('should have the correct method and path', () => {
     expect(contactUs.method).toBe('GET')
-    expect(contactUs.path).toBe('/contact-us')
+    expect(contactUs.path).toBe('/contact-help')
   })
 
   test('should render the contact-us view with correct data', () => {
     const result = contactUs.handler(null, mockH)
 
-    expect(mockH.view).toHaveBeenCalledWith('footer/contact-us', {
+    expect(mockH.view).toHaveBeenCalledWith('footer/contact-help', {
       pageTitle: 'Contact us for help',
       heading: 'How to contact this service if you need help.'
     })

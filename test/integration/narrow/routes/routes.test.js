@@ -152,7 +152,7 @@ describe('Routes Integration Tests', () => {
     test('service-problem route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
-        url: '/contact-us'
+        url: '/contact-help'
       })
 
       expect(response.statusCode).toBe(200)

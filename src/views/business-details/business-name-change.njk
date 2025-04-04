@@ -1,16 +1,10 @@
 {% extends 'common/layout.njk' %}
 
-{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "common/navigation/back-link.njk" import appBackLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
-
-{{ subHeader(
-    businessName="Agile Farm Ltd", 
-    sbi="123456789", 
-    userName="Alfred Waldron"
-) }}
 
 {% block beforeContent %}
     {{ subHeader(
@@ -25,22 +19,40 @@
 
 {% block content %}
 
-{{ govukInput({
-  label: {
-    text: "What is your business name?",
-    classes: "govuk-label--l",
-    isPageHeading: true
-  },
-  id: "business-name",
-  name: "businessName"
-}) }}
+{% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+            {
+                text: errors.businessName.text,
+                href: "#business-name"
+            }
+        ]
+    }) }}
+{% endif %}
 
-<div class="govuk-button-group">
-  {{ govukButton({
-    text: "Continue"
+<form method="post" novalidate>
+  {{ govukInput({
+    label: {
+      text: pageTitle,
+      classes: "govuk-label--l",
+      isPageHeading: true
+    },
+    id: "business-name",
+    name: "businessName",
+    value: businessName,
+    errorMessage: errors.businessName and {
+      text: errors.businessName.text
+    }
   }) }}
 
-  <a class="govuk-link" href="#">Cancel</a>
-</div>
+  <div class="govuk-button-group">
+    {{ govukButton({
+      text: "Continue"
+    }) }}
+
+    <a class="govuk-link" href="/business-details">Cancel</a>
+  </div>
+</form>
 
 {% endblock %}

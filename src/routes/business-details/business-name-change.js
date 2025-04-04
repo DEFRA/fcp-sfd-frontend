@@ -3,7 +3,7 @@ import { businessNameValidation } from './business-details-schema.js'
 export const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
-  handler: (request, h) => {
+  handler: (_, h) => {
     return h.view('business-details/business-name-change', {
       pageTitle: 'What is your business name?',
       heading: 'Update the name for your business.'
@@ -41,7 +41,7 @@ export const postBusinessNameChange = {
         }).code(400).takeover()
       }
     },
-    handler: (request, h) => {
+    handler: (_, h) => {
       return h.redirect('/placeholder-for-parent-page')
     }
   }

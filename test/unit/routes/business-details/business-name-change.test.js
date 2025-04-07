@@ -74,7 +74,7 @@ describe('Business Name Routes Unit Tests', () => {
 
       postBusinessNameChange.options.handler(request, h)
 
-      expect(h.redirect).toHaveBeenCalledWith('/placeholder-for-parent-page')
+      expect(h.redirect).toHaveBeenCalledWith('/business-name-check')
     })
 
     test('should handle validation failures correctly', async () => {

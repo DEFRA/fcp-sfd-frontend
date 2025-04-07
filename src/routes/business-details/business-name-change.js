@@ -42,7 +42,7 @@ export const postBusinessNameChange = {
       }
     },
     handler: (_, h) => {
-      return h.redirect('/placeholder-for-parent-page')
+      return h.redirect('/business-name-check')
     }
   }
 }

@@ -1,6 +1,5 @@
 import Joi from 'joi'
 
-// Create and export a complete schema for each form
 export const businessNameSchema = Joi.object({
   businessName: Joi.string()
     .required()

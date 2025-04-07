@@ -1,4 +1,4 @@
-import { businessNameValidation } from './business-details-schema.js'
+import { businessNameSchema } from '../../schemas/validationFields.js'
 
 export const getBusinessNameChange = {
   method: 'GET',
@@ -17,7 +17,7 @@ export const postBusinessNameChange = {
   options: {
     validate: {
       payload:
-        businessNameValidation,
+        businessNameSchema,
       options: {
         abortEarly: false
       },

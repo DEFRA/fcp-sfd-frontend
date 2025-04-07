@@ -1,5 +1,4 @@
 import { describe, test, expect, jest } from '@jest/globals'
-import Joi from 'joi'
 import {
   getBusinessNameChange,
   postBusinessNameChange,
@@ -37,7 +36,7 @@ describe('Business Name Routes Unit Tests', () => {
       test('should validate empty business name', () => {
         const schema = postBusinessNameChange.options.validate.payload
 
-        const result = Joi.object(schema).validate({ businessName: '' })
+        const result = schema.validate({ businessName: '' })
 
         expect(result.error).toBeTruthy()
         expect(result.error.details[0].message).toBe('Enter business name')
@@ -47,7 +46,7 @@ describe('Business Name Routes Unit Tests', () => {
         const schema = postBusinessNameChange.options.validate.payload
         const longBusinessName = 'a'.repeat(301)
 
-        const result = Joi.object(schema).validate({ businessName: longBusinessName })
+        const result = schema.validate({ businessName: longBusinessName })
 
         expect(result.error).toBeTruthy()
         expect(result.error.details[0].message).toBe('Business name must be 300 characters or less')
@@ -56,7 +55,7 @@ describe('Business Name Routes Unit Tests', () => {
       test('should accept valid business name', () => {
         const schema = postBusinessNameChange.options.validate.payload
 
-        const result = Joi.object(schema).validate({ businessName: 'Acme Corporation' })
+        const result = schema.validate({ businessName: 'Acme Corporation' })
 
         expect(result.error).toBeFalsy()
       })

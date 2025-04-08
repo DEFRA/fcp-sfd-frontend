@@ -3,10 +3,12 @@ export const getBusinessDetails = {
   path: '/business-details',
   handler: (request, h) => {
     const showSuccessBanner = request.state.showSuccessBanner === 'true'
+    const businessName = request.state.businessName
 
     return h.view('business-details/business-details', {
-      showSuccessBanner
-    }).unstate('showSuccessBanner')
+      showSuccessBanner,
+      businessName
+    }).unstate('showSuccessBanner').unstate('businessName')
   }
 }
 

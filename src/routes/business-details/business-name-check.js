@@ -3,7 +3,7 @@ export const getBusinessNameCheck = {
   path: '/business-name-check',
   handler: (request, h) => {
     const businessName = request.state.businessName || ''
-    
+
     return h.view('business-details/business-name-check', {
       businessName
     })
@@ -17,11 +17,11 @@ export const postBusinessNameCheck = {
     const businessName = request.state.businessName
 
     // TO DO: Save the new business name to the database
-    // TO DO: based on the response route user or show 
+    // TO DO: based on the response route user or show
 
     return h.redirect('/business-details')
-            .unstate('businessName')
-            .state('showSuccessBanner', 'true')
+      .state('showSuccessBanner', 'true')
+      .state('businessName', businessName)
   }
 }
 

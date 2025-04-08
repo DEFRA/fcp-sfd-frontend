@@ -13,13 +13,21 @@ describe('Business Name Routes Unit Tests', () => {
     })
 
     test('should render the correct view with correct data', () => {
+      const request = {
+        state: {
+          businessName: null
+        }
+      }
+
       const h = {
         view: jest.fn().mockReturnThis()
       }
 
-      getBusinessNameChange.handler({}, h)
+      getBusinessNameChange.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-name-change')
+      expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
+        businessName: 'Agile Farm Ltd'
+      })
     })
   })
 
@@ -65,13 +73,18 @@ describe('Business Name Routes Unit Tests', () => {
         }
       }
 
+      const state = jest.fn().mockReturnThis()
+
       const h = {
-        redirect: jest.fn().mockReturnThis()
+        redirect: jest.fn().mockReturnValue({
+          state
+        })
       }
 
       postBusinessNameChange.options.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-name-check')
+      expect(state).toHaveBeenCalledWith('businessName', 'Test Business')
     })
 
     test('should handle validation failures correctly', async () => {

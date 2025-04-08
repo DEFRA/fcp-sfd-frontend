@@ -35,19 +35,19 @@
 {% endif %}
 
 <form method="post" novalidate>
-  {{ govukInput({
-    label: {
-      text: businessNameInput,
-      classes: "govuk-label--l",
-      isPageHeading: true
-    },
-    id: "business-name",
-    name: "businessName",
-    value: businessName,
-    errorMessage: errors.businessName and {
-      text: errors.businessName.text
-    }
-  }) }}
+      {{ govukInput({
+        label: {
+          text: "What is your business name?",
+          classes: "govuk-label--l",
+          isPageHeading: true
+        },
+        id: "business-name",
+        name: "businessName",
+        value: businessName,
+        errorMessage: errors.businessName and {
+          text: errors.businessName.text
+        }
+      }) }}
 
   <div class="govuk-button-group">
     {{ govukButton({

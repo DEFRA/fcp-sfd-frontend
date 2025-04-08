@@ -3,7 +3,7 @@ export const getBusinessDetails = {
   path: '/business-details',
   handler: (request, h) => {
     const showSuccessBanner = request.state.showSuccessBanner === 'true'
-    const businessName = request.state.businessName
+    const businessName = request.state.businessName || "Agile Farm Ltd"
 
     return h.view('business-details/business-details', {
       showSuccessBanner,

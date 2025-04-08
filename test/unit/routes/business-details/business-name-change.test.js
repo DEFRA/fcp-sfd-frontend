@@ -19,10 +19,7 @@ describe('Business Name Routes Unit Tests', () => {
 
       getBusinessNameChange.handler({}, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
-        pageTitle: 'What is your business name?',
-        heading: 'Update the name for your business.'
-      })
+      expect(h.view).toHaveBeenCalledWith('business-details/business-name-change')
     })
   })
 
@@ -100,8 +97,6 @@ describe('Business Name Routes Unit Tests', () => {
       await postBusinessNameChange.options.validate.failAction(request, h, err)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
-        pageTitle: 'What is your business name?',
-        heading: 'Update the name for your business.',
         businessName: '',
         errors: {
           businessName: {

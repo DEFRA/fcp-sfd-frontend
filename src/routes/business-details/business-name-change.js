@@ -4,10 +4,7 @@ export const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
   handler: (_, h) => {
-    return h.view('business-details/business-name-change', {
-      pageTitle: 'What is your business name?',
-      heading: 'Update the name for your business.'
-    })
+    return h.view('business-details/business-name-change')
   }
 }
 
@@ -34,8 +31,6 @@ export const postBusinessNameChange = {
         }
 
         return h.view('business-details/business-name-change', {
-          pageTitle: 'What is your business name?',
-          heading: 'Update the name for your business.',
           businessName: request.payload?.businessName || '',
           errors
         }).code(400).takeover()

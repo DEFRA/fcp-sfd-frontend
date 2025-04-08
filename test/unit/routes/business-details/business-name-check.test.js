@@ -60,7 +60,10 @@ describe('Business Name Check Routes Unit Tests', () => {
         }
       }
 
-      const secondState = jest.fn().mockReturnThis()
+      const unstateMock = jest.fn().mockReturnThis()
+      const secondState = jest.fn().mockReturnValue({
+        unstate: unstateMock
+      })
       const firstState = jest.fn().mockReturnValue({
         state: secondState
       })
@@ -76,6 +79,7 @@ describe('Business Name Check Routes Unit Tests', () => {
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
       expect(firstState).toHaveBeenCalledWith('showSuccessBanner', 'true')
       expect(secondState).toHaveBeenCalledWith('businessName', 'Test Business')
+      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
     })
 
     test('should handle undefined business name in state', () => {
@@ -83,7 +87,10 @@ describe('Business Name Check Routes Unit Tests', () => {
         state: {}
       }
 
-      const secondState = jest.fn().mockReturnThis()
+      const unstateMock = jest.fn().mockReturnThis()
+      const secondState = jest.fn().mockReturnValue({
+        unstate: unstateMock
+      })
       const firstState = jest.fn().mockReturnValue({
         state: secondState
       })
@@ -99,6 +106,7 @@ describe('Business Name Check Routes Unit Tests', () => {
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
       expect(firstState).toHaveBeenCalledWith('showSuccessBanner', 'true')
       expect(secondState).toHaveBeenCalledWith('businessName', undefined)
+      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
     })
   })
 

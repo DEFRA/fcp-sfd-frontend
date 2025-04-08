@@ -4,12 +4,12 @@ export const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
   handler: (request, h) => {
-    // TO DO businessName must be pulled from either parent object that hold business details or from api call. Line 9 is a dummy placeholder
-    const businessName = request.state.businessName || 'Agile Farm Ltd'
+    const currentBusinessName = request.state.businessName || 'Agile Farm Ltd'
+    const originalBusinessName = request.state.originalBusinessName || currentBusinessName
 
     return h.view('business-details/business-name-change', {
-      businessName
-    })
+      businessName: currentBusinessName
+    }).state('originalBusinessName', originalBusinessName)
   }
 }
 

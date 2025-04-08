@@ -22,6 +22,7 @@ export const postBusinessNameCheck = {
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
       .state('businessName', businessName)
+      .unstate('originalBusinessName')
   }
 }
 

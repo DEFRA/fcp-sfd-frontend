@@ -19,8 +19,12 @@ describe('Business Name Routes Unit Tests', () => {
         }
       }
 
+      const stateMock = jest.fn().mockReturnThis()
+
       const h = {
-        view: jest.fn().mockReturnThis()
+        view: jest.fn().mockReturnValue({
+          state: stateMock
+        })
       }
 
       getBusinessNameChange.handler(request, h)
@@ -28,6 +32,8 @@ describe('Business Name Routes Unit Tests', () => {
       expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
         businessName: 'Agile Farm Ltd'
       })
+
+      expect(stateMock).toHaveBeenCalledWith('originalBusinessName', 'Agile Farm Ltd')
     })
   })
 

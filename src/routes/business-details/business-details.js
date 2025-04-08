@@ -3,12 +3,23 @@ export const getBusinessDetails = {
   path: '/business-details',
   handler: (request, h) => {
     const showSuccessBanner = request.state.showSuccessBanner === 'true'
-    const businessName = request.state.businessName || "Agile Farm Ltd"
+
+    let businessName = request.state.businessName
+    const originalBusinessName = request.state.originalBusinessName
+
+    if (originalBusinessName && !showSuccessBanner) {
+      businessName = originalBusinessName
+    }
+
+    businessName = businessName || 'Agile Farm Ltd'
 
     return h.view('business-details/business-details', {
       showSuccessBanner,
       businessName
-    }).unstate('showSuccessBanner').unstate('businessName')
+    })
+      .unstate('showSuccessBanner')
+      .unstate('originalBusinessName')
+      .state('businessName', businessName)
   }
 }
 

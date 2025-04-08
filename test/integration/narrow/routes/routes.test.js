@@ -29,6 +29,7 @@ describe('Routes Integration Tests', () => {
     afterEach(async () => {
       await server.stop()
     })
+
     test('cookies route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
@@ -56,6 +57,27 @@ describe('Routes Integration Tests', () => {
       })
 
       expect(response.statusCode).toBe(200)
+    })
+
+    test('business-name-change GET route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-name-change'
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
+    })
+
+    test('business-name-change POST route is registered', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-name-change',
+        payload: {
+          businessName: 'Test Business'
+        }
+      })
+      expect(response.statusCode).toBe(302)
     })
 
     test('service-unavailable route responds correctly', async () => {

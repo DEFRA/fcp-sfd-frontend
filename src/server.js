@@ -1,5 +1,6 @@
 import path from 'path'
 import hapi from '@hapi/hapi'
+import Joi from 'joi'
 
 import { config } from './config/config.js'
 import { plugins } from './plugins/index.js'
@@ -44,6 +45,7 @@ export async function createServer () {
       strictHeader: false
     }
   })
+  server.validator(Joi)
   await server.register(plugins)
 
   server.ext('onPreResponse', catchAll)

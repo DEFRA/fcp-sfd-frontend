@@ -37,7 +37,8 @@ describe('Business Details Routes Unit Tests', () => {
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: true,
-        businessName: 'Test Business'
+        businessName: 'Test Business',
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
       })
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
@@ -71,7 +72,8 @@ describe('Business Details Routes Unit Tests', () => {
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: false,
-        businessName: 'Original Business Name'
+        businessName: 'Original Business Name',
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
       })
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
@@ -105,7 +107,8 @@ describe('Business Details Routes Unit Tests', () => {
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: true,
-        businessName: 'New Business Name'
+        businessName: 'New Business Name',
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
       })
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
@@ -135,7 +138,8 @@ describe('Business Details Routes Unit Tests', () => {
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: false,
-        businessName: 'Agile Farm Ltd'
+        businessName: 'Agile Farm Ltd',
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
       })
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')

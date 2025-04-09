@@ -51,13 +51,10 @@
           Business address
         </dt>
         <dd class="govuk-summary-list__value">
-          10 Skirbeck Way<br>
-          Maidstone<br>
-          SK22 1DL<br>
-          United Kingdom
+          {{ formattedAddress | safe }}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Change<span class="govuk-visually-hidden"> business address</span></a>
+          <a class="govuk-link govuk-link--no-visited-state" href="/business-address-enter">Change<span class="govuk-visually-hidden"> business address</span></a>
         </dd>
       </div>
       <div class="govuk-summary-list__row">

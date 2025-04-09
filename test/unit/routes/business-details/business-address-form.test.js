@@ -6,7 +6,6 @@ import {
 } from '../../../../src/routes/business-details/business-address-form.js'
 import { defaultAddress, testAddress, newAddress } from '../../constants/test-addresses.js'
 
-// Mock the schema to avoid importing the real validation schema
 jest.mock('../../../../src/schemas/business-details/business-address-form.js', () => ({
   businessAddressSchema: {
     validate: jest.fn()

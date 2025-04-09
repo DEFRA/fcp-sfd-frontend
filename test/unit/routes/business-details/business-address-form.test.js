@@ -4,7 +4,7 @@ import {
   postBusinessAddressEnter,
   businessAddressRoutes
 } from '../../../../src/routes/business-details/business-address-form.js'
-import { defaultAddress, testAddress, newAddress } from '../../constants/test-addresses.js'
+import { defaultAddress, testAddress, newAddress, emptyAddress } from '../../constants/test-addresses.js'
 
 jest.mock('../../../../src/schemas/business-details/business-address-form.js', () => ({
   businessAddressSchema: {
@@ -66,14 +66,7 @@ describe('Business Address Routes Unit Tests', () => {
 
     test('should handle validation failures correctly', async () => {
       const request = {
-        payload: {
-          address1: '',
-          address2: '',
-          addressCity: '',
-          addressCounty: '',
-          addressPostcode: '',
-          addressCountry: ''
-        }
+        payload: { ...emptyAddress }
       }
 
       const h = {
@@ -102,12 +95,7 @@ describe('Business Address Routes Unit Tests', () => {
       await postBusinessAddressEnter.options.validate.failAction(request, h, err)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-address-form', {
-        address1: '',
-        address2: '',
-        addressCity: '',
-        addressCounty: '',
-        addressPostcode: '',
-        addressCountry: '',
+        ...emptyAddress,
         errors: {
           address1: {
             text: 'Enter address line 1, typically the building and street'
@@ -119,6 +107,30 @@ describe('Business Address Routes Unit Tests', () => {
             text: 'Enter a country'
           }
         }
+      })
+
+      expect(h.code).toHaveBeenCalledWith(400)
+      expect(h.takeover).toHaveBeenCalled()
+    })
+
+    test('should handle validation failures with undefined details property', async () => {
+      const request = {
+        payload: { ...emptyAddress }
+      }
+
+      const h = {
+        view: jest.fn().mockReturnThis(),
+        code: jest.fn().mockReturnThis(),
+        takeover: jest.fn().mockReturnThis()
+      }
+
+      const err = {}
+
+      await postBusinessAddressEnter.options.validate.failAction(request, h, err)
+
+      expect(h.view).toHaveBeenCalledWith('business-details/business-address-form', {
+        ...emptyAddress,
+        errors: {}
       })
 
       expect(h.code).toHaveBeenCalledWith(400)

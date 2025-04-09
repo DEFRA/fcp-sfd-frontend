@@ -1,3 +1,4 @@
+// test/unit/plugins/template-renderer/filters/to-error-list.test.js
 import { describe, test, expect } from '@jest/globals'
 import { toErrorList } from '../../../../../src/plugins/template-renderer/filters/to-error-list.js'
 
@@ -16,13 +17,19 @@ describe('toErrorList filter', () => {
     ])
   })
 
-  test('should return empty array when errors is null or undefined', () => {
-    expect(toErrorList(null)).toEqual([])
-    expect(toErrorList(undefined)).toEqual([])
+  test('should return empty array when errors is null', () => {
+    const result = toErrorList(null)
+    expect(result).toEqual([])
+  })
+
+  test('should return empty array when errors is undefined', () => {
+    const result = toErrorList(undefined)
+    expect(result).toEqual([])
   })
 
   test('should return empty array when errors is an empty object', () => {
-    expect(toErrorList({})).toEqual([])
+    const result = toErrorList({})
+    expect(result).toEqual([])
   })
 
   test('should create correct href attributes with field IDs', () => {
@@ -39,7 +46,7 @@ describe('toErrorList filter', () => {
     ])
   })
 
-  test('should handle complex error objects', () => {
+  test('should handle error objects with additional properties', () => {
     const errors = {
       email: {
         text: 'Enter a valid email',

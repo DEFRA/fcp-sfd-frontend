@@ -24,3 +24,12 @@ export const newAddress = {
   addressPostcode: 'NE1 2ST',
   addressCountry: 'New Country'
 }
+
+export const emptyAddress = {
+  address1: '',
+  address2: '',
+  addressCity: '',
+  addressCounty: '',
+  addressPostcode: '',
+  addressCountry: ''
+}

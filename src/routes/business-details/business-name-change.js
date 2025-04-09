@@ -3,8 +3,13 @@ import { businessNameSchema } from '../../schemas/validationFields.js'
 export const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
-  handler: (_, h) => {
-    return h.view('business-details/business-name-change')
+  handler: (request, h) => {
+    const currentBusinessName = request.state.businessName || 'Agile Farm Ltd'
+    const originalBusinessName = request.state.originalBusinessName || currentBusinessName
+
+    return h.view('business-details/business-name-change', {
+      businessName: currentBusinessName
+    }).state('originalBusinessName', originalBusinessName)
   }
 }
 
@@ -13,8 +18,7 @@ export const postBusinessNameChange = {
   path: '/business-name-change',
   options: {
     validate: {
-      payload:
-        businessNameSchema,
+      payload: businessNameSchema,
       options: {
         abortEarly: false
       },
@@ -36,8 +40,11 @@ export const postBusinessNameChange = {
         }).code(400).takeover()
       }
     },
-    handler: (_, h) => {
+    handler: (request, h) => {
+      const { businessName } = request.payload
+
       return h.redirect('/business-name-check')
+        .state('businessName', businessName)
     }
   }
 }

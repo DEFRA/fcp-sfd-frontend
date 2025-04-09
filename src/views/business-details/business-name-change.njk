@@ -17,24 +17,24 @@
 ) }}
 
     {{ appBackLink() }}
-
 {% endblock %}
 
 {% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if errors %}
+        {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: [
+                {
+                    text: errors.businessName.text,
+                    href: "#business-name"
+                }
+            ]
+        }) }}
+    {% endif %}
 
-{% if errors %}
-    {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: [
-            {
-                text: errors.businessName.text,
-                href: "#business-name"
-            }
-        ]
-    }) }}
-{% endif %}
-
-<form method="post" novalidate>
+    <form method="post" novalidate>
       {{ govukInput({
         label: {
           text: "What is your business name?",
@@ -49,13 +49,14 @@
         }
       }) }}
 
-  <div class="govuk-button-group">
-    {{ govukButton({
-      text: "Continue"
-    }) }}
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Continue"
+        }) }}
 
-    <a class="govuk-link" href="/business-details">Cancel</a>
+        <a class="govuk-link" href="/business-details">Cancel</a>
+      </div>
+    </form>
   </div>
-</form>
-
+</div>
 {% endblock %}

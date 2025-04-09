@@ -1,5 +1,6 @@
 import { businessAddressSchema } from '../../schemas/business-details/business-address-form.js'
 import { formatValidationErrors } from '../../../src/utils/validation-error-handler.js'
+import { OK } from '../../constants/error-codes.js'
 
 export const getBusinessAddressEnter = {
   method: 'GET',
@@ -52,7 +53,7 @@ export const postBusinessAddressEnter = {
           addressPostcode: request.payload?.addressPostcode || '',
           addressCountry: request.payload?.addressCountry || '',
           errors
-        }).code(400).takeover()
+        }).code(OK).takeover()
       }
     },
     handler: (request, h) => {

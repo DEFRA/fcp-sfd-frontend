@@ -1,0 +1,68 @@
+{% extends 'common/layout.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "common/navigation/back-link.njk" import appBackLink %}
+{% from "common/sub-header/macro.njk" import subHeader %}
+
+{% set pageTitle = "Check your business address is correct before submitting" %}
+{% set metaDescription = "Check the address for your business is correct." %}
+
+{% block beforeContent %}
+    {{ subHeader(
+    businessName="Agile Farm Ltd", 
+    sbi="123456789", 
+    userName="Alfred Waldron"
+) }}
+
+    {{ appBackLink() }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form method="post" novalidate>
+      <h1 class="govuk-heading-l">
+        Check your business address is correct before submitting
+      </h1>
+
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Business address
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <!-- Address line 1 -->
+            {% if address1 %}{{ address1 }}<br>{% endif %}
+            
+            <!-- Address line 2 -->
+            {% if address2 %}{{ address2 }}<br>{% endif %}
+            
+            <!-- Town or city -->
+            {% if addressCity %}{{ addressCity }}<br>{% endif %}
+            
+            <!-- County -->
+            {% if addressCounty %}{{ addressCounty }}<br>{% endif %}
+            
+            <!-- Postcode -->
+            {% if addressPostcode %}{{ addressPostcode }}<br>{% endif %}
+            
+            <!-- Country -->
+            {% if addressCountry %}{{ addressCountry }}{% endif %}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/business-address-change">Change<span class="govuk-visually-hidden"> business address</span></a>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Submit"
+        }) }}
+      </div>
+      <p class="govuk-body"><a href="details-business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
+    </form>
+  </div>
+</div>
+{% endblock %}

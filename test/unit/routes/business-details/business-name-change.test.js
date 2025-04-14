@@ -135,4 +135,30 @@ describe('Business Name Routes Unit Tests', () => {
       postBusinessNameChange
     ])
   })
+
+  test('should handle validation failures with undefined details property', async () => {
+    const request = {
+      payload: {
+        businessName: ''
+      }
+    }
+
+    const h = {
+      view: jest.fn().mockReturnThis(),
+      code: jest.fn().mockReturnThis(),
+      takeover: jest.fn().mockReturnThis()
+    }
+
+    const err = {}
+
+    await postBusinessNameChange.options.validate.failAction(request, h, err)
+
+    expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
+      businessName: '',
+      errors: {}
+    })
+
+    expect(h.code).toHaveBeenCalledWith(400)
+    expect(h.takeover).toHaveBeenCalled()
+  })
 })

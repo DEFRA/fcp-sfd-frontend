@@ -1,4 +1,6 @@
-import { businessNameSchema } from '../../schemas/validationFields.js'
+import { businessNameSchema } from '../../schemas/business-details/business-name-change.js'
+import { formatValidationErrors } from '../../utils/validation-error-handler.js'
+import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 export const getBusinessNameChange = {
   method: 'GET',
@@ -23,21 +25,12 @@ export const postBusinessNameChange = {
         abortEarly: false
       },
       failAction: async (request, h, err) => {
-        const errors = {}
-
-        if (err.details) {
-          err.details.forEach(detail => {
-            const path = detail.path[0]
-            errors[path] = {
-              text: detail.message
-            }
-          })
-        }
+        const errors = formatValidationErrors(err.details || [])
 
         return h.view('business-details/business-name-change', {
           businessName: request.payload?.businessName || '',
           errors
-        }).code(400).takeover()
+        }).code(BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {

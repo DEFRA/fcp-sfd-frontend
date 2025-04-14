@@ -10,7 +10,6 @@ describe('#catchAll', () => {
   let mockToolkit
 
   beforeEach(() => {
-    // Reset mocks before each test
     jest.clearAllMocks()
 
     mockToolkitView = jest.fn().mockReturnThis()

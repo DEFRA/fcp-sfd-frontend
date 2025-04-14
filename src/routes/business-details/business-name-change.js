@@ -1,6 +1,6 @@
 import { businessNameSchema } from '../../schemas/business-details/business-name-change.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
-import { OK } from '../../constants/error-codes.js'
+import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 export const getBusinessNameChange = {
   method: 'GET',
@@ -30,7 +30,7 @@ export const postBusinessNameChange = {
         return h.view('business-details/business-name-change', {
           businessName: request.payload?.businessName || '',
           errors
-        }).code(OK).takeover()
+        }).code(BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {

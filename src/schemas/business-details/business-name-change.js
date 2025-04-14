@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import {
   BUSINESS_NAME_MAX
-} from '../../constants/validation.js'
+} from '../../constants/validation-fields.js'
 
 export const businessNameSchema = Joi.object({
   businessName: Joi.string()

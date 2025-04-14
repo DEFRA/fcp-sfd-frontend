@@ -5,7 +5,7 @@ import {
   COUNTY_MAX,
   POSTCODE_MAX,
   COUNTRY_MAX
-} from '../../constants/validation.js'
+} from '../../constants/validation-fields.js'
 
 export const businessAddressSchema = Joi.object({
   address1: Joi.string()

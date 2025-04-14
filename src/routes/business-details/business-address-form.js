@@ -66,8 +66,6 @@ export const postBusinessAddressEnter = {
         addressCountry
       } = request.payload
 
-      // Note: In the future, add a confirmation page here
-
       return h.redirect('/business-address-check')
         .state('address1', address1)
         .state('address2', address2)

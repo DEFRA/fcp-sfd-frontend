@@ -4,196 +4,99 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-frontend)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-frontend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-frontend)
 
-Core delivery platform Node.js Frontend Template.
+Frontend service for the Single Front Door (SFD) service. This service provides the user interface for customers to interact with the SFD service.
 
-- [Requirements](#requirements)
-  - [Node.js](#nodejs)
-- [Server-side Caching](#server-side-caching)
-- [Redis](#redis)
-- [Local Development](#local-development)
-  - [Setup](#setup)
-  - [Development](#development)
-  - [Production](#production)
-  - [Npm scripts](#npm-scripts)
-  - [Update dependencies](#update-dependencies)
-  - [Formatting](#formatting)
-    - [Windows prettier issue](#windows-prettier-issue)
-- [Docker](#docker)
-  - [Development image](#development-image)
-  - [Production image](#production-image)
-  - [Docker Compose](#compose)
-  - [Dependabot](#dependabot)
-  - [SonarCloud](#sonarcloud)
-- [Licence](#licence)
-  - [About the licence](#about-the-licence)
+## Prerequisites
 
-## Requirements
+- Docker
+- Docker Compose
+- Node.js (v22 LTS)
 
-### Node.js
+## Environment Variables
 
-Please install [Node.js](http://nodejs.org/) `>= v18` and [npm](https://nodejs.org/) `>= v9`. You will find it
-easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
+| Name | Default Value | Required | Description |
+| --- | --- | --- | --- |
+| ALLOW_ERROR_VIEWS | false | No | Enable error route views in local development to inspect error pages |
 
-To use the correct version of Node.js for this application, via nvm:
+## Setup
 
-```bash
+Clone the repository and install dependencies:
+git clone https://github.com/DEFRA/fcp-sfd-frontend.git
 cd fcp-sfd-frontend
-nvm use
+npm install
+
+Create a `.env` file in the root of the project with the required environment variables:
+ALLOW_ERROR_VIEWS=true/false
+
+## Running the application
+
+We recommend using the [fcp-sfd-core](https://github.com/DEFRA/fcp-sfd-core) repository for local development. You can howerver run this service independently by following the instructions below.
+
+### Local development
+
+To run the application in development mode with hot reloading without container:
 ```
+npm run dev
+```
+This will start the server and watch for changes to both server and client files.
+
+### Build container image
+
+Container images are built using Docker Compose
+
+When using the Docker Compose files in development the local `app` folder will
+be mounted on top of the `app` folder within the Docker container, hiding the CSS files that were generated during the Docker build.  For the site to render correctly locally `npm run build` must be run on the host system.
+
+
+By default, the start script will build (or rebuild) images so there will
+rarely be a need to build images manually. However, this can be achieved
+through the Docker Compose
+[build](https://docs.docker.com/compose/reference/build/) command:
+```
+# Build container images
+docker-compose build
+```
+
+### Start
+
+Use Docker Compose to run service locally.
+
+```
+docker-compose up --build
+```
+
+## Tests
+
+### Test structure
+
+The tests have been structured into subfolders:
+
+- `test/unit` - Unit tests for individual modules
+- `test/integration` - Integration tests for API endpoints and server functionality
+
+### Running tests
+
+Run the tests with:
+npm test
+
+## Project Structure
+
+- `src/` - Application source code
+  - `client/` - Frontend assets (JavaScript, SCSS)
+  - `config/` - Configuration files
+  - `constants/` - Application constants
+  - `plugins/` - Hapi server plugins
+  - `routes/` - API routes and handlers
+  - `schemas/` - Validation schemas
+  - `utils/` - Utility functions
+  - `views/` - Nunjucks templates
+- `test/` - Test files
 
 ## Server-side Caching
 
-We use Catbox for server-side caching. By default the service will use CatboxRedis when deployed and CatboxMemory for
-local development.
-You can override the default behaviour by setting the `SESSION_CACHE_ENGINE` environment variable to either `redis` or
-`memory`.
+We use Catbox for server-side caching. By default, the service will use CatboxRedis when deployed and CatboxMemory for local development. You can override the default behavior by setting the `SESSION_CACHE_ENGINE` environment variable to either `redis` or `memory`.
 
-Please note: CatboxMemory (`memory`) is _not_ suitable for production use! The cache will not be shared between each
-instance of the service and it will not persist between restarts.
-
-## Redis
-
-Redis is an in-memory key-value store. Every instance of a service has access to the same Redis key-value store similar
-to how services might have a database (or MongoDB). All frontend services are given access to a namespaced prefixed that
-matches the service name. e.g. `my-service` will have access to everything in Redis that is prefixed with `my-service`.
-
-If your service does not require a session cache to be shared between instances or if you don't require Redis, you can
-disable setting `SESSION_CACHE_ENGINE=false` or changing the default value in `./src/config/index.js`.
-
-## Proxy
-
-We are using forward-proxy which is set up by default. To make use of this: `import { fetch } from 'undici'` then because of the `setGlobalDispatcher(new ProxyAgent(proxyUrl))` calls will use the ProxyAgent Dispatcher
-
-If you are not using Wreck, Axios or Undici or a similar http that uses `Request`. Then you may have to provide the proxy dispatcher:
-
-To add the dispatcher to your own client:
-
-```javascript
-import { ProxyAgent } from 'undici'
-
-return await fetch(url, {
-  dispatcher: new ProxyAgent({
-    uri: proxyUrl,
-    keepAliveTimeout: 10,
-    keepAliveMaxTimeout: 10
-  })
-})
-```
-
-## Local Development
-
-### Setup
-
-Install application dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-To run the application in `development` mode run:
-
-```bash
-npm run dev
-```
-
-### Production
-
-To mimic the application running in `production` mode locally run:
-
-```bash
-npm start
-```
-
-### Npm scripts
-
-All available Npm scripts can be seen in [package.json](./package.json)
-To view them in your command line run:
-
-```bash
-npm run
-```
-
-### Update dependencies
-
-To update dependencies use [npm-check-updates](https://github.com/raineorshine/npm-check-updates):
-
-> The following script is a good start. Check out all the options on
-> the [npm-check-updates](https://github.com/raineorshine/npm-check-updates)
-
-```bash
-ncu --interactive --format group
-```
-
-### Formatting
-
-#### Windows prettier issue
-
-If you are having issues with formatting of line breaks on Windows update your global git config by running:
-
-```bash
-git config --global core.autocrlf false
-```
-
-## Docker
-
-### Development image
-
-Build:
-
-```bash
-docker build --target development --no-cache --tag fcp-sfd-frontend:development .
-```
-
-Run:
-
-```bash
-docker run -p 3000:3000 fcp-sfd-frontend:development
-```
-
-### Production image
-
-Build:
-
-```bash
-docker build --no-cache --tag fcp-sfd-frontend .
-```
-
-Run:
-
-```bash
-docker run -p 3000:3000 fcp-sfd-frontend
-```
-
-### Docker Compose
-
-A local environment with:
-
-- Localstack for AWS services (S3, SQS)
-- Redis
-- MongoDB
-- This service.
-- A commented out backend example.
-
-```bash
-docker compose up --build -d
-```
-
-### .ENV variables 
-
-For the project to run correctly you must add .env file to the root of the project with following entries :
-
-- ALLOW_ERROR_VIEWS = true/false (Switch error routes in local development to inspect error views)
-
-### Dependabot
-
-We have added an example dependabot configuration file to the repository. You can enable it by renaming
-the [.github/example.dependabot.yml](.github/example.dependabot.yml) to `.github/dependabot.yml`
-
-### SonarCloud
-
-Instructions for setting up SonarCloud can be found in [sonar-project.properties](./sonar-project.properties).
+Please note: CatboxMemory (`memory`) is _not_ suitable for production use! The cache will not be shared between each instance of the service and it will not persist between restarts.
 
 ## Licence
 
@@ -207,8 +110,6 @@ The following attribution statement MUST be cited in your products and applicati
 
 ### About the licence
 
-The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable
-information providers in the public sector to license the use and re-use of their information under a common open
-licence.
+The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable information providers in the public sector to license the use and re-use of their information under a common open licence.
 
 It is designed to encourage use and re-use of information freely and flexibly, with only a few conditions.

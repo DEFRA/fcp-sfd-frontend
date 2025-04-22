@@ -10,16 +10,16 @@ export const businessPhoneSchema = Joi.object({
     .min(BUSINESS_PHONE_NUMBER_MIN)
     .max(BUSINESS_PHONE_NUMBER_MAX)
     .messages({
-      'string.min': `Business phone number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`,
-      'string.max': `Business phone number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`
+      'string.min': `Business telephone number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`,
+      'string.max': `Business telephone number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`
     }),
   businessMobile: Joi.string()
     .empty('')
     .min(BUSINESS_PHONE_NUMBER_MIN)
     .max(BUSINESS_PHONE_NUMBER_MAX)
     .messages({
-      'string.min': `Business phone number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`,
-      'string.max': `Business phone number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`
+      'string.min': `Business mobile number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`,
+      'string.max': `Business mobile number must be between ${BUSINESS_PHONE_NUMBER_MIN} and ${BUSINESS_PHONE_NUMBER_MAX} characters`
     })
 })
   .or('businessTelephone', 'businessMobile')

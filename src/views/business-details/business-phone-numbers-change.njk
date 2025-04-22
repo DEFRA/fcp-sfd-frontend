@@ -10,74 +10,80 @@
 {% set metaDescription = "Update the phone numbers for your business." %}
 
 {% block beforeContent %}
-    {{ subHeader(
+  {{ subHeader(
     businessName="Agile Farm Ltd", 
     sbi="123456789", 
     userName="Alfred Waldron"
 ) }}
 
-    {{ appBackLink() }}
-
+  {{ appBackLink() }}
 {% endblock %}
 
 {% block content %}
 
-{% if errors %}
-    {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errors | toErrorList
-    }) }}
-{% endif %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <form method="post" novalidate>
-      <fieldset class="govuk-fieldset">
-        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-          <h1 class="govuk-fieldset__heading">
-            {{ pageTitle }}
-          </h1>
-        </legend>
+    {% if errors %}
+      {{ govukErrorSummary({
+          titleText: "There is a problem",
+          errorList: errors | toErrorList
+      }) }}
+    {% endif %}
 
-        <div class="govuk-hint">
-          Enter at least one phone number
-        </div>
+      <form method="post" novalidate>
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              {{ pageTitle }}
+            </h1>
+          </legend>
+          <div class="govuk-hint">
+            Enter at least one phone number
+          </div>
 
-        {{ govukInput({
+          {% if errors._error %}
+            <span id="business-phone-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{ errors._error.text }}
+            </span>
+          {% endif %}
+
+          {{ govukInput({
           label: {
             text: "Business telephone number"
           },
           classes: "govuk-input--width-20",
           id: "businessTelephone",
           name: "businessTelephone",
-          value: addressPostcode,
+          value: businessTelephone,
           autocomplete: "business-telephone",
           errorMessage: errors.businessTelephone and {
             text: errors.businessTelephone.text
           }
-        }) }}
+          }) }}
 
-        {{ govukInput({
+          {{ govukInput({
           label: {
             text: "Business mobile number"
           },
           classes: "govuk-input--width-20",
           id: "businessMobile",
           name: "businessMobile",
-          value: addressPostcode,
+          value: businessMobile,
           autocomplete: "business-mobile",
           errorMessage: errors.businessMobile and {
             text: errors.businessMobile.text
           }
-        }) }}
-      </fieldset>
+          }) }}
+        </fieldset>
 
-      {{ govukButton({
+        {{ govukButton({
         text: "Continue"
       }) }}
-      
-      <p class="govuk-body"><a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
-    </form>
+        <p class="govuk-body">
+          <a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a>
+        </p>
+      </form>
+    </div>
   </div>
-</div>
 {% endblock %}

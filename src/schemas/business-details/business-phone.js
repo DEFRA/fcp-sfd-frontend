@@ -6,7 +6,6 @@ import {
 
 export const businessPhoneSchema = Joi.object({
   businessTelephone: Joi.string()
-    .required()
     .min(BUSINESS_PHONE_NUMBER_MIN)
     .max(BUSINESS_PHONE_NUMBER_MAX)
     .messages({
@@ -15,7 +14,6 @@ export const businessPhoneSchema = Joi.object({
       'any.required': 'Enter business phone number'
     }),
   businessMobile: Joi.string()
-    .required()
     .min(BUSINESS_PHONE_NUMBER_MIN)
     .max(BUSINESS_PHONE_NUMBER_MAX)
     .messages({
@@ -24,8 +22,7 @@ export const businessPhoneSchema = Joi.object({
       'any.required': 'Enter business phone number'
     })
 })
-
-/**
- * both businessTelephone and businessMobile are marked as "required" above, 
- * but considering only one is needed not sure how to configure this
- */
+.or('businessTelephone', 'businessMobile')
+.messages({
+  'object.missing': 'Enter at least one business phone number'
+})

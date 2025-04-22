@@ -3,8 +3,7 @@ import { businessNameCheckRoutes } from './business-name-check.js'
 import { businessDetailsRoutesView } from './business-details.js'
 import { businessAddressRoutes } from './business-address-form.js'
 import { businessAddressCheckRoutes } from './business-address-check.js'
-import { businessPhoneChangeRoutes } from './business-phone-change.js'
-import { businessPhoneCheckRoutes } from './business-phone-check.js'
+import { businessPhoneNumbersChangeRoutes } from './business-phone-numbers-change.js'
 
 export const businessDetailsRoutes = [
   ...businessNameChangeRoutes,
@@ -12,6 +11,5 @@ export const businessDetailsRoutes = [
   ...businessDetailsRoutesView,
   ...businessAddressRoutes,
   ...businessAddressCheckRoutes,
-  ...businessPhoneChangeRoutes,
-  ...businessPhoneCheckRoutes
+  ...businessPhoneNumbersChangeRoutes
 ]

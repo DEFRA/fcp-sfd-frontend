@@ -1,4 +1,4 @@
-export function formatValidationErrors (details) {
+export const formatValidationErrors = (details) => {
   const errors = {}
 
   details.forEach(detail => {

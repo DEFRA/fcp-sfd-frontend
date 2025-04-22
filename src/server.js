@@ -2,14 +2,14 @@ import path from 'path'
 import hapi from '@hapi/hapi'
 import Joi from 'joi'
 
-import { config } from './config/config.js'
+import { config } from './config/index.js'
 import { plugins } from './plugins/index.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 
-export async function createServer () {
+export const createServer = async () => {
   const server = hapi.server({
-    port: config.get('port'),
+    port: config.get('server.port'),
     routes: {
       validate: {
         options: {
@@ -17,7 +17,7 @@ export async function createServer () {
         }
       },
       files: {
-        relativeTo: path.resolve(config.get('root'), '.public')
+        relativeTo: path.resolve(config.get('server.root'), '.public')
       },
       security: {
         hsts: {
@@ -35,9 +35,9 @@ export async function createServer () {
     },
     cache: [
       {
-        name: config.get('session.cache.name'),
+        name: config.get('server.session.cache.name'),
         engine: getCacheEngine(
-          (config.get('session.cache.engine'))
+          (config.get('server.session.cache.engine'))
         )
       }
     ],

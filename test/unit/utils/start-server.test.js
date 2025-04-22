@@ -51,7 +51,7 @@ jest.unstable_mockModule('../../../src/server.js', () => ({
 
 const startServerModule = await import('../../../src/utils/start-server.js')
 const serverModule = await import('../../../src/server.js')
-const { config } = await import('../../../src/config/config.js')
+const { config } = await import('../../../src/config/index.js')
 
 describe('#startServer', () => {
   const PROCESS_ENV = process.env
@@ -60,7 +60,7 @@ describe('#startServer', () => {
   beforeAll(() => {
     process.env = { ...PROCESS_ENV }
     process.env.PORT = '3097'
-    config.set('port', '3097')
+    config.set('server.port', '3097')
   })
 
   afterAll(() => {

@@ -1,9 +1,9 @@
-import { config } from '../config/config.js'
+import { config } from '../config/index.js'
 
 import { createServer } from '../server.js'
 import { createLogger } from './logger.js'
 
-export async function startServer () {
+export const startServer = async () => {
   let server
 
   try {
@@ -12,7 +12,7 @@ export async function startServer () {
 
     server.logger.info('Server started successfully')
     server.logger.info(
-      `Access your frontend on http://localhost:${config.get('port')}`
+      `Access your frontend on http://localhost:${config.get('server.port')}`
     )
   } catch (error) {
     const logger = createLogger()

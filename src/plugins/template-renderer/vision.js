@@ -3,7 +3,7 @@ import path from 'path'
 import nunjucks from 'nunjucks'
 import hapiVision from '@hapi/vision'
 
-import { config } from '../../config/config.js'
+import { config } from '../../config/index.js'
 import { context } from './context.js'
 import * as filters from './filters/filters.js'
 
@@ -42,7 +42,7 @@ export const vision = {
     },
     relativeTo: path.resolve(dirname, '../..'),
     path: 'views',
-    isCached: config.get('isProduction'),
+    isCached: config.get('server.isProduction'),
     context
   }
 }

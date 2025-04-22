@@ -1,12 +1,12 @@
 import { constants as httpConstants } from 'http2'
-import { config } from '../config/config.js'
+import { config } from '../config/index.js'
 
 export const staticAssetRoutes = [
   {
     options: {
       auth: false,
       cache: {
-        expiresIn: config.get('staticCacheTimeout'),
+        expiresIn: config.get('server.staticCacheTimeout'),
         privacy: 'private'
       }
     },
@@ -23,12 +23,12 @@ export const staticAssetRoutes = [
     options: {
       auth: false,
       cache: {
-        expiresIn: config.get('staticCacheTimeout'),
+        expiresIn: config.get('server.staticCacheTimeout'),
         privacy: 'private'
       }
     },
     method: 'GET',
-    path: `${config.get('assetPath')}/{param*}`,
+    path: `${config.get('server.assetPath')}/{param*}`,
     handler: {
       directory: {
         path: '.',

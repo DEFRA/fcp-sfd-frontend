@@ -4,11 +4,11 @@ import {
   StorageResolution
 } from 'aws-embedded-metrics'
 
-import { config } from '../config/config.js'
+import { config } from '../config/index.js'
 import { createLogger } from './logger.js'
 
-export async function metricsCounter (metricName, value = 1) {
-  const isMetricsEnabled = config.get('isMetricsEnabled')
+export const metricsCounter = async (metricName, value = 1) => {
+  const isMetricsEnabled = config.get('server.isMetricsEnabled')
 
   if (!isMetricsEnabled) {
     return

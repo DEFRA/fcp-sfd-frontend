@@ -44,11 +44,11 @@ jest.unstable_mockModule('../../../../src/utils/caching/redis-client.js', () => 
 
 let originalConfigGet
 
-jest.unstable_mockModule('../../../../src/config/config.js', () => {
+jest.unstable_mockModule('../../../../src/config/index.js', () => {
   const mockConfig = {
     get: jest.fn(key => {
       if (key === 'redis') return { host: 'localhost', port: 6379 }
-      if (key === 'isProduction') return false
+      if (key === 'server.isProduction') return false
       return null
     }),
     set: jest.fn()
@@ -63,7 +63,7 @@ let getCacheEngine, config
 
 const setup = async () => {
   const cacheEngineModule = await import('../../../../src/utils/caching/cache-engine.js')
-  const configModule = await import('../../../../src/config/config.js')
+  const configModule = await import('../../../../src/config/index.js')
 
   getCacheEngine = cacheEngineModule.getCacheEngine
   config = configModule.config
@@ -101,7 +101,7 @@ describe('#getCacheEngine', () => {
   describe('When In memory cache engine has been requested in Production', () => {
     beforeEach(() => {
       config.get = jest.fn(key => {
-        if (key === 'isProduction') return true
+        if (key === 'server.isProduction') return true
         if (key === 'redis') return { host: 'localhost', port: 6379 }
         return null
       })

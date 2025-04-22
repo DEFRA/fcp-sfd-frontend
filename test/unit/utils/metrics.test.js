@@ -25,7 +25,7 @@ jest.unstable_mockModule('../../../src/utils/logger.js', () => ({
   })
 }))
 
-const { config } = await import('../../../src/config/config.js')
+const { config } = await import('../../../src/config/index.js')
 const { metricsCounter } = await import('../../../src/utils/metrics.js')
 const { Unit, StorageResolution } = await import('aws-embedded-metrics')
 
@@ -43,7 +43,7 @@ describe('#metrics', () => {
 
   describe('When metrics is not enabled', () => {
     beforeEach(async () => {
-      config.set('isMetricsEnabled', false)
+      config.set('server.isMetricsEnabled', false)
       await metricsCounter(mockMetricsName, mockValue)
     })
 
@@ -58,7 +58,7 @@ describe('#metrics', () => {
 
   describe('When metrics is enabled', () => {
     beforeEach(() => {
-      config.set('isMetricsEnabled', true)
+      config.set('server.isMetricsEnabled', true)
     })
 
     test('Should send metric with default value', async () => {
@@ -94,7 +94,7 @@ describe('#metrics', () => {
     const mockError = new Error('mock-metrics-put-error')
 
     beforeEach(async () => {
-      config.set('isMetricsEnabled', true)
+      config.set('server.isMetricsEnabled', true)
 
       mockFlush.mockRejectedValue(mockError)
 

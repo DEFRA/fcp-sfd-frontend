@@ -1,4 +1,4 @@
-export function toErrorList (errors) {
+export const toErrorList = (errors) => {
   if (!errors) {
     return []
   }

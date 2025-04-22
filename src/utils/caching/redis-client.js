@@ -2,7 +2,7 @@ import { Cluster, Redis } from 'ioredis'
 
 import { createLogger } from '../logger.js'
 
-export function buildRedisClient (redisConfig) {
+export const buildRedisClient = (redisConfig) => {
   const logger = createLogger()
   const port = 6379
   const db = 0

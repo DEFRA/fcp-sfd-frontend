@@ -1,16 +1,16 @@
 import tls from 'node:tls'
 
-import { config } from '../../config/config.js'
+import { config } from '../../config/index.js'
 import { getTrustStoreCerts } from './get-trust-store-certs.js'
 
 export const secureContext = {
   plugin: {
     name: 'secure-context',
     register: (server) => {
-      if (config.get('isSecureContextEnabled')) {
+      if (config.get('server.isSecureContextEnabled')) {
         const originalTlsCreateSecureContext = tls.createSecureContext
 
-        tls.createSecureContext = function (options = {}) {
+        tls.createSecureContext = (options = {}) => {
           const trustStoreCerts = getTrustStoreCerts(process.env)
 
           if (!trustStoreCerts.length) {

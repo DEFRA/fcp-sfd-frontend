@@ -30,20 +30,20 @@ describe('Routes Integration Tests', () => {
       await server.stop()
     })
 
-    test('cookies route responds correctly', async () => {
+    test('home route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
-        url: '/cookies'
+        url: '/'
       })
 
       expect(response.statusCode).toBe(200)
       expect(response.headers['content-type']).toContain('text/html')
     })
 
-    test('home route responds correctly', async () => {
+    test('cookies route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
-        url: '/'
+        url: '/cookies'
       })
 
       expect(response.statusCode).toBe(200)
@@ -57,27 +57,6 @@ describe('Routes Integration Tests', () => {
       })
 
       expect(response.statusCode).toBe(200)
-    })
-
-    test('business-name-change GET route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-name-change'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-name-change POST route is registered', async () => {
-      const response = await server.inject({
-        method: 'POST',
-        url: '/business-name-change',
-        payload: {
-          businessName: 'Test Business'
-        }
-      })
-      expect(response.statusCode).toBe(302)
     })
 
     test('service-unavailable route responds correctly', async () => {
@@ -110,7 +89,17 @@ describe('Routes Integration Tests', () => {
       expect(response.headers['content-type']).toContain('text/html')
     })
 
-    test('business-name-change route responds correctly', async () => {
+    test('business-details route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-details'
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
+    })
+
+    test('business-name-change GET route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
         url: '/business-name-change'
@@ -118,6 +107,18 @@ describe('Routes Integration Tests', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.headers['content-type']).toContain('text/html')
+    })
+
+    test('business-name-change POST route is registered', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-name-change',
+        payload: {
+          businessName: 'Test Business'
+        }
+      })
+
+      expect(response.statusCode).toBe(302)
     })
 
     test('business-name-check route responds correctly', async () => {
@@ -130,17 +131,7 @@ describe('Routes Integration Tests', () => {
       expect(response.headers['content-type']).toContain('text/html')
     })
 
-    test('business-details route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-details'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-address-enter route responds correctly', async () => {
+    test('business-address-enter GET route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
         url: '/business-address-enter'
@@ -148,6 +139,23 @@ describe('Routes Integration Tests', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.headers['content-type']).toContain('text/html')
+    })
+
+    test('business-address-enter POST route is registered', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-address-enter',
+        payload: {
+          address1: '10 Skirbeck Way',
+          address2: '',
+          addressCity: 'Maidstone',
+          addressCounty: '',
+          addressPostcode: 'SK22 1DL',
+          addressCountry: 'United Kingdom'
+        }
+      })
+
+      expect(response.statusCode).toBe(302)
     })
 
     test('business-address-check route responds correctly', async () => {
@@ -158,6 +166,29 @@ describe('Routes Integration Tests', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.headers['content-type']).toContain('text/html')
+    })
+
+    test('business-phone-numbers-change GET route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-phone-numbers-change'
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
+    })
+
+    test('business-phone-numbers-change POST route is registered', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-phone-numbers-change',
+        payload: {
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
+        }
+      })
+
+      expect(response.statusCode).toBe(302)
     })
   })
 

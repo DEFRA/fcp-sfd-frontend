@@ -3,8 +3,17 @@ export const toErrorList = (errors) => {
     return []
   }
 
-  return Object.entries(errors).map(([field, error]) => ({
-    text: error.text,
-    href: `#${field}`
-  }))
+  const uniqueFields = new Set()
+
+   return Object.entries(errors)
+    .reduce((acc, [field, error]) => {
+      if (!uniqueFields.has(error.text)) {
+        uniqueFields.add(error.text)
+        acc.push({
+          text: error.text,
+          href: `#${field}`
+        })
+      }
+      return acc
+    }, [])
 }

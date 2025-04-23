@@ -15,8 +15,8 @@ describe('Application Startup Integration Test', () => {
     expect(server).toBeDefined()
     expect(server.info).toBeDefined()
 
-    await server.start()
-    expect(server.info.started).toBeGreaterThan(0)
+    await server.initialize()
+    expect(server.info.created).toBeGreaterThan(0)
     expect(server.info.port).toBe(parseInt(3002))
   })
 

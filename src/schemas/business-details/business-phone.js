@@ -24,5 +24,5 @@ export const businessPhoneSchema = Joi.object({
 })
   .or('businessTelephone', 'businessMobile')
   .messages({
-    'object.missing': 'Enter at least one business phone number'
+    'object.missing': 'Enter at least one phone number'
   })

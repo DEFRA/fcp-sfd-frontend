@@ -5,7 +5,7 @@ export const toErrorList = (errors) => {
 
   const uniqueFields = new Set()
 
-   return Object.entries(errors)
+  return Object.entries(errors)
     .reduce((acc, [field, error]) => {
       if (!uniqueFields.has(error.text)) {
         uniqueFields.add(error.text)

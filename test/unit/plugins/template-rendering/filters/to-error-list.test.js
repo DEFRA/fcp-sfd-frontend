@@ -1,4 +1,3 @@
-// test/unit/plugins/template-renderer/filters/to-error-list.test.js
 import { describe, test, expect } from '@jest/globals'
 import { toErrorList } from '../../../../../src/plugins/template-renderer/filters/to-error-list.js'
 
@@ -59,6 +58,34 @@ describe('toErrorList filter', () => {
 
     expect(result).toEqual([
       { text: 'Enter a valid email', href: '#email' }
+    ])
+  })
+
+  test('should deduplicate errors with the same text', () => {
+    const errors = {
+      businessTelephone: { text: 'Enter at least one business phone number' },
+      businessMobile: { text: 'Enter at least one business phone number' }
+    }
+
+    const result = toErrorList(errors)
+
+    expect(result).toEqual([
+      { text: 'Enter at least one business phone number', href: '#businessTelephone' }
+    ])
+  })
+
+  test('should deduplicate errors with the same text across fields', () => {
+    const errors = {
+      businessTelephone: { text: 'Enter at least one business phone number' },
+      businessMobile: { text: 'Enter at least one business phone number' },
+      personalMobile: { text: 'Enter a personal mobile phone number' }
+    }
+
+    const result = toErrorList(errors)
+
+    expect(result).toEqual([
+      { text: 'Enter at least one business phone number', href: '#businessTelephone' },
+      { text: 'Enter a personal mobile phone number', href: '#personalMobile' }
     ])
   })
 })

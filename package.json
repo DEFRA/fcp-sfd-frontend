@@ -31,7 +31,8 @@
   "contributors": [
     "Amirs Ishmuhametovs <amirs.ishmuhametovs@defra.gov.uk>",
     "Fay Toward <fay.toward@defra.gov.uk>",
-    "Rana Salem <rana.salem@defra.gov.uk>"
+    "Rana Salem <rana.salem@defra.gov.uk>",
+    "John Watson <john.watson1@defra.gov.uk>"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {

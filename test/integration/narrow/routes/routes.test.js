@@ -150,7 +150,7 @@ describe('Routes Integration Tests', () => {
       expect(response.headers['content-type']).toContain('text/html')
     })
 
-    test('business-address-enter route responds correctly', async () => {
+    test('business-address-check route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
         url: '/business-address-check'

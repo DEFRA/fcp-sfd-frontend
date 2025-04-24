@@ -29,10 +29,15 @@ export const getBusinessDetails = {
       addressCountry
     ].filter(Boolean).join('<br>')
 
+    const businessTelephone = request.state.businessTelephone || ''
+    const businessMobile = request.state.businessMobile || ''
+
     return h.view('business-details/business-details', {
       showSuccessBanner,
       businessName,
-      formattedAddress
+      formattedAddress,
+      businessTelephone,
+      businessMobile
     })
       .unstate('showSuccessBanner')
       .unstate('originalBusinessName')

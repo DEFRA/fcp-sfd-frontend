@@ -1,0 +1,76 @@
+{% extends 'common/layout.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "common/navigation/back-link.njk" import appBackLink %}
+{% from "common/sub-header/macro.njk" import subHeader %}
+
+{% set pageTitle = "Check your business phone numbers are correct before submitting" %}
+{% set metaDescription = "Check the phone numbers for your business are correct." %}
+
+{% set businessPhoneNumbers %}
+  Telephone: {{ businessTelephone or '<span class="govuk-hint">Not added</span>' }}<br>
+  Mobile: {{ businessMobile or '<span class="govuk-hint">Not added</span>' }}
+{% endset %}
+
+{% block beforeContent %}
+    {{ subHeader(
+    businessName="Agile Farm Ltd", 
+    sbi="123456789", 
+    userName="Alfred Waldron"
+) }}
+
+    {{ appBackLink() }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form method="post" novalidate>
+      <h1 class="govuk-heading-l">
+        {{ pageTitle }}
+      </h1>
+
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Business phone numbers
+          </dt>
+          <dd class="govuk-summary-list__value">
+            <p class="govuk-body">
+              Telephone: 
+              {% if businessTelephone %}
+                {{ businessTelephone }}
+              {% else %}
+                <span class="govuk-hint">
+                  Not added
+                </span>
+              {% endif %}
+              <br>
+              Mobile: 
+              {% if businessMobile %}
+                {{ businessMobile }}
+              {% else %}
+                <span class="govuk-hint">
+                  Not added
+                </span>
+              {% endif %}
+            </p>
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link" href="/business-phone-numbers-change">Change<span class="govuk-visually-hidden">business phone numbers</span></a>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Submit"
+        }) }}
+
+        <a class="govuk-link" href="/business-details">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

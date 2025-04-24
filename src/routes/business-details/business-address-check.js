@@ -31,9 +31,6 @@ export const postBusinessAddressCheck = {
     const addressPostcode = request.state.addressPostcode || ''
     const addressCountry = request.state.addressCountry || ''
 
-    // TO DO: Save the new business name to the database
-    // TO DO: based on the response route user or show
-
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
       .state('address1', address1)

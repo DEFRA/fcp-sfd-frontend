@@ -190,6 +190,16 @@ describe('Routes Integration Tests', () => {
 
       expect(response.statusCode).toBe(302)
     })
+
+    test('business-phone-numbers-route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-phone-numbers-check'
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
+    })
   })
 
   describe('With Error Views Disabled', () => {

@@ -1,22 +1,22 @@
 import { describe, test, expect, jest } from '@jest/globals'
 import {
-  getBusinessPhoneNumberChange,
-  postBusinessPhoneNumberChange,
+  getBusinessPhoneNumbersChange,
+  postBusinessPhoneNumbersChange,
   businessPhoneNumbersChangeRoutes
 } from '../../../../src/routes/business-details/business-phone-numbers-change.js'
 
-describe('Business Phone Numbers Routes Unit Tests', () => {
+describe('Business Phone Numbers Change Routes Unit Tests', () => {
   describe('GET /business-phone-numbers-change', () => {
     test('should have the correct method and path', () => {
-      expect(getBusinessPhoneNumberChange.method).toBe('GET')
-      expect(getBusinessPhoneNumberChange.path).toBe('/business-phone-numbers-change')
+      expect(getBusinessPhoneNumbersChange.method).toBe('GET')
+      expect(getBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
     })
 
     test('should render the correct view with correct data', () => {
       const request = {
         state: {
-          businessTelephone: null,
-          businessMobile: null
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
         }
       }
 
@@ -28,7 +28,7 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
         })
       }
 
-      getBusinessPhoneNumberChange.handler(request, h)
+      getBusinessPhoneNumbersChange.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
         businessTelephone: '01234567890',
@@ -39,13 +39,13 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
 
   describe('POST /business-phone-numbers-change', () => {
     test('should have the correct method and path', () => {
-      expect(postBusinessPhoneNumberChange.method).toBe('POST')
-      expect(postBusinessPhoneNumberChange.path).toBe('/business-phone-numbers-change')
+      expect(postBusinessPhoneNumbersChange.method).toBe('POST')
+      expect(postBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
     })
 
     describe('Validation', () => {
       test('should validate empty fields', () => {
-        const schema = postBusinessPhoneNumberChange.options.validate.payload
+        const schema = postBusinessPhoneNumbersChange.options.validate.payload
 
         const result = schema.validate({
           businessTelephone: '',
@@ -57,7 +57,7 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
       })
 
       test('should accept valid phone numbers', () => {
-        const schema = postBusinessPhoneNumberChange.options.validate.payload
+        const schema = postBusinessPhoneNumbersChange.options.validate.payload
 
         const result = schema.validate({
           businessTelephone: '01234567890',
@@ -76,11 +76,15 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
         }
       }
 
+      const stateMock = jest.fn().mockReturnThis()
+
       const h = {
-        redirect: jest.fn()
+        redirect: jest.fn().mockReturnValue({
+          state: stateMock
+        })
       }
 
-      postBusinessPhoneNumberChange.options.handler(request, h)
+      postBusinessPhoneNumbersChange.options.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-phone-numbers-check')
     })
@@ -112,7 +116,7 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
         ]
       }
 
-      await postBusinessPhoneNumberChange.options.validate.failAction(request, h, err)
+      await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
         businessTelephone: '',
@@ -147,7 +151,7 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
 
       const err = {}
 
-      await postBusinessPhoneNumberChange.options.validate.failAction(request, h, err)
+      await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
         businessTelephone: '',
@@ -162,8 +166,8 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
 
   test('should export all routes', () => {
     expect(businessPhoneNumbersChangeRoutes).toEqual([
-      getBusinessPhoneNumberChange,
-      postBusinessPhoneNumberChange
+      getBusinessPhoneNumbersChange,
+      postBusinessPhoneNumbersChange
     ])
   })
 })

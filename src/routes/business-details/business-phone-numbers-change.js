@@ -17,7 +17,6 @@ export const getBusinessPhoneNumberChange = {
     })
       .state('originalBusinessTelephone', originalBusinessTelephone)
       .state('originalBusinessMobile', originalBusinessMobile)
-
   }
 }
 

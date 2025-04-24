@@ -5,8 +5,19 @@ import { BAD_REQUEST } from '../../constants/status-codes.js'
 export const getBusinessPhoneNumberChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
-  handler: (_, h) => {
-    return h.view('business-details/business-phone-numbers-change')
+  handler: (request, h) => {
+    const currentBusinessTelephone = request.state.businessTelephone || '01234567890'
+    const originalBusinessTelephone = request.state.originalBusinessTelephone || currentBusinessTelephone
+    const currentBusinessMobile = request.state.businessMobile || '09876543210'
+    const originalBusinessMobile = request.state.originalBusinessMobile || currentBusinessMobile
+
+    return h.view('business-details/business-phone-numbers-change', {
+      businessTelephone: currentBusinessTelephone,
+      businessMobile: currentBusinessMobile
+    })
+      .state('originalBusinessTelephone', originalBusinessTelephone)
+      .state('originalBusinessMobile', originalBusinessMobile)
+
   }
 }
 

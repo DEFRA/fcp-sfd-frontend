@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 
-export function catchAll (request, h) {
+export const catchAll = (request, h) => {
   if (!request.response || !('isBoom' in request.response)) {
     return h.continue
   }

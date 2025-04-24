@@ -2,13 +2,13 @@ import { URL } from 'node:url'
 import { ProxyAgent } from 'undici'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 
-import { config } from '../config/config.js'
+import { config } from '../config/index.js'
 import { createLogger } from './logger.js'
 
 const logger = createLogger()
 
-function provideProxy () {
-  const proxyUrl = config.get('httpsProxy') ?? config.get('httpProxy')
+const provideProxy = () => {
+  const proxyUrl = config.get('server.httpsProxy') ?? config.get('server.httpProxy')
 
   if (!proxyUrl) {
     return null
@@ -34,7 +34,7 @@ function provideProxy () {
   }
 }
 
-function proxyFetch (url, options) {
+const proxyFetch = (url, options) => {
   const proxy = provideProxy()
 
   if (!proxy) {

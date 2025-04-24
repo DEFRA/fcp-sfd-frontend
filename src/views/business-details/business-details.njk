@@ -7,6 +7,9 @@
 {% set pageTitle = "View and update your business details" %}
 {% set metaDescription = "View and change the details for your business." %}
 
+{% set businessTelephone = "01234567890" %}
+{% set businessMobile = "09876543210" %}
+
 {% block beforeContent %}
     {{ subHeader(
     businessName="Agile Farm Ltd", 
@@ -62,11 +65,30 @@
           Business phone numbers
         </dt>
         <dd class="govuk-summary-list__value">
-          Telephone: 01632 960000<br>
-          Mobile: 07700 900 967
+          <div class"govuk-summary-list__value-item">
+            Telephone:
+              {% if businessTelephone %}
+                {{ businessTelephone }}
+              {% else %}
+                <div class="govuk-hint" style="display: inline;">
+                  Not added
+                </div>
+              {% endif %}
+          </div>
+
+          <div class"govuk-summary-list__value-item">
+            Mobile:
+            {% if businessMobile %}
+              {{ businessMobile }}
+            {% else %}
+              <div class="govuk-hint" style="display: inline;">
+                Not added
+              </div>
+            {% endif %}
+          </div>
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Change<span class="govuk-visually-hidden"> business phone numbers</span></a>
+          <a class="govuk-link govuk-link--no-visited-state" href="/business-phone-numbers-change">Change<span class="govuk-visually-hidden"> business phone numbers</span></a>
         </dd>
       </div>
       <div class="govuk-summary-list__row">

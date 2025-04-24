@@ -1,11 +1,11 @@
 import { constants as httpConstants } from 'http2'
 import { jest, beforeEach, describe, test, expect } from '@jest/globals'
 
-jest.unstable_mockModule('../../../src/config/config.js', () => ({
+jest.unstable_mockModule('../../../src/config/index.js', () => ({
   config: {
     get: jest.fn(key => {
-      if (key === 'staticCacheTimeout') return 3600000
-      if (key === 'assetPath') return '/public'
+      if (key === 'server.staticCacheTimeout') return 3600000
+      if (key === 'server.assetPath') return '/public'
       return null
     })
   }
@@ -13,7 +13,7 @@ jest.unstable_mockModule('../../../src/config/config.js', () => ({
 
 const importModules = async () => {
   const { staticAssetRoutes } = await import('../../../src/routes/static-assets.js')
-  const { config } = await import('../../../src/config/config.js')
+  const { config } = await import('../../../src/config/index.js')
   return { staticAssetRoutes, config }
 }
 
@@ -52,7 +52,7 @@ describe('Static asset routes', () => {
       const faviconRoute = staticAssetRoutes[0]
       expect(faviconRoute.options.cache.expiresIn).toBe(3600000)
       expect(faviconRoute.options.cache.privacy).toBe('private')
-      expect(config.get).toHaveBeenCalledWith('staticCacheTimeout')
+      expect(config.get).toHaveBeenCalledWith('server.staticCacheTimeout')
     })
 
     test('should have auth disabled', () => {
@@ -76,7 +76,7 @@ describe('Static asset routes', () => {
       const assetsRoute = staticAssetRoutes[1]
       expect(assetsRoute.method).toBe('GET')
       expect(assetsRoute.path).toBe('/public/{param*}')
-      expect(config.get).toHaveBeenCalledWith('assetPath')
+      expect(config.get).toHaveBeenCalledWith('server.assetPath')
     })
 
     test('should have correct cache settings', () => {

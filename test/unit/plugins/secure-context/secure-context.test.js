@@ -2,7 +2,7 @@ import hapi from '@hapi/hapi'
 import { jest, beforeAll, beforeEach, describe, test, expect, afterAll, afterEach } from '@jest/globals'
 
 import { secureContext } from '../../../../src/plugins/secure-context/secure-context.js'
-import { config } from '../../../../src/config/config.js'
+import { config } from '../../../../src/config/index.js'
 
 describe('secureContext plugin', () => {
   let server
@@ -41,7 +41,7 @@ describe('secureContext plugin', () => {
   describe('when secure context is disabled', () => {
     beforeEach(async () => {
       config.get = jest.fn((key) => {
-        if (key === 'isSecureContextEnabled') {
+        if (key === 'server.isSecureContextEnabled') {
           return false
         }
         return originalConfigGet ? originalConfigGet(key) : undefined
@@ -62,7 +62,7 @@ describe('secureContext plugin', () => {
   describe('when secure context is enabled with certificates', () => {
     beforeEach(async () => {
       config.get = jest.fn((key) => {
-        if (key === 'isSecureContextEnabled') {
+        if (key === 'server.isSecureContextEnabled') {
           return true
         }
         return originalConfigGet ? originalConfigGet(key) : undefined
@@ -89,7 +89,7 @@ describe('secureContext plugin', () => {
   describe('when secure context is enabled without certificates', () => {
     beforeEach(async () => {
       config.get = jest.fn((key) => {
-        if (key === 'isSecureContextEnabled') {
+        if (key === 'server.isSecureContextEnabled') {
           return true
         }
         return originalConfigGet ? originalConfigGet(key) : undefined

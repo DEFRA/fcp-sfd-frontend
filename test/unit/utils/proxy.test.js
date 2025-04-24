@@ -1,6 +1,6 @@
 import { jest, describe, test, expect, beforeEach } from '@jest/globals'
 
-import { config } from '../../../src/config/config.js'
+import { config } from '../../../src/config/index.js'
 import { provideProxy, proxyFetch } from '../../../src/utils/proxy.js'
 
 const mockLogger = {
@@ -17,7 +17,6 @@ const mockHttpsProxyAgent = jest.fn().mockImplementation((url) => {
   return { url }
 })
 
-// Setup mocks BEFORE imports
 jest.mock('../../../src/utils/logger.js', () => {
   return {
     createLogger: () => mockLogger
@@ -49,8 +48,8 @@ describe('#proxy', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    config.set('httpProxy', null)
-    config.set('httpsProxy', null)
+    config.set('server.httpProxy', null)
+    config.set('server.httpsProxy', null)
   })
 
   describe('#provideProxy', () => {
@@ -69,7 +68,7 @@ describe('#proxy', () => {
       let result
 
       beforeEach(() => {
-        config.set('httpProxy', httpProxyUrl)
+        config.set('server.httpProxy', httpProxyUrl)
         result = provideProxy()
       })
 
@@ -86,7 +85,7 @@ describe('#proxy', () => {
       let result
 
       beforeEach(() => {
-        config.set('httpsProxy', httpsProxyUrl)
+        config.set('server.httpsProxy', httpsProxyUrl)
         result = provideProxy()
       })
 
@@ -106,7 +105,7 @@ describe('#proxy', () => {
 
     describe('When a proxy is configured', () => {
       beforeEach(() => {
-        config.set('httpProxy', httpProxyUrl)
+        config.set('server.httpProxy', httpProxyUrl)
       })
 
       test('Should call fetch with the right URL and include a dispatcher', async () => {

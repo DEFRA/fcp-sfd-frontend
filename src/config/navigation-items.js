@@ -1,4 +1,4 @@
-export function getNavigationItems (request) {
+export const getNavigationItems = (request) => {
   return [
     {
       text: 'Home',

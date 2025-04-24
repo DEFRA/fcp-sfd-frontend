@@ -12,14 +12,28 @@ describe('Business Phone Numbers Routes Unit Tests', () => {
       expect(getBusinessPhoneNumberChange.path).toBe('/business-phone-numbers-change')
     })
 
-    test('should render the correct view', () => {
-      const h = {
-        view: jest.fn()
+    test('should render the correct view with correct data', () => {
+      const request = {
+        state: {
+          businessTelephone: null,
+          businessMobile: null
+        }
       }
 
-      getBusinessPhoneNumberChange.handler({}, h)
+      const stateMock = jest.fn().mockReturnThis()
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change')
+      const h = {
+        view: jest.fn().mockReturnValue({
+          state: stateMock
+        })
+      }
+
+      getBusinessPhoneNumberChange.handler(request, h)
+
+      expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
+        businessTelephone: '01234567890',
+        businessMobile: '09876543210'
+      })
     })
   })
 

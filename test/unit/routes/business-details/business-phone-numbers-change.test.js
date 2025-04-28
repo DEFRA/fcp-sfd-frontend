@@ -6,6 +6,9 @@ import {
 } from '../../../../src/routes/business-details/business-phone-numbers-change.js'
 
 describe('Business Phone Numbers Change Routes Unit Tests', () => {
+  const businessTelephone = '0123456789'
+  const businessMobile = '9876543210'
+
   describe('GET /business-phone-numbers-change', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessPhoneNumbersChange.method).toBe('GET')
@@ -15,8 +18,8 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
     test('should render the correct view with correct data', () => {
       const request = {
         state: {
-          businessTelephone: '01234567890',
-          businessMobile: '09876543210'
+          businessTelephone,
+          businessMobile
         }
       }
 
@@ -31,8 +34,8 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
       getBusinessPhoneNumbersChange.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
-        businessTelephone: '01234567890',
-        businessMobile: '09876543210'
+        businessTelephone: '0123456789',
+        businessMobile: '9876543210'
       })
     })
   })
@@ -60,8 +63,8 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
         const schema = postBusinessPhoneNumbersChange.options.validate.payload
 
         const result = schema.validate({
-          businessTelephone: '01234567890',
-          businessMobile: '07123456789'
+          businessTelephone,
+          businessMobile
         })
 
         expect(result.error).toBeFalsy()
@@ -71,8 +74,8 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
     test('should redirect to check page on successful submission', () => {
       const request = {
         payload: {
-          businessTelephone: '01234567890',
-          businessMobile: '07123456789'
+          businessTelephone,
+          businessMobile
         }
       }
 

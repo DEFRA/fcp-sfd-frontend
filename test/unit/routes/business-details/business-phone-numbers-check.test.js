@@ -6,6 +6,9 @@ import {
 } from '../../../../src/routes/business-details/business-phone-numbers-check.js'
 
 describe('Business Phone Numbers Check Routes Unit Tests', () => {
+  const businessTelephone = '0123456789'
+  const businessMobile = '9876543210'
+
   describe('GET /business-phone-numbers-check', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessPhoneNumbersCheck.method).toBe('GET')
@@ -15,8 +18,8 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
     test('should render the correct view with business phone numbers from state', () => {
       const request = {
         state: {
-          businessTelephone: '0123456789',
-          businessMobile: '9876543210'
+          businessTelephone,
+          businessMobile
         }
       }
 
@@ -27,8 +30,8 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
       getBusinessPhoneNumbersCheck.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-check', {
-        businessTelephone: '0123456789',
-        businessMobile: '9876543210'
+        businessTelephone,
+        businessMobile
       })
     })
 
@@ -59,8 +62,8 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
     test('should redirect to business-details with success banner and business phone number state', () => {
       const request = {
         state: {
-          businessTelephone: '01234567890',
-          businessMobile: '07123456789'
+          businessTelephone,
+          businessMobile
         }
       }
 
@@ -78,8 +81,8 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
 
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
       expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(stateMock).toHaveBeenCalledWith('businessTelephone', '01234567890')
-      expect(stateMock).toHaveBeenCalledWith('businessMobile', '07123456789')
+      expect(stateMock).toHaveBeenCalledWith('businessTelephone', '0123456789')
+      expect(stateMock).toHaveBeenCalledWith('businessMobile', '9876543210')
       expect(unstateMock).toHaveBeenCalledWith('originalBusinessTelephone')
       expect(unstateMock).toHaveBeenCalledWith('originalBusinessMobile')
     })

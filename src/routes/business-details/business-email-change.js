@@ -40,7 +40,6 @@ export const postBusinessEmailChange = {
   }
 }
 
-
 export const businessEmailChangeRoutes = [
   getBusinessEmailChange,
   postBusinessEmailChange

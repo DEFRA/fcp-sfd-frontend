@@ -2,23 +2,22 @@ export const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   handler: (request, h) => {
-    const showSuccessBanner = request.state.showSuccessBanner === 'true'
+    const {
+      showSuccessBanner: showSuccessBannerRaw,
+      businessName: businessNameRaw,
+      originalBusinessName,
+      address1 = '10 Skirbeck Way',
+      address2 = '',
+      addressCity = 'Maidstone',
+      addressCounty = '',
+      addressPostcode = 'SK22 1DL',
+      addressCountry = 'United Kingdom',
+      businessTelephone = '',
+      businessMobile = ''
+    } = request.state
 
-    let businessName = request.state.businessName
-    const originalBusinessName = request.state.originalBusinessName
-
-    if (originalBusinessName && !showSuccessBanner) {
-      businessName = originalBusinessName
-    }
-
-    businessName = businessName || 'Agile Farm Ltd'
-
-    const address1 = request.state.address1 || '10 Skirbeck Way'
-    const address2 = request.state.address2 || ''
-    const addressCity = request.state.addressCity || 'Maidstone'
-    const addressCounty = request.state.addressCounty || ''
-    const addressPostcode = request.state.addressPostcode || 'SK22 1DL'
-    const addressCountry = request.state.addressCountry || 'United Kingdom'
+    const showSuccessBanner = showSuccessBannerRaw === 'true'
+    const businessName = originalBusinessName && !showSuccessBanner ? originalBusinessName : businessNameRaw || 'Agile Farm Ltd'
 
     const formattedAddress = [
       address1,
@@ -32,7 +31,9 @@ export const getBusinessDetails = {
     return h.view('business-details/business-details', {
       showSuccessBanner,
       businessName,
-      formattedAddress
+      formattedAddress,
+      businessTelephone,
+      businessMobile
     })
       .unstate('showSuccessBanner')
       .unstate('originalBusinessName')

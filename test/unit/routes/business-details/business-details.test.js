@@ -15,7 +15,9 @@ describe('Business Details Routes Unit Tests', () => {
       const request = {
         state: {
           showSuccessBanner: 'true',
-          businessName: 'Test Business'
+          businessName: 'Test Business',
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
         }
       }
 
@@ -38,8 +40,11 @@ describe('Business Details Routes Unit Tests', () => {
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: true,
         businessName: 'Test Business',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
+        businessTelephone: '01234567890',
+        businessMobile: '09876543210'
       })
+
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'Test Business')
@@ -50,7 +55,9 @@ describe('Business Details Routes Unit Tests', () => {
         state: {
           showSuccessBanner: 'false',
           businessName: 'New Business Name',
-          originalBusinessName: 'Original Business Name'
+          originalBusinessName: 'Original Business Name',
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
         }
       }
 
@@ -73,7 +80,9 @@ describe('Business Details Routes Unit Tests', () => {
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: false,
         businessName: 'Original Business Name',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
+        businessTelephone: '01234567890',
+        businessMobile: '09876543210'
       })
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
@@ -85,7 +94,9 @@ describe('Business Details Routes Unit Tests', () => {
         state: {
           showSuccessBanner: 'true',
           businessName: 'New Business Name',
-          originalBusinessName: 'Original Business Name'
+          originalBusinessName: 'Original Business Name',
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
         }
       }
 
@@ -108,8 +119,11 @@ describe('Business Details Routes Unit Tests', () => {
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: true,
         businessName: 'New Business Name',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
+        businessTelephone: '01234567890',
+        businessMobile: '09876543210'
       })
+
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'New Business Name')
@@ -117,7 +131,10 @@ describe('Business Details Routes Unit Tests', () => {
 
     test('should use default business name when no name is provided', () => {
       const request = {
-        state: {}
+        state: {
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
+        }
       }
 
       const stateMock = jest.fn().mockReturnThis()
@@ -139,7 +156,9 @@ describe('Business Details Routes Unit Tests', () => {
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
         showSuccessBanner: false,
         businessName: 'Agile Farm Ltd',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom'
+        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
+        businessTelephone: '01234567890',
+        businessMobile: '09876543210'
       })
       expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
       expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')

@@ -2,13 +2,13 @@ import { businessPhoneSchema } from '../../schemas/business-details/business-pho
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
-export const getBusinessPhoneNumberChange = {
+export const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   handler: (request, h) => {
-    const currentBusinessTelephone = request.state.businessTelephone || '01234567890'
+    const currentBusinessTelephone = request.state.businessTelephone || ''
     const originalBusinessTelephone = request.state.originalBusinessTelephone || currentBusinessTelephone
-    const currentBusinessMobile = request.state.businessMobile || '09876543210'
+    const currentBusinessMobile = request.state.businessMobile || ''
     const originalBusinessMobile = request.state.originalBusinessMobile || currentBusinessMobile
 
     return h.view('business-details/business-phone-numbers-change', {
@@ -20,7 +20,7 @@ export const getBusinessPhoneNumberChange = {
   }
 }
 
-export const postBusinessPhoneNumberChange = {
+export const postBusinessPhoneNumbersChange = {
   method: 'POST',
   path: '/business-phone-numbers-change',
   options: {
@@ -39,13 +39,17 @@ export const postBusinessPhoneNumberChange = {
         }).code(BAD_REQUEST).takeover()
       }
     },
-    handler: (_, h) => {
+    handler: (request, h) => {
+      const { businessTelephone, businessMobile } = request.payload
+
       return h.redirect('/business-phone-numbers-check')
+        .state('businessTelephone', businessTelephone)
+        .state('businessMobile', businessMobile)
     }
   }
 }
 
 export const businessPhoneNumbersChangeRoutes = [
-  getBusinessPhoneNumberChange,
-  postBusinessPhoneNumberChange
+  getBusinessPhoneNumbersChange,
+  postBusinessPhoneNumbersChange
 ]

@@ -11,7 +11,7 @@ const resolveFields = (state, showSuccessBanner) => {
     { name: 'addressCounty', raw: state.addressCounty, original: state.originalAddressCounty, fallback: '' },
     { name: 'addressPostcode', raw: state.addressPostcode, original: state.originalAddressPostcode, fallback: 'SK22 1DL' },
     { name: 'addressCountry', raw: state.addressCountry, original: state.originalAddressCountry, fallback: 'United Kingdom' },
-    { name: 'businessEmail', raw: state.businessEmail, original: state.businessEmail, fallback: '' }
+    { name: 'businessEmail', raw: state.businessEmail, original: state.originalBusinessEmail, fallback: 'name@example.com' }
   ]
 
   return fields.reduce((acc, { name, raw, original, fallback }) => {
@@ -48,7 +48,7 @@ const manageState = (response, resolvedFields) => {
     { key: 'originalAddressCounty' },
     { key: 'originalAddressPostcode' },
     { key: 'originalAddressCountry' },
-    { key: 'businessEmail' }
+    { key: 'originalBusinessEmail' }
   ]
 
   stateChanges.forEach(({ key }) => response.unstate(key))
@@ -85,7 +85,7 @@ export const getBusinessDetails = {
       formattedAddress,
       businessTelephone: resolvedFields.businessTelephone,
       businessMobile: resolvedFields.businessMobile,
-      businessEmail: resolveFields.businessEmail
+      businessEmail: resolvedFields.businessEmail
     })
 
     manageState(response, resolvedFields)

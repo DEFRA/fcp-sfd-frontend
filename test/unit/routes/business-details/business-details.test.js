@@ -17,8 +17,7 @@ describe('Business Details Routes Unit Tests', () => {
           showSuccessBanner: 'true',
           businessName: 'Test Business',
           businessTelephone: '01234567890',
-          businessMobile: '09876543210',
-          businessEmail: 'name@example.com'
+          businessMobile: '09876543210'
         }
       }
 
@@ -41,8 +40,7 @@ describe('Business Details Routes Unit Tests', () => {
         businessName: 'Test Business',
         formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
         businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        businessMobile: '09876543210'
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
@@ -57,8 +55,7 @@ describe('Business Details Routes Unit Tests', () => {
           businessName: 'New Business Name',
           originalBusinessName: 'Original Business Name',
           businessTelephone: '01234567890',
-          businessMobile: '09876543210',
-          businessEmail: 'name@example.com'
+          businessMobile: '09876543210'
         }
       }
 
@@ -81,8 +78,7 @@ describe('Business Details Routes Unit Tests', () => {
         businessName: 'Original Business Name',
         formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
         businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        businessMobile: '09876543210'
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
@@ -97,8 +93,7 @@ describe('Business Details Routes Unit Tests', () => {
           businessName: 'New Business Name',
           originalBusinessName: 'Original Business Name',
           businessTelephone: '01234567890',
-          businessMobile: '09876543210',
-          businessEmail: 'name@example.com'
+          businessMobile: '09876543210'
         }
       }
 
@@ -121,8 +116,7 @@ describe('Business Details Routes Unit Tests', () => {
         businessName: 'New Business Name',
         formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
         businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        businessMobile: '09876543210'
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
@@ -134,8 +128,7 @@ describe('Business Details Routes Unit Tests', () => {
       const request = {
         state: {
           businessTelephone: '01234567890',
-          businessMobile: '09876543210',
-          businessEmail: 'name@example.com'
+          businessMobile: '09876543210'
         }
       }
 
@@ -158,8 +151,7 @@ describe('Business Details Routes Unit Tests', () => {
         businessName: 'Agile Farm Ltd',
         formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
         businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        businessMobile: '09876543210'
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')

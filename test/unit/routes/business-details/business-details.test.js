@@ -22,17 +22,15 @@ describe('Business Details Routes Unit Tests', () => {
       }
 
       const stateMock = jest.fn().mockReturnThis()
-      const secondUnstate = jest.fn().mockReturnValue({
-        state: stateMock
-      })
-      const firstUnstate = jest.fn().mockReturnValue({
-        unstate: secondUnstate
-      })
+      const unstateMock = jest.fn().mockReturnThis()
+
+      const responseMock = {
+        state: stateMock,
+        unstate: unstateMock
+      }
 
       const h = {
-        view: jest.fn().mockReturnValue({
-          unstate: firstUnstate
-        })
+        view: jest.fn().mockReturnValue(responseMock)
       }
 
       getBusinessDetails.handler(request, h)
@@ -45,8 +43,8 @@ describe('Business Details Routes Unit Tests', () => {
         businessMobile: '09876543210'
       })
 
-      expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
-      expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
+      expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
+      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'Test Business')
     })
 
@@ -62,17 +60,15 @@ describe('Business Details Routes Unit Tests', () => {
       }
 
       const stateMock = jest.fn().mockReturnThis()
-      const secondUnstate = jest.fn().mockReturnValue({
-        state: stateMock
-      })
-      const firstUnstate = jest.fn().mockReturnValue({
-        unstate: secondUnstate
-      })
+      const unstateMock = jest.fn().mockReturnThis()
+
+      const responseMock = {
+        state: stateMock,
+        unstate: unstateMock
+      }
 
       const h = {
-        view: jest.fn().mockReturnValue({
-          unstate: firstUnstate
-        })
+        view: jest.fn().mockReturnValue(responseMock)
       }
 
       getBusinessDetails.handler(request, h)
@@ -84,8 +80,9 @@ describe('Business Details Routes Unit Tests', () => {
         businessTelephone: '01234567890',
         businessMobile: '09876543210'
       })
-      expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
-      expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
+
+      expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
+      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'Original Business Name')
     })
 
@@ -101,17 +98,15 @@ describe('Business Details Routes Unit Tests', () => {
       }
 
       const stateMock = jest.fn().mockReturnThis()
-      const secondUnstate = jest.fn().mockReturnValue({
-        state: stateMock
-      })
-      const firstUnstate = jest.fn().mockReturnValue({
-        unstate: secondUnstate
-      })
+      const unstateMock = jest.fn().mockReturnThis()
+
+      const responseMock = {
+        state: stateMock,
+        unstate: unstateMock
+      }
 
       const h = {
-        view: jest.fn().mockReturnValue({
-          unstate: firstUnstate
-        })
+        view: jest.fn().mockReturnValue(responseMock)
       }
 
       getBusinessDetails.handler(request, h)
@@ -124,8 +119,8 @@ describe('Business Details Routes Unit Tests', () => {
         businessMobile: '09876543210'
       })
 
-      expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
-      expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
+      expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
+      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'New Business Name')
     })
 
@@ -138,17 +133,15 @@ describe('Business Details Routes Unit Tests', () => {
       }
 
       const stateMock = jest.fn().mockReturnThis()
-      const secondUnstate = jest.fn().mockReturnValue({
-        state: stateMock
-      })
-      const firstUnstate = jest.fn().mockReturnValue({
-        unstate: secondUnstate
-      })
+      const unstateMock = jest.fn().mockReturnThis()
+
+      const responseMock = {
+        state: stateMock,
+        unstate: unstateMock
+      }
 
       const h = {
-        view: jest.fn().mockReturnValue({
-          unstate: firstUnstate
-        })
+        view: jest.fn().mockReturnValue(responseMock)
       }
 
       getBusinessDetails.handler(request, h)
@@ -160,8 +153,9 @@ describe('Business Details Routes Unit Tests', () => {
         businessTelephone: '01234567890',
         businessMobile: '09876543210'
       })
-      expect(firstUnstate).toHaveBeenCalledWith('showSuccessBanner')
-      expect(secondUnstate).toHaveBeenCalledWith('originalBusinessName')
+
+      expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
+      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'Agile Farm Ltd')
     })
   })

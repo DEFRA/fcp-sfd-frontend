@@ -6,13 +6,12 @@ export const getBusinessEmailChange = {
   method: 'GET',
   path: '/business-email-change',
   handler: (request, h) => {
-    const currentBusinessEmail = request.state.businessEmail = 'agilefarms@gmail.com'
+    const currentBusinessEmail = request.state.businessEmail || ''
     const originalBusinessEmail = request.state.originalBusinessEmail || currentBusinessEmail
 
     return h.view('business-details/business-email-change', {
       businessEmail: currentBusinessEmail
-    })
-      .state('originalBusinessEmail', originalBusinessEmail)
+    }).state('originalBusinessEmail', originalBusinessEmail)
   }
 }
 
@@ -34,8 +33,11 @@ export const postBusinessEmailChange = {
         }).code(BAD_REQUEST).takeover()
       }
     },
-    handler: (_, h) => {
-      return h.redirect('business-details/business-email-check')
+    handler: (request, h) => {
+      const { businessEmail } = request.payload
+
+      return h.redirect('/business-email-check')
+        .state('businessEmail', businessEmail)
     }
   }
 }

@@ -200,6 +200,28 @@ describe('Routes Integration Tests', () => {
       expect(response.statusCode).toBe(200)
       expect(response.headers['content-type']).toContain('text/html')
     })
+
+    test('business-email-change GET route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-email-change'
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
+    })
+
+    test('business-email-change POST route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-email-change',
+        payload: {
+          businessEmail: 'name@example.com'
+        }
+      })
+
+      expect(response.statusCode).toBe(302)
+    })
   })
 
   describe('With Error Views Disabled', () => {

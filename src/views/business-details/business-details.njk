@@ -7,6 +7,8 @@
 {% set pageTitle = "View and update your business details" %}
 {% set metaDescription = "View and change the details for your business." %}
 
+{% set businessEmail = "agilefarms@gmail.com" %}
+
 {% block beforeContent %}
     {{ subHeader(
     businessName="Agile Farm Ltd", 
@@ -93,10 +95,10 @@
           Business email address
         </dt>
         <dd class="govuk-summary-list__value">
-          agilefarmsrus25@gmail.com
+          {{ businessEmail }}
         </dd>
         <dd class="govuk-summary-list__actions">
-          <a class="govuk-link govuk-link--no-visited-state" href="#">Change<span class="govuk-visually-hidden"> business email address</span></a>
+          <a class="govuk-link govuk-link--no-visited-state" href="/business-email-change">Change<span class="govuk-visually-hidden"> business email address</span></a>
         </dd>
       </div>
     </dl>

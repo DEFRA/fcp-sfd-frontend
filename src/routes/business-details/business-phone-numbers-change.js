@@ -43,8 +43,8 @@ export const postBusinessPhoneNumbersChange = {
       const { businessTelephone, businessMobile } = request.payload
 
       return h.redirect('/business-phone-numbers-check')
-        .state('businessTelephone', businessTelephone)
-        .state('businessMobile', businessMobile)
+        .state('tempBusinessTelephone', businessTelephone)
+        .state('tempBusinessMobile', businessMobile)
     }
   }
 }

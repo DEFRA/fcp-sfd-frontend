@@ -3,8 +3,8 @@ import { resolveField } from '../../utils/resolve-field.js'
 const resolveFields = (state, showSuccessBanner) => {
   const fields = [
     { name: 'businessName', raw: state.businessName, original: state.originalBusinessName, fallback: 'Agile Farm Ltd' },
-    { name: 'businessTelephone', raw: state.businessTelephone, original: state.originalBusinessTelephone },
-    { name: 'businessMobile', raw: state.businessMobile, original: state.originalBusinessMobile },
+    { name: 'businessTelephone', raw: state.businessTelephone, original: state.originalBusinessTelephone, fallback: '020 7946 0123' },
+    { name: 'businessMobile', raw: state.businessMobile, original: state.originalBusinessMobile, fallback: '07400 123456' },
     { name: 'address1', raw: state.address1, original: state.originalAddress1, fallback: '10 Skirbeck Way' },
     { name: 'address2', raw: state.address2, original: state.originalAddress2, fallback: '' },
     { name: 'addressCity', raw: state.addressCity, original: state.originalAddressCity, fallback: 'Maidstone' },

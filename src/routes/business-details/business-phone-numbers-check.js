@@ -16,8 +16,8 @@ export const postBusinessPhoneNumbersCheck = {
   method: 'POST',
   path: '/business-phone-numbers-check',
   handler: (request, h) => {
-    const businessTelephone = request.state.businessTelephone
-    const businessMobile = request.state.businessMobile
+    const businessTelephone = request.state.tempBusinessTelephone
+    const businessMobile = request.state.tempBusinessMobile
 
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')

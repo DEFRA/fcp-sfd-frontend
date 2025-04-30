@@ -18,8 +18,8 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
     test('should render the correct view with business phone numbers from state', () => {
       const request = {
         state: {
-          businessTelephone,
-          businessMobile
+          tempBusinessTelephone: businessTelephone,
+          tempBusinessMobile: businessMobile
         }
       }
 
@@ -62,8 +62,8 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
     test('should redirect to business-details with success banner and business phone number state', () => {
       const request = {
         state: {
-          businessTelephone,
-          businessMobile
+          tempBusinessTelephone: businessTelephone,
+          tempBusinessMobile: businessMobile
         }
       }
 

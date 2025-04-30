@@ -6,10 +6,29 @@ export const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   handler: (request, h) => {
-    const currentBusinessTelephone = request.state.businessTelephone || ''
-    const originalBusinessTelephone = request.state.originalBusinessTelephone || currentBusinessTelephone
-    const currentBusinessMobile = request.state.businessMobile || ''
-    const originalBusinessMobile = request.state.originalBusinessMobile || currentBusinessMobile
+    // const currentBusinessTelephone = request.state.businessTelephone || ''
+    // const originalBusinessTelephone = request.state.originalBusinessTelephone || currentBusinessTelephone
+    // const currentBusinessMobile = request.state.businessMobile || ''
+    // const originalBusinessMobile = request.state.originalBusinessMobile || currentBusinessMobile
+
+    const currentBusinessTelephone =
+      request.state.tempBusinessTelephone ??
+      request.state.businessTelephone ??
+      ''
+    const currentBusinessMobile =
+      request.state.tempBusinessMobile ??
+      request.state.businessMobile ??
+      ''
+
+    const originalBusinessTelephone =
+      request.state.originalBusinessTelephone ??
+      request.state.businessTelephone ??
+      ''
+
+    const originalBusinessMobile =
+      request.state.originalBusinessMobile ??
+      request.state.businessMobile ??
+      ''
 
     return h.view('business-details/business-phone-numbers-change', {
       businessTelephone: currentBusinessTelephone,
@@ -43,8 +62,8 @@ export const postBusinessPhoneNumbersChange = {
       const { businessTelephone, businessMobile } = request.payload
 
       return h.redirect('/business-phone-numbers-check')
-        .state('businessTelephone', businessTelephone)
-        .state('businessMobile', businessMobile)
+        .state('tempBusinessTelephone', businessTelephone)
+        .state('tempBusinessMobile', businessMobile)
     }
   }
 }

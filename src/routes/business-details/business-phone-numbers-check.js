@@ -2,8 +2,8 @@ export const getBusinessPhoneNumbersCheck = {
   method: 'GET',
   path: '/business-phone-numbers-check',
   handler: (request, h) => {
-    const businessTelephone = request.state.businessTelephone || ''
-    const businessMobile = request.state.businessMobile || ''
+    const businessTelephone = request.state.tempBusinessTelephone || ''
+    const businessMobile = request.state.tempBusinessMobile || ''
 
     return h.view('business-details/business-phone-numbers-check', {
       businessTelephone,
@@ -16,8 +16,8 @@ export const postBusinessPhoneNumbersCheck = {
   method: 'POST',
   path: '/business-phone-numbers-check',
   handler: (request, h) => {
-    const businessTelephone = request.state.businessTelephone
-    const businessMobile = request.state.businessMobile
+    const businessTelephone = request.state.tempBusinessTelephone
+    const businessMobile = request.state.tempBusinessMobile
 
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
@@ -25,6 +25,8 @@ export const postBusinessPhoneNumbersCheck = {
       .state('businessMobile', businessMobile)
       .unstate('originalBusinessTelephone')
       .unstate('originalBusinessMobile')
+      .unstate('tempBusinessTelephone')
+      .unstate('tempBusinessMobile')
   }
 }
 

@@ -90,6 +90,15 @@ export const getBusinessDetails = {
 
     manageState(response, resolvedFields)
 
+    const tempData =
+      request.state.tempBusinessTelephone !== undefined ||
+      request.state.tempBusinessMobile !== undefined
+
+    if (tempData && !showSuccessBanner) {
+      response.unstate('tempBusinessTelephone')
+      response.unstate('tempBusinessMobile')
+    }
+
     return response
   }
 }

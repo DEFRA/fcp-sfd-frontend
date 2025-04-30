@@ -164,6 +164,36 @@ describe('Business Details Routes Unit Tests', () => {
       expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'Agile Farm Ltd')
     })
+
+    test('should unstate temp values when they exist and showSuccessBanner is false', () => {
+      const request = {
+        state: {
+          showSuccessBanner: 'false',
+          businessName: 'Test Business',
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210',
+          tempBusinessTelephone: '01230000000',
+          tempBusinessMobile: '09870000000'
+        }
+      }
+
+      const stateMock = jest.fn().mockReturnThis()
+      const unstateMock = jest.fn().mockReturnThis()
+
+      const responseMock = {
+        state: stateMock,
+        unstate: unstateMock
+      }
+
+      const h = {
+        view: jest.fn().mockReturnValue(responseMock)
+      }
+
+      getBusinessDetails.handler(request, h)
+
+      expect(unstateMock).toHaveBeenCalledWith('tempBusinessTelephone')
+      expect(unstateMock).toHaveBeenCalledWith('tempBusinessMobile')
+    })
   })
 
   test('should export all routes', () => {

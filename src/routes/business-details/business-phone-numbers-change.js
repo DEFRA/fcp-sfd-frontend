@@ -6,11 +6,6 @@ export const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   handler: (request, h) => {
-    // const currentBusinessTelephone = request.state.businessTelephone || ''
-    // const originalBusinessTelephone = request.state.originalBusinessTelephone || currentBusinessTelephone
-    // const currentBusinessMobile = request.state.businessMobile || ''
-    // const originalBusinessMobile = request.state.originalBusinessMobile || currentBusinessMobile
-
     const currentBusinessTelephone =
       request.state.tempBusinessTelephone ??
       request.state.businessTelephone ??

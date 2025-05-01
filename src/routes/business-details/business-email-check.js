@@ -18,6 +18,7 @@ const postBusinessEmailCheck = {
 
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
+      .state('successField', 'BUSINESS_EMAIL_ADDRESS')
       .state('businessEmail', businessEmail)
       .unstate('originalBusinessEmail')
   }

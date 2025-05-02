@@ -2,7 +2,7 @@ import { businessEmailSchema } from '../../schemas/business-details/business-ema
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
-export const getBusinessEmailChange = {
+const getBusinessEmailChange = {
   method: 'GET',
   path: '/business-email-change',
   handler: (request, h) => {
@@ -15,7 +15,7 @@ export const getBusinessEmailChange = {
   }
 }
 
-export const postBusinessEmailChange = {
+const postBusinessEmailChange = {
   method: 'POST',
   path: '/business-email-change',
   options: {

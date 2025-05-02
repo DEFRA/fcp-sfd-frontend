@@ -1,15 +1,21 @@
 import { describe, test, expect, jest } from '@jest/globals'
 import {
-  getBusinessEmailChange,
-  postBusinessEmailChange,
   businessEmailChangeRoutes
 } from '../../../../src/routes/business-details/business-email-change.js'
+
+const getRoute = businessEmailChangeRoutes.find(
+  route => route.method === 'GET' && route.path === '/business-email-change'
+)
+
+const postRoute = businessEmailChangeRoutes.find(
+  route => route.method === 'POST' && route.path === '/business-email-change'
+)
 
 describe('Business Email Routes Unit Tests', () => {
   describe('GET /business-email-change', () => {
     test('should have the correct method and path', () => {
-      expect(getBusinessEmailChange.method).toBe('GET')
-      expect(getBusinessEmailChange.path).toBe('/business-email-change')
+      expect(getRoute.method).toBe('GET')
+      expect(getRoute.path).toBe('/business-email-change')
     })
 
     test('should render the correct view with correct data', () => {
@@ -27,7 +33,7 @@ describe('Business Email Routes Unit Tests', () => {
         })
       }
 
-      getBusinessEmailChange.handler(request, h)
+      getRoute.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
         businessEmail: 'name@example.com'
@@ -39,12 +45,12 @@ describe('Business Email Routes Unit Tests', () => {
 
   describe('POST /business-email-change', () => {
     test('should have the correct method and path', () => {
-      expect(postBusinessEmailChange.method).toBe('POST')
-      expect(postBusinessEmailChange.path).toBe('/business-email-change')
+      expect(postRoute.method).toBe('POST')
+      expect(postRoute.path).toBe('/business-email-change')
     })
 
     describe('Validation', () => {
-      const schema = postBusinessEmailChange.options.validate.payload
+      const schema = postRoute.options.validate.payload
 
       test('should validate empty business email', () => {
         const result = schema.validate({ businessEmail: '' })
@@ -54,7 +60,7 @@ describe('Business Email Routes Unit Tests', () => {
       })
 
       test('should validate invalid business email', () => {
-        const schema = postBusinessEmailChange.options.validate.payload
+        const schema = postRoute.options.validate.payload
 
         const result = schema.validate({ businessEmail: 'not-an-email' })
 
@@ -84,7 +90,7 @@ describe('Business Email Routes Unit Tests', () => {
         })
       }
 
-      postBusinessEmailChange.options.handler(request, h)
+      postRoute.options.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-email-check')
       expect(stateMock).toHaveBeenCalledWith('businessEmail', 'name@example.com')
@@ -110,7 +116,7 @@ describe('Business Email Routes Unit Tests', () => {
         ]
       }
 
-      await postBusinessEmailChange.options.validate.failAction(request, h, err)
+      await postRoute.options.validate.failAction(request, h, err)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
         businessEmail: '',
@@ -140,7 +146,7 @@ describe('Business Email Routes Unit Tests', () => {
 
       const err = {}
 
-      await postBusinessEmailChange.options.validate.failAction(request, h, err)
+      await postRoute.options.validate.failAction(request, h, err)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
         businessEmail: '',
@@ -154,8 +160,8 @@ describe('Business Email Routes Unit Tests', () => {
 
   test('should export all routes', () => {
     expect(businessEmailChangeRoutes).toEqual([
-      getBusinessEmailChange,
-      postBusinessEmailChange
+      getRoute,
+      postRoute
     ])
   })
 })

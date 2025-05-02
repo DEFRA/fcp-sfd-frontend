@@ -223,6 +223,32 @@ describe('Routes Integration Tests', () => {
       expect(response.statusCode).toBe(302)
     })
 
+    test('business-email-change POST returns 400 on empty email', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-email-change',
+        payload: {
+          businessEmail: ''
+        }
+      })
+
+      expect(response.statusCode).toBe(400)
+      expect(response.payload).toContain('Enter business email address')
+    })
+
+    test('business-email-change POST returns 400 on invalid email format', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-email-change',
+        payload: {
+          businessEmail: 'not-an-email'
+        }
+      })
+
+      expect(response.statusCode).toBe(400)
+      expect(response.payload).toContain('Enter an email address, like name@example.com')
+    })
+
     test('business-email-check route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',

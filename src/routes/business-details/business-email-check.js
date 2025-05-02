@@ -1,4 +1,4 @@
-export const getBusinessEmailCheck = {
+const getBusinessEmailCheck = {
   method: 'GET',
   path: '/business-email-check',
   handler: (request, h) => {
@@ -10,7 +10,7 @@ export const getBusinessEmailCheck = {
   }
 }
 
-export const postBusinessEmailCheck = {
+const postBusinessEmailCheck = {
   method: 'POST',
   path: '/business-email-check',
   handler: (request, h) => {

@@ -1,15 +1,21 @@
 import { describe, test, expect, jest } from '@jest/globals'
 import {
-  getBusinessEmailCheck,
-  postBusinessEmailCheck,
   businessEmailCheckRoutes
 } from '../../../../src/routes/business-details/business-email-check.js'
+
+const getRoute = businessEmailCheckRoutes.find(
+  route => route.method === 'GET' && route.path === '/business-email-check'
+)
+
+const postRoute = businessEmailCheckRoutes.find(
+  route => route.method === 'POST' && route.path === '/business-email-check'
+)
 
 describe('Business Email Check Routes Unit Tests', () => {
   describe('GET /business-email-check', () => {
     test('should have the correct method and path', () => {
-      expect(getBusinessEmailCheck.method).toBe('GET')
-      expect(getBusinessEmailCheck.path).toBe('/business-email-check')
+      expect(getRoute.method).toBe('GET')
+      expect(getRoute.path).toBe('/business-email-check')
     })
 
     test('should render the correct view with the business email address from state', () => {
@@ -23,7 +29,7 @@ describe('Business Email Check Routes Unit Tests', () => {
         view: jest.fn().mockReturnThis()
       }
 
-      getBusinessEmailCheck.handler(request, h)
+      getRoute.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-email-check', {
         businessEmail: 'name@example.com'
@@ -39,7 +45,7 @@ describe('Business Email Check Routes Unit Tests', () => {
         view: jest.fn().mockReturnThis()
       }
 
-      getBusinessEmailCheck.handler(request, h)
+      getRoute.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-email-check', {
         businessEmail: ''
@@ -49,8 +55,8 @@ describe('Business Email Check Routes Unit Tests', () => {
 
   describe('POST /business-email-check', () => {
     test('should have the correct method and path', () => {
-      expect(postBusinessEmailCheck.method).toBe('POST')
-      expect(postBusinessEmailCheck.path).toBe('/business-email-check')
+      expect(postRoute.method).toBe('POST')
+      expect(postRoute.path).toBe('/business-email-check')
     })
 
     test('should redirect to business-details with success banner and business name state', () => {
@@ -70,7 +76,7 @@ describe('Business Email Check Routes Unit Tests', () => {
         })
       }
 
-      postBusinessEmailCheck.handler(request, h)
+      postRoute.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
       expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
@@ -93,7 +99,7 @@ describe('Business Email Check Routes Unit Tests', () => {
         })
       }
 
-      postBusinessEmailCheck.handler(request, h)
+      postRoute.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
       expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
@@ -104,8 +110,8 @@ describe('Business Email Check Routes Unit Tests', () => {
 
   test('should export all routes', () => {
     expect(businessEmailCheckRoutes).toEqual([
-      getBusinessEmailCheck,
-      postBusinessEmailCheck
+      getRoute,
+      postRoute
     ])
   })
 })

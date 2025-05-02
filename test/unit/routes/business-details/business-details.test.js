@@ -6,6 +6,9 @@ import {
 
 describe('Business Details Routes Unit Tests', () => {
   describe('GET /business-details', () => {
+    const businessTelephone = '01234567890'
+    const businessMobile = '09876543210'
+
     test('should have the correct method and path', () => {
       expect(getBusinessDetails.method).toBe('GET')
       expect(getBusinessDetails.path).toBe('/business-details')
@@ -16,8 +19,8 @@ describe('Business Details Routes Unit Tests', () => {
         state: {
           showSuccessBanner: 'true',
           businessName: 'Test Business',
-          businessTelephone: '01234567890',
-          businessMobile: '09876543210'
+          businessTelephone,
+          businessMobile
         }
       }
 
@@ -55,8 +58,8 @@ describe('Business Details Routes Unit Tests', () => {
           showSuccessBanner: 'false',
           businessName: 'New Business Name',
           originalBusinessName: 'Original Business Name',
-          businessTelephone: '01234567890',
-          businessMobile: '09876543210',
+          businessTelephone,
+          businessMobile,
           businessEmail: 'name@example.com'
         }
       }
@@ -95,8 +98,8 @@ describe('Business Details Routes Unit Tests', () => {
           showSuccessBanner: 'true',
           businessName: 'New Business Name',
           originalBusinessName: 'Original Business Name',
-          businessTelephone: '01234567890',
-          businessMobile: '09876543210',
+          businessTelephone,
+          businessMobile,
           businessEmail: 'name@example.com'
         }
       }
@@ -132,8 +135,8 @@ describe('Business Details Routes Unit Tests', () => {
     test('should use default business name when no name is provided', () => {
       const request = {
         state: {
-          businessTelephone: '01234567890',
-          businessMobile: '09876543210'
+          businessTelephone,
+          businessMobile
         }
       }
 
@@ -170,8 +173,8 @@ describe('Business Details Routes Unit Tests', () => {
         state: {
           showSuccessBanner: 'false',
           businessName: 'Test Business',
-          businessTelephone: '01234567890',
-          businessMobile: '09876543210',
+          businessTelephone,
+          businessMobile,
           tempBusinessTelephone: '01230000000',
           tempBusinessMobile: '09870000000'
         }

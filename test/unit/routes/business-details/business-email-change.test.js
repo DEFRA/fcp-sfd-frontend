@@ -1,9 +1,9 @@
 import { describe, test, expect, jest } from '@jest/globals'
 import {
-  getBusinessEmailChange,
-  postBusinessEmailChange,
   businessEmailChangeRoutes
 } from '../../../../src/routes/business-details/business-email-change.js'
+
+const [getBusinessEmailChange, postBusinessEmailChange] = businessEmailChangeRoutes
 
 describe('Business Email Routes Unit Tests', () => {
   describe('GET /business-email-change', () => {
@@ -15,7 +15,7 @@ describe('Business Email Routes Unit Tests', () => {
     test('should render the correct view with correct data', () => {
       const request = {
         state: {
-          businessEmail: null
+          businessEmail: 'name@example.com'
         }
       }
 
@@ -30,10 +30,10 @@ describe('Business Email Routes Unit Tests', () => {
       getBusinessEmailChange.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
-        businessEmail: 'agilefarms@gmail.com'
+        businessEmail: 'name@example.com'
       })
 
-      expect(stateMock).toHaveBeenCalledWith('originalBusinessEmail', 'agilefarms@gmail.com')
+      expect(stateMock).toHaveBeenCalledWith('originalBusinessEmail', 'name@example.com')
     })
   })
 
@@ -70,13 +70,24 @@ describe('Business Email Routes Unit Tests', () => {
     })
 
     test('should redirect to business email check page on successful submission', () => {
-      const h = {
-        redirect: jest.fn()
+      const request = {
+        payload: {
+          businessEmail: 'name@example.com'
+        }
       }
 
-      postBusinessEmailChange.options.handler({}, h)
+      const stateMock = jest.fn().mockReturnThis()
 
-      expect(h.redirect).toHaveBeenCalledWith('business-details/business-email-check')
+      const h = {
+        redirect: jest.fn().mockReturnValue({
+          state: stateMock
+        })
+      }
+
+      postBusinessEmailChange.options.handler(request, h)
+
+      expect(h.redirect).toHaveBeenCalledWith('/business-email-check')
+      expect(stateMock).toHaveBeenCalledWith('businessEmail', 'name@example.com')
     })
 
     test('should handle validation failures correctly', async () => {

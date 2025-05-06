@@ -191,7 +191,7 @@ describe('Routes Integration Tests', () => {
       expect(response.statusCode).toBe(302)
     })
 
-    test('business-phone-numbers-route responds correctly', async () => {
+    test('business-phone-numbers-check route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
         url: '/business-phone-numbers-check'
@@ -211,7 +211,7 @@ describe('Routes Integration Tests', () => {
       expect(response.headers['content-type']).toContain('text/html')
     })
 
-    test('business-email-change POST route responds correctly', async () => {
+    test('business-email-change POST route is registered', async () => {
       const response = await server.inject({
         method: 'POST',
         url: '/business-email-change',
@@ -221,6 +221,42 @@ describe('Routes Integration Tests', () => {
       })
 
       expect(response.statusCode).toBe(302)
+    })
+
+    test('business-email-change POST returns 400 on empty email', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-email-change',
+        payload: {
+          businessEmail: ''
+        }
+      })
+
+      expect(response.statusCode).toBe(400)
+      expect(response.payload).toContain('Enter business email address')
+    })
+
+    test('business-email-change POST returns 400 on invalid email format', async () => {
+      const response = await server.inject({
+        method: 'POST',
+        url: '/business-email-change',
+        payload: {
+          businessEmail: 'not-an-email'
+        }
+      })
+
+      expect(response.statusCode).toBe(400)
+      expect(response.payload).toContain('Enter an email address, like name@example.com')
+    })
+
+    test('business-email-check route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-email-check'
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
     })
   })
 

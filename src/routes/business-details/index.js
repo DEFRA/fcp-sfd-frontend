@@ -6,6 +6,7 @@ import { businessAddressCheckRoutes } from './business-address-check.js'
 import { businessPhoneNumbersChangeRoutes } from './business-phone-numbers-change.js'
 import { businessPhoneNumbersCheckRoutes } from './business-phone-numbers-check.js'
 import { businessEmailChangeRoutes } from './business-email-change.js'
+import { businessEmailCheckRoutes } from './business-email-check.js'
 import { BusinessLegalStatusChangeRoutes } from './business-legal-status-change.js'
 
 export const businessDetailsRoutes = [
@@ -17,5 +18,6 @@ export const businessDetailsRoutes = [
   ...businessPhoneNumbersChangeRoutes,
   ...businessPhoneNumbersCheckRoutes,
   ...businessEmailChangeRoutes,
+  ...businessEmailCheckRoutes,
   ...BusinessLegalStatusChangeRoutes
 ]

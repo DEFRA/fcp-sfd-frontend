@@ -7,6 +7,7 @@ import {
 describe('Business Details Routes Unit Tests', () => {
   const defauViewData = {
     showSuccessBanner: true,
+    successMessage: null,
     businessName: 'Test Business',
     formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
     businessTelephone: '01234567890',

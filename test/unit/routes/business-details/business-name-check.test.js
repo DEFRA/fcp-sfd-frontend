@@ -60,25 +60,21 @@ describe('Business Name Check Routes Unit Tests', () => {
         }
       }
 
+      const stateMock = jest.fn().mockReturnThis()
       const unstateMock = jest.fn().mockReturnThis()
-      const secondState = jest.fn().mockReturnValue({
-        unstate: unstateMock
-      })
-      const firstState = jest.fn().mockReturnValue({
-        state: secondState
-      })
 
       const h = {
         redirect: jest.fn().mockReturnValue({
-          state: firstState
+          state: stateMock,
+          unstate: unstateMock
         })
       }
 
       postBusinessNameCheck.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(firstState).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(secondState).toHaveBeenCalledWith('businessName', 'Test Business')
+      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
+      expect(stateMock).toHaveBeenCalledWith('businessName', 'Test Business')
       expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
     })
 
@@ -87,25 +83,21 @@ describe('Business Name Check Routes Unit Tests', () => {
         state: {}
       }
 
+      const stateMock = jest.fn().mockReturnThis()
       const unstateMock = jest.fn().mockReturnThis()
-      const secondState = jest.fn().mockReturnValue({
-        unstate: unstateMock
-      })
-      const firstState = jest.fn().mockReturnValue({
-        state: secondState
-      })
 
       const h = {
         redirect: jest.fn().mockReturnValue({
-          state: firstState
+          state: stateMock,
+          unstate: unstateMock
         })
       }
 
       postBusinessNameCheck.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(firstState).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(secondState).toHaveBeenCalledWith('businessName', undefined)
+      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
+      expect(stateMock).toHaveBeenCalledWith('businessName', undefined)
       expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
     })
   })

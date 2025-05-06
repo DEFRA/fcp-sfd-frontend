@@ -33,6 +33,7 @@ export const postBusinessAddressCheck = {
 
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
+      .state('successField', 'BUSINESS_ADDRESS')
       .state('address1', address1)
       .state('address2', address2)
       .state('addressCity', addressCity)

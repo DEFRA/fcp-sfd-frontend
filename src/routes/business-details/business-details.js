@@ -1,4 +1,5 @@
 import { resolveField } from '../../utils/resolve-field.js'
+import { successMessages } from '../../constants/success-messages.js'
 
 const resolveFields = (state, showSuccessBanner) => {
   const fields = [
@@ -39,6 +40,7 @@ const getFormattedAddress = (resolvedFields) => {
 const manageState = (response, resolvedFields) => {
   const stateChanges = [
     { key: 'showSuccessBanner' },
+    { key: 'successField' },
     { key: 'originalBusinessName' },
     { key: 'originalBusinessTelephone' },
     { key: 'originalBusinessMobile' },
@@ -73,14 +75,16 @@ export const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   handler: (request, h) => {
-    const { showSuccessBanner: showSuccessBannerRaw, ...state } = request.state
+    const { showSuccessBanner: showSuccessBannerRaw, successField, ...state } = request.state
     const showSuccessBanner = showSuccessBannerRaw === 'true'
+    const successMessage = successMessages?.[successField] || null
 
     const resolvedFields = resolveFields(state, showSuccessBanner)
     const formattedAddress = getFormattedAddress(resolvedFields)
 
     const response = h.view('business-details/business-details', {
       showSuccessBanner,
+      successMessage,
       businessName: resolvedFields.businessName,
       formattedAddress,
       businessTelephone: resolvedFields.businessTelephone,

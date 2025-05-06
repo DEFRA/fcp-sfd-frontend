@@ -21,6 +21,7 @@ export const postBusinessPhoneNumbersCheck = {
 
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
+      .state('successField', 'BUSINESS_PHONE_NUMBERS')
       .state('businessTelephone', businessTelephone)
       .state('businessMobile', businessMobile)
       .unstate('originalBusinessTelephone')

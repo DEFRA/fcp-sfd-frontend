@@ -1,7 +1,7 @@
 export const getBusinessTypeChange = {
   method: 'GET',
   path: '/business-type-change',
-  handler: (request, h) => {
+  handler: (h) => {
     return h.view('business-details/business-type-change')
   }
 }

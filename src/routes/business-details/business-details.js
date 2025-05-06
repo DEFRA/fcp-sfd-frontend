@@ -1,4 +1,5 @@
 import { resolveField } from '../../utils/resolve-field.js'
+import { successMessages } from '../../constants/success-messages.js'
 
 const resolveFields = (state, showSuccessBanner) => {
   const fields = [
@@ -10,7 +11,8 @@ const resolveFields = (state, showSuccessBanner) => {
     { name: 'addressCity', raw: state.addressCity, original: state.originalAddressCity, fallback: 'Maidstone' },
     { name: 'addressCounty', raw: state.addressCounty, original: state.originalAddressCounty, fallback: '' },
     { name: 'addressPostcode', raw: state.addressPostcode, original: state.originalAddressPostcode, fallback: 'SK22 1DL' },
-    { name: 'addressCountry', raw: state.addressCountry, original: state.originalAddressCountry, fallback: 'United Kingdom' }
+    { name: 'addressCountry', raw: state.addressCountry, original: state.originalAddressCountry, fallback: 'United Kingdom' },
+    { name: 'businessEmail', raw: state.businessEmail, original: state.originalBusinessEmail, fallback: 'name@example.com' }
   ]
 
   return fields.reduce((acc, { name, raw, original, fallback }) => {
@@ -38,6 +40,7 @@ const getFormattedAddress = (resolvedFields) => {
 const manageState = (response, resolvedFields) => {
   const stateChanges = [
     { key: 'showSuccessBanner' },
+    { key: 'successField' },
     { key: 'originalBusinessName' },
     { key: 'originalBusinessTelephone' },
     { key: 'originalBusinessMobile' },
@@ -46,7 +49,8 @@ const manageState = (response, resolvedFields) => {
     { key: 'originalAddressCity' },
     { key: 'originalAddressCounty' },
     { key: 'originalAddressPostcode' },
-    { key: 'originalAddressCountry' }
+    { key: 'originalAddressCountry' },
+    { key: 'originalBusinessEmail' }
   ]
 
   stateChanges.forEach(({ key }) => response.unstate(key))
@@ -60,7 +64,8 @@ const manageState = (response, resolvedFields) => {
     'addressCity',
     'addressCounty',
     'addressPostcode',
-    'addressCountry'
+    'addressCountry',
+    'businessEmail'
   ]
 
   stateUpdates.forEach(key => response.state(key, resolvedFields[key]))
@@ -70,18 +75,21 @@ export const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   handler: (request, h) => {
-    const { showSuccessBanner: showSuccessBannerRaw, ...state } = request.state
+    const { showSuccessBanner: showSuccessBannerRaw, successField, ...state } = request.state
     const showSuccessBanner = showSuccessBannerRaw === 'true'
+    const successMessage = successMessages?.[successField] || null
 
     const resolvedFields = resolveFields(state, showSuccessBanner)
     const formattedAddress = getFormattedAddress(resolvedFields)
 
     const response = h.view('business-details/business-details', {
       showSuccessBanner,
+      successMessage,
       businessName: resolvedFields.businessName,
       formattedAddress,
       businessTelephone: resolvedFields.businessTelephone,
-      businessMobile: resolvedFields.businessMobile
+      businessMobile: resolvedFields.businessMobile,
+      businessEmail: resolvedFields.businessEmail
     })
 
     manageState(response, resolvedFields)

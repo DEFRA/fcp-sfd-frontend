@@ -5,10 +5,32 @@ import {
 } from '../../../../src/routes/business-details/business-details.js'
 
 describe('Business Details Routes Unit Tests', () => {
-  describe('GET /business-details', () => {
-    const businessTelephone = '01234567890'
-    const businessMobile = '09876543210'
+  const defauViewData = {
+    showSuccessBanner: true,
+    businessName: 'Test Business',
+    formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
+    businessTelephone: '01234567890',
+    businessMobile: '09876543210',
+    businessEmail: 'name@example.com'
+  }
 
+  const createMockResponse = () => {
+    const stateMock = jest.fn().mockReturnThis()
+    const unstateMock = jest.fn().mockReturnThis()
+
+    return {
+      h: {
+        view: jest.fn().mockReturnValue({
+          state: stateMock,
+          unstate: unstateMock
+        })
+      },
+      stateMock,
+      unstateMock
+    }
+  }
+
+  describe('GET /business-details', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessDetails.method).toBe('GET')
       expect(getBusinessDetails.path).toBe('/business-details')
@@ -19,32 +41,17 @@ describe('Business Details Routes Unit Tests', () => {
         state: {
           showSuccessBanner: 'true',
           businessName: 'Test Business',
-          businessTelephone,
-          businessMobile
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
         }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
-
-      const responseMock = {
-        state: stateMock,
-        unstate: unstateMock
-      }
-
-      const h = {
-        view: jest.fn().mockReturnValue(responseMock)
-      }
+      const { h, stateMock, unstateMock } = createMockResponse()
 
       getBusinessDetails.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
-        showSuccessBanner: true,
-        businessName: 'Test Business',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
-        businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        ...defauViewData
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
@@ -58,33 +65,20 @@ describe('Business Details Routes Unit Tests', () => {
           showSuccessBanner: 'false',
           businessName: 'New Business Name',
           originalBusinessName: 'Original Business Name',
-          businessTelephone,
-          businessMobile,
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210',
           businessEmail: 'name@example.com'
         }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
-
-      const responseMock = {
-        state: stateMock,
-        unstate: unstateMock
-      }
-
-      const h = {
-        view: jest.fn().mockReturnValue(responseMock)
-      }
+      const { h, stateMock, unstateMock } = createMockResponse()
 
       getBusinessDetails.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
+        ...defauViewData,
         showSuccessBanner: false,
-        businessName: 'Original Business Name',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
-        businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        businessName: 'Original Business Name'
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
@@ -98,33 +92,19 @@ describe('Business Details Routes Unit Tests', () => {
           showSuccessBanner: 'true',
           businessName: 'New Business Name',
           originalBusinessName: 'Original Business Name',
-          businessTelephone,
-          businessMobile,
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210',
           businessEmail: 'name@example.com'
         }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
-
-      const responseMock = {
-        state: stateMock,
-        unstate: unstateMock
-      }
-
-      const h = {
-        view: jest.fn().mockReturnValue(responseMock)
-      }
+      const { h, stateMock, unstateMock } = createMockResponse()
 
       getBusinessDetails.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
-        showSuccessBanner: true,
-        businessName: 'New Business Name',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
-        businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        ...defauViewData,
+        businessName: 'New Business Name'
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
@@ -135,32 +115,19 @@ describe('Business Details Routes Unit Tests', () => {
     test('should use default business name when no name is provided', () => {
       const request = {
         state: {
-          businessTelephone,
-          businessMobile
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210'
         }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
-
-      const responseMock = {
-        state: stateMock,
-        unstate: unstateMock
-      }
-
-      const h = {
-        view: jest.fn().mockReturnValue(responseMock)
-      }
+      const { h, stateMock, unstateMock } = createMockResponse()
 
       getBusinessDetails.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
+        ...defauViewData,
         showSuccessBanner: false,
-        businessName: 'Agile Farm Ltd',
-        formattedAddress: '10 Skirbeck Way<br>Maidstone<br>SK22 1DL<br>United Kingdom',
-        businessTelephone: '01234567890',
-        businessMobile: '09876543210',
-        businessEmail: 'name@example.com'
+        businessName: 'Agile Farm Ltd'
       })
 
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
@@ -173,24 +140,14 @@ describe('Business Details Routes Unit Tests', () => {
         state: {
           showSuccessBanner: 'false',
           businessName: 'Test Business',
-          businessTelephone,
-          businessMobile,
+          businessTelephone: '01234567890',
+          businessMobile: '09876543210',
           tempBusinessTelephone: '01230000000',
           tempBusinessMobile: '09870000000'
         }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
-
-      const responseMock = {
-        state: stateMock,
-        unstate: unstateMock
-      }
-
-      const h = {
-        view: jest.fn().mockReturnValue(responseMock)
-      }
+      const { h, unstateMock } = createMockResponse()
 
       getBusinessDetails.handler(request, h)
 

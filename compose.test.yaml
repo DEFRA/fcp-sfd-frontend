@@ -8,6 +8,8 @@ services:
     env_file:
       - path: .env
         required: false
+    environment:
+      ALLOW_ERROR_VIEWS: false
     volumes:
       - ./src/:/home/node/src
       - ./test/:/home/node/test

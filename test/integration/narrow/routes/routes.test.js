@@ -222,6 +222,15 @@ describe('Routes Integration Tests', () => {
 
       expect(response.statusCode).toBe(302)
     })
+
+    test('business-type-change GET route responds correctly', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-type-change'
+      })
+
+      expect(response.statusCode).toBe(200)
+    })
   })
 
   describe('With Error Views Disabled', () => {

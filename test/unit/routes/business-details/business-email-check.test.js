@@ -3,7 +3,7 @@ import {
   businessEmailCheckRoutes
 } from '../../../../src/routes/business-details/business-email-check.js'
 
-const [ getBusinessEmailCheck, postBusinessEmailCheck] = businessEmailCheckRoutes
+const [getBusinessEmailCheck, postBusinessEmailCheck] = businessEmailCheckRoutes
 
 describe('Business Email Check Routes Unit Tests', () => {
   describe('GET /business-email-check', () => {

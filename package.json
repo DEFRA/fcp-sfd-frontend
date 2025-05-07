@@ -24,6 +24,7 @@
     "test": "rm -rf ./coverage/** && vitest run --coverage",
     "test:watch": "vitest watch",
     "test:lint": "standard",
+    "start:debug": "nodemon --watch src --exec 'node --experimental-vm-modules --inspect-brk=0.0.0.0 src/index.js'",
     "server:watch": "nodemon --inspect=0.0.0.0 --ext js,njk --legacy-watch src/index.js",
     "server:debug": "nodemon --inspect-brk=0.0.0.0 --ext js --legacy-watch src/index.js",
     "prestart": "npm run build",

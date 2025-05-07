@@ -19,5 +19,5 @@ export const businessDetailsRoutes = [
   ...businessPhoneNumbersCheckRoutes,
   ...businessEmailChangeRoutes,
   ...businessEmailCheckRoutes,
-  ...BusinessLegalStatusChangeRoutes
+  BusinessLegalStatusChangeRoutes
 ]

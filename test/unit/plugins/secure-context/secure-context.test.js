@@ -1,5 +1,5 @@
 import hapi from '@hapi/hapi'
-import { jest, beforeAll, beforeEach, describe, test, expect, afterAll, afterEach } from '@jest/globals'
+import { vi, beforeAll, beforeEach, describe, test, expect, afterAll, afterEach } from 'vitest'
 
 import { secureContext } from '../../../../src/plugins/secure-context/secure-context.js'
 import { config } from '../../../../src/config/index.js'
@@ -8,8 +8,8 @@ describe('secureContext plugin', () => {
   let server
   let originalConfigGet
   let originalProcessEnv
-  const mockLoggerInfo = jest.fn()
-  const mockLoggerError = jest.fn()
+  const mockLoggerInfo = vi.fn()
+  const mockLoggerError = vi.fn()
 
   beforeAll(() => {
     originalProcessEnv = process.env
@@ -22,7 +22,7 @@ describe('secureContext plugin', () => {
   })
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
     mockLoggerInfo.mockClear()
     mockLoggerError.mockClear()
 
@@ -40,7 +40,7 @@ describe('secureContext plugin', () => {
 
   describe('when secure context is disabled', () => {
     beforeEach(async () => {
-      config.get = jest.fn((key) => {
+      config.get = vi.fn((key) => {
         if (key === 'server.isSecureContextEnabled') {
           return false
         }
@@ -61,7 +61,7 @@ describe('secureContext plugin', () => {
 
   describe('when secure context is enabled with certificates', () => {
     beforeEach(async () => {
-      config.get = jest.fn((key) => {
+      config.get = vi.fn((key) => {
         if (key === 'server.isSecureContextEnabled') {
           return true
         }
@@ -88,7 +88,7 @@ describe('secureContext plugin', () => {
 
   describe('when secure context is enabled without certificates', () => {
     beforeEach(async () => {
-      config.get = jest.fn((key) => {
+      config.get = vi.fn((key) => {
         if (key === 'server.isSecureContextEnabled') {
           return true
         }

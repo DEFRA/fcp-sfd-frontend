@@ -1,4 +1,4 @@
-import { describe, test, expect, jest } from '@jest/globals'
+import { describe, test, expect, vi } from 'vitest'
 import {
   getBusinessAddressEnter,
   postBusinessAddressEnter,
@@ -6,9 +6,9 @@ import {
 } from '../../../../src/routes/business-details/business-address-form.js'
 import { defaultAddress, testAddress, newAddress, emptyAddress } from '../../constants/test-addresses.js'
 
-jest.mock('../../../../src/schemas/business-details/business-address-form.js', () => ({
+vi.mock('../../../../src/schemas/business-details/business-address-form.js', () => ({
   businessAddressSchema: {
-    validate: jest.fn()
+    validate: vi.fn()
   }
 }))
 
@@ -24,10 +24,10 @@ describe('Business Address Routes Unit Tests', () => {
         state: { ...testAddress }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
 
       const h = {
-        view: jest.fn().mockReturnValue({
+        view: vi.fn().mockReturnValue({
           state: stateMock
         })
       }
@@ -43,10 +43,10 @@ describe('Business Address Routes Unit Tests', () => {
         state: {}
       }
 
-      const stateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
 
       const h = {
-        view: jest.fn().mockReturnValue({
+        view: vi.fn().mockReturnValue({
           state: stateMock
         })
       }
@@ -70,9 +70,9 @@ describe('Business Address Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis(),
-        code: jest.fn().mockReturnThis(),
-        takeover: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis(),
+        code: vi.fn().mockReturnThis(),
+        takeover: vi.fn().mockReturnThis()
       }
 
       const err = {
@@ -119,9 +119,9 @@ describe('Business Address Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis(),
-        code: jest.fn().mockReturnThis(),
-        takeover: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis(),
+        code: vi.fn().mockReturnThis(),
+        takeover: vi.fn().mockReturnThis()
       }
 
       const err = {}
@@ -142,28 +142,28 @@ describe('Business Address Routes Unit Tests', () => {
         payload: { ...newAddress }
       }
 
-      const unstateMock = jest.fn().mockReturnThis()
-      const sixthState = jest.fn().mockReturnValue({
+      const unstateMock = vi.fn().mockReturnThis()
+      const sixthState = vi.fn().mockReturnValue({
         unstate: unstateMock
       })
-      const fifthState = jest.fn().mockReturnValue({
+      const fifthState = vi.fn().mockReturnValue({
         state: sixthState
       })
-      const fourthState = jest.fn().mockReturnValue({
+      const fourthState = vi.fn().mockReturnValue({
         state: fifthState
       })
-      const thirdState = jest.fn().mockReturnValue({
+      const thirdState = vi.fn().mockReturnValue({
         state: fourthState
       })
-      const secondState = jest.fn().mockReturnValue({
+      const secondState = vi.fn().mockReturnValue({
         state: thirdState
       })
-      const firstState = jest.fn().mockReturnValue({
+      const firstState = vi.fn().mockReturnValue({
         state: secondState
       })
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
+        redirect: vi.fn().mockReturnValue({
           state: firstState
         })
       }

@@ -1,4 +1,4 @@
-import { describe, test, expect, jest } from '@jest/globals'
+import { describe, test, expect, vi } from 'vitest'
 import {
   businessEmailCheckRoutes
 } from '../../../../src/routes/business-details/business-email-check.js'
@@ -20,7 +20,7 @@ describe('Business Email Check Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis()
       }
 
       getBusinessEmailCheck.handler(request, h)
@@ -36,7 +36,7 @@ describe('Business Email Check Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis()
       }
 
       getBusinessEmailCheck.handler(request, h)
@@ -60,11 +60,11 @@ describe('Business Email Check Routes Unit Tests', () => {
         }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
+      const unstateMock = vi.fn().mockReturnThis()
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
+        redirect: vi.fn().mockReturnValue({
           state: stateMock,
           unstate: unstateMock
         })
@@ -83,11 +83,11 @@ describe('Business Email Check Routes Unit Tests', () => {
         state: {}
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
+      const unstateMock = vi.fn().mockReturnThis()
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
+        redirect: vi.fn().mockReturnValue({
           state: stateMock,
           unstate: unstateMock
         })

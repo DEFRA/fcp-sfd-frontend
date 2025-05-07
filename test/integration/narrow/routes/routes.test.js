@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, jest } from '@jest/globals'
+import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 
 describe('Routes Integration Tests', () => {
   const originalEnv = process.env.ALLOW_ERROR_VIEWS
@@ -6,7 +6,7 @@ describe('Routes Integration Tests', () => {
   const SERVER_MODULE_PATH = '../../../../src/server.js'
 
   const resetAndCreateServer = async () => {
-    jest.resetModules()
+    vi.resetModules()
 
     const { createServer } = await import(SERVER_MODULE_PATH)
 

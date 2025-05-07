@@ -1,4 +1,4 @@
-import { describe, test, expect, jest } from '@jest/globals'
+import { describe, test, expect, vi } from 'vitest'
 import {
   getBusinessNameChange,
   postBusinessNameChange,
@@ -19,10 +19,10 @@ describe('Business Name Routes Unit Tests', () => {
         }
       }
 
-      const stateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
 
       const h = {
-        view: jest.fn().mockReturnValue({
+        view: vi.fn().mockReturnValue({
           state: stateMock
         })
       }
@@ -79,10 +79,10 @@ describe('Business Name Routes Unit Tests', () => {
         }
       }
 
-      const state = jest.fn().mockReturnThis()
+      const state = vi.fn().mockReturnThis()
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
+        redirect: vi.fn().mockReturnValue({
           state
         })
       }
@@ -99,9 +99,9 @@ describe('Business Name Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis(),
-        code: jest.fn().mockReturnThis(),
-        takeover: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis(),
+        code: vi.fn().mockReturnThis(),
+        takeover: vi.fn().mockReturnThis()
       }
 
       const err = {
@@ -144,9 +144,9 @@ describe('Business Name Routes Unit Tests', () => {
     }
 
     const h = {
-      view: jest.fn().mockReturnThis(),
-      code: jest.fn().mockReturnThis(),
-      takeover: jest.fn().mockReturnThis()
+      view: vi.fn().mockReturnThis(),
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
     }
 
     const err = {}

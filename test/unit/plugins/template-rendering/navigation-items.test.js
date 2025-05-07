@@ -1,5 +1,5 @@
 import { getNavigationItems } from '../../../../src/config/navigation-items.js'
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 
 const createMockRequest = (testPath) => {
   return { path: testPath }

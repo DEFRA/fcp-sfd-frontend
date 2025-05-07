@@ -1,4 +1,4 @@
-import { describe, test, expect, jest } from '@jest/globals'
+import { describe, test, expect, vi } from 'vitest'
 import {
   getBusinessAddressCheck,
   postBusinessAddressCheck,
@@ -19,7 +19,7 @@ describe('Business Address Check Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis()
       }
 
       getBusinessAddressCheck.handler(request, h)
@@ -33,7 +33,7 @@ describe('Business Address Check Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis()
       }
 
       getBusinessAddressCheck.handler(request, h)
@@ -52,7 +52,7 @@ describe('Business Address Check Routes Unit Tests', () => {
       }
 
       const h = {
-        view: jest.fn().mockReturnThis()
+        view: vi.fn().mockReturnThis()
       }
 
       getBusinessAddressCheck.handler(request, h)
@@ -78,11 +78,11 @@ describe('Business Address Check Routes Unit Tests', () => {
         state: newAddress
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
+      const unstateMock = vi.fn().mockReturnThis()
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
+        redirect: vi.fn().mockReturnValue({
           state: stateMock,
           unstate: unstateMock
         })
@@ -106,11 +106,11 @@ describe('Business Address Check Routes Unit Tests', () => {
         state: {}
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
+      const unstateMock = vi.fn().mockReturnThis()
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
+        redirect: vi.fn().mockReturnValue({
           state: stateMock,
           unstate: unstateMock
         })
@@ -136,11 +136,11 @@ describe('Business Address Check Routes Unit Tests', () => {
         state: partialAddress
       }
 
-      const stateMock = jest.fn().mockReturnThis()
-      const unstateMock = jest.fn().mockReturnThis()
+      const stateMock = vi.fn().mockReturnThis()
+      const unstateMock = vi.fn().mockReturnThis()
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
+        redirect: vi.fn().mockReturnValue({
           state: stateMock,
           unstate: unstateMock
         })

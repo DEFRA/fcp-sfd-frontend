@@ -1,4 +1,4 @@
-import { describe, test, expect, jest } from '@jest/globals'
+import { describe, test, expect, vi } from 'vitest'
 import {
   getBusinessDetails,
   businessDetailsRoutesView
@@ -16,12 +16,12 @@ describe('Business Details Routes Unit Tests', () => {
   }
 
   const createMockResponse = () => {
-    const stateMock = jest.fn().mockReturnThis()
-    const unstateMock = jest.fn().mockReturnThis()
+    const stateMock = vi.fn().mockReturnThis()
+    const unstateMock = vi.fn().mockReturnThis()
 
     return {
       h: {
-        view: jest.fn().mockReturnValue({
+        view: vi.fn().mockReturnValue({
           state: stateMock,
           unstate: unstateMock
         })

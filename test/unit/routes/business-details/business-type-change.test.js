@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 import { getBusinessTypeChange } from '../../../../src/routes/business-details/business-type-change.js'
 
 describe('Change business type', () => {

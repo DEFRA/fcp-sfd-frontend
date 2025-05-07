@@ -10,13 +10,13 @@
 {% set businessType = "Central or local governmen" %}
 
 {% block beforeContent %}
-    {{ subHeader(
+  {{ subHeader(
     businessName="Agile Farm Ltd", 
     sbi="123456789", 
     userName="Alfred Waldron"
 ) }}
 
-    {{ appBackLink() }}
+  {{ appBackLink() }}
 {% endblock %}
 
 {% block content %}
@@ -28,13 +28,13 @@
         {{ businessType }}
       </p>
       <p class="govuk-body">If your business type is incorrect, contact the Rural Payments Agency to update it.</p>
+      
       <h2 class="govuk-heading-m">Contact the Rural Payments Agency</h2>
-      <p class="govuk-body">Phone: 03000 200 301</p>
-      <p class="govuk-body">Monday to Friday, 8.30am to 5pm (except bank holidays)</p>
-      <p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="http://www.gov.uk/call-charges" rel="noreferrer noopener" target="_blank">Find out about call charges (opens in new tab)</a>.</p>
-      <p class="govuk-body">Email: <a class="govuk-link govuk-link--no-visited-state" href="mailto:ruralpayments@defra.gov.uk">ruralpayments@defra.gov.uk</a></p>
-      <p class="govuk-body">We aim to respond to emails within 10 working days.</p>
-      <p class="govuk-body govuk-!-margin-top-6"><a class="govuk-button" href="/business-details">Return to business details</a></p>
+      {% include 'common/contact/contact-us.njk' %}
+
+      <p class="govuk-body govuk-!-margin-top-6">
+        <a class="govuk-button" href="/business-details">Return to business details</a>
+      </p>
     </div>
   </div>
 {% endblock %}

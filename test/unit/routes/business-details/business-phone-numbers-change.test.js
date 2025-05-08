@@ -3,94 +3,84 @@ import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/busines
 
 const [getBusinessPhoneNumbersChange, postBusinessPhoneNumbersChange] = businessPhoneNumbersChangeRoutes
 
-describe('Business Phone Numbers Change Routes Unit Tests', () => {
-  const businessTelephone = '0123456789'
-  const businessMobile = '9876543210'
+const businessTelephone = '0123456789'
+const businessMobile = '9876543210'
 
+const createMockResponse = () => {
+  const view = vi.fn().mockReturnThis()
+  const code = vi.fn().mockReturnThis()
+  const takeover = vi.fn().mockReturnThis()
+  const state = vi.fn().mockReturnThis()
+  const redirect = vi.fn().mockReturnValue({ state })
+
+  return { view, code, takeover, state, redirect }
+}
+
+describe('change business phone numbers', () => {
   describe('GET /business-phone-numbers-change', () => {
-    test('should have the correct method and path', () => {
+    test('should have correct method and path', () => {
       expect(getBusinessPhoneNumbersChange.method).toBe('GET')
       expect(getBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
     })
 
-    test('should render the correct view with correct data', () => {
+    test('should render view with phone numbers from state', () => {
       const request = {
-        state: {
-          businessTelephone,
-          businessMobile
-        }
+        state: { businessTelephone, businessMobile }
       }
 
-      const stateMock = vi.fn().mockReturnThis()
-
-      const h = {
-        view: vi.fn().mockReturnValue({
-          state: stateMock
-        })
-      }
+      const h = createMockResponse()
 
       getBusinessPhoneNumbersChange.handler(request, h)
 
       expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
-        businessTelephone: '0123456789',
-        businessMobile: '9876543210'
+        businessTelephone,
+        businessMobile
       })
     })
   })
 
   describe('POST /business-phone-numbers-change', () => {
-    test('should have the correct method and path', () => {
+    test('should have correct method and path', () => {
       expect(postBusinessPhoneNumbersChange.method).toBe('POST')
       expect(postBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
     })
 
-    describe('Validation', () => {
-      test('should validate empty fields', () => {
-        const schema = postBusinessPhoneNumbersChange.options.validate.payload
+    describe('validation', () => {
+      const schema = postBusinessPhoneNumbersChange.options.validate.payload
 
-        const result = schema.validate({
+      test('should fail with empty fields', () => {
+        const { error } = schema.validate({
           businessTelephone: '',
           businessMobile: ''
         })
 
-        expect(result.error).toBeTruthy()
-        expect(result.error.details.length).toBeGreaterThan(0)
+        expect(error).toBeTruthy()
+        expect(error.details.length).toBeGreaterThan(0)
       })
 
-      test('should accept valid phone numbers', () => {
-        const schema = postBusinessPhoneNumbersChange.options.validate.payload
-
-        const result = schema.validate({
+      test('should pass with valid phone numbers', () => {
+        const { error } = schema.validate({
           businessTelephone,
           businessMobile
         })
 
-        expect(result.error).toBeFalsy()
+        expect(error).toBeFalsy()
       })
     })
 
     test('should redirect to check page on successful submission', () => {
       const request = {
-        payload: {
-          businessTelephone,
-          businessMobile
-        }
+        payload: { businessTelephone, businessMobile }
       }
 
-      const stateMock = vi.fn().mockReturnThis()
-
-      const h = {
-        redirect: vi.fn().mockReturnValue({
-          state: stateMock
-        })
-      }
+      const h = createMockResponse()
 
       postBusinessPhoneNumbersChange.options.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-phone-numbers-check')
     })
 
-    test('should handle validation failures correctly', async () => {
+    test('should handle validation failures with error details', async () => {
       const request = {
         payload: {
           businessTelephone: '',
@@ -98,11 +88,7 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
         }
       }
 
-      const h = {
-        view: vi.fn().mockReturnThis(),
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
+      const h = createMockResponse()
 
       const err = {
         details: [
@@ -123,12 +109,8 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
         businessTelephone: '',
         businessMobile: '',
         errors: {
-          businessTelephone: {
-            text: 'Enter a business telephone number'
-          },
-          businessMobile: {
-            text: 'Enter a business mobile number'
-          }
+          businessTelephone: { text: 'Enter a business telephone number' },
+          businessMobile: { text: 'Enter a business mobile number' }
         }
       })
 
@@ -136,7 +118,7 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
       expect(h.takeover).toHaveBeenCalled()
     })
 
-    test('should handle validation failure with undefined details property', async () => {
+    test('should handle validation failure without error details', async () => {
       const request = {
         payload: {
           businessTelephone: '',
@@ -144,12 +126,7 @@ describe('Business Phone Numbers Change Routes Unit Tests', () => {
         }
       }
 
-      const h = {
-        view: vi.fn().mockReturnThis(),
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
-
+      const h = createMockResponse()
       const err = {}
 
       await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)

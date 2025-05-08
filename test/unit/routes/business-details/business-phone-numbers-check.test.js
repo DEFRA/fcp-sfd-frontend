@@ -3,17 +3,28 @@ import { businessPhoneNumbersCheckRoutes } from '../../../../src/routes/business
 
 const [getBusinessPhoneNumbersCheck, postBusinessPhoneNumbersCheck] = businessPhoneNumbersCheckRoutes
 
-describe('Business Phone Numbers Check Routes Unit Tests', () => {
-  const businessTelephone = '0123456789'
-  const businessMobile = '9876543210'
+const businessTelephone = '0123456789'
+const businessMobile = '9876543210'
 
+const createMockResponse = () => {
+  const view = vi.fn().mockReturnThis()
+  const code = vi.fn().mockReturnThis()
+  const takeover = vi.fn().mockReturnThis()
+  const state = vi.fn().mockReturnThis()
+  const unstate = vi.fn().mockReturnThis()
+  const redirect = vi.fn().mockReturnValue({ state, unstate })
+
+  return { view, code, takeover, state, unstate, redirect }
+}
+
+describe('Business Phone Numbers Check Routes', () => {
   describe('GET /business-phone-numbers-check', () => {
-    test('should have the correct method and path', () => {
+    test('has correct method and path', () => {
       expect(getBusinessPhoneNumbersCheck.method).toBe('GET')
       expect(getBusinessPhoneNumbersCheck.path).toBe('/business-phone-numbers-check')
     })
 
-    test('should render the correct view with business phone numbers from state', () => {
+    test('renders view with business phone numbers from state', () => {
       const request = {
         state: {
           tempBusinessTelephone: businessTelephone,
@@ -21,9 +32,7 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
         }
       }
 
-      const h = {
-        view: vi.fn().mockReturnThis()
-      }
+      const h = createMockResponse()
 
       getBusinessPhoneNumbersCheck.handler(request, h)
 
@@ -33,14 +42,9 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
       })
     })
 
-    test('should render the correct view with empty string when no business name in state', () => {
-      const request = {
-        state: {}
-      }
-
-      const h = {
-        view: vi.fn().mockReturnThis()
-      }
+    test('renders view with empty strings when phone numbers are missing in state', () => {
+      const request = { state: {} }
+      const h = createMockResponse()
 
       getBusinessPhoneNumbersCheck.handler(request, h)
 
@@ -52,12 +56,12 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
   })
 
   describe('POST /business-phone-numbers-check', () => {
-    test('should have the correct method and path', () => {
+    test('has correct method and path', () => {
       expect(postBusinessPhoneNumbersCheck.method).toBe('POST')
       expect(postBusinessPhoneNumbersCheck.path).toBe('/business-phone-numbers-check')
     })
 
-    test('should redirect to business-details with success banner and business phone number state', () => {
+    test('redirects to business-details with success banner and sets new phone numbers', () => {
       const request = {
         state: {
           tempBusinessTelephone: businessTelephone,
@@ -65,56 +69,37 @@ describe('Business Phone Numbers Check Routes Unit Tests', () => {
         }
       }
 
-      const stateMock = vi.fn().mockReturnThis()
-      const unstateMock = vi.fn().mockReturnThis()
-
-      const h = {
-        redirect: vi.fn().mockReturnValue({
-          state: stateMock,
-          unstate: unstateMock
-        })
-      }
+      const h = createMockResponse()
 
       postBusinessPhoneNumbersCheck.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(stateMock).toHaveBeenCalledWith('businessTelephone', '0123456789')
-      expect(stateMock).toHaveBeenCalledWith('businessMobile', '9876543210')
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessTelephone')
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessMobile')
+      expect(h.state).toHaveBeenCalledWith('showSuccessBanner', 'true')
+      expect(h.state).toHaveBeenCalledWith('businessTelephone', businessTelephone)
+      expect(h.state).toHaveBeenCalledWith('businessMobile', businessMobile)
+      expect(h.unstate).toHaveBeenCalledWith('originalBusinessTelephone')
+      expect(h.unstate).toHaveBeenCalledWith('originalBusinessMobile')
     })
 
-    test('should handle undefine business phone numbers in state', () => {
-      const request = {
-        state: {}
-      }
-
-      const stateMock = vi.fn().mockReturnThis()
-      const unstateMock = vi.fn().mockReturnThis()
-
-      const h = {
-        redirect: vi.fn().mockReturnValue({
-          state: stateMock,
-          unstate: unstateMock
-        })
-      }
+    test('handles missing phone numbers in state without crashing', () => {
+      const request = { state: {} }
+      const h = createMockResponse()
 
       postBusinessPhoneNumbersCheck.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(stateMock).toHaveBeenCalledWith('businessTelephone', undefined)
-      expect(stateMock).toHaveBeenCalledWith('businessMobile', undefined)
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessTelephone')
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessMobile')
+      expect(h.state).toHaveBeenCalledWith('showSuccessBanner', 'true')
+      expect(h.state).toHaveBeenCalledWith('businessTelephone', undefined)
+      expect(h.state).toHaveBeenCalledWith('businessMobile', undefined)
+      expect(h.unstate).toHaveBeenCalledWith('originalBusinessTelephone')
+      expect(h.unstate).toHaveBeenCalledWith('originalBusinessMobile')
     })
+  })
 
-    test('should export all routes', () => {
-      expect(businessPhoneNumbersCheckRoutes).toEqual([
-        getBusinessPhoneNumbersCheck,
-        postBusinessPhoneNumbersCheck
-      ])
-    })
+  test('exports all routes', () => {
+    expect(businessPhoneNumbersCheckRoutes).toEqual([
+      getBusinessPhoneNumbersCheck,
+      postBusinessPhoneNumbersCheck
+    ])
   })
 })

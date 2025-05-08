@@ -15,7 +15,7 @@ const mockH = {
 
 describe('Static asset routes', () => {
   beforeEach(async () => {
-    vi.resetModules() 
+    vi.resetModules()
     vi.clearAllMocks()
 
     vi.doMock('../../../src/config/index.js', () => ({

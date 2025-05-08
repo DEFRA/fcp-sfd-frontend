@@ -1,33 +1,38 @@
-
 {% extends 'common/layout.njk' %}
 
-{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "common/navigation/back-link.njk" import appBackLink %}
+{% from "common/sub-header/macro.njk" import subHeader %}
+
+{% set pageTitle = "Change your legal status" %}
+{% set metaDescription = "Update the legal status of your business." %}
+{% set businessLegalStatus = "Sole proprietorship" %}
 
 {% block beforeContent %}
-    {{ appBackLink() }}
+  {{ subHeader(
+    businessName="Agile Farm Ltd", 
+    sbi="123456789", 
+    userName="Alfred Waldron"
+) }}
+
+  {{ appBackLink() }}
 {% endblock %}
 
 {% block content %}
-  {{ appHeading({
-    text: "Change your legal status"
-  }) }}
-
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
       <p class="govuk-body">
         <span class="govuk-!-font-weight-bold">Legal status</span><br>
-        Sole proprietorship</p>
-        
-     <p class="govuk-body">If your legal status is incorrect, contact the Rural Payments Agency to update it.</p>
+        {{ businessLegalStatus }}
+      </p>
+      <p class="govuk-body">If your legal status is incorrect, contact the Rural Payments Agency to update it.</p>
 
       <h2 class="govuk-heading-m">Contact the Rural Payments Agency</h2>
-      <p class="govuk-body">Phone: 03000 200 301</p>
-      <p class="govuk-body">Monday to Friday, 8.30am to 5pm (except bank holidays)</p>
-      <p class="govuk-body"><a class="govuk-link govuk-link--no-visited-state" href="http://www.gov.uk/call-charges" rel="noreferrer noopener" target="_blank">Find out about call charges (opens in new tab)</a>.</p>
-      <p class="govuk-body">Email: <a class="govuk-link govuk-link--no-visited-state" href="mailto:ruralpayments@defra.gov.uk">ruralpayments@defra.gov.uk</a></p>
-      <p class="govuk-body">We aim to respond to emails within 10 working days.</p>
-      <p class="govuk-body govuk-!-margin-top-6"><a class="govuk-button" href="/business-details">Return to business details</a></p>
+      {% include 'common/contact/contact-us.njk' %}
+
+      <p class="govuk-body govuk-!-margin-top-6">
+        <a class="govuk-button" href="/business-details">Return to business details</a>
+      </p>
     </div>
   </div>
 {% endblock %}

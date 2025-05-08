@@ -2,7 +2,7 @@ import { businessNameSchema } from '../../schemas/business-details/business-name
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
-export const getBusinessNameChange = {
+const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
   handler: (request, h) => {
@@ -15,7 +15,7 @@ export const getBusinessNameChange = {
   }
 }
 
-export const postBusinessNameChange = {
+const postBusinessNameChange = {
   method: 'POST',
   path: '/business-name-change',
   options: {

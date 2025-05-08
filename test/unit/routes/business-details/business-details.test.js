@@ -1,8 +1,7 @@
 import { describe, test, expect, vi } from 'vitest'
-import {
-  getBusinessDetails,
-  businessDetailsRoutesView
-} from '../../../../src/routes/business-details/business-details.js'
+import { businessDetailsRoutesView } from '../../../../src/routes/business-details/business-details.js'
+
+const [getBusinessDetails] = businessDetailsRoutesView
 
 describe('Business Details Routes Unit Tests', () => {
   const defauViewData = {

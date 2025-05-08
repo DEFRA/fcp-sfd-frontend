@@ -2,7 +2,7 @@ import { businessAddressSchema } from '../../schemas/business-details/business-a
 import { formatValidationErrors } from '../../../src/utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
-export const getBusinessAddressEnter = {
+const getBusinessAddressEnter = {
   method: 'GET',
   path: '/business-address-enter',
   handler: (request, h) => {
@@ -33,7 +33,7 @@ export const getBusinessAddressEnter = {
   }
 }
 
-export const postBusinessAddressEnter = {
+const postBusinessAddressEnter = {
   method: 'POST',
   path: '/business-address-enter',
   options: {

@@ -1,10 +1,8 @@
 import { describe, test, expect, vi } from 'vitest'
-import {
-  getBusinessAddressEnter,
-  postBusinessAddressEnter,
-  businessAddressRoutes
-} from '../../../../src/routes/business-details/business-address-form.js'
 import { defaultAddress, testAddress, newAddress, emptyAddress } from '../../constants/test-addresses.js'
+import { businessAddressRoutes } from '../../../../src/routes/business-details/business-address-form.js'
+
+const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 
 vi.mock('../../../../src/schemas/business-details/business-address-form.js', () => ({
   businessAddressSchema: {

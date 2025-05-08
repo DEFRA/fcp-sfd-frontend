@@ -1,10 +1,8 @@
 import { describe, test, expect, vi } from 'vitest'
-import {
-  getBusinessAddressCheck,
-  postBusinessAddressCheck,
-  businessAddressCheckRoutes
-} from '../../../../src/routes/business-details/business-address-check'
 import { testAddress, defaultAddress, emptyAddress, newAddress } from '../../constants/test-addresses'
+import { businessAddressCheckRoutes } from '../../../../src/routes/business-details/business-address-check'
+
+const [getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
 
 describe('Business Address Check Routes Unit Tests', () => {
   describe('GET /business-address-check', () => {

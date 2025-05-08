@@ -1,9 +1,7 @@
 import { describe, test, expect, vi } from 'vitest'
-import {
-  getBusinessPhoneNumbersCheck,
-  postBusinessPhoneNumbersCheck,
-  businessPhoneNumbersCheckRoutes
-} from '../../../../src/routes/business-details/business-phone-numbers-check.js'
+import { businessPhoneNumbersCheckRoutes } from '../../../../src/routes/business-details/business-phone-numbers-check.js'
+
+const [getBusinessPhoneNumbersCheck, postBusinessPhoneNumbersCheck] = businessPhoneNumbersCheckRoutes
 
 describe('Business Phone Numbers Check Routes Unit Tests', () => {
   const businessTelephone = '0123456789'

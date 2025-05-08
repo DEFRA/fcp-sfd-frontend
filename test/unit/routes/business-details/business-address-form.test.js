@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from 'vitest'
 import { defaultAddress, testAddress, newAddress, emptyAddress } from '../../constants/test-addresses.js'
-import { businessAddressRoutes } from '../../../../src/routes/business-details/business-address-form.js'
+import { businessAddressRoutes } from '../../../../src/routes/business-details/business-address-enter.js'
 
 const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 
@@ -140,41 +140,25 @@ describe('Business Address Routes Unit Tests', () => {
         payload: { ...newAddress }
       }
 
+      const stateMock = vi.fn().mockReturnThis()
       const unstateMock = vi.fn().mockReturnThis()
-      const sixthState = vi.fn().mockReturnValue({
-        unstate: unstateMock
-      })
-      const fifthState = vi.fn().mockReturnValue({
-        state: sixthState
-      })
-      const fourthState = vi.fn().mockReturnValue({
-        state: fifthState
-      })
-      const thirdState = vi.fn().mockReturnValue({
-        state: fourthState
-      })
-      const secondState = vi.fn().mockReturnValue({
-        state: thirdState
-      })
-      const firstState = vi.fn().mockReturnValue({
-        state: secondState
-      })
 
       const h = {
         redirect: vi.fn().mockReturnValue({
-          state: firstState
+          state: stateMock,
+          unstate: unstateMock
         })
       }
 
       postBusinessAddressEnter.options.handler(request, h)
 
       expect(h.redirect).toHaveBeenCalledWith('/business-address-check')
-      expect(firstState).toHaveBeenCalledWith('address1', newAddress.address1)
-      expect(secondState).toHaveBeenCalledWith('address2', newAddress.address2)
-      expect(thirdState).toHaveBeenCalledWith('addressCity', newAddress.addressCity)
-      expect(fourthState).toHaveBeenCalledWith('addressCounty', newAddress.addressCounty)
-      expect(fifthState).toHaveBeenCalledWith('addressPostcode', newAddress.addressPostcode)
-      expect(sixthState).toHaveBeenCalledWith('addressCountry', newAddress.addressCountry)
+      expect(stateMock).toHaveBeenCalledWith('address1', newAddress.address1)
+      expect(stateMock).toHaveBeenCalledWith('address2', newAddress.address2)
+      expect(stateMock).toHaveBeenCalledWith('addressCity', newAddress.addressCity)
+      expect(stateMock).toHaveBeenCalledWith('addressCounty', newAddress.addressCounty)
+      expect(stateMock).toHaveBeenCalledWith('addressPostcode', newAddress.addressPostcode)
+      expect(stateMock).toHaveBeenCalledWith('addressCountry', newAddress.addressCountry)
       expect(unstateMock).toHaveBeenCalledWith('originalAddress')
     })
   })

@@ -1,7 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { businessDetailsRoutesView } from '../../../../src/routes/business-details/business-details.js'
-
-const [getBusinessDetails] = businessDetailsRoutesView
+import { getBusinessDetails } from '../../../../src/routes/business-details/business-details.js'
 
 describe('Business Details Routes Unit Tests', () => {
   const defauViewData = {
@@ -154,11 +152,5 @@ describe('Business Details Routes Unit Tests', () => {
       expect(unstateMock).toHaveBeenCalledWith('tempBusinessTelephone')
       expect(unstateMock).toHaveBeenCalledWith('tempBusinessMobile')
     })
-  })
-
-  test('should export all routes', () => {
-    expect(businessDetailsRoutesView).toEqual([
-      getBusinessDetails
-    ])
   })
 })

@@ -1,5 +1,5 @@
-import { formatCurrency } from '../../../../../src/plugins/template-renderer/filters/format-currency.js'
 import { describe, test, expect } from 'vitest'
+import { formatCurrency } from '../../../../../src/plugins/template-renderer/filters/format-currency.js'
 
 describe('#formatCurrency', () => {
   describe('With defaults', () => {

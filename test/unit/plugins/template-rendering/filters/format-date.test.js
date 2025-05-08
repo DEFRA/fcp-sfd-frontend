@@ -1,5 +1,5 @@
-import { formatDate } from '../../../../../src/plugins/template-renderer/filters/format-date.js'
 import { vi, beforeAll, describe, test, expect, afterAll } from 'vitest'
+import { formatDate } from '../../../../../src/plugins/template-renderer/filters/format-date.js'
 
 describe('#formatDate', () => {
   beforeAll(() => {

@@ -7,7 +7,7 @@ const mockH = {
   view: vi.fn().mockReturnValue(mockView)
 }
 
-describe('Contact-us endpoint', () => {
+describe('Contact us endpoint', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })

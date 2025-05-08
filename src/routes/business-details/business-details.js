@@ -71,7 +71,7 @@ const manageState = (response, resolvedFields) => {
   stateUpdates.forEach(key => response.state(key, resolvedFields[key]))
 }
 
-const getBusinessDetails = {
+export const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   handler: (request, h) => {
@@ -106,7 +106,3 @@ const getBusinessDetails = {
     return response
   }
 }
-
-export const businessDetailsRoutesView = [
-  getBusinessDetails
-]

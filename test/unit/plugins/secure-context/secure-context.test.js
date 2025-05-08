@@ -1,5 +1,5 @@
-import hapi from '@hapi/hapi'
 import { vi, beforeAll, beforeEach, describe, test, expect, afterAll, afterEach } from 'vitest'
+import hapi from '@hapi/hapi'
 
 import { secureContext } from '../../../../src/plugins/secure-context/secure-context.js'
 import { config } from '../../../../src/config/index.js'

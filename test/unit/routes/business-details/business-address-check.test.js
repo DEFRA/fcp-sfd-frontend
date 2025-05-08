@@ -4,7 +4,7 @@ import { businessAddressCheckRoutes } from '../../../../src/routes/business-deta
 
 const [getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
 
-describe('Business Address Check Routes Unit Tests', () => {
+describe('Check business address', () => {
   describe('GET /business-address-check', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessAddressCheck.method).toBe('GET')

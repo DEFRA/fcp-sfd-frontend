@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 
-describe('Routes Integration Tests', () => {
+describe('business details', () => {
   const originalEnv = process.env.ALLOW_ERROR_VIEWS
 
   const SERVER_MODULE_PATH = '../../../../src/server.js'
@@ -28,6 +28,30 @@ describe('Routes Integration Tests', () => {
 
     afterEach(async () => {
       await server.stop()
+    })
+
+    test.each([
+      ['home route', '/'],
+      ['cookies route', '/cookies'],
+      ['service unavailable route', '/service-unavailable'],
+      ['page not found route', '/page-not-found'],
+      ['service problem route', '/service-problem'],
+      ['business details route', '/business-details'],
+      ['change business name GET route', '/business-name-change'],
+      ['check business name route', '/business-name-check'],
+      ['enter business address GET route', '/business-address-enter'],
+      ['check business address route', '/business-address-check'],
+      ['change business phone numbers GET route', '/business-phone-numbers-change'],
+      ['check business phone numbers route', '/business-phone-numbers-check'],
+      ['change business GET email', '/business-email-change'],
+      ['check business email route', '/business-email-check'],
+      ['change business legal status route', '/business-legal-status-change'],
+      ['change business type route', '/business-type-change']
+    ])('%s responds correctly', async (_, url) => {
+      const response = await server.inject({method: 'GET', url})
+
+      expect(response.statusCode).toBe(200)
+      expect(response.headers['content-type']).toContain('text/html')
     })
 
     test('home route responds correctly', async () => {

@@ -30,50 +30,6 @@ describe('business details', () => {
       await server.stop()
     })
 
-    test.each([
-      ['home route', '/'],
-      ['cookies route', '/cookies'],
-      ['service unavailable route', '/service-unavailable'],
-      ['page not found route', '/page-not-found'],
-      ['service problem route', '/service-problem'],
-      ['business details route', '/business-details'],
-      ['change business name GET route', '/business-name-change'],
-      ['check business name route', '/business-name-check'],
-      ['enter business address GET route', '/business-address-enter'],
-      ['check business address route', '/business-address-check'],
-      ['change business phone numbers GET route', '/business-phone-numbers-change'],
-      ['check business phone numbers route', '/business-phone-numbers-check'],
-      ['change business GET email', '/business-email-change'],
-      ['check business email route', '/business-email-check'],
-      ['change business legal status route', '/business-legal-status-change'],
-      ['change business type route', '/business-type-change']
-    ])('%s responds correctly', async (_, url) => {
-      const response = await server.inject({method: 'GET', url})
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('home route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('cookies route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/cookies'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
     test('health route responds correctly', async () => {
       const response = await server.inject({
         method: 'GET',
@@ -82,52 +38,26 @@ describe('business details', () => {
 
       expect(response.statusCode).toBe(200)
     })
-
-    test('service-unavailable route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/service-unavailable'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('page-not-found route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/page-not-found'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('service-problem route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/service-problem'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-details route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-details'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-name-change GET route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-name-change'
-      })
+    
+    test.each([
+      ['home', '/'],
+      ['cookies', '/cookies'],
+      ['service unavailable', '/service-unavailable'],
+      ['page not found', '/page-not-found'],
+      ['service problem', '/service-problem'],
+      ['business details', '/business-details'],
+      ['change business name (GET)', '/business-name-change'],
+      ['check business name', '/business-name-check'],
+      ['enter business address (GET)', '/business-address-enter'],
+      ['check business address', '/business-address-check'],
+      ['change business phone numbers (GET)', '/business-phone-numbers-change'],
+      ['check business phone numbers', '/business-phone-numbers-check'],
+      ['change business email (GET)', '/business-email-change'],
+      ['check business email', '/business-email-check'],
+      ['change business legal status', '/business-legal-status-change'],
+      ['change business type', '/business-type-change']
+    ])('%s route responds correctly', async (_, url) => {
+      const response = await server.inject({ method: 'GET', url })
 
       expect(response.statusCode).toBe(200)
       expect(response.headers['content-type']).toContain('text/html')
@@ -143,26 +73,6 @@ describe('business details', () => {
       })
 
       expect(response.statusCode).toBe(302)
-    })
-
-    test('business-name-check route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-name-check'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-address-enter GET route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-address-enter'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
     })
 
     test('business-address-enter POST route is registered', async () => {
@@ -182,26 +92,6 @@ describe('business details', () => {
       expect(response.statusCode).toBe(302)
     })
 
-    test('business-address-check route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-address-check'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-phone-numbers-change GET route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-phone-numbers-change'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
     test('business-phone-numbers-change POST route is registered', async () => {
       const response = await server.inject({
         method: 'POST',
@@ -215,26 +105,6 @@ describe('business details', () => {
       expect(response.statusCode).toBe(302)
     })
 
-    test('business-phone-numbers-check route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-phone-numbers-check'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-email-change GET route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-email-change'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
     test('business-email-change POST route is registered', async () => {
       const response = await server.inject({
         method: 'POST',
@@ -245,15 +115,6 @@ describe('business details', () => {
       })
 
       expect(response.statusCode).toBe(302)
-    })
-
-    test('business-type-change GET route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-type-change'
-      })
-
-      expect(response.statusCode).toBe(200)
     })
 
     test('business-email-change POST returns 400 on empty email', async () => {
@@ -280,25 +141,6 @@ describe('business details', () => {
 
       expect(response.statusCode).toBe(400)
       expect(response.payload).toContain('Enter an email address, like name@example.com')
-    })
-
-    test('business-email-check route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-email-check'
-      })
-
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toContain('text/html')
-    })
-
-    test('business-legal-status-change GET route responds correctly', async () => {
-      const response = await server.inject({
-        method: 'GET',
-        url: '/business-legal-status-change'
-      })
-
-      expect(response.statusCode).toBe(200)
     })
   })
 

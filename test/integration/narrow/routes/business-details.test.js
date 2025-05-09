@@ -8,7 +8,7 @@ import {
   COUNTRY_MAX,
   PHONE_NUMBER_MIN,
   PHONE_NUMBER_MAX,
-  EMAIL_MAX,
+  EMAIL_MAX
 } from '../../../../src/constants/validation-fields.js'
 
 describe('business details', () => {

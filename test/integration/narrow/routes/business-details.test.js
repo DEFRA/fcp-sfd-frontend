@@ -1,4 +1,15 @@
 import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
+import {
+  BUSINESS_NAME_MAX,
+  ADDRESS_LINE_MAX,
+  TOWN_CITY_MAX,
+  COUNTY_MAX,
+  POSTCODE_MAX,
+  COUNTRY_MAX,
+  PHONE_NUMBER_MIN,
+  PHONE_NUMBER_MAX,
+  EMAIL_MAX,
+} from '../../../../src/constants/validation-fields.js'
 
 describe('business details', () => {
   const originalEnv = process.env.ALLOW_ERROR_VIEWS
@@ -53,11 +64,11 @@ describe('business details', () => {
         ['check business address', '/business-address-check'],
         ['change business phone numbers', '/business-phone-numbers-change'],
         ['check business phone numbers', '/business-phone-numbers-check'],
-        ['change business email', '/business-email-change'],
-        ['check business email', '/business-email-check'],
+        ['change business email address', '/business-email-change'],
+        ['check business email address', '/business-email-check'],
         ['change business legal status', '/business-legal-status-change'],
         ['change business type', '/business-type-change']
-      ])('%s route responds correctly', async (_, url) => {
+      ])('%s GET route responds correctly', async (_, url) => {
         const response = await server.inject({ method: 'GET', url })
 
         expect(response.statusCode).toBe(200)
@@ -65,84 +76,239 @@ describe('business details', () => {
       })
     })
 
-    test('business-name-change POST route is registered', async () => {
-      const response = await server.inject({
-        method: 'POST',
-        url: '/business-name-change',
-        payload: {
-          businessName: 'Test Business'
-        }
-      })
+    describe('POST routes', () => {
+      test.each([
+        [
+          'change business name',
+          '/business-name-change',
+          {
+            businessName: 'Test Farms Ltd'
+          }
+        ],
+        [
+          'enter business address',
+          '/business-address-enter',
+          {
+            address1: '10 Skirbeck Way',
+            address2: '',
+            addressCity: 'Maidstone',
+            addressCounty: '',
+            addressPostcode: 'SK22 1DL',
+            addressCountry: 'United Kingdom'
+          }
+        ],
+        [
+          'change business phone numbers',
+          '/business-phone-numbers-change',
+          {
+            businessTelephone: '01234567890',
+            businessMobile: '09876543210'
+          }
+        ],
+        [
+          'change business email address',
+          '/business-email-change',
+          {
+            businessEmail: 'name@example.com'
+          }
+        ]
+      ])('%s POST route is registered', async (_, url, payload) => {
+        const response = await server.inject({
+          method: 'POST',
+          url,
+          payload
+        })
 
-      expect(response.statusCode).toBe(302)
+        expect(response.statusCode).toBe(302)
+      })
     })
 
-    test('business-address-enter POST route is registered', async () => {
-      const response = await server.inject({
-        method: 'POST',
-        url: '/business-address-enter',
-        payload: {
-          address1: '10 Skirbeck Way',
-          address2: '',
-          addressCity: 'Maidstone',
-          addressCounty: '',
-          addressPostcode: 'SK22 1DL',
-          addressCountry: 'United Kingdom'
-        }
-      })
+    describe('schema validation: business name', () => {
+      test.each([
+        [
+          'no business name provided',
+          {
+            businessName: ''
+          },
+          'Enter business name'
+        ],
+        [
+          'business name is too long',
+          {
+            businessName: 'a'.repeat(BUSINESS_NAME_MAX + 1)
+          },
+          `Business name must be ${BUSINESS_NAME_MAX} characters or less`
+        ]
+      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
+        const response = await server.inject({
+          method: 'POST',
+          url: '/business-name-change',
+          payload
+        })
 
-      expect(response.statusCode).toBe(302)
+        expect(response.statusCode).toBe(400)
+        expect(response.payload).toContain(errorMessage)
+      })
     })
 
-    test('business-phone-numbers-change POST route is registered', async () => {
-      const response = await server.inject({
-        method: 'POST',
-        url: '/business-phone-numbers-change',
-        payload: {
-          businessTelephone: '01234567890',
-          businessMobile: '09876543210'
-        }
-      })
+    describe('schema validation: business address', () => {
+      const businessAddress = {
+        address1: '10 Skirbeck Way',
+        address2: '',
+        addressCity: 'Maidstone',
+        addressCounty: '',
+        addressPostcode: 'SK22 1DL',
+        addressCountry: 'United Kingdom'
+      }
 
-      expect(response.statusCode).toBe(302)
+      test.each([
+        [
+          'missing address line 1',
+          {
+            ...businessAddress,
+            address1: ''
+          },
+          'Enter address line 1, typically the building and street'
+        ],
+        [
+          'address line is too long',
+          {
+            ...businessAddress,
+            address2: 'a'.repeat(ADDRESS_LINE_MAX + 1)
+          },
+          `Address line 2 must be ${ADDRESS_LINE_MAX} characters or less`
+        ],
+        [
+          'missing town/city',
+          {
+            ...businessAddress,
+            addressCity: ''
+          },
+          'Enter town or city'
+        ],
+        [
+          'town/city is too long',
+          {
+            ...businessAddress,
+            addressCity: 'a'.repeat(TOWN_CITY_MAX + 1)
+          },
+          `Town or city must be ${TOWN_CITY_MAX} characters or less`
+        ],
+        [
+          'county is too long',
+          {
+            ...businessAddress,
+            addressCounty: 'a'.repeat(COUNTY_MAX + 1)
+          },
+          `County must be ${COUNTY_MAX} characters or less`
+        ],
+        [
+          'postcode is too long',
+          {
+            ...businessAddress,
+            addressPostcode: 'a'.repeat(POSTCODE_MAX + 1)
+          },
+          `Postal code or zip code must be ${POSTCODE_MAX} characters or less`
+        ],
+        [
+          'missing country',
+          {
+            ...businessAddress,
+            addressCountry: ''
+          },
+          'Enter a country'
+        ],
+        [
+          'country is too long',
+          {
+            ...businessAddress,
+            addressCountry: 'a'.repeat(COUNTRY_MAX + 1)
+          },
+          `Country must be ${COUNTRY_MAX} characters or less`
+        ]
+      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
+        const response = await server.inject({
+          method: 'POST',
+          url: '/business-address-enter',
+          payload
+        })
+
+        expect(response.statusCode).toBe(400)
+        expect(response.payload).toContain(errorMessage)
+      })
     })
 
-    test('business-email-change POST route is registered', async () => {
-      const response = await server.inject({
-        method: 'POST',
-        url: '/business-email-change',
-        payload: {
-          businessEmail: 'name@example.com'
-        }
-      })
+    describe('schema validation: business phone numbers', () => {
+      test.each([
+        [
+          'no business phone numbers are provided',
+          {
+            businessTelephone: '',
+            businessMobile: ''
+          },
+          'Enter at least one phone number'
+        ],
+        [
+          'business telephone number is too short',
+          {
+            businessTelephone: '123',
+            businessMobile: ''
+          },
+          `Business telephone number must be ${PHONE_NUMBER_MIN} characters or more`
+        ],
+        [
+          'business mobile number is too long',
+          {
+            businessTelephone: '',
+            businessMobile: '1'.repeat(PHONE_NUMBER_MAX + 1)
+          },
+          `Business mobile phone number must be ${PHONE_NUMBER_MAX} characters or less`
+        ]
+      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
+        const response = await server.inject({
+          method: 'POST',
+          url: '/business-phone-numbers-change',
+          payload
+        })
 
-      expect(response.statusCode).toBe(302)
+        expect(response.statusCode).toBe(400)
+        expect(response.payload).toContain(errorMessage)
+      })
     })
 
-    test('business-email-change POST returns 400 on empty email', async () => {
-      const response = await server.inject({
-        method: 'POST',
-        url: '/business-email-change',
-        payload: {
-          businessEmail: ''
-        }
+    describe('schema validation: business email address', () => {
+      test.each([
+        [
+          'no business email address provided',
+          {
+            businessEmail: ''
+          },
+          'Enter business email address'
+        ],
+        [
+          'business email address is too long',
+          {
+            businessEmail: 'a'.repeat(EMAIL_MAX + 1)
+          },
+          `Business email address must be ${EMAIL_MAX} characters or less`
+        ],
+        [
+          'business email address format is invalid',
+          {
+            businessEmail: 'not-an-email'
+          },
+          'Enter an email address, like name@example.com'
+        ]
+      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
+        const response = await server.inject({
+          method: 'POST',
+          url: '/business-email-change',
+          payload
+        })
+
+        expect(response.statusCode).toBe(400)
+        expect(response.payload).toContain(errorMessage)
       })
-
-      expect(response.statusCode).toBe(400)
-      expect(response.payload).toContain('Enter business email address')
-    })
-
-    test('business-email-change POST returns 400 on invalid email format', async () => {
-      const response = await server.inject({
-        method: 'POST',
-        url: '/business-email-change',
-        payload: {
-          businessEmail: 'not-an-email'
-        }
-      })
-
-      expect(response.statusCode).toBe(400)
-      expect(response.payload).toContain('Enter an email address, like name@example.com')
     })
   })
 

@@ -3,7 +3,7 @@ import { businessNameChangeRoutes } from '../../../../src/routes/business-detail
 
 const [getBusinessNameChange, postBusinessNameChange] = businessNameChangeRoutes
 
-describe('Business Name Change Routes', () => {
+describe('change business name', () => {
   const createMockResponse = () => {
     const state = vi.fn().mockReturnThis()
     const unstate = vi.fn().mockReturnThis()

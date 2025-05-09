@@ -17,7 +17,7 @@ const createMockResponse = () => {
   return { view, code, takeover, state, unstate, redirect }
 }
 
-describe('Business Phone Numbers Check Routes', () => {
+describe('check business phone numbers', () => {
   describe('GET /business-phone-numbers-check', () => {
     test('has correct method and path', () => {
       expect(getBusinessPhoneNumbersCheck.method).toBe('GET')

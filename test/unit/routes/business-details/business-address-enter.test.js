@@ -9,7 +9,7 @@ import { businessAddressRoutes } from '../../../../src/routes/business-details/b
 
 const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 
-vi.mock('../../../../src/schemas/business-details/business-address-form.js', () => ({
+vi.mock('../../../../src/schemas/business-details/business-address.js', () => ({
   businessAddressSchema: {
     validate: vi.fn()
   }
@@ -37,7 +37,7 @@ const createRedirectHandler = () => {
   }
 }
 
-describe('Enter business address', () => {
+describe('enter business address', () => {
   describe('GET /business-address-enter', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessAddressEnter.method).toBe('GET')

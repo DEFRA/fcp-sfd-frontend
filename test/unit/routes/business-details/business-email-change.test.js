@@ -1,30 +1,49 @@
-import { describe, test, expect, jest } from '@jest/globals'
-import {
-  businessEmailChangeRoutes
-} from '../../../../src/routes/business-details/business-email-change.js'
+import { describe, test, expect, vi } from 'vitest'
+import { businessEmailChangeRoutes } from '../../../../src/routes/business-details/business-email-change.js'
 
 const [getBusinessEmailChange, postBusinessEmailChange] = businessEmailChangeRoutes
 
-describe('Business Email Routes Unit Tests', () => {
+const createMockRequest = (overrides = {}) => ({
+  payload: {
+    businessEmail: 'name@example.com',
+    ...overrides
+  },
+  state: {
+    businessEmail: 'name@example.com',
+    ...overrides
+  }
+})
+
+const createMockResponse = () => {
+  const stateMock = vi.fn().mockReturnThis()
+  const view = vi.fn().mockReturnThis()
+  const redirect = vi.fn().mockReturnThis()
+  const code = vi.fn().mockReturnThis()
+  const takeover = vi.fn().mockReturnThis()
+
+  return {
+    h: { view, redirect, code, takeover },
+    stateMock,
+    view,
+    redirect,
+    code,
+    takeover
+  }
+}
+
+describe('change business email', () => {
   describe('GET /business-email-change', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessEmailChange.method).toBe('GET')
       expect(getBusinessEmailChange.path).toBe('/business-email-change')
     })
 
-    test('should render the correct view with correct data', () => {
-      const request = {
-        state: {
-          businessEmail: 'name@example.com'
-        }
-      }
-
-      const stateMock = jest.fn().mockReturnThis()
+    test('should render the correct view with data', () => {
+      const request = createMockRequest()
+      const stateMock = vi.fn().mockReturnThis()
 
       const h = {
-        view: jest.fn().mockReturnValue({
-          state: stateMock
-        })
+        view: vi.fn().mockReturnValue({ state: stateMock })
       }
 
       getBusinessEmailChange.handler(request, h)
@@ -38,50 +57,41 @@ describe('Business Email Routes Unit Tests', () => {
   })
 
   describe('POST /business-email-change', () => {
+    const schema = postBusinessEmailChange.options.validate.payload
+
     test('should have the correct method and path', () => {
       expect(postBusinessEmailChange.method).toBe('POST')
       expect(postBusinessEmailChange.path).toBe('/business-email-change')
     })
 
-    describe('Validation', () => {
-      const schema = postBusinessEmailChange.options.validate.payload
-
-      test('should validate empty business email', () => {
+    describe('validation', () => {
+      test('should fail on empty business email', () => {
         const result = schema.validate({ businessEmail: '' })
 
         expect(result.error).toBeTruthy()
         expect(result.error.details[0].message).toBe('Enter business email address')
       })
 
-      test('should validate invalid business email', () => {
-        const schema = postBusinessEmailChange.options.validate.payload
-
+      test('should fail on invalid email', () => {
         const result = schema.validate({ businessEmail: 'not-an-email' })
 
         expect(result.error).toBeTruthy()
         expect(result.error.details[0].message).toBe('Enter an email address, like name@example.com')
       })
 
-      test('should accept valid business email', () => {
+      test('should accept valid email', () => {
         const result = schema.validate({ businessEmail: 'name@example.com' })
 
         expect(result.error).toBeFalsy()
       })
     })
 
-    test('should redirect to business email check page on successful submission', () => {
-      const request = {
-        payload: {
-          businessEmail: 'name@example.com'
-        }
-      }
-
-      const stateMock = jest.fn().mockReturnThis()
+    test('should redirect on successful submission', () => {
+      const request = createMockRequest()
+      const stateMock = vi.fn().mockReturnThis()
 
       const h = {
-        redirect: jest.fn().mockReturnValue({
-          state: stateMock
-        })
+        redirect: vi.fn().mockReturnValue({ state: stateMock })
       }
 
       postBusinessEmailChange.options.handler(request, h)
@@ -90,65 +100,42 @@ describe('Business Email Routes Unit Tests', () => {
       expect(stateMock).toHaveBeenCalledWith('businessEmail', 'name@example.com')
     })
 
-    test('should handle validation failures correctly', async () => {
-      const request = {
-        payload: { businessEmail: '' }
-      }
+    describe('validation failAction', () => {
+      test('should handle specific validation error', async () => {
+        const request = createMockRequest({ businessEmail: '' })
+        const { h } = createMockResponse()
 
-      const h = {
-        view: jest.fn().mockReturnThis(),
-        code: jest.fn().mockReturnThis(),
-        takeover: jest.fn().mockReturnThis()
-      }
-
-      const err = {
-        details: [
-          {
-            path: ['businessEmail'],
-            message: 'Enter business email address'
-          }
-        ]
-      }
-
-      await postBusinessEmailChange.options.validate.failAction(request, h, err)
-
-      expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
-        businessEmail: '',
-        errors: {
-          businessEmail: {
-            text: 'Enter business email address'
-          }
+        const err = {
+          details: [{ path: ['businessEmail'], message: 'Enter business email address' }]
         }
+
+        await postBusinessEmailChange.options.validate.failAction(request, h, err)
+
+        expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
+          businessEmail: '',
+          errors: {
+            businessEmail: { text: 'Enter business email address' }
+          }
+        })
+
+        expect(h.code).toHaveBeenCalledWith(400)
+        expect(h.takeover).toHaveBeenCalled()
       })
 
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
-    })
+      test('should handle error with undefined details', async () => {
+        const request = createMockRequest({ businessEmail: '' })
+        const { h } = createMockResponse()
 
-    test('should handle validation failures with undefined details property', async () => {
-      const request = {
-        payload: {
-          businessEmail: ''
-        }
-      }
+        await postBusinessEmailChange.options.validate.failAction(request, h, {})
 
-      const h = {
-        view: jest.fn().mockReturnThis(),
-        code: jest.fn().mockReturnThis(),
-        takeover: jest.fn().mockReturnThis()
-      }
+        expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
+          businessEmail: '',
+          errors: {}
+        })
 
-      const err = {}
-
-      await postBusinessEmailChange.options.validate.failAction(request, h, err)
-
-      expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
-        businessEmail: '',
-        errors: {}
+        expect(h.code).toHaveBeenCalledWith(400)
+        expect(h.takeover).toHaveBeenCalled()
       })
-
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
     })
   })
 

@@ -2,7 +2,7 @@ import { businessPhoneSchema } from '../../schemas/business-details/business-pho
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
-export const getBusinessPhoneNumbersChange = {
+const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   handler: (request, h) => {
@@ -34,7 +34,7 @@ export const getBusinessPhoneNumbersChange = {
   }
 }
 
-export const postBusinessPhoneNumbersChange = {
+const postBusinessPhoneNumbersChange = {
   method: 'POST',
   path: '/business-phone-numbers-change',
   options: {

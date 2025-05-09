@@ -37,8 +37,8 @@ updates:
 
       tools:
         patterns:
-          - 'jest'
-          - 'jest-*'
+          - 'vi'
+          - 'vi-*'
           - 'nodemon'
           - 'npm-run-all'
           - 'source-map-loader'

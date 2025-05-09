@@ -1,9 +1,28 @@
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 import fs from 'node:fs'
 import { context } from '../../../../src/plugins/template-renderer/context.js'
 
-jest.mock('../../../../src/plugins/template-renderer/context.js', () => {
-  const originalModule = jest.requireActual('../../../../src/plugins/template-renderer/context.js')
+vi.mock('../../../../src/config/navigation-items.js', () => ({
+  getNavigationItems: () => [{
+    isActive: true,
+    text: 'Home',
+    url: '/'
+  }]
+}))
+
+vi.mock('../../../../src/utils/logger.js', () => ({
+  createLogger: () => ({
+    error: vi.fn()
+  })
+}))
+
+const mockReadFileSync = vi.spyOn(fs, 'readFileSync').mockImplementation(() => '{}')
+const mockLoggerError = vi.fn()
+vi.spyOn(console, 'error').mockImplementation(mockLoggerError)
+
+vi.mock('../../../../src/plugins/template-renderer/context.js', async (importOriginal) => {
+  const originalModule = await importOriginal()
+
   return {
     ...originalModule,
     context: (request) => {
@@ -20,31 +39,13 @@ jest.mock('../../../../src/plugins/template-renderer/context.js', () => {
   }
 })
 
-jest.mock('../../../../src/config/navigation-items.js', () => ({
-  getNavigationItems: () => [{
-    isActive: true,
-    text: 'Home',
-    url: '/'
-  }]
-}))
-
-jest.mock('../../../../src/utils/logger.js', () => ({
-  createLogger: () => ({
-    error: jest.fn()
-  })
-}))
-
-const mockReadFileSync = jest.spyOn(fs, 'readFileSync').mockImplementation(() => '{}')
-const mockLoggerError = jest.fn()
-jest.spyOn(console, 'error').mockImplementation(mockLoggerError)
-
 describe('#context', () => {
   const mockRequest = { path: '/' }
   let contextResult
 
   describe('When webpack manifest file read succeeds', () => {
     beforeEach(() => {
-      jest.clearAllMocks()
+      vi.clearAllMocks()
       mockReadFileSync.mockReturnValue(`{
         "application.js": "javascripts/application.js",
         "stylesheets/application.scss": "stylesheets/application.css"
@@ -94,7 +95,7 @@ describe('#context cache', () => {
 
   describe('Webpack manifest file cache', () => {
     beforeEach(() => {
-      jest.clearAllMocks()
+      vi.clearAllMocks()
       mockReadFileSync.mockReturnValue(`{
         "application.js": "javascripts/application.js",
         "stylesheets/application.scss": "stylesheets/application.css"

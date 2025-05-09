@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 import { formatValidationErrors } from '../../../src/utils/validation-error-handler.js'
 
 describe('formatValidationErrors', () => {

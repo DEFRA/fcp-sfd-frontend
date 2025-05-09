@@ -1,10 +1,10 @@
-import { jest, describe, test, expect, beforeEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
-const mockPutMetric = jest.fn()
-const mockFlush = jest.fn().mockResolvedValue(undefined)
-const mockLoggerError = jest.fn()
+const mockPutMetric = vi.fn()
+const mockFlush = vi.fn().mockResolvedValue(undefined)
+const mockLoggerError = vi.fn()
 
-jest.unstable_mockModule('aws-embedded-metrics', () => {
+vi.mock('aws-embedded-metrics', () => {
   return {
     createMetricsLogger: () => ({
       putMetric: mockPutMetric,
@@ -19,7 +19,7 @@ jest.unstable_mockModule('aws-embedded-metrics', () => {
   }
 })
 
-jest.unstable_mockModule('../../../src/utils/logger.js', () => ({
+vi.mock('../../../src/utils/logger.js', () => ({
   createLogger: () => ({
     error: (...args) => mockLoggerError(...args)
   })
@@ -35,7 +35,7 @@ const mockValue = 200
 
 describe('#metrics', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
     mockPutMetric.mockClear()
     mockFlush.mockClear()
     mockLoggerError.mockClear()

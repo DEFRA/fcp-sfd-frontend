@@ -1,15 +1,15 @@
 import { cookies } from '../../../src/routes/cookies.js'
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 
-const mockView = jest.fn()
+const mockView = vi.fn()
 
 const mockH = {
-  view: jest.fn().mockReturnValue(mockView)
+  view: vi.fn().mockReturnValue(mockView)
 }
 
 describe('Cookies endpoint', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should have the correct method and path', () => {

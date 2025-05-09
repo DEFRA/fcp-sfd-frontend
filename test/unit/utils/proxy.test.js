@@ -1,41 +1,41 @@
-import { jest, describe, test, expect, beforeEach } from '@jest/globals'
-
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 import { config } from '../../../src/config/index.js'
-import { provideProxy, proxyFetch } from '../../../src/utils/proxy.js'
 
-const mockLogger = {
-  debug: jest.fn()
-}
+let mockLogger, provideProxy, proxyFetch
 
-class MockProxyAgent {
-  constructor (options) {
-    this.options = options
+vi.mock('../../../src/utils/logger.js', () => {
+  mockLogger = {
+    debug: vi.fn()
   }
-}
 
-const mockHttpsProxyAgent = jest.fn().mockImplementation((url) => {
-  return { url }
-})
-
-jest.mock('../../../src/utils/logger.js', () => {
   return {
     createLogger: () => mockLogger
   }
 })
 
-jest.mock('undici', () => {
+vi.mock('undici', () => {
+  class MockProxyAgent {
+    constructor (options) {
+      this.options = options
+    }
+  }
+
   return {
     ProxyAgent: MockProxyAgent
   }
 })
 
-jest.mock('https-proxy-agent', () => {
+vi.mock('https-proxy-agent', () => {
+  const mockHttpsProxyAgent = vi.fn().mockImplementation((url) => {
+    return { url }
+  })
+
   return {
     HttpsProxyAgent: mockHttpsProxyAgent
   }
 })
 
-global.fetch = jest.fn().mockResolvedValue(new Response(JSON.stringify({ success: true })))
+global.fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true })))
 
 const httpProxyUrl = 'http://proxy.example.com'
 const httpsProxyUrl = 'https://proxy.example.com'
@@ -45,26 +45,29 @@ const testUrl = 'https://example.com/api'
 const testOptions = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
 
 describe('#proxy', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-
+  beforeEach(async () => {
+    vi.clearAllMocks()
     config.set('server.httpProxy', null)
     config.set('server.httpsProxy', null)
+
+    const proxyModule = await import('../../../src/utils/proxy.js')
+    provideProxy = proxyModule.provideProxy
+    proxyFetch = proxyModule.proxyFetch
   })
 
   describe('#provideProxy', () => {
-    describe('When a Proxy URL has not been set', () => {
-      test('Should return null', () => {
+    describe('when a Proxy URL has not been set', () => {
+      test('should return null', () => {
         expect(provideProxy()).toBeNull()
       })
 
-      test('Should not log anything', () => {
+      test('should not log anything', () => {
         provideProxy()
         expect(mockLogger.debug).not.toHaveBeenCalled()
       })
     })
 
-    describe('When a HTTP Proxy URL has been set', () => {
+    describe('when a HTTP Proxy URL has been set', () => {
       let result
 
       beforeEach(() => {
@@ -72,16 +75,16 @@ describe('#proxy', () => {
         result = provideProxy()
       })
 
-      test('Should set the correct port for HTTP', () => {
+      test('should set the correct port for HTTP', () => {
         expect(result).toHaveProperty('port', httpPort)
       })
 
-      test('Should create the correct URL object', () => {
+      test('should create the correct URL object', () => {
         expect(result.url.origin).toBe(httpProxyUrl)
       })
     })
 
-    describe('When a HTTPS Proxy URL has been set', () => {
+    describe('when a HTTPS Proxy URL has been set', () => {
       let result
 
       beforeEach(() => {
@@ -89,26 +92,26 @@ describe('#proxy', () => {
         result = provideProxy()
       })
 
-      test('Should set the correct port for HTTPS', () => {
+      test('should set the correct port for HTTPS', () => {
         expect(result).toHaveProperty('port', httpsPort)
       })
     })
   })
 
   describe('#proxyFetch', () => {
-    describe('When no proxy is configured', () => {
-      test('Should call fetch without a dispatcher', async () => {
+    describe('when no proxy is configured', () => {
+      test('should call fetch without a dispatcher', async () => {
         await proxyFetch(testUrl, testOptions)
         expect(global.fetch).toHaveBeenCalledWith(testUrl, testOptions)
       })
     })
 
-    describe('When a proxy is configured', () => {
+    describe('when a proxy is configured', () => {
       beforeEach(() => {
         config.set('server.httpProxy', httpProxyUrl)
       })
 
-      test('Should call fetch with the right URL and include a dispatcher', async () => {
+      test('should call fetch with the right URL and include a dispatcher', async () => {
         await proxyFetch(testUrl, testOptions)
 
         expect(global.fetch).toHaveBeenCalled()

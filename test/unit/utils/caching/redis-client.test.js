@@ -1,9 +1,9 @@
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { EventEmitter } from 'events'
 
 const mockLogger = {
-  info: jest.fn(),
-  error: jest.fn()
+  info: vi.fn(),
+  error: vi.fn()
 }
 
 class MockRedis extends EventEmitter {
@@ -21,13 +21,13 @@ class MockCluster extends EventEmitter {
   }
 }
 
-jest.unstable_mockModule('../../../../src/utils/logger.js', () => ({
-  createLogger: jest.fn(() => mockLogger)
+vi.mock('../../../../src/utils/logger.js', () => ({
+  createLogger: vi.fn(() => mockLogger)
 }))
 
-jest.unstable_mockModule('ioredis', () => ({
-  Redis: jest.fn((config) => new MockRedis(config)),
-  Cluster: jest.fn((nodes, options) => new MockCluster(nodes, options))
+vi.mock('ioredis', () => ({
+  Redis: vi.fn((config) => new MockRedis(config)),
+  Cluster: vi.fn((nodes, options) => new MockCluster(nodes, options))
 }))
 
 describe('buildRedisClient', () => {
@@ -47,7 +47,7 @@ describe('buildRedisClient', () => {
     Cluster = redisModule.Cluster
     createLogger = loggerModule.createLogger
 
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('creates a single Redis instance when useSingleInstanceCache is true', () => {
@@ -187,7 +187,7 @@ describe('buildRedisClient', () => {
 
     const client = buildRedisClient(redisConfig) // eslint-disable-line no-unused-vars
     const dnsLookup = Cluster.mock.calls[0][1].dnsLookup
-    const callbackMock = jest.fn()
+    const callbackMock = vi.fn()
 
     dnsLookup('test.address', callbackMock)
 

@@ -1,40 +1,38 @@
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { constants as httpConstants } from 'http2'
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
 
-jest.unstable_mockModule('../../../src/config/index.js', () => ({
-  config: {
-    get: jest.fn(key => {
-      if (key === 'server.staticCacheTimeout') return 3600000
-      if (key === 'server.assetPath') return '/public'
-      return null
-    })
-  }
-}))
-
-const importModules = async () => {
-  const { staticAssetRoutes } = await import('../../../src/routes/static-assets.js')
-  const { config } = await import('../../../src/config/index.js')
-  return { staticAssetRoutes, config }
-}
+let staticAssetRoutes
+let config
 
 const mockResponse = {
-  code: jest.fn().mockReturnThis(),
-  type: jest.fn().mockReturnThis()
+  code: vi.fn().mockReturnThis(),
+  type: vi.fn().mockReturnThis()
 }
 
 const mockH = {
-  response: jest.fn().mockReturnValue(mockResponse)
+  response: vi.fn().mockReturnValue(mockResponse)
 }
 
 describe('Static asset routes', () => {
-  let staticAssetRoutes
-  let config
-
   beforeEach(async () => {
-    jest.clearAllMocks()
-    const modules = await importModules()
-    staticAssetRoutes = modules.staticAssetRoutes
-    config = modules.config
+    vi.resetModules()
+    vi.clearAllMocks()
+
+    vi.doMock('../../../src/config/index.js', () => ({
+      config: {
+        get: vi.fn(key => {
+          if (key === 'server.staticCacheTimeout') return 3600000
+          if (key === 'server.assetPath') return '/public'
+          return null
+        })
+      }
+    }))
+
+    const { staticAssetRoutes: routes } = await import('../../../src/routes/static-assets.js')
+    const { config: configModule } = await import('../../../src/config/index.js')
+
+    staticAssetRoutes = routes
+    config = configModule
   })
 
   test('there should be two static asset routes', () => {

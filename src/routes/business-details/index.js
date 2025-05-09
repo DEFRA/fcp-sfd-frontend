@@ -1,7 +1,7 @@
 import { businessNameChangeRoutes } from './business-name-change.js'
 import { businessNameCheckRoutes } from './business-name-check.js'
-import { businessDetailsRoutesView } from './business-details.js'
-import { businessAddressRoutes } from './business-address-form.js'
+import { getBusinessDetails } from './business-details.js'
+import { businessAddressRoutes } from './business-address-enter.js'
 import { businessAddressCheckRoutes } from './business-address-check.js'
 import { businessPhoneNumbersChangeRoutes } from './business-phone-numbers-change.js'
 import { businessPhoneNumbersCheckRoutes } from './business-phone-numbers-check.js'
@@ -11,9 +11,9 @@ import { getBusinessLegalStatusChange } from './business-legal-status-change.js'
 import { getBusinessTypeChange } from './business-type-change.js'
 
 export const businessDetailsRoutes = [
+  getBusinessDetails,
   ...businessNameChangeRoutes,
   ...businessNameCheckRoutes,
-  ...businessDetailsRoutesView,
   ...businessAddressRoutes,
   ...businessAddressCheckRoutes,
   ...businessPhoneNumbersChangeRoutes,

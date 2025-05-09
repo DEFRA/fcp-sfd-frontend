@@ -106,7 +106,3 @@ export const getBusinessDetails = {
     return response
   }
 }
-
-export const businessDetailsRoutesView = [
-  getBusinessDetails
-]

@@ -1,4 +1,4 @@
-import { describe, test, expect, afterEach } from '@jest/globals'
+import { describe, test, expect, afterEach } from 'vitest'
 import { createServer } from '../../../src/server.js'
 
 describe('Application Startup Integration Test', () => {

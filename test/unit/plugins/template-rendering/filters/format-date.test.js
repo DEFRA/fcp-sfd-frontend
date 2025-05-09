@@ -1,15 +1,15 @@
+import { vi, beforeAll, describe, test, expect, afterAll } from 'vitest'
 import { formatDate } from '../../../../../src/plugins/template-renderer/filters/format-date.js'
-import { jest, beforeAll, describe, test, expect, afterAll } from '@jest/globals'
 
 describe('#formatDate', () => {
   beforeAll(() => {
-    jest.useFakeTimers({
+    vi.useFakeTimers({
       now: new Date('2023-02-01')
     })
   })
 
   afterAll(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   describe('With defaults', () => {

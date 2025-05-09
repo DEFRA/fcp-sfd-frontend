@@ -1,19 +1,19 @@
 import { StatusCodes } from 'http-status-codes'
 import { catchAll } from '../../../src/utils/errors.js'
-import { jest, describe, test, expect, beforeEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
 describe('#catchAll', () => {
-  const mockErrorLogger = jest.fn()
+  const mockErrorLogger = vi.fn()
   const mockStack = 'Mock error stack'
   let mockToolkitView
   let mockToolkitCode
   let mockToolkit
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
 
-    mockToolkitView = jest.fn().mockReturnThis()
-    mockToolkitCode = jest.fn().mockReturnThis()
+    mockToolkitView = vi.fn().mockReturnThis()
+    mockToolkitCode = vi.fn().mockReturnThis()
 
     mockToolkit = {
       view: mockToolkitView,

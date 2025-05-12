@@ -8,7 +8,8 @@ import { context } from './context.js'
 import * as filters from './filters/filters.js'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
-const nunjucksEnvironment = nunjucks.configure(
+
+export const nunjucksEnvironment = nunjucks.configure(
   [
     'node_modules/govuk-frontend/dist/',
     path.resolve(dirname, '../../views')
@@ -22,6 +23,7 @@ const nunjucksEnvironment = nunjucks.configure(
     noCache: config.get('nunjucks.noCache')
   }
 )
+
 Object.entries(filters).forEach(([name, filter]) => {
   nunjucksEnvironment.addFilter(name, filter)
 })

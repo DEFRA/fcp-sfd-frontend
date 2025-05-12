@@ -1,0 +1,37 @@
+import { describe, test, expect, beforeAll } from 'vitest'
+import { JSDOM } from 'jsdom'
+import { renderTemplate } from '../../../helpers/render-template.js'
+
+describe('change business email address', () => {
+  let document
+
+  beforeAll(() => {
+    const html = renderTemplate('business-details/business-email-change.njk', {
+      businessEmail: 'testbusiness@email.com',
+      errors: {}
+    })
+
+    const dom = new JSDOM(html)
+    document = dom.window.document
+  })
+  
+  test('should include the business email input field with the correct value', () => {
+    const input = document.querySelector('input#business-email')
+
+    expect(input).not.toBeNull()
+    expect(input.name).toBe('businessEmail')
+    expect(input.value).toBe('testbusiness@email.com')
+  })
+  
+  test.each([
+    ['correct heading', 'h1', 'What is your business email address?'],
+    ['continue button', 'button', 'Continue'],
+    ['cancel link', 'a[href="/business-details"]', 'Cancel']
+  ])('should render %s', (_, selector, textContent) => {
+    const element = document.querySelector(selector)
+
+    expect(element).not.toBeNull()
+    expect(element.textContent.trim()).toContain(textContent)
+  })
+
+})

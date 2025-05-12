@@ -24,7 +24,7 @@ describe('change business name', () => {
 
   test('should include the business name input field with the correct value', () => {
     const input = document.querySelector('input#business-name')
-    
+
     expect(input).not.toBeNull()
     expect(input.name).toBe('businessName')
     expect(input.value).toBe('Test business name')
@@ -39,7 +39,7 @@ describe('change business name', () => {
 
   test('should include a cancel link which navigates to business details', () => {
     const cancelLink = document.querySelector('a[href="/business-details"]')
-    
+
     expect(cancelLink).not.toBeNull()
     expect(cancelLink.textContent.trim()).toBe('Cancel')
   })

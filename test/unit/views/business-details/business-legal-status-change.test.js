@@ -1,13 +1,11 @@
-import { describe, test, expect, beforeAll } from 'vitest'
+import { describe, test, expect } from 'vitest'
 import { JSDOM } from 'jsdom'
 import { renderTemplate } from '../../../helpers/render-template.js'
 
 describe('change business legal status', () => {
-  let document
-
   const html = renderTemplate('business-details/business-legal-status-change.njk')
   const dom = new JSDOM(html)
-  document = dom.window.document
+  const document = dom.window.document
 
   test('should render the correct heading', () => {
     const heading = document.querySelector('h1')

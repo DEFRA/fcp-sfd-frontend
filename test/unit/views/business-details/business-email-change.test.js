@@ -14,24 +14,32 @@ describe('change business email address', () => {
     const dom = new JSDOM(html)
     document = dom.window.document
   })
-  
-  test('should include the business email input field with the correct value', () => {
-    const input = document.querySelector('input#business-email')
+
+  test('should render the business email input field with the correct value', () => {
+    const input = document.querySelector('#business-email')
 
     expect(input).not.toBeNull()
     expect(input.name).toBe('businessEmail')
     expect(input.value).toBe('testbusiness@email.com')
   })
-  
+
+  test('should render a cancel link which navigates to business details', () => {
+    const link = document.querySelector(
+      'a.govuk-link.govuk-link--no-visited-state'
+    )
+
+    expect(link).not.toBeNull()
+    expect(link.getAttribute('href')).toBe('/business-details')
+    expect(link.textContent.trim()).toContain('Cancel')
+  })
+
   test.each([
     ['correct heading', 'h1', 'What is your business email address?'],
-    ['continue button', 'button', 'Continue'],
-    ['cancel link', 'a[href="/business-details"]', 'Cancel']
+    ['"Continue" button', 'button', 'Continue']
   ])('should render %s', (_, selector, textContent) => {
     const element = document.querySelector(selector)
 
     expect(element).not.toBeNull()
     expect(element.textContent.trim()).toContain(textContent)
   })
-
 })

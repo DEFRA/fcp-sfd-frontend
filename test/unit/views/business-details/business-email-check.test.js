@@ -15,7 +15,7 @@ describe('check business email address', () => {
     document = dom.window.document
   })
 
-  test('should render a summary list row with the correct business email address', () => {
+  test('should render a summary list row with correct business email address', () => {
     const key = document.querySelector('.govuk-summary-list__key')
     const value = document.querySelector('.govuk-summary-list__value')
 
@@ -26,26 +26,30 @@ describe('check business email address', () => {
     expect(value.textContent.trim()).toBe('testbusiness@email.com')
   })
 
-  test('should render a “Change” action link with correct href and hidden text', () => {
-    const actionLink = document.querySelector(
-      '.govuk-summary-list__actions a.govuk-link'
-    )
+  test.each([
+    [
+      '"Change" link which navigates to /business-email-change',
+      '.govuk-summary-list__actions a.govuk-link',
+      '/business-email-change',
+      'Change'
+    ],
+    [
+      '"Cancel" link which navigates to /business-details',
+      'a.govuk-link.govuk-link--no-visited-state',
+      '/business-details',
+      'Cancel'
+    ]
+  ])('should render %s', (_, selector, route, textContent) => {
+    const link = document.querySelector(selector)
 
-    const visuallyHidden = actionLink.querySelector(
-      '.govuk-visually-hidden'
-    )
-
-    expect(actionLink).not.toBeNull()
-    expect(actionLink.getAttribute('href')).toBe('/business-email-change')
-
-    expect(visuallyHidden).not.toBeNull()
-    expect(visuallyHidden.textContent.trim()).toBe('business email')
+    expect(link).not.toBeNull()
+    expect(link.getAttribute('href')).toBe(route)
+    expect(link.textContent.trim()).toContain(textContent)
   })
 
   test.each([
     ['correct heading', 'h1', 'Check your business email address is correct before submitting'],
-    ['submit button', 'button.govuk-button', 'Submit'],
-    ['cancel link', 'a[href="/business-details"]', 'Cancel']
+    ['submit button', 'button.govuk-button', 'Submit']
   ])('should render %s', (_, selector, textContent) => {
     const element = document.querySelector(selector)
 

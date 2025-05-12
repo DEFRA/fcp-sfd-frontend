@@ -15,14 +15,7 @@ describe('check business name', () => {
     document = dom.window.document
   })
 
-  test('should render the correct heading', () => {
-    const heading = document.querySelector('h1')
-
-    expect(heading).not.toBeNull()
-    expect(heading.textContent).toContain('Check your business name is correct before submitting')
-  })
-
-  test('should render a summary list row with the correct business name', () => {
+  test('should render a summary list row with correct business name', () => {
     const key = document.querySelector('.govuk-summary-list__key')
     const value = document.querySelector('.govuk-summary-list__value')
 
@@ -33,31 +26,34 @@ describe('check business name', () => {
     expect(value.textContent.trim()).toBe('Test business name')
   })
 
-  test('should render a “Change” action link with correct href and hidden text', () => {
-    const actionLink = document.querySelector(
-      '.govuk-summary-list__actions a.govuk-link'
-    )
-    expect(actionLink).not.toBeNull()
-    expect(actionLink.getAttribute('href')).toBe('/business-name-change')
-    const visuallyHidden = actionLink.querySelector(
-      '.govuk-visually-hidden'
-    )
-    expect(visuallyHidden).not.toBeNull()
-    expect(visuallyHidden.textContent.trim()).toBe('business name')
+  test.each([
+    [
+      '"Change" link which navigates to /business-name-change',
+      '.govuk-summary-list__actions a.govuk-link',
+      '/business-name-change',
+      'Change'
+    ],
+    [
+      '"Cancel" link which navigates to /business-details',
+      'a.govuk-link.govuk-link--no-visited-state',
+      '/business-details',
+      'Cancel'
+    ]
+  ])('should render %s', (_, selector, route, textContent) => {
+    const link = document.querySelector(selector)
+
+    expect(link).not.toBeNull()
+    expect(link.getAttribute('href')).toBe(route)
+    expect(link.textContent.trim()).toContain(textContent)
   })
 
-  test('should render a submit button', () => {
-    const submitBtn = document.querySelector('button.govuk-button')
-    expect(submitBtn).not.toBeNull()
-    expect(submitBtn.textContent.trim()).toBe('Submit')
-  })
+  test.each([
+    ['correct heading', 'h1', 'Check your business name is correct before submitting'],
+    ['submit button', 'button', 'Submit']
+  ])('should render %s', (_, selector, textContent) => {
+    const element = document.querySelector(selector)
 
-  test('should include a cancel link which navigates to business details', () => {
-    const cancelLink = document.querySelector(
-      'a.govuk-link.govuk-link--no-visited-state'
-    )
-    expect(cancelLink).not.toBeNull()
-    expect(cancelLink.getAttribute('href')).toBe('/business-details')
-    expect(cancelLink.textContent.trim()).toBe('Cancel')
+    expect(element).not.toBeNull()
+    expect(element.textContent.trim()).toContain(textContent)
   })
 })

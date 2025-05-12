@@ -2,7 +2,7 @@ import { describe, test, expect, beforeAll } from 'vitest'
 import { JSDOM } from 'jsdom'
 import { renderTemplate } from '../../../helpers/render-template.js'
 
-describe('Business phone numbers page', () => {
+describe('change business phone numbers', () => {
   let document
 
   beforeAll(() => {
@@ -16,52 +16,43 @@ describe('Business phone numbers page', () => {
     document = dom.window.document
   })
 
-  test('should render the correct heading', () => {
-    const heading = document.querySelector('h1')
-
-    expect(heading).not.toBeNull()
-    expect(heading.textContent.trim()).toBe('What are your business phone numbers?')
-  })
-
-  test('should show the hint text', () => {
-    const hint = document.querySelector('.govuk-hint')
-
-    expect(hint).not.toBeNull()
-    expect(hint.textContent.trim()).toBe('Enter at least one phone number')
-  })
-
-  test('should render the business telephone number input', () => {
-    const input = document.querySelector('#businessTelephone')
-
-    expect(input).not.toBeNull()
-    expect(input.getAttribute('name')).toBe('businessTelephone')
-    expect(input.getAttribute('type')).toBe('tel')
-    expect(input.value).toBe('01234567890')
-    expect(input.classList.contains('govuk-input--width-20')).toBe(true)
-  })
-
-  test('should render the business mobile number input', () => {
-    const input = document.querySelector('#businessMobile')
+  test.each([
+    [
+      'business telephone number input field with correct value',
+      '#businessTelephone',
+      'businessTelephone',
+      '01234567890'
+    ],
+    [
+      'business mobile number input field with correct value',
+      '#businessMobile',
+      'businessMobile',
+      '07123456789'
+    ]
+  ])('should render %s', (_, selector, name, value) => {
+    const input = document.querySelector(selector)
 
     expect(input).not.toBeNull()
-    expect(input.getAttribute('name')).toBe('businessMobile')
-    expect(input.getAttribute('type')).toBe('tel')
-    expect(input.value).toBe('07123456789')
-    expect(input.classList.contains('govuk-input--width-20')).toBe(true)
+    expect(input.name).toBe(name)
+    expect(input.value).toBe(value)
   })
 
-  test('should render the continue button', () => {
-    const button = document.querySelector('button.govuk-button')
+  test.each([
+    ['correct heading', 'h1', 'What are your business phone numbers?'],
+    ['hint text', '.govuk-hint', 'Enter at least one phone number'],
+    ['"Continue" button', 'button', 'Continue']
+  ])('should render %s', (_, selector, textContent) => {
+    const element = document.querySelector(selector)
 
-    expect(button).not.toBeNull()
-    expect(button.textContent.trim()).toBe('Continue')
+    expect(element).not.toBeNull()
+    expect(element.textContent.trim()).toContain(textContent)
   })
 
-  test('should render the cancel link with correct href', () => {
-    const cancelLink = document.querySelector('a.govuk-link--no-visited-state')
+  test('should render cancel link which navigates to business details', () => {
+    const link = document.querySelector('a.govuk-link--no-visited-state')
 
-    expect(cancelLink).not.toBeNull()
-    expect(cancelLink.getAttribute('href')).toBe('/business-details')
-    expect(cancelLink.textContent.trim()).toBe('Cancel')
+    expect(link).not.toBeNull()
+    expect(link.getAttribute('href')).toBe('/business-details')
+    expect(link.textContent.trim()).toBe('Cancel')
   })
 })

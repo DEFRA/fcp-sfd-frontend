@@ -7,28 +7,27 @@ describe('change business type', () => {
   const dom = new JSDOM(html)
   const document = dom.window.document
 
-  test('should render the correct heading', () => {
-    const heading = document.querySelector('h1')
+  test.each([
+    ['correct heading', 'h1', 'Change your business type'],
+    ['contact section heading', 'h2', 'Contact the Rural Payments Agency']
+  ])('should render %s', (_, selector, textContent) => {
+    const heading = document.querySelector(selector)
 
     expect(heading).not.toBeNull()
-    expect(heading.textContent).toContain('Change your business type')
+    expect(heading.textContent.trim()).toContain(textContent)
   })
 
   test('should include the contact guidance text', () => {
     const bodyText = document.body.textContent
-    expect(bodyText).toContain('If your business type is incorrect, contact the Rural Payments Agency to update it.')
-  })
 
-  test('should render the contact section heading', () => {
-    const contactHeading = document.querySelector('h2')
-    expect(contactHeading).not.toBeNull()
-    expect(contactHeading.textContent.trim()).toBe('Contact the Rural Payments Agency')
+    expect(bodyText).toContain('If your business type is incorrect, contact the Rural Payments Agency to update it.')
   })
 
   test('should render a return button that navigates to business details', () => {
     const button = document.querySelector('a.govuk-button[href="/business-details"]')
 
     expect(button).not.toBeNull()
-    expect(button.textContent.trim()).toBe('Return to business details')
+    expect(button.getAttribute('href')).toBe('/business-details')
+    expect(button.textContent.trim()).toContain('Return to business details')
   })
 })

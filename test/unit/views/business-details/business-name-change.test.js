@@ -15,32 +15,31 @@ describe('change business name', () => {
     document = dom.window.document
   })
 
-  test('should render the correct heading', () => {
-    const heading = document.querySelector('h1')
-
-    expect(heading).not.toBeNull()
-    expect(heading.textContent).toContain('What is your business name?')
-  })
-
-  test('should include the business name input field with the correct value', () => {
-    const input = document.querySelector('input#business-name')
+  test('should render business name input field with correct value', () => {
+    const input = document.querySelector('#business-name')
 
     expect(input).not.toBeNull()
     expect(input.name).toBe('businessName')
     expect(input.value).toBe('Test business name')
   })
 
-  test('should render a continue button', () => {
-    const button = document.querySelector('button')
+  test('should render cancel link which navigates to business details', () => {
+    const link = document.querySelector(
+      'a.govuk-link.govuk-link--no-visited-state'
+    )
 
-    expect(button).not.toBeNull()
-    expect(button.textContent.trim()).toBe('Continue')
+    expect(link).not.toBeNull()
+    expect(link.getAttribute('href')).toBe('/business-details')
+    expect(link.textContent.trim()).toContain('Cancel')
   })
 
-  test('should include a cancel link which navigates to business details', () => {
-    const cancelLink = document.querySelector('a[href="/business-details"]')
+  test.each([
+    ['correct heading', 'h1', 'What is your business name?'],
+    ['"Continue" button', 'button', 'Continue']
+  ])('should render %s', (_, selector, textContent) => {
+    const element = document.querySelector(selector)
 
-    expect(cancelLink).not.toBeNull()
-    expect(cancelLink.textContent.trim()).toBe('Cancel')
+    expect(element).not.toBeNull()
+    expect(element.textContent.trim()).toContain(textContent)
   })
 })

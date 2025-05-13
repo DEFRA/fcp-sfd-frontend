@@ -6,19 +6,14 @@ import { normaliseText } from '../../../helpers/normalise-text.js'
 describe('check business phone numbers', () => {
   let document
 
-  const render = (context = {}) => {
-    const html = renderTemplate('business-details/business-phone-numbers-check.njk', {
-      businessTelephone: context.businessTelephone,
-      businessMobile: context.businessMobile
-    })
-    const dom = new JSDOM(html)
-    document = dom.window.document
-  }
   beforeEach(() => {
-    render({
+    const html = renderTemplate('business-details/business-phone-numbers-check.njk', {
       businessTelephone: '01234567890',
       businessMobile: ''
     })
+
+    const dom = new JSDOM(html)
+    document = dom.window.document
   })
 
   test('displays both telephone and mobile numbers', () => {
@@ -31,7 +26,7 @@ describe('check business phone numbers', () => {
   })
 
   test.each([
-    ['correct heading', 'h1', 'Check your business phone numbers are correct before submitting'],
+    ['pageheading', 'h1', 'Check your business phone numbers are correct before submitting'],
     ['"Submit" button', 'button', 'Submit']
   ])('should render %s', (_, selector, textContent) => {
     const element = document.querySelector(selector)

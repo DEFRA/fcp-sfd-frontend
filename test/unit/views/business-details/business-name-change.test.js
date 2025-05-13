@@ -30,16 +30,16 @@ describe('change business name', () => {
 
     expect(link).not.toBeNull()
     expect(link.getAttribute('href')).toBe('/business-details')
-    expect(link.textContent.trim()).toContain('Cancel')
+    expect(link.textContent.trim()).toBe('Cancel')
   })
 
   test.each([
-    ['correct heading', 'h1', 'What is your business name?'],
+    ['page heading', 'h1', 'What is your business name?'],
     ['"Continue" button', 'button', 'Continue']
   ])('should render %s', (_, selector, textContent) => {
     const element = document.querySelector(selector)
 
     expect(element).not.toBeNull()
-    expect(element.textContent.trim()).toContain(textContent)
+    expect(element.textContent.trim()).toBe(textContent)
   })
 })

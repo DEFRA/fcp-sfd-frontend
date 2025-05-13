@@ -1,53 +1,65 @@
-import { describe, test, expect, beforeAll } from 'vitest'
+import { describe, test, expect, beforeEach } from 'vitest'
 import { JSDOM } from 'jsdom'
 import { renderTemplate } from '../../../helpers/render-template.js'
+import { normaliseText } from '../../../helpers/normalise-text.js'
 
-describe('Business Address Check Page (Static Content)', () => {
+describe('check business address', () => {
   let document
 
-  beforeAll(async () => {
-    const html = await renderTemplate('business-details/business-address-check.njk', {
-      address1: '',
+  beforeEach(() => {
+    const html = renderTemplate('business-details/business-address-check.njk', {
+      address1: '123 Farm Lane',
       address2: '',
-      addressCity: '',
-      addressCounty: '',
-      addressPostcode: '',
-      addressCountry: ''
+      addressCity: 'York',
+      addressCounty: 'North Yorkshire',
+      addressPostcode: 'Y01 7HG',
+      addressCountry: 'United Kingdom',
     })
 
     const dom = new JSDOM(html)
     document = dom.window.document
   })
 
-  test('renders the correct heading', () => {
-    const heading = document.querySelector('h1.govuk-heading-l')
-    expect(heading).not.toBeNull()
-    expect(heading.textContent.trim()).toBe('Check your business address is correct before submitting')
+  test('displays the full business address', () => {
+    const value = document.querySelector('.govuk-summary-list__value')
+    const content = normaliseText(value.textContent)
+
+    expect(value).not.toBeNull()
+    expect(content).toContain('123 Farm Lane')
+    expect(content).toContain('York')
+    expect(content).toContain('North Yorkshire')
+    expect(content).toContain('Y01 7HG')
+    expect(content).toContain('United Kingdom')
   })
 
-  test('renders the "Change" link with correct href', () => {
-    const changeLink = document.querySelector('a[href="/business-address-enter"]')
-    expect(changeLink).not.toBeNull()
-    expect(changeLink.textContent.trim()).toBe('Change business address')
+  test.each([
+    ['page heading', 'h1', 'Check your business address is correct before submitting'],
+    ['"Submit" button', 'button', 'Submit']
+  ])('should render %s', (_, selector, textContent) => {
+    const element = document.querySelector(selector)
+
+    expect(element).not.toBeNull()
+    expect(normaliseText(element.textContent)).toContain(textContent)
   })
 
-  test('renders the "Cancel" link with correct href', () => {
-    const cancelLink = document.querySelector('a[href="/business-details"]')
-    expect(cancelLink).not.toBeNull()
-    expect(cancelLink.textContent.trim()).toBe('Cancel')
-  })
+  test.each([
+    [
+      '"Change" link which navigates to /business-address-enter',
+      '.govuk-summary-list__actions a.govuk-link',
+      '/business-address-enter',
+      'Change'
+    ],
+    [
+      '"Cancel" link which navigates to /business-details',
+      'a.govuk-link--no-visited-state',
+      '/business-details',
+      'Cancel'
+    ]
+  ])('should render %s', (_, selector, route, textContent) => {
+    const link = document.querySelector(selector)
 
-  test('renders the "Submit" button', () => {
-    const submitButton = document.querySelector('button[type="submit"]')
-    expect(submitButton).not.toBeNull()
-    expect(submitButton.textContent.trim()).toBe('Submit')
-  })
-
-  test('renders the address fields', () => {
-    const addressRow = document.querySelector('dl.govuk-summary-list')
-    expect(addressRow).not.toBeNull()
-
-    const addressDetails = addressRow.querySelector('dd.govuk-summary-list__value')
-    expect(addressDetails.textContent.trim()).toBe('')
+    expect(link).not.toBeNull()
+    expect(link.getAttribute('href')).toBe(route)
+    expect(normaliseText(link.textContent)).toContain(textContent)
   })
 })

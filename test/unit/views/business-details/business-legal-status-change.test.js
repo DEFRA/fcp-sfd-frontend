@@ -8,7 +8,7 @@ describe('change business legal status', () => {
   const document = dom.window.document
 
   test.each([
-    ['correct heading', 'h1', 'Change your legal status'],
+    ['page heading', 'h1', 'Change your legal status'],
     ['contact section heading', 'h2', 'Contact the Rural Payments Agency']
   ])('should render %s', (_, selector, textContent) => {
     const heading = document.querySelector(selector)

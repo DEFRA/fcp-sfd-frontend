@@ -38,7 +38,7 @@ describe('change business phone numbers', () => {
   })
 
   test.each([
-    ['correct heading', 'h1', 'What are your business phone numbers?'],
+    ['page heading', 'h1', 'What are your business phone numbers?'],
     ['hint text', '.govuk-hint', 'Enter at least one phone number'],
     ['"Continue" button', 'button', 'Continue']
   ])('should render %s', (_, selector, textContent) => {

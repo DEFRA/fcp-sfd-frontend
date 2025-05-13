@@ -48,12 +48,12 @@ describe('check business email address', () => {
   })
 
   test.each([
-    ['correct heading', 'h1', 'Check your business email address is correct before submitting'],
+    ['page heading', 'h1', 'Check your business email address is correct before submitting'],
     ['submit button', 'button.govuk-button', 'Submit']
   ])('should render %s', (_, selector, textContent) => {
     const element = document.querySelector(selector)
 
     expect(element).not.toBeNull()
-    expect(element.textContent.trim()).toContain(textContent)
+    expect(element.textContent.trim()).toBe(textContent)
   })
 })

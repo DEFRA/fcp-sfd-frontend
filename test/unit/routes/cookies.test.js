@@ -1,5 +1,5 @@
-import { cookies } from '../../../src/routes/cookies.js'
 import { vi, beforeEach, describe, test, expect } from 'vitest'
+import { cookies } from '../../../src/routes/cookies.js'
 
 const mockView = vi.fn()
 

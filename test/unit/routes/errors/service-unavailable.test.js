@@ -1,5 +1,5 @@
-import { serviceUnavailable } from '../../../../src/routes/errors/service-unavailable.js'
 import { vi, beforeEach, describe, test, expect } from 'vitest'
+import { serviceUnavailable } from '../../../../src/routes/errors/service-unavailable.js'
 
 const mockView = vi.fn()
 const mockH = {

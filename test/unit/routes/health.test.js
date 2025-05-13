@@ -1,6 +1,6 @@
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { constants as httpConstants } from 'http2'
 import { health } from '../../../src/routes/health'
-import { vi, beforeEach, describe, test, expect } from 'vitest'
 
 const mockResponse = {
   code: vi.fn().mockReturnThis()

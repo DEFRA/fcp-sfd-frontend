@@ -1,7 +1,6 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 import { JSDOM } from 'jsdom'
 import { renderTemplate } from '../../../helpers/render-template.js'
-import { normaliseText } from '../../../helpers/normalise-text.js'
 
 describe('view and update business details', () => {
   let document

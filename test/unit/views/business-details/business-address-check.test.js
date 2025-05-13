@@ -13,7 +13,7 @@ describe('check business address', () => {
       addressCity: 'York',
       addressCounty: 'North Yorkshire',
       addressPostcode: 'Y01 7HG',
-      addressCountry: 'United Kingdom',
+      addressCountry: 'United Kingdom'
     })
 
     const dom = new JSDOM(html)

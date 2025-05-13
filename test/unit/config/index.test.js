@@ -112,7 +112,7 @@ describe('Config', () => {
     test('should default to refreshing tokens if environment variable is not set', async () => {
       delete process.env.DEFRA_ID_REFRESH_TOKENS
       const { config } = await import('../../../src/config/index.js')
-      
+
       expect(config.get('defraId.refreshTokens')).toBe(true)
     })
   })

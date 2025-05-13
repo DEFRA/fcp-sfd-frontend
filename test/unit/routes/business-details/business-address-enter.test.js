@@ -15,7 +15,7 @@ vi.mock('../../../../src/schemas/business-details/business-address.js', () => ({
   }
 }))
 
-const viewPath = 'business-details/business-address-form'
+const viewPath = 'business-details/business-address-enter'
 
 const createViewHandler = () => {
   const state = vi.fn().mockReturnThis()

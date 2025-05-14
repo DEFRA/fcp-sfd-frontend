@@ -1,4 +1,4 @@
-export const getBusinessPhoneNumbersCheck = {
+const getBusinessPhoneNumbersCheck = {
   method: 'GET',
   path: '/business-phone-numbers-check',
   handler: (request, h) => {
@@ -12,7 +12,7 @@ export const getBusinessPhoneNumbersCheck = {
   }
 }
 
-export const postBusinessPhoneNumbersCheck = {
+const postBusinessPhoneNumbersCheck = {
   method: 'POST',
   path: '/business-phone-numbers-check',
   handler: (request, h) => {

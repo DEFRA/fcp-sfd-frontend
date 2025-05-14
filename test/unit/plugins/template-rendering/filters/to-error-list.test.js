@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals'
+import { describe, test, expect } from 'vitest'
 import { toErrorList } from '../../../../../src/plugins/template-renderer/filters/to-error-list.js'
 
 describe('toErrorList filter', () => {

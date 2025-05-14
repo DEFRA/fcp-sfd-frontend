@@ -1,18 +1,18 @@
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { constants as httpConstants } from 'http2'
 import { health } from '../../../src/routes/health'
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
 
 const mockResponse = {
-  code: jest.fn().mockReturnThis()
+  code: vi.fn().mockReturnThis()
 }
 
 const mockH = {
-  response: jest.fn().mockReturnValue(mockResponse)
+  response: vi.fn().mockReturnValue(mockResponse)
 }
 
 describe('Health endpoint', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should have the correct method and path', () => {

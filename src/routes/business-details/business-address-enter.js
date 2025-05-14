@@ -1,8 +1,8 @@
-import { businessAddressSchema } from '../../schemas/business-details/business-address-form.js'
-import { formatValidationErrors } from '../../../src/utils/validation-error-handler.js'
+import { businessAddressSchema } from '../../schemas/business-details/business-address.js'
+import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
-export const getBusinessAddressEnter = {
+const getBusinessAddressEnter = {
   method: 'GET',
   path: '/business-address-enter',
   handler: (request, h) => {
@@ -22,7 +22,7 @@ export const getBusinessAddressEnter = {
       addressCountry
     }
 
-    return h.view('business-details/business-address-form', {
+    return h.view('business-details/business-address-enter', {
       address1,
       address2,
       addressCity,
@@ -33,7 +33,7 @@ export const getBusinessAddressEnter = {
   }
 }
 
-export const postBusinessAddressEnter = {
+const postBusinessAddressEnter = {
   method: 'POST',
   path: '/business-address-enter',
   options: {
@@ -45,7 +45,7 @@ export const postBusinessAddressEnter = {
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
 
-        return h.view('business-details/business-address-form', {
+        return h.view('business-details/business-address-enter', {
           address1: request.payload?.address1 || '',
           address2: request.payload?.address2 || '',
           addressCity: request.payload?.addressCity || '',

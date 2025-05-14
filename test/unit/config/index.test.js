@@ -1,9 +1,9 @@
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 
 describe('Config', () => {
   describe('DefraId', () => {
     beforeEach(() => {
-      jest.resetModules()
+      vi.resetModules()
       process.env.DEFRA_ID_WELL_KNOWN_URL = 'mockWellKnownUrl'
       process.env.DEFRA_ID_CLIENT_ID = 'mockClientId'
       process.env.DEFRA_ID_CLIENT_SECRET = 'mockClientSecret'
@@ -16,39 +16,46 @@ describe('Config', () => {
 
     test('should return well known url from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.wellKnownUrl')).toBe('mockWellKnownUrl')
     })
 
     test('should return null if well known url environment variable is not set', async () => {
       delete process.env.DEFRA_ID_WELL_KNOWN_URL
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.wellKnownUrl')).toBe(null)
     })
 
     test('should return client id from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.clientId')).toBe('mockClientId')
     })
 
     test('should return null if client id environment variable is not set', async () => {
       delete process.env.DEFRA_ID_CLIENT_ID
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.clientId')).toBe(null)
     })
 
     test('should return client secret from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.clientSecret')).toBe('mockClientSecret')
     })
 
     test('should return null if client secret environment variable is not set', async () => {
       delete process.env.DEFRA_ID_CLIENT_SECRET
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.clientSecret')).toBe(null)
     })
 
     test('should return service id from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.serviceId')).toBe('mockServiceId')
     })
 
@@ -60,17 +67,20 @@ describe('Config', () => {
 
     test('should return policy from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.policy')).toBe('mockPolicy')
     })
 
     test('should return null if policy environment variable is not set', async () => {
       delete process.env.DEFRA_ID_POLICY
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.policy')).toBe(null)
     })
 
     test('should return redirect url from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.redirectUrl')).toBe('mockRedirectUrl')
     })
 
@@ -82,23 +92,27 @@ describe('Config', () => {
 
     test('should return sign out redirect url from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.signOutRedirectUrl')).toBe('mockSignOutRedirectUrl')
     })
 
     test('should return null if sign out redirect url environment variable is not set', async () => {
       delete process.env.DEFRA_ID_SIGN_OUT_REDIRECT_URL
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.signOutRedirectUrl')).toBe(null)
     })
 
     test('should return refresh tokens from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.refreshTokens')).toBe(false)
     })
 
     test('should default to refreshing tokens if environment variable is not set', async () => {
       delete process.env.DEFRA_ID_REFRESH_TOKENS
       const { config } = await import('../../../src/config/index.js')
+
       expect(config.get('defraId.refreshTokens')).toBe(true)
     })
   })

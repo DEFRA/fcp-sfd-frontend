@@ -1,18 +1,14 @@
-import { jest, beforeAll, beforeEach, describe, test, expect } from '@jest/globals'
+import { vi, beforeAll, beforeEach, describe, test, expect } from 'vitest'
 
-jest.unstable_mockModule('@defra/hapi-tracing', () => ({
-  getTraceId: jest.fn()
+const mockGetTraceId = vi.fn()
+
+vi.mock('@defra/hapi-tracing', () => ({
+  getTraceId: mockGetTraceId
 }))
-
-const mockGetTraceId = jest.fn()
 
 let loggerOptions
 
 beforeAll(async () => {
-  jest.unstable_mockModule('@defra/hapi-tracing', () => ({
-    getTraceId: mockGetTraceId
-  }))
-
   const loggerOptionsModule = await import('../../../src/config/logger-options.js')
   loggerOptions = loggerOptionsModule.loggerOptions
 })

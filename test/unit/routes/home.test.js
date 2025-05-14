@@ -1,15 +1,15 @@
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { home } from '../../../src/routes/home'
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
 
-const mockView = jest.fn()
+const mockView = vi.fn()
 
 const mockH = {
-  view: jest.fn().mockReturnValue(mockView)
+  view: vi.fn().mockReturnValue(mockView)
 }
 
 describe('Home endpoint', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should have the correct method and path', () => {

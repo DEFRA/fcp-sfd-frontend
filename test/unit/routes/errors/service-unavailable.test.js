@@ -1,14 +1,14 @@
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { serviceUnavailable } from '../../../../src/routes/errors/service-unavailable.js'
-import { jest, beforeEach, describe, test, expect } from '@jest/globals'
 
-const mockView = jest.fn()
+const mockView = vi.fn()
 const mockH = {
-  view: jest.fn().mockReturnValue(mockView)
+  view: vi.fn().mockReturnValue(mockView)
 }
 
 describe('Service Unavailable Route', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should have the correct method and path', () => {

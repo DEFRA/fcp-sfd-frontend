@@ -5,6 +5,7 @@ services:
       target: development
     ports:
       - '3002:3002'
+      - '9002:9229'
     links:
       - 'redis:redis'
     depends_on:

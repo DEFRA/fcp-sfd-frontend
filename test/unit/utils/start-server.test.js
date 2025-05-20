@@ -1,27 +1,27 @@
-import { jest, describe, test, expect, beforeAll, beforeEach, afterAll, afterEach } from '@jest/globals'
+import { vi, describe, test, expect, beforeAll, beforeEach, afterAll, afterEach } from 'vitest'
 
-const mockLoggerInfo = jest.fn()
-const mockLoggerError = jest.fn()
-const mockHapiLoggerInfo = jest.fn()
-const mockHapiLoggerError = jest.fn()
+const mockLoggerInfo = vi.fn()
+const mockLoggerError = vi.fn()
+const mockHapiLoggerInfo = vi.fn()
+const mockHapiLoggerError = vi.fn()
 
 const mockServer = {
-  start: jest.fn().mockResolvedValue(),
-  stop: jest.fn().mockResolvedValue(),
+  start: vi.fn().mockResolvedValue(),
+  stop: vi.fn().mockResolvedValue(),
   logger: {
     info: mockHapiLoggerInfo,
     error: mockHapiLoggerError
   },
   events: {
-    on: jest.fn(),
-    once: jest.fn(),
-    removeAllListeners: jest.fn()
+    on: vi.fn(),
+    once: vi.fn(),
+    removeAllListeners: vi.fn()
   },
-  listeners: jest.fn().mockReturnValue([]),
-  removeAllListeners: jest.fn()
+  listeners: vi.fn().mockReturnValue([]),
+  removeAllListeners: vi.fn()
 }
 
-jest.unstable_mockModule('hapi-pino', () => ({
+vi.mock('hapi-pino', () => ({
   register: (server) => {
     server.decorate('server', 'logger', {
       info: mockHapiLoggerInfo,
@@ -31,22 +31,22 @@ jest.unstable_mockModule('hapi-pino', () => ({
   name: 'mock-hapi-pino'
 }))
 
-jest.unstable_mockModule('@hapi/hapi', () => ({
-  server: jest.fn().mockReturnValue(mockServer),
+vi.mock('@hapi/hapi', () => ({
+  server: vi.fn().mockReturnValue(mockServer),
   default: {
-    server: jest.fn().mockReturnValue(mockServer)
+    server: vi.fn().mockReturnValue(mockServer)
   }
 }))
 
-jest.unstable_mockModule('../../../src/utils/logger.js', () => ({
+vi.mock('../../../src/utils/logger.js', () => ({
   createLogger: () => ({
     info: (...args) => mockLoggerInfo(...args),
     error: (...args) => mockLoggerError(...args)
   })
 }))
 
-jest.unstable_mockModule('../../../src/server.js', () => ({
-  createServer: jest.fn().mockResolvedValue(mockServer)
+vi.mock('../../../src/server.js', () => ({
+  createServer: vi.fn().mockResolvedValue(mockServer)
 }))
 
 const startServerModule = await import('../../../src/utils/start-server.js')
@@ -68,7 +68,7 @@ describe('#startServer', () => {
   })
 
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   afterEach(async () => {
@@ -80,7 +80,7 @@ describe('#startServer', () => {
     process.removeAllListeners('uncaughtException')
     process.removeAllListeners('unhandledRejection')
 
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   describe('When server starts', () => {

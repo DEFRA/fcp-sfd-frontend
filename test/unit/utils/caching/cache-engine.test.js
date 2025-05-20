@@ -1,57 +1,57 @@
-import { jest, describe, beforeEach, afterEach, test, expect, afterAll, beforeAll } from '@jest/globals'
+import { vi, describe, beforeEach, afterEach, test, expect, afterAll, beforeAll } from 'vitest'
 
-const mockLoggerInfo = jest.fn()
-const mockLoggerError = jest.fn()
+const mockLoggerInfo = vi.fn()
+const mockLoggerError = vi.fn()
 
-const mockRedisOn = jest.fn().mockReturnThis()
-const mockRedisQuit = jest.fn().mockResolvedValue()
+const mockRedisOn = vi.fn().mockReturnThis()
+const mockRedisQuit = vi.fn().mockResolvedValue()
 
 const mockRedisInstance = {
   on: mockRedisOn,
   quit: mockRedisQuit
 }
 
-const Redis = jest.fn().mockReturnValue(mockRedisInstance)
+const Redis = vi.fn().mockReturnValue(mockRedisInstance)
 
-Redis.Cluster = jest.fn().mockReturnValue(mockRedisInstance)
+Redis.Cluster = vi.fn().mockReturnValue(mockRedisInstance)
 
-jest.unstable_mockModule('../../../../src/utils/logger.js', () => ({
+vi.mock('../../../../src/utils/logger.js', () => ({
   createLogger: () => ({
     info: mockLoggerInfo,
     error: mockLoggerError,
-    flush: jest.fn().mockResolvedValue()
+    flush: vi.fn().mockResolvedValue()
   })
 }))
 
-jest.unstable_mockModule('ioredis', () => ({
+vi.mock('ioredis', () => ({
   default: Redis
 }))
 
-const mockCatboxRedisInstance = { start: jest.fn(), stop: jest.fn() }
-const mockCatboxMemoryInstance = { start: jest.fn(), stop: jest.fn() }
+const mockCatboxRedisInstance = { start: vi.fn(), stop: vi.fn() }
+const mockCatboxMemoryInstance = { start: vi.fn(), stop: vi.fn() }
 
-jest.unstable_mockModule('@hapi/catbox-redis', () => ({
-  Engine: jest.fn().mockImplementation(() => mockCatboxRedisInstance)
+vi.mock('@hapi/catbox-redis', () => ({
+  Engine: vi.fn().mockImplementation(() => mockCatboxRedisInstance)
 }))
 
-jest.unstable_mockModule('@hapi/catbox-memory', () => ({
-  Engine: jest.fn().mockImplementation(() => mockCatboxMemoryInstance)
+vi.mock('@hapi/catbox-memory', () => ({
+  Engine: vi.fn().mockImplementation(() => mockCatboxMemoryInstance)
 }))
 
-jest.unstable_mockModule('../../../../src/utils/caching/redis-client.js', () => ({
-  buildRedisClient: jest.fn().mockReturnValue(mockRedisInstance)
+vi.mock('../../../../src/utils/caching/redis-client.js', () => ({
+  buildRedisClient: vi.fn().mockReturnValue(mockRedisInstance)
 }))
 
 let originalConfigGet
 
-jest.unstable_mockModule('../../../../src/config/index.js', () => {
+vi.mock('../../../../src/config/index.js', () => {
   const mockConfig = {
-    get: jest.fn(key => {
+    get: vi.fn(key => {
       if (key === 'redis') return { host: 'localhost', port: 6379 }
       if (key === 'server.isProduction') return false
       return null
     }),
-    set: jest.fn()
+    set: vi.fn()
   }
 
   originalConfigGet = mockConfig.get
@@ -75,11 +75,11 @@ beforeAll(async () => {
 
 describe('#getCacheEngine', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   afterAll(() => {
-    jest.restoreAllMocks()
+    vi.restoreAllMocks()
   })
 
   describe('When Redis cache engine has been requested', () => {
@@ -100,7 +100,7 @@ describe('#getCacheEngine', () => {
 
   describe('When In memory cache engine has been requested in Production', () => {
     beforeEach(() => {
-      config.get = jest.fn(key => {
+      config.get = vi.fn(key => {
         if (key === 'server.isProduction') return true
         if (key === 'redis') return { host: 'localhost', port: 6379 }
         return null

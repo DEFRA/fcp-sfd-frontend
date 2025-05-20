@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, jest } from '@jest/globals'
+import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 
 describe('Error Routes Registration', () => {
   const originalEnv = process.env.ALLOW_ERROR_VIEWS
@@ -14,7 +14,7 @@ describe('Error Routes Registration', () => {
     })
 
     beforeEach(async () => {
-      jest.resetModules()
+      vi.resetModules()
 
       const errorsModule = await import(ERRORS_MODULE_PATH)
       errors = errorsModule.errors
@@ -65,7 +65,7 @@ describe('Error Routes Registration', () => {
     })
 
     beforeEach(async () => {
-      jest.resetModules()
+      vi.resetModules()
 
       const errorsModule = await import(ERRORS_MODULE_PATH)
       errors = errorsModule.errors

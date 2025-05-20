@@ -17,6 +17,14 @@ Frontend service for the Single Front Door (SFD) service. This service provides 
 | Name | Default Value | Required | Description |
 | --- | --- | --- | --- |
 | ALLOW_ERROR_VIEWS | false | No | Enable error route views in local development to inspect error pages |
+| DEFRA_ID_WELL_KNOWN_URL | null | No | The Defra Identity well known URL - Readable endpoint for DefraId |
+| DEFRA_ID_POLICY | null | No | The Defra Identity policy - Enables multiple microservices to share same DefraId active token (Must be the same for all FCP microservices) |
+| DEFRA_ID_CLIENT_ID | null | No | The Defra Identity client ID - Unique code for identifying fcp-sfd-frontend |
+| DEFRA_ID_CLIENT_SECRET | null | No | The Defra Identity client secret - client secret for fcp-sfd-frontend |
+| DEFRA_ID_SERVICE_ID | null | No |The Defra Identity service ID - Service ID for SFD |
+| DEFRA_ID_REDIRECT_URL | null | No | The Defra Identity redirect URl - URL of the page to be redirected immediatly after user has succesfully signed in |
+| DEFRA_ID_SIGN_OUT_REDIRECT_URL | null | No | The Defra Identity sign out redirect URL - URL of the page to be redirected after user has succesfully signed out |
+| DEFRA_ID_REFRESH_TOKENS | true | No | Defra Identity refresh tokens - Set to true to enable auto refresh of Defra Identity tokens |
 
 ## Setup
 
@@ -27,6 +35,14 @@ npm install
 
 Create a `.env` file in the root of the project with the required environment variables:
 ALLOW_ERROR_VIEWS=true/false
+The following DEFRA_ID variables are also to be added onto the `.env` file, values for the variables are [here](https://defra.sharepoint.com/teams/Team1974/FCP%20Front%20Door%20team/Forms/AllItems.aspx?id=%2Fteams%2FTeam1974%2FFCP%20Front%20Door%20team%2FTechnology%2FProtected%5FData&viewid=9296ac29%2D76a0%2D4373%2Db652%2Dd876b3b8e35f)
+```bash
+DEFRA_ID_WELL_KNOWN_URL
+DEFRA_ID_CLIENT_ID
+DEFRA_ID_CLIENT_SECRET
+DEFRA_ID_SERVICE
+DEFRA_ID_POLICY
+```
 
 ## Running the application
 
@@ -110,6 +126,6 @@ The following attribution statement MUST be cited in your products and applicati
 
 ### About the licence
 
-The Open Government Licence (OGL) was developed by the Controller of Her Majesty's Stationery Office (HMSO) to enable information providers in the public sector to license the use and re-use of their information under a common open licence.
+The Open Government Licence (OGL) was developed by the Controller of His Majesty's Stationery Office (HMSO) to enable information providers in the public sector to license the use and re-use of their information under a common open licence.
 
 It is designed to encourage use and re-use of information freely and flexibly, with only a few conditions.

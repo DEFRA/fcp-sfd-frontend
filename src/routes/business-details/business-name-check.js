@@ -1,4 +1,4 @@
-export const getBusinessNameCheck = {
+const getBusinessNameCheck = {
   method: 'GET',
   path: '/business-name-check',
   handler: (request, h) => {
@@ -10,7 +10,7 @@ export const getBusinessNameCheck = {
   }
 }
 
-export const postBusinessNameCheck = {
+const postBusinessNameCheck = {
   method: 'POST',
   path: '/business-name-check',
   handler: (request, h) => {

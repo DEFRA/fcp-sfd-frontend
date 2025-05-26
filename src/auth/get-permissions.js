@@ -26,7 +26,8 @@ async function getPersonId (headers) {
   //   Authorization <headers.token>
 
   const mockResponse = {
-    _data: {
+    headers,
+    data: {
       id: '123456',
       customerReferenceNumber: '1234567890', // crn
       title: 'Mr',
@@ -51,7 +52,7 @@ async function getPersonId (headers) {
     }
   }
 
-  return mockResponse._data.id
+  return mockResponse.data.id
 }
 
 async function getRolesAndPrivileges (personId, organisationId, { headers }) {
@@ -64,6 +65,9 @@ async function getRolesAndPrivileges (personId, organisationId, { headers }) {
   //   Authorization <headers.token>
 
   const mockResponse = {
+    personId,
+    organisationId,
+    headers,
     data: {
       personRoles: [{
         personId: '123456',

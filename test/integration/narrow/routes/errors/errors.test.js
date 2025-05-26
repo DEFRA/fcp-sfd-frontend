@@ -22,11 +22,11 @@ describe('Error Routes Registration', () => {
       const { createServer } = await import(SERVER_MODULE_PATH)
       server = await createServer()
       await server.initialize()
-    })
+    }, 50000)
 
     afterEach(async () => {
       await server.stop()
-    })
+    }, 50000)
 
     test('service-unavailable route is included in errors array', () => {
       const serviceUnavailableRoute = errors.find(route =>

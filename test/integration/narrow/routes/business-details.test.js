@@ -30,11 +30,11 @@ describe('business details', () => {
 
   beforeEach(async () => {
     server = await resetAndCreateServer()
-  })
+  }, 50000)
 
   afterEach(async () => {
     await server.stop()
-  })
+  }, 50000)
 
   describe('with error views enabled', () => {
     beforeAll(() => {

@@ -22,7 +22,7 @@ const getBusinessAddressEnter = {
       addressCountry
     }
 
-    return h.view('business-details/business-address-enter', {
+    return h.view('business-details/address', {
       address1,
       address2,
       addressCity,
@@ -45,7 +45,7 @@ const postBusinessAddressEnter = {
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
 
-        return h.view('business-details/business-address-enter', {
+        return h.view('business-details/check-address', {
           address1: request.payload?.address1 || '',
           address2: request.payload?.address2 || '',
           addressCity: request.payload?.addressCity || '',
@@ -66,7 +66,7 @@ const postBusinessAddressEnter = {
         addressCountry
       } = request.payload
 
-      return h.redirect('/business-address-check')
+      return h.redirect('/business-details/check-address')
         .state('address1', address1)
         .state('address2', address2)
         .state('addressCity', addressCity)

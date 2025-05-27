@@ -1,7 +1,49 @@
+/**
+ * Orchestrates fetching and presenting the data for `/business-details` page
+ * @module BusinessDetailsService
+ */
+
 import { resolveField } from '../../utils/resolve-field.js'
 import { successMessages } from '../../constants/success-messages.js'
+import { BusinessDetailsPresenter } from '../../presenters/business-details/business-details.presenter.js'
 
-const resolveFields = (state, showSuccessBanner) => {
+
+async function go (request, h) {
+    // const data = FetchBusinessDetailsService.go(request)
+    // const pageData = BusinessDetailsPresenter.go(request)
+
+    const { showSuccessBanner: showSuccessBannerRaw, successField, ...state } = request.state
+    const showSuccessBanner = showSuccessBannerRaw === 'true'
+    const successMessage = successMessages?.[successField] || null
+    const resolvedFields = _resolveFields(state, showSuccessBanner)
+    console.log('🚀 resolvedFields:', resolvedFields)
+    const formattedAddress = _formattedAddress(resolvedFields)
+
+    const response = h.view('business-details/business-details', {
+      showSuccessBanner,
+      successMessage,
+      businessName: resolvedFields.businessName,
+      formattedAddress,
+      businessTelephone: resolvedFields.businessTelephone,
+      businessMobile: resolvedFields.businessMobile,
+      businessEmail: resolvedFields.businessEmail
+    })
+
+    _manageState(response, resolvedFields)
+
+    const tempData =
+      request.state.tempBusinessTelephone !== undefined ||
+      request.state.tempBusinessMobile !== undefined
+
+    if (tempData && !showSuccessBanner) {
+      response.unstate('tempBusinessTelephone')
+      response.unstate('tempBusinessMobile')
+    }
+
+    return response
+}
+
+function _resolveFields (state, showSuccessBanner) {
   const fields = [
     { name: 'businessName', raw: state.businessName, original: state.originalBusinessName, fallback: 'Agile Farm Ltd' },
     { name: 'businessTelephone', raw: state.businessTelephone, original: state.originalBusinessTelephone },
@@ -26,7 +68,7 @@ const resolveFields = (state, showSuccessBanner) => {
   }, {})
 }
 
-const getFormattedAddress = (resolvedFields) => {
+function _formattedAddress (resolvedFields) {
   return [
     resolvedFields.address1,
     resolvedFields.address2,
@@ -37,7 +79,7 @@ const getFormattedAddress = (resolvedFields) => {
   ].filter(Boolean).join('<br>')
 }
 
-const manageState = (response, resolvedFields) => {
+function _manageState (response, resolvedFields) {
   const stateChanges = [
     { key: 'showSuccessBanner' },
     { key: 'successField' },
@@ -71,39 +113,6 @@ const manageState = (response, resolvedFields) => {
   stateUpdates.forEach(key => response.state(key, resolvedFields[key]))
 }
 
-export const getBusinessDetails = {
-  method: 'GET',
-  path: '/business-details',
-  handler: (request, h) => {
-    const { showSuccessBanner: showSuccessBannerRaw, successField, ...state } = request.state
-    const showSuccessBanner = showSuccessBannerRaw === 'true'
-    const successMessage = successMessages?.[successField] || null
-
-    const resolvedFields = resolveFields(state, showSuccessBanner)
-    const formattedAddress = getFormattedAddress(resolvedFields)
-
-    const response = h.view('business-details/business-details', {
-      showSuccessBanner,
-      successMessage,
-      businessName: resolvedFields.businessName,
-      formattedAddress,
-      businessTelephone: resolvedFields.businessTelephone,
-      businessMobile: resolvedFields.businessMobile,
-      businessEmail: resolvedFields.businessEmail
-    })
-    console.log('🚀 response:', response)
-
-    manageState(response, resolvedFields)
-
-    const tempData =
-      request.state.tempBusinessTelephone !== undefined ||
-      request.state.tempBusinessMobile !== undefined
-
-    if (tempData && !showSuccessBanner) {
-      response.unstate('tempBusinessTelephone')
-      response.unstate('tempBusinessMobile')
-    }
-
-    return response
-  }
+export const BusinessDetailsService = {
+  go
 }

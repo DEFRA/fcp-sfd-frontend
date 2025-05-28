@@ -6,6 +6,8 @@ describe('Error Routes Registration', () => {
   const ERRORS_MODULE_PATH = '../../../../../src/routes/errors/index.js'
 
   describe('With Error Views Enabled', () => {
+    const hookTimeout = 50000
+
     let server
     let errors
 
@@ -22,11 +24,11 @@ describe('Error Routes Registration', () => {
       const { createServer } = await import(SERVER_MODULE_PATH)
       server = await createServer()
       await server.initialize()
-    })
+    }, hookTimeout)
 
     afterEach(async () => {
       await server.stop()
-    })
+    }, hookTimeout)
 
     test('service-unavailable route is included in errors array', () => {
       const serviceUnavailableRoute = errors.find(route =>

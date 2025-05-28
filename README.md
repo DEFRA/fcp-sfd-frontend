@@ -35,6 +35,7 @@ npm install
 
 Create a `.env` file in the root of the project with the required environment variables:
 ALLOW_ERROR_VIEWS=true/false
+
 The following DEFRA_ID variables are also to be added onto the `.env` file, values for the variables are [here](https://defra.sharepoint.com/teams/Team1974/FCP%20Front%20Door%20team/Forms/AllItems.aspx?id=%2Fteams%2FTeam1974%2FFCP%20Front%20Door%20team%2FTechnology%2FProtected%5FData&viewid=9296ac29%2D76a0%2D4373%2Db652%2Dd876b3b8e35f)
 ```bash
 DEFRA_ID_WELL_KNOWN_URL

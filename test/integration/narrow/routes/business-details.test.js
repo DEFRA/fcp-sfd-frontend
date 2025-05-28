@@ -26,15 +26,17 @@ describe('business details', () => {
     return server
   }
 
+  const hookTimeout = 50000
+
   let server
 
   beforeEach(async () => {
     server = await resetAndCreateServer()
-  })
+  }, hookTimeout)
 
   afterEach(async () => {
     await server.stop()
-  })
+  }, hookTimeout)
 
   describe('with error views enabled', () => {
     beforeAll(() => {

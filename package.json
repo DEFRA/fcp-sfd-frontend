@@ -1,6 +1,6 @@
 {
   "name": "fcp-sfd-frontend",
-  "version": "0.30.6",
+  "version": "0.33.0",
   "description": "SFD Frontend",
   "sideEffects": false,
   "main": ".server/index.js",

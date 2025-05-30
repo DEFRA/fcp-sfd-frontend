@@ -1,5 +1,18 @@
 import { resolveField } from '../../utils/resolve-field.js'
 import { successMessages } from '../../constants/success-messages.js'
+import { queryBuilder } from '../../dal/helper.js'
+import { dalConnector } from '../../dal/connector.js'
+
+const query = queryBuilder(
+  'customer',
+  'crn: "9477368292"',
+  `business(sbi: "107591843") {
+    name
+  }`
+)
+const response = await dalConnector(query)
+
+console.log("-----------------------", response)
 
 const resolveFields = (state, showSuccessBanner) => {
   const fields = [

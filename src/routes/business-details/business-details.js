@@ -3,17 +3,6 @@ import { successMessages } from '../../constants/success-messages.js'
 import { queryBuilder } from '../../dal/helper.js'
 import { dalConnector } from '../../dal/connector.js'
 
-const query = queryBuilder(
-  'customer',
-  'crn: "9477368292"',
-  `business(sbi: "107591843") {
-    name
-  }`
-)
-const response = await dalConnector(query)
-
-console.log("-----------------------", response)
-
 const resolveFields = (state, showSuccessBanner) => {
   const fields = [
     { name: 'businessName', raw: state.businessName, original: state.originalBusinessName, fallback: 'Agile Farm Ltd' },
@@ -87,7 +76,17 @@ const manageState = (response, resolvedFields) => {
 export const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
-  handler: (request, h) => {
+  handler: async (request, h) => {
+    const query = queryBuilder(
+      'customer',
+      'crn: "9477368292"',
+      `business(sbi: "107591843") {
+        name
+      }`
+    )
+
+    const responseData = await dalConnector(query)
+
     const { showSuccessBanner: showSuccessBannerRaw, successField, ...state } = request.state
     const showSuccessBanner = showSuccessBannerRaw === 'true'
     const successMessage = successMessages?.[successField] || null
@@ -98,7 +97,7 @@ export const getBusinessDetails = {
     const response = h.view('business-details/business-details', {
       showSuccessBanner,
       successMessage,
-      businessName: resolvedFields.businessName,
+      businessName: responseData.data.customer.business.name,
       formattedAddress,
       businessTelephone: resolvedFields.businessTelephone,
       businessMobile: resolvedFields.businessMobile,

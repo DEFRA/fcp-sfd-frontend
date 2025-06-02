@@ -1,22 +1,23 @@
 import { createLogger } from '../utils/logger.js'
+import { config } from '../config/index.js'
 
 const logger = createLogger()
 
 export const dalConnector = async (query) => {
   try {
-    const response = await fetch('http://fcp-dal-api:3005/graphql', {
+    const response = await fetch(config.get('dalConfig.localDalEndpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        'email': 'test.user11@defra.gov.uk'
+        email: config.get('dalConfig.localDalEmailAddress')
       },
       body: JSON.stringify({ query })
     })
 
     const responseData = await response.json()
-    
+
     return responseData
-  } catch (error) {
-    logger.error(error, `Error connecting to DAL`)
+  } catch (err) {
+    logger.error(err, 'Error connecting to DAL')
   }
 }

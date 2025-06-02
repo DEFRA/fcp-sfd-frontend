@@ -45,7 +45,7 @@ query Business {
 
 const dal = await dalConnectionHandler(query)
 
-const response = dal.data
+const response = dal.data.business.info
 
 console.log('---> THIS IS FROM THE DAL', JSON.stringify(response, null, 2))
 

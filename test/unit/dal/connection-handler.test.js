@@ -57,8 +57,8 @@ describe('Handle DAL (data access layer) connection', () => {
     const mockError = new Error('Network error')
     global.fetch.mockRejectedValue(mockError)
 
-    const result = await dalConnectionHandler(mockQuery)
+    const result = dalConnectionHandler(mockQuery)
 
-    expect(result).toBeUndefined()
+    expect(result).rejects.toThrow('Network error')
   })
 })

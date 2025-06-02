@@ -19,5 +19,6 @@ export const dalConnectionHandler = async (query) => {
     return responseData
   } catch (err) {
     logger.error(err, 'Error connecting to DAL')
+    throw err
   }
 }

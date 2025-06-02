@@ -1,23 +1,8 @@
 import process from 'node:process'
 import { createLogger } from './utils/logger.js'
 import { startServer } from './utils/start-server.js'
-// import { queryBuilder } from './dal/helper.js'
-import { dalConnector } from './dal/connector.js'
 
 await startServer()
-
-const query = `
-  query Business {
-  business(sbi: 107591843) {
-    sbi
-  }
-}
-`
-
-const dal = await dalConnector(query)
-
-const response = dal.data
-console.log('**********', response)
 
 process.on('unhandledRejection', (error) => {
   const logger = createLogger()

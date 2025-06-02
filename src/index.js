@@ -6,9 +6,39 @@ import { dalConnectionHandler } from './dal/connection-handler.js'
 await startServer()
 
 const query = `
-  query Business {
+query Business {
   business(sbi: 107591843) {
-    sbi
+    info {
+      address {
+        pafOrganisationName
+        buildingNumberRange
+        buildingName
+        flatName
+        street
+        city
+        county
+        postalCode
+        country
+        uprn
+        dependentLocality
+        doubleDependentLocality
+        typeId
+      }
+      email {
+        address
+      }
+      legalStatus {
+        type
+      }
+      name
+      phone {
+        mobile
+      }
+      reference
+      traderNumber
+      vat
+      vendorNumber
+    }
   }
 }
 `
@@ -17,7 +47,7 @@ const dal = await dalConnectionHandler(query)
 
 const response = dal.data
 
-console.log('------->', response)
+console.log('---> THIS IS FROM THE DAL', JSON.stringify(response, null, 2))
 
 process.on('unhandledRejection', (error) => {
   const logger = createLogger()

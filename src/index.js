@@ -16,7 +16,7 @@ const query = queryBuilder(
 
 const dal = await dalConnector(query)
 
-const response = dal.data.customer.business.name
+const response = dal.data
 console.log('**********', response)
 
 process.on('unhandledRejection', (error) => {

@@ -2,26 +2,10 @@ import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { dalConnectionHandler } from '../../../src/dal/connection-handler.js'
 import { mockQuery } from '../../mocks/query.js'
 
-vi.mock('../../../src/config/index.js', () => ({
-  config: {
-    get: vi.fn((config) => {
-      const configMap = {
-        'dalConfig.endpoint': 'http://mock-endpoint/graphql',
-        'dalConfig.emailAddress': 'mock.email@test.com'
-      }
-      return configMap[config]
-    })
-  }
-}))
-
-vi.mock('../../../src/utils/logger.js', () => ({
-  createLogger: vi.fn(() => ({
-    error: vi.fn()
-  }))
-}))
-
 describe('Handle DAL (data access layer) connection', () => {
   beforeEach(() => {
+    process.env.DAL_ENDPOINT = 'http://fcp-dal-api:3005/graphql'
+    process.env.DAL_EMAIL_ADDRESS = 'test.user11@defra.gov.uk'
     global.fetch = vi.fn()
     vi.clearAllMocks()
   })
@@ -41,11 +25,11 @@ describe('Handle DAL (data access layer) connection', () => {
 
     const result = await dalConnectionHandler(mockQuery)
 
-    expect(global.fetch).toHaveBeenCalledWith('http://mock-endpoint/graphql', {
+    expect(global.fetch).toHaveBeenCalledWith('http://fcp-dal-api:3005/graphql', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        email: 'mock.email@test.com'
+        email: 'test.user11@defra.gov.uk'
       },
       body: JSON.stringify({ query: mockQuery })
     })

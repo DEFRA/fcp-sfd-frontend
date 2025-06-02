@@ -1,7 +1,7 @@
 import process from 'node:process'
 import { createLogger } from './utils/logger.js'
 import { startServer } from './utils/start-server.js'
-import { dalConnecitonHandler } from './dal/connection-handler.js'
+import { dalConnectionHandler } from './dal/connection-handler.js'
 
 await startServer()
 
@@ -13,7 +13,7 @@ const query = `
 }
 `
 
-const dal = await dalConnecitonHandler(query)
+const dal = await dalConnectionHandler(query)
 
 const response = dal.data
 

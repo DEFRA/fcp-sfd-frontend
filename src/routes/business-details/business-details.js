@@ -77,7 +77,6 @@ export const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   handler: async (request, h) => {
-
     const query = queryBuilder(
       'customer',
       'crn: "9477368292"',

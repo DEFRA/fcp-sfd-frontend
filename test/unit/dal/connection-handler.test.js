@@ -1,11 +1,10 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { dalConnectionHandler } from '../../../src/dal/connection-handler.js'
+import { config } from '../../../src/config/index.js'
 import { mockQuery } from '../../mocks/query.js'
 
 describe('Handle DAL (data access layer) connection', () => {
   beforeEach(() => {
-    process.env.DAL_ENDPOINT = 'http://fcp-dal-api:3005/graphql'
-    process.env.DAL_EMAIL_ADDRESS = 'test.user11@defra.gov.uk'
     global.fetch = vi.fn()
     vi.clearAllMocks()
   })
@@ -25,11 +24,11 @@ describe('Handle DAL (data access layer) connection', () => {
 
     const result = await dalConnectionHandler(mockQuery)
 
-    expect(global.fetch).toHaveBeenCalledWith('http://fcp-dal-api:3005/graphql', {
+    expect(global.fetch).toHaveBeenCalledWith(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        email: 'test.user11@defra.gov.uk'
+        email: config.get('dalConfig.emailAddress')
       },
       body: JSON.stringify({ query: mockQuery })
     })

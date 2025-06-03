@@ -1,5 +1,6 @@
 import { describe, test, expect } from 'vitest'
-import { getBusinessLegalStatusChange } from '../../../../src/routes/business-details/business-legal-status-change.js'
+import { businessLegalStatusRoutes } from '../../../../src/routes/business-details/business-legal-status-change.js'
+const [getBusinessLegalStatusChange] = businessLegalStatusRoutes
 
 describe('change business legal status', () => {
   test('should have the correct method and path', () => {

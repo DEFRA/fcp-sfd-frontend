@@ -11,11 +11,11 @@
  *
  * @returns {object} page data needed for the `/business-details` page
  */
-const businessDetailsPresenter = (data, yar) => {
+const businessDetailsPresenter = (data) => {
+  // Need to sort out the banner
   return {
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
-    notification: yar.flash('notification')[0],
     address: _formatAddress(data.businessAddress),
     businessName: data.businessName,
     businessTelephone: data.businessTelephone,

@@ -17,6 +17,7 @@ const businessDetailsService = async (request) => {
   const data = await fetchBusinessDetailsService(request)
 
   const pageData = businessDetailsPresenter(data, request.yar)
+  console.log('🚀 pageData:', pageData)
 
   return {
     ...pageData

@@ -9,7 +9,7 @@ export const dalConfig = {
     endpoint: {
       doc: 'API endpoint to retrieve data from the data access layer (DAL)',
       format: 'String',
-      default: 'http://fcp-dal-api:3005/graphql',
+      default: null,
       env: 'DAL_ENDPOINT'
     }
   }

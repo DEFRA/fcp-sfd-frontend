@@ -1,25 +1,25 @@
-import { businessNameChangeRoutes } from './business-name-change.js'
-import { businessNameCheckRoutes } from './business-name-check.js'
-import { getBusinessDetails } from './business-details.js'
 import { businessAddressRoutes } from './business-address-enter.js'
 import { businessAddressCheckRoutes } from './business-address-check.js'
-import { businessPhoneNumbersChangeRoutes } from './business-phone-numbers-change.js'
-import { businessPhoneNumbersCheckRoutes } from './business-phone-numbers-check.js'
+import { businessDetailsRoutes } from './business-details.js'
 import { businessEmailChangeRoutes } from './business-email-change.js'
 import { businessEmailCheckRoutes } from './business-email-check.js'
-import { getBusinessLegalStatusChange } from './business-legal-status-change.js'
-import { getBusinessTypeChange } from './business-type-change.js'
+import { businessLegalStatusRoutes } from './business-legal-status-change.js'
+import { businessNameChangeRoutes } from './business-name-change.js'
+import { businessNameCheckRoutes } from './business-name-check.js'
+import { businessPhoneNumbersChangeRoutes } from './business-phone-numbers-change.js'
+import { businessPhoneNumbersCheckRoutes } from './business-phone-numbers-check.js'
+import { businessTypeRoutes } from './business-type-change.js'
 
-export const businessDetailsRoutes = [
-  getBusinessDetails,
-  ...businessNameChangeRoutes,
-  ...businessNameCheckRoutes,
+export const businessRoutes = [
   ...businessAddressRoutes,
   ...businessAddressCheckRoutes,
-  ...businessPhoneNumbersChangeRoutes,
-  ...businessPhoneNumbersCheckRoutes,
+  ...businessDetailsRoutes,
   ...businessEmailChangeRoutes,
   ...businessEmailCheckRoutes,
-  getBusinessLegalStatusChange,
-  getBusinessTypeChange
+  ...businessLegalStatusRoutes,
+  ...businessNameChangeRoutes,
+  ...businessNameCheckRoutes,
+  ...businessPhoneNumbersChangeRoutes,
+  ...businessPhoneNumbersCheckRoutes,
+  ...businessTypeRoutes
 ]

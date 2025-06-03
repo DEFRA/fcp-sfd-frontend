@@ -4,7 +4,7 @@ import { home } from './home.js'
 import { staticAssetRoutes } from './static-assets.js'
 import { cookies } from './cookies.js'
 import { footerRoutes } from './footer/index.js'
-import { businessDetailsRoutes } from './business-details/index.js'
+import { businessRoutes } from './business-details/index.js'
 
 export const routes = [
   health,
@@ -13,5 +13,5 @@ export const routes = [
   ...errors,
   ...staticAssetRoutes,
   ...footerRoutes,
-  ...businessDetailsRoutes
+  ...businessRoutes
 ]

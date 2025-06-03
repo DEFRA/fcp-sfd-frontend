@@ -1,4 +1,4 @@
-import { contactUs } from './contact-us.js'
+import { contactUs } from './contact-us.routes.js'
 
 export const footerRoutes = [
   contactUs

@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { businessEmailChangeRoutes } from '../../../../src/routes/business-details/business-email-change.js'
+import { businessEmailChangeRoutes } from '../../../../src/routes/business/business-email-change.routes.js'
 
 const [getBusinessEmailChange, postBusinessEmailChange] = businessEmailChangeRoutes
 
@@ -48,7 +48,7 @@ describe('change business email', () => {
 
       getBusinessEmailChange.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
+      expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
         businessEmail: 'name@example.com'
       })
 
@@ -111,7 +111,7 @@ describe('change business email', () => {
 
         await postBusinessEmailChange.options.validate.failAction(request, h, err)
 
-        expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
+        expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
           businessEmail: '',
           errors: {
             businessEmail: { text: 'Enter business email address' }
@@ -128,7 +128,7 @@ describe('change business email', () => {
 
         await postBusinessEmailChange.options.validate.failAction(request, h, {})
 
-        expect(h.view).toHaveBeenCalledWith('business-details/business-email-change', {
+        expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
           businessEmail: '',
           errors: {}
         })

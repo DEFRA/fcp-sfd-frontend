@@ -9,7 +9,7 @@ const getBusinessAddressCheck = {
     const addressPostcode = request.state.addressPostcode || ''
     const addressCountry = request.state.addressCountry || ''
 
-    return h.view('business-details/business-address-check', {
+    return h.view('business/business-address-check', {
       address1,
       address2,
       addressCity,

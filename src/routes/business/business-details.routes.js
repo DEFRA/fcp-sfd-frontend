@@ -82,7 +82,7 @@ export const getBusinessDetails = {
     const resolvedFields = resolveFields(state, showSuccessBanner)
     const formattedAddress = getFormattedAddress(resolvedFields)
 
-    const response = h.view('business-details/business-details', {
+    const response = h.view('business/business-details', {
       showSuccessBanner,
       successMessage,
       businessName: resolvedFields.businessName,

@@ -16,7 +16,7 @@ describe('view and update business details', () => {
   }
 
   beforeEach(() => {
-    const html = renderTemplate('business-details/business-details.njk', context)
+    const html = renderTemplate('business/business-details.njk', context)
 
     const dom = new JSDOM(html)
     document = dom.window.document

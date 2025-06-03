@@ -4,7 +4,7 @@ const getBusinessNameCheck = {
   handler: (request, h) => {
     const businessName = request.state.businessName || ''
 
-    return h.view('business-details/business-name-check', {
+    return h.view('business/business-name-check', {
       businessName
     })
   }

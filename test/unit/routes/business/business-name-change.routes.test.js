@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { businessNameChangeRoutes } from '../../../../src/routes/business-details/business-name-change.js'
+import { businessNameChangeRoutes } from '../../../../src/routes/business/business-name-change.routes.js'
 
 const [getBusinessNameChange, postBusinessNameChange] = businessNameChangeRoutes
 
@@ -27,7 +27,7 @@ describe('change business name', () => {
 
       getBusinessNameChange.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
+      expect(h.view).toHaveBeenCalledWith('business/business-name-change', {
         businessName: 'Agile Farm Ltd'
       })
 
@@ -85,7 +85,7 @@ describe('change business name', () => {
 
       await postBusinessNameChange.options.validate.failAction(request, h, err)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
+      expect(h.view).toHaveBeenCalledWith('business/business-name-change', {
         businessName: '',
         errors: {
           businessName: { text: 'Enter business name' }
@@ -102,7 +102,7 @@ describe('change business name', () => {
 
       await postBusinessNameChange.options.validate.failAction(request, h, {})
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-name-change', {
+      expect(h.view).toHaveBeenCalledWith('business/business-name-change', {
         businessName: '',
         errors: {}
       })

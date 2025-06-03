@@ -6,7 +6,7 @@ describe('change business email address', () => {
   let document
 
   beforeAll(() => {
-    const html = renderTemplate('business-details/business-email-change.njk', {
+    const html = renderTemplate('business/business-email-change.njk', {
       businessEmail: 'testbusiness@email.com',
       errors: {}
     })

@@ -5,17 +5,17 @@ import {
   newAddress,
   emptyAddress
 } from '../../constants/test-addresses.js'
-import { businessAddressRoutes } from '../../../../src/routes/business-details/business-address-enter.js'
+import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter.routes.js'
 
 const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 
-vi.mock('../../../../src/schemas/business-details/business-address.js', () => ({
+vi.mock('../../../../src/schemas/business/business-address.js', () => ({
   businessAddressSchema: {
     validate: vi.fn()
   }
 }))
 
-const viewPath = 'business-details/business-address-enter'
+const viewPath = 'business/business-address-enter'
 
 const createViewHandler = () => {
   const state = vi.fn().mockReturnThis()

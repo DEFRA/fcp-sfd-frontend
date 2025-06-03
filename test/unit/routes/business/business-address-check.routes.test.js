@@ -5,7 +5,7 @@ import {
   emptyAddress,
   newAddress
 } from '../../constants/test-addresses'
-import { businessAddressCheckRoutes } from '../../../../src/routes/business-details/business-address-check'
+import { businessAddressCheckRoutes } from '../../../../src/routes/business/business-address-check.routes.js'
 
 const [
   getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
@@ -42,7 +42,7 @@ describe('check business address', () => {
 
       getBusinessAddressCheck.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-address-check', expectedAddress)
+      expect(h.view).toHaveBeenCalledWith('business/business-address-check', expectedAddress)
     })
   })
 

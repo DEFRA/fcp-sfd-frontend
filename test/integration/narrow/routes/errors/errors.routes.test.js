@@ -3,7 +3,7 @@ import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi 
 describe('Error Routes Registration', () => {
   const originalEnv = process.env.ALLOW_ERROR_VIEWS
   const SERVER_MODULE_PATH = '../../../../../src/server.js'
-  const ERRORS_MODULE_PATH = '../../../../../src/routes/errors/index.js'
+  const ERRORS_MODULE_PATH = '../../../../../src/routes/errors/index.routes.js'
 
   describe('With Error Views Enabled', () => {
     const hookTimeout = 50000

@@ -7,7 +7,7 @@ describe('check business address', () => {
   let document
 
   beforeEach(() => {
-    const html = renderTemplate('business-details/business-address-check.njk', {
+    const html = renderTemplate('business/business-address-check.njk', {
       address1: '123 Farm Lane',
       address2: '',
       addressCity: 'York',

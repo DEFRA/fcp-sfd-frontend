@@ -4,7 +4,7 @@ const getBusinessEmailCheck = {
   handler: (request, h) => {
     const businessEmail = request.state.businessEmail || ''
 
-    return h.view('business-details/business-email-check', {
+    return h.view('business/business-email-check', {
       businessEmail
     })
   }

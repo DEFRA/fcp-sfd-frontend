@@ -7,7 +7,7 @@ describe('check business phone numbers', () => {
   let document
 
   beforeEach(() => {
-    const html = renderTemplate('business-details/business-phone-numbers-check.njk', {
+    const html = renderTemplate('business/business-phone-numbers-check.njk', {
       businessTelephone: '01234567890',
       businessMobile: ''
     })

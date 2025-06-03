@@ -1,4 +1,4 @@
-import { businessNameSchema } from '../../schemas/business/business-name.js'
+import { businessNameSchema } from '../../schemas/business/business-name.schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
@@ -9,7 +9,7 @@ const getBusinessNameChange = {
     const currentBusinessName = request.state.businessName || 'Agile Farm Ltd'
     const originalBusinessName = request.state.originalBusinessName || currentBusinessName
 
-    return h.view('business-details/business-name-change', {
+    return h.view('business/business-name-change', {
       businessName: currentBusinessName
     }).state('originalBusinessName', originalBusinessName)
   }
@@ -27,7 +27,7 @@ const postBusinessNameChange = {
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
 
-        return h.view('business-details/business-name-change', {
+        return h.view('business/business-name-change', {
           businessName: request.payload?.businessName || '',
           errors
         }).code(BAD_REQUEST).takeover()

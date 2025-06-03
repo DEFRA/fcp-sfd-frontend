@@ -5,7 +5,7 @@ const getBusinessPhoneNumbersCheck = {
     const businessTelephone = request.state.tempBusinessTelephone || ''
     const businessMobile = request.state.tempBusinessMobile || ''
 
-    return h.view('business-details/business-phone-numbers-check', {
+    return h.view('business/business-phone-numbers-check', {
       businessTelephone,
       businessMobile
     })

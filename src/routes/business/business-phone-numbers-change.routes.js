@@ -1,4 +1,4 @@
-import { businessPhoneSchema } from '../../schemas/business-details/business-phone.js'
+import { businessPhoneSchema } from '../../schemas/business/business-phone.schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
@@ -25,7 +25,7 @@ const getBusinessPhoneNumbersChange = {
       request.state.businessMobile ??
       ''
 
-    return h.view('business-details/business-phone-numbers-change', {
+    return h.view('business/business-phone-numbers-change', {
       businessTelephone: currentBusinessTelephone,
       businessMobile: currentBusinessMobile
     })
@@ -46,7 +46,7 @@ const postBusinessPhoneNumbersChange = {
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
 
-        return h.view('business-details/business-phone-numbers-change', {
+        return h.view('business/business-phone-numbers-change', {
           businessTelephone: request.payload?.businessTelephone || '',
           businessMobile: request.payload?.businessMobile || '',
           errors

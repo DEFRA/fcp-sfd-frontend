@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { businessEmailCheckRoutes } from '../../../../src/routes/business-details/business-email-check.js'
+import { businessEmailCheckRoutes } from '../../../../src/routes/business/business-email-check.routes.js'
 
 const [getBusinessEmailCheck, postBusinessEmailCheck] = businessEmailCheckRoutes
 
@@ -33,7 +33,7 @@ describe('check business email', () => {
 
       getBusinessEmailCheck.handler(request, h)
 
-      expect(view).toHaveBeenCalledWith('business-details/business-email-check', {
+      expect(view).toHaveBeenCalledWith('business/business-email-check', {
         businessEmail: 'name@example.com'
       })
     })
@@ -44,7 +44,7 @@ describe('check business email', () => {
 
       getBusinessEmailCheck.handler(request, h)
 
-      expect(view).toHaveBeenCalledWith('business-details/business-email-check', {
+      expect(view).toHaveBeenCalledWith('business/business-email-check', {
         businessEmail: ''
       })
     })

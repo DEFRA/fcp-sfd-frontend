@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { getBusinessDetails } from '../../../../src/routes/business-details/business-details.js'
+import { getBusinessDetails } from '../../../../src/routes/business/business-details.routes.js'
 
 const defaultViewData = {
   showSuccessBanner: true,
@@ -57,7 +57,7 @@ describe('business details', () => {
 
       getBusinessDetails.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-details', defaultViewData)
+      expect(h.view).toHaveBeenCalledWith('business/business-details', defaultViewData)
       expect(unstateMock).toHaveBeenCalledWith('showSuccessBanner')
       expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
       expect(stateMock).toHaveBeenCalledWith('businessName', 'Test Business')
@@ -74,7 +74,7 @@ describe('business details', () => {
 
       getBusinessDetails.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
+      expect(h.view).toHaveBeenCalledWith('business/business-details', {
         ...defaultViewData,
         showSuccessBanner: false,
         businessName: 'Original Business Name'
@@ -97,7 +97,7 @@ describe('business details', () => {
 
       getBusinessDetails.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
+      expect(h.view).toHaveBeenCalledWith('business/business-details', {
         ...defaultViewData,
         businessName: 'New Business Name'
       })
@@ -113,7 +113,7 @@ describe('business details', () => {
 
       getBusinessDetails.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-details', {
+      expect(h.view).toHaveBeenCalledWith('business/business-details', {
         ...defaultViewData,
         showSuccessBanner: false,
         businessName: 'Agile Farm Ltd'

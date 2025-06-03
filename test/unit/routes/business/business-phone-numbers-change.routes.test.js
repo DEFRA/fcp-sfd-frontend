@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business-details/business-phone-numbers-change.js'
+import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business/business-phone-numbers-change.routes.js'
 
 const [getBusinessPhoneNumbersChange, postBusinessPhoneNumbersChange] = businessPhoneNumbersChangeRoutes
 
@@ -32,7 +32,7 @@ describe('change business phone numbers', () => {
 
       getBusinessPhoneNumbersChange.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
+      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
         businessTelephone,
         businessMobile
       })
@@ -105,7 +105,7 @@ describe('change business phone numbers', () => {
 
       await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
+      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
         businessTelephone: '',
         businessMobile: '',
         errors: {
@@ -131,7 +131,7 @@ describe('change business phone numbers', () => {
 
       await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
-      expect(h.view).toHaveBeenCalledWith('business-details/business-phone-numbers-change', {
+      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
         businessTelephone: '',
         businessMobile: '',
         errors: {}

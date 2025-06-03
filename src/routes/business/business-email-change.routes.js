@@ -1,4 +1,4 @@
-import { businessEmailSchema } from '../../schemas/business-details/business-email.js'
+import { businessEmailSchema } from '../../schemas/business/business-email.schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
@@ -9,7 +9,7 @@ const getBusinessEmailChange = {
     const currentBusinessEmail = request.state.businessEmail || ''
     const originalBusinessEmail = request.state.originalBusinessEmail || currentBusinessEmail
 
-    return h.view('business-details/business-email-change', {
+    return h.view('business/business-email-change', {
       businessEmail: currentBusinessEmail
     }).state('originalBusinessEmail', originalBusinessEmail)
   }
@@ -27,7 +27,7 @@ const postBusinessEmailChange = {
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
 
-        return h.view('business-details/business-email-change', {
+        return h.view('business/business-email-change', {
           businessEmail: request.payload?.businessEmail || '',
           errors
         }).code(BAD_REQUEST).takeover()

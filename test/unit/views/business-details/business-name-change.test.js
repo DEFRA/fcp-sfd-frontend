@@ -6,7 +6,7 @@ describe('change business name', () => {
   let document
 
   beforeAll(() => {
-    const html = renderTemplate('business-details/business-name-change.njk', {
+    const html = renderTemplate('business/business-name-change.njk', {
       businessName: 'Test business name',
       errors: {}
     })

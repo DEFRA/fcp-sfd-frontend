@@ -4,7 +4,7 @@ import { config } from '../../../src/config/index.js'
 import { mockQuery } from '../../mocks/query.js'
 
 describe('Handle DAL (data access layer) connection', () => {
-  const mockEmail = "mockemail@test.com"
+  const mockEmail = 'mockemail@test.com'
 
   beforeEach(() => {
     global.fetch = vi.fn()

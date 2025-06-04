@@ -3,7 +3,7 @@ import { config } from '../config/index.js'
 
 const logger = createLogger()
 
-export const dalConnectionHandler = async (query) => {
+export const dalConnector = async (query) => {
   try {
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',

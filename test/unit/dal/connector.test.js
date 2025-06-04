@@ -1,5 +1,5 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { dalConnectionHandler } from '../../../src/dal/connection-handler.js'
+import { dalConnector } from '../../../src/dal/connector.js'
 import { config } from '../../../src/config/index.js'
 import { mockQuery } from '../../mocks/query.js'
 
@@ -22,7 +22,7 @@ describe('Handle DAL (data access layer) connection', () => {
       json: vi.fn().mockResolvedValue(mockResponse)
     })
 
-    const result = await dalConnectionHandler(mockQuery)
+    const result = await dalConnector(mockQuery)
 
     expect(global.fetch).toHaveBeenCalledWith(config.get('dalConfig.endpoint'), {
       method: 'POST',
@@ -40,7 +40,7 @@ describe('Handle DAL (data access layer) connection', () => {
     const mockError = new Error('Network error')
     global.fetch.mockRejectedValue(mockError)
 
-    const result = dalConnectionHandler(mockQuery)
+    const result = dalConnector(mockQuery)
 
     expect(result).rejects.toThrow('Network error')
   })

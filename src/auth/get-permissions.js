@@ -17,7 +17,7 @@ async function getPermissions (crn, organisationId, token) {
 }
 
 async function getPersonId (headers) {
-  // simulate call to RPS API
+  // simulate call to RPS API via common DAL
   // Only id is needed for mapping roles, but other fields shown for context for what else is available
   // PATH: /person/3337243/summary
   // METHOD: GET

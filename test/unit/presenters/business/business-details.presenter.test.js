@@ -1,14 +1,17 @@
 // Test framework dependencies
-import { describe, test, expect, beforeEach } from 'vitest'
+import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Thing under test
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details.presenter.js'
 
 describe('businessDetailsPresenter', () => {
   let data
+  let yar
 
   describe('when provided with business details data', () => {
     beforeEach(() => {
+      vi.clearAllMocks()
+
       data = {
         businessName: 'Agile Farm Ltd',
         businessAddress: {
@@ -31,12 +34,18 @@ describe('businessDetailsPresenter', () => {
         businessType: 'Central or local government',
         userName: 'Alfred Waldron'
       }
+
+      // Mock yar session manager
+      yar = {
+        flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }])
+      }
     })
 
     test('it correctly presents the data', () => {
-      const result = businessDetailsPresenter(data)
+      const result = businessDetailsPresenter(data, yar)
 
       expect(result).toEqual({
+        notification: { title: 'Update', text: 'Business details updated successfully' },
         pageTitle: 'View and update your business details',
         metaDescription: 'View and change the details for your business.',
         address: ['10 Skirbeck Way', 'Lonely Lane', 'Maidstone', 'Somerset', 'SK22 1DL', 'United Kingdom'],
@@ -72,7 +81,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should remove them from the address', () => {
-        const result = businessDetailsPresenter(data)
+        const result = businessDetailsPresenter(data, yar)
         expect(result.address).toEqual(['10 Skirbeck Way', 'Lonely Lane', 'Somerset', 'SK22 1DL'])
       })
     })

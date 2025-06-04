@@ -16,7 +16,7 @@ import { fetchBusinessDetailsService } from './fetch-business-details.service.js
 const businessDetailsService = async (request) => {
   const data = await fetchBusinessDetailsService(request)
 
-  const pageData = businessDetailsPresenter(data)
+  const pageData = businessDetailsPresenter(data, request.yar)
 
   return {
     ...pageData

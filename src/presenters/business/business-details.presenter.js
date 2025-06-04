@@ -11,9 +11,9 @@
  *
  * @returns {object} page data needed for the `/business-details` page
  */
-const businessDetailsPresenter = (data) => {
-  // Need to sort out the banner
+const businessDetailsPresenter = (data, yar) => {
   return {
+    notification: yar.flash('notification')[0],
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
     address: _formatAddress(data.businessAddress),

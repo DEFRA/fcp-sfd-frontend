@@ -13,6 +13,8 @@ vi.mock('../../../../src/services/business/fetch-business-details.service.js', (
 }))
 
 describe('businessDetailsService', () => {
+  const request = {}
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -43,18 +45,24 @@ describe('businessDetailsService', () => {
       }
 
       fetchBusinessDetailsService.mockResolvedValue(mockData)
+
+      // Mock yar session manager
+      request.yar = {
+        flash: vi.fn().mockReturnValue([{}])
+      }
     })
 
     test('it fetches the business details data', async () => {
-      await businessDetailsService()
+      await businessDetailsService(request)
 
       expect(fetchBusinessDetailsService).toHaveBeenCalled()
     })
 
     test('returns the page data for the view', async () => {
-      const result = await businessDetailsService()
+      const result = await businessDetailsService(request)
 
       expect(result).toEqual({
+        notification: {},
         pageTitle: 'View and update your business details',
         metaDescription: 'View and change the details for your business.',
         address: ['10 Skirbeck Way', 'Maidstone', 'SK22 1DL', 'United Kingdom'],

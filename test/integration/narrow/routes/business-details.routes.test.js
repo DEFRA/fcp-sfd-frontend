@@ -31,7 +31,16 @@ describe('business details', () => {
   let server
 
   beforeEach(async () => {
+    vi.clearAllMocks()
     server = await resetAndCreateServer()
+
+    // Mock yar session manager
+    server.ext('onPreHandler', (request, h) => {
+      request.yar = {
+        flash: vi.fn().mockReturnValue([])
+      }
+      return h.continue
+    })
   }, hookTimeout)
 
   afterEach(async () => {

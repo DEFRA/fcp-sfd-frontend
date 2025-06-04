@@ -78,7 +78,6 @@ export const getBusinessDetails = {
     const { showSuccessBanner: showSuccessBannerRaw, successField, ...state } = request.state
     const showSuccessBanner = showSuccessBannerRaw === 'true'
     const successMessage = successMessages?.[successField] || null
-
     const resolvedFields = resolveFields(state, showSuccessBanner)
     const formattedAddress = getFormattedAddress(resolvedFields)
 

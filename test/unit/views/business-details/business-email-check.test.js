@@ -6,7 +6,7 @@ describe('check business email address', () => {
   let document
 
   beforeAll(() => {
-    const html = renderTemplate('business-details/business-email-check.njk', {
+    const html = renderTemplate('business/business-email-check.njk', {
       businessEmail: 'testbusiness@email.com',
       error: {}
     })

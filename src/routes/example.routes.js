@@ -8,7 +8,7 @@ const email = 'test.user11@defra.gov.uk'
 const exampleDalConnectionRoute = {
   method: 'GET',
   path: '/example',
-  handler: async (request, h) => {
+  handler: async (_request, h) => {
     const logger = createLogger()
 
     try {

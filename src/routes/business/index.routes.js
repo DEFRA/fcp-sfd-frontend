@@ -9,6 +9,7 @@ import { businessEmailChangeRoutes } from './business-email-change.routes.js'
 import { businessEmailCheckRoutes } from './business-email-check.routes.js'
 import { getBusinessLegalStatusChange } from './business-legal-status-change.routes.js'
 import { getBusinessTypeChange } from './business-type-change.routes.js'
+import { exampleDalConnectionRoute } from '../example.routes.js'
 
 export const businessDetailsRoutes = [
   getBusinessDetails,
@@ -21,5 +22,6 @@ export const businessDetailsRoutes = [
   ...businessEmailChangeRoutes,
   ...businessEmailCheckRoutes,
   getBusinessLegalStatusChange,
-  getBusinessTypeChange
+  getBusinessTypeChange,
+  exampleDalConnectionRoute
 ]

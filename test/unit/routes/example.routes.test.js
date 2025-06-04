@@ -1,14 +1,5 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { constants as httpConstants } from 'http2'
 import { exampleDalConnectionRoute } from '../../../src/routes/example.routes.js'
-
-const mockResponse = {
-  code: vi.fn().mockReturnThis()
-}
-
-const mockH = {
-  response: vi.fn().mockReturnValue(mockResponse)
-}
 
 describe('Example endpoint for DAL integration', () => {
   beforeEach(() => {
@@ -20,4 +11,3 @@ describe('Example endpoint for DAL integration', () => {
     expect(exampleDalConnectionRoute.path).toBe('/example')
   })
 })
-

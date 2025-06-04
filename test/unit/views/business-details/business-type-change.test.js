@@ -3,7 +3,7 @@ import { JSDOM } from 'jsdom'
 import { renderTemplate } from '../../../helpers/render-template.js'
 
 describe('change business type', () => {
-  const html = renderTemplate('business-details/business-type-change.njk')
+  const html = renderTemplate('business/business-type-change.njk')
   const dom = new JSDOM(html)
   const document = dom.window.document
 

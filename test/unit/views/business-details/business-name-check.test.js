@@ -6,7 +6,7 @@ describe('check business name', () => {
   let document
 
   beforeAll(() => {
-    const html = renderTemplate('business-details/business-name-check.njk', {
+    const html = renderTemplate('business/business-name-check.njk', {
       businessName: 'Test business name',
       error: {}
     })

@@ -1,4 +1,4 @@
-import { describe, test, beforeAll, afterAll, beforeEach, vi, expect } from 'vitest'
+import { describe, test, expect, beforeAll, afterAll, vi } from 'vitest'
 import { createServer } from '../../../../src/server.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
 

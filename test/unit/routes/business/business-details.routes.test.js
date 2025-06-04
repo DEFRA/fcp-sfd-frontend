@@ -8,12 +8,15 @@ import { businessDetailsService } from '../../../../src/services/business/busine
 import { businessDetailsRoutes } from '../../../../src/routes/business/business-details.routes.js'
 const [getBusinessDetails] = businessDetailsRoutes
 
-// Mock
+// Mock the service
 vi.mock('../../../../src/services/business/business-details.service.js', () => ({
   businessDetailsService: vi.fn()
 }))
 
 describe('business details', () => {
+  let h
+  let request
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -21,13 +24,19 @@ describe('business details', () => {
   describe('GET /business-details', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
+        }
+
+        request = {}
         businessDetailsService.mockResolvedValue({})
       })
 
-      test('it calls the business details service', () => {
-        getBusinessDetails.handler()
+      test('it calls the business details service', async () => {
+        await getBusinessDetails.handler(request, h)
 
-        expect(businessDetailsService).toHaveBeenCalled()
+        expect(businessDetailsService).toHaveBeenCalled(request)
+        expect(h.view).toHaveBeenCalledWith('business/business-details.njk', {})
       })
     })
   })

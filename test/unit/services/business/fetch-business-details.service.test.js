@@ -6,8 +6,8 @@ import { fetchBusinessDetailsService } from '../../../../src/services/business/f
 
 describe('fetchBusinessDetailsService', () => {
   describe('when called', () => {
-    test('it correctly returns the data', () => {
-      const result = fetchBusinessDetailsService()
+    test('it correctly returns the data', async () => {
+      const result = await fetchBusinessDetailsService()
 
       expect(result).toEqual({
         businessName: 'Agile Farm Ltd',

@@ -1,6 +1,6 @@
 import inert from '@hapi/inert'
 
-import { routes } from '../routes/index.js'
+import { routes } from '../routes/index.routes.js'
 
 export const router = {
   plugin: {

@@ -6,7 +6,7 @@ describe('enter business address', () => {
   let document
 
   beforeAll(() => {
-    const html = renderTemplate('business-details/business-address-enter.njk', {
+    const html = renderTemplate('business/business-address-enter.njk', {
       address1: '123 Farm Lane',
       address2: '',
       addressCity: 'York',

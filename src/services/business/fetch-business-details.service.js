@@ -6,7 +6,7 @@
 const fetchBusinessDetailsService = async (_request) => {
   // TODO: Remove stubbed data and instead call the API to get the business details associated with the users log in
   // This will be using the consolidated view API
-  // The data needed for the business details page
+  // The data needed for the business details page.
   return {
     businessName: 'Agile Farm Ltd',
     businessAddress: {

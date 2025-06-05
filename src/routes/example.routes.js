@@ -13,10 +13,12 @@ const exampleDalConnectionRoute = {
 
     try {
       const dal = await dalConnector(getSbi, email)
-      const response = dal.data
+      const dalData = dal.data
 
-      console.log('------------> This is from the DAL', response)
-      return h.response({ message: 'success' }).code(httpConstants.HTTP_STATUS_OK)
+      return h.response({
+        message: 'success',
+        data: dalData
+      }).code(httpConstants.HTTP_STATUS_OK)
     } catch (error) {
       logger.error(error, 'Error fetching data from DAL')
       return h.response({ error: 'Failed to fetch data' }).code(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)

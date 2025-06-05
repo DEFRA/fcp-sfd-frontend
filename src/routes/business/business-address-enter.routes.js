@@ -1,35 +1,39 @@
 import { businessAddressSchema } from '../../schemas/business/business-address.schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { businessAddressEnterService } from '../../services/business/business-address-enter.service.js'
 
 const getBusinessAddressEnter = {
   method: 'GET',
   path: '/business-address-enter',
-  handler: (request, h) => {
-    const address1 = request.state.address1 || '10 Skirbeck Way'
-    const address2 = request.state.address2 || ''
-    const addressCity = request.state.addressCity || 'Maidstone'
-    const addressCounty = request.state.addressCounty || ''
-    const addressPostcode = request.state.addressPostcode || 'SK22 1DL'
-    const addressCountry = request.state.addressCountry || 'United Kingdom'
+  handler: async (request, h) => {
+    const pageData = await businessAddressEnterService(request.state)
 
-    const originalAddress = {
-      address1,
-      address2,
-      addressCity,
-      addressCounty,
-      addressPostcode,
-      addressCountry
-    }
+    return h.view('business/business-address-enter', pageData)
+    // const address1 = request.state.address1 || '10 Skirbeck Way'
+    // const address2 = request.state.address2 || ''
+    // const addressCity = request.state.addressCity || 'Maidstone'
+    // const addressCounty = request.state.addressCounty || ''
+    // const addressPostcode = request.state.addressPostcode || 'SK22 1DL'
+    // const addressCountry = request.state.addressCountry || 'United Kingdom'
 
-    return h.view('business/business-address-enter', {
-      address1,
-      address2,
-      addressCity,
-      addressCounty,
-      addressPostcode,
-      addressCountry
-    }).state('originalAddress', JSON.stringify(originalAddress))
+    // const originalAddress = {
+    //   address1,
+    //   address2,
+    //   addressCity,
+    //   addressCounty,
+    //   addressPostcode,
+    //   addressCountry
+    // }
+
+    // return h.view('business/business-address-enter', {
+    //   address1,
+    //   address2,
+    //   addressCity,
+    //   addressCounty,
+    //   addressPostcode,
+    //   addressCountry
+    // }).state('originalAddress', JSON.stringify(originalAddress))
   }
 }
 
@@ -43,6 +47,8 @@ const postBusinessAddressEnter = {
         abortEarly: false
       },
       failAction: async (request, h, err) => {
+        const pageData = await submitBusinessAddressEnterService(request)
+
         const errors = formatValidationErrors(err.details || [])
 
         return h.view('business/business-address-enter', {

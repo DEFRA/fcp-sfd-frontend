@@ -6,14 +6,12 @@
 {% from "common/navigation/back-link.njk" import appBackLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
-{% set pageTitle = "Enter your business address" %}
-{% set metaDescription = "Enter the address for your business." %}
 
 {% block beforeContent %}
     {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
-    userName="Alfred Waldron"
+    businessName=businessName,
+    sbi=sbi,
+    userName=userName
 ) }}
 
     {{ appBackLink() }}
@@ -46,9 +44,9 @@
           hint: {
             text: "Include flat and floor numbers, where appropriate"
           },
-          id: "address1",
+          id: "address-1",
           name: "address1",
-          value: address1,
+          value: address.address1,
           autocomplete: "address-line1",
           errorMessage: errors.address1 and {
             text: errors.address1.text
@@ -59,9 +57,9 @@
           label: {
             text: "Address line 2 (optional)"
           },
-          id: "address2",
+          id: "address-2",
           name: "address2",
-          value: address2,
+          value: address.address2,
           autocomplete: "address-line2",
           errorMessage: errors.address2 and {
             text: errors.address2.text
@@ -73,9 +71,9 @@
             text: "Town or city"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCity",
+          id: "address-city",
           name: "addressCity",
-          value: addressCity,
+          value: address.city,
           autocomplete: "address-level2",
           errorMessage: errors.addressCity and {
             text: errors.addressCity.text
@@ -87,9 +85,9 @@
             text: "County (optional)"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCounty",
+          id: "address-county",
           name: "addressCounty",
-          value: addressCounty,
+          value: address.county,
           errorMessage: errors.addressCounty and {
             text: errors.addressCounty.text
           }
@@ -100,9 +98,9 @@
             text: "Postal code or zip code (if you have one)"
           },
           classes: "govuk-input--width-10",
-          id: "addressPostcode",
+          id: "address-postcode",
           name: "addressPostcode",
-          value: addressPostcode,
+          value: address.postcode,
           autocomplete: "postal-code",
           errorMessage: errors.addressPostcode and {
             text: errors.addressPostcode.text
@@ -114,9 +112,9 @@
             text: "Country"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCountry",
+          id: "address-country",
           name: "addressCountry",
-          value: addressCountry,
+          value: address.country,
           autocomplete: "country-name",
           errorMessage: errors.addressCountry and {
             text: errors.addressCountry.text
@@ -125,9 +123,10 @@
       </fieldset>
 
       {{ govukButton({
-        text: "Continue"
+        text: "Continue",
+        preventDoubleClick: true
       }) }}
-      
+
       <p class="govuk-body"><a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
     </form>
   </div>

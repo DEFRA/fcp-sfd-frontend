@@ -13,7 +13,7 @@ const exampleDalConnectionRoute = {
     const logger = createLogger()
 
     try {
-      const dal = await dalConnector(getSbi,variables, email)
+      const dal = await dalConnector(getSbi, variables, email)
       const dalData = dal.data
 
       return h.response({

@@ -32,9 +32,9 @@ describe('Handle DAL (data access layer) connection', () => {
         'Content-type': 'application/json',
         email: 'mockemail@test.com'
       },
-      body: JSON.stringify({ 
-        query: mockQuery, 
-        variables: mockVariables 
+      body: JSON.stringify({
+        query: mockQuery,
+        variables: mockVariables
       })
     })
 

@@ -1,7 +1,7 @@
 export const getSbi = `
-query Business {
-  business(sbi: 107591843) {
-    sbi
+  query Business($sbi: ID!) {
+    business(sbi: $sbi) {
+      sbi
   }
 }
 `

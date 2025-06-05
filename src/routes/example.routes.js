@@ -4,6 +4,7 @@ import { dalConnector } from '../../src/dal/connector.js'
 import { getSbi } from '../dal/queries/get-sbi.js'
 
 const email = 'test.user11@defra.gov.uk'
+const variables = { sbi: 107591843 }
 
 const exampleDalConnectionRoute = {
   method: 'GET',
@@ -12,7 +13,7 @@ const exampleDalConnectionRoute = {
     const logger = createLogger()
 
     try {
-      const dal = await dalConnector(getSbi, email)
+      const dal = await dalConnector(getSbi,variables, email)
       const dalData = dal.data
 
       return h.response({

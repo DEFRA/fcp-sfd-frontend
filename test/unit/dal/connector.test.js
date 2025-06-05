@@ -5,6 +5,7 @@ import { mockQuery } from '../../mocks/query.js'
 
 describe('Handle DAL (data access layer) connection', () => {
   const mockEmail = 'mockemail@test.com'
+  const mockVariables = { sbi: 123456789 }
 
   beforeEach(() => {
     global.fetch = vi.fn()
@@ -23,8 +24,7 @@ describe('Handle DAL (data access layer) connection', () => {
     global.fetch.mockResolvedValue({
       json: vi.fn().mockResolvedValue(mockResponse)
     })
-
-    const result = await dalConnector(mockQuery, mockEmail)
+    const result = await dalConnector(mockQuery, mockVariables, mockEmail)
 
     expect(global.fetch).toHaveBeenCalledWith(config.get('dalConfig.endpoint'), {
       method: 'POST',
@@ -32,7 +32,10 @@ describe('Handle DAL (data access layer) connection', () => {
         'Content-type': 'application/json',
         email: 'mockemail@test.com'
       },
-      body: JSON.stringify({ query: mockQuery })
+      body: JSON.stringify({ 
+        query: mockQuery, 
+        variables: mockVariables 
+      })
     })
 
     expect(result).toEqual(mockResponse)
@@ -42,6 +45,6 @@ describe('Handle DAL (data access layer) connection', () => {
     const mockError = new Error('Network error')
     global.fetch.mockRejectedValue(mockError)
 
-    await expect(dalConnector(mockQuery, mockEmail)).rejects.toThrow('Network error')
+    await expect(dalConnector(mockQuery, mockVariables, mockEmail)).rejects.toThrow('Network error')
   })
 })

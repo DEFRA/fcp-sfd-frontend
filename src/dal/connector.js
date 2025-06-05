@@ -3,15 +3,15 @@ import { config } from '../config/index.js'
 
 const logger = createLogger()
 
-export const dalConnector = async (query, email) => {
+export const dalConnector = async (query,variables, email) => {
   try {
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        email
+        email,
       },
-      body: JSON.stringify({ query })
+      body: JSON.stringify({ query,variables })
     })
 
     const responseData = await response.json()

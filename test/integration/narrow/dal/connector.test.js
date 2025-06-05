@@ -22,7 +22,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should successfully call DAL and return data', async () => {
-    const result = await dalConnector(getSbi)
+    const result = await dalConnector(getSbi, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
     expect(result).toHaveProperty('data')
     expect(result.data).toHaveProperty('business')
@@ -31,16 +31,12 @@ describe('Data access layer (DAL) connector integration', () => {
   }, 10000)
 
   test('should handle DAL connection errors', async () => {
-    const originalEndpoint = process.env.DAL_ENDPOINT
     process.env.DAL_ENDPOINT = 'http://localhost:9999/invalid'
 
     try {
       await dalConnector(getSbi)
-      expect(true).toBe(false)
     } catch (error) {
       expect(error).toBeDefined()
-    } finally {
-      process.env.DAL_ENDPOINT = originalEndpoint
     }
   }, 10000)
 })

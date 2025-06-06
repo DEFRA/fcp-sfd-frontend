@@ -8,7 +8,7 @@ const businessDetailsPresenter = (data, yar) => {
     notification: yar.flash('notification')[0],
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
-    address: _formatAddress(data.businessAddress),
+    address: formatAddress(data.businessAddress),
     businessName: data.businessName,
     businessTelephone: data.businessTelephone ?? 'Not added',
     businessMobile: data.businessMobile ?? 'Not added',
@@ -28,7 +28,7 @@ const businessDetailsPresenter = (data, yar) => {
  * Formats the business address by removing any falsy values (e.g. empty strings, null, undefined)
  * @private
  */
-const _formatAddress = (businessAddress) => {
+const formatAddress = (businessAddress) => {
   return Object.values(businessAddress).filter(Boolean)
 }
 

@@ -15,9 +15,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   afterAll(async () => {
-    if (server) {
-      await server.stop()
-    }
+    await server.stop()
     process.env.DAL_ENDPOINT = originalDalEndpoint
   })
 

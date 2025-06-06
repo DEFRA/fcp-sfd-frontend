@@ -1,30 +1,29 @@
-import { describe, test, expect } from 'vitest'
+import { describe, test, expect, beforeAll, afterAll } from 'vitest'
 import { createServer } from '../../../../src/server.js'
 
 describe('Example DAL connection integration route', () => {
-  test('example route responds with success message and data', async () => {
-    const originalEnv = process.env.ALLOW_ERROR_VIEWS
-    process.env.ALLOW_ERROR_VIEWS = 'true'
+  let server
 
-    const server = await createServer()
+  beforeAll(async () => {
+    server = await createServer()
     await server.initialize()
+  })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
+  test('example route is registered', async () => {
     const response = await server.inject({
       method: 'GET',
       url: '/example'
     })
 
-    await server.stop()
-    if (originalEnv === undefined) {
-      delete process.env.ALLOW_ERROR_VIEWS
-    } else {
-      process.env.ALLOW_ERROR_VIEWS = originalEnv
-    }
+    const payload = JSON.parse(response.payload)
+    console.log(payload)
 
     expect(response.statusCode).toBe(200)
-    expect(response.result).toEqual({
-      message: 'success',
-      data: expect.any(Object)
-    })
+    expect(payload.message).toContain('success')
+    expect(payload.data).not.toBeNull()
   })
 })

@@ -1,5 +1,6 @@
 import { describe, test, expect } from 'vitest'
-import { getBusinessTypeChange } from '../../../../src/routes/business/business-type-change.routes.js'
+import { businessTypeRoutes } from '../../../../src/routes/business/business-type-change.routes.js'
+const [getBusinessTypeChange] = businessTypeRoutes
 
 describe('change business type', () => {
   test('should have the correct method and path', () => {

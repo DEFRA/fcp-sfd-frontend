@@ -1,4 +1,4 @@
-import { businessPhoneSchema } from '../../schemas/business/business-phone.schema.js'
+import { businessPhoneSchema } from '../../schemas/business/business-phone-schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 

@@ -3,14 +3,6 @@
  * @module businessDetailsPresenter
  */
 
-/**
- * Formats the data ready for presenting in the `/business-details` page
- *
- * @param {object} data - The business details data fetched from the API
- * @param {object} yar - The Hapi `request.yar` session manager
- *
- * @returns {object} page data needed for the `/business-details` page
- */
 const businessDetailsPresenter = (data, yar) => {
   return {
     notification: yar.flash('notification')[0],

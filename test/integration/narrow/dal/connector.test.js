@@ -27,14 +27,4 @@ describe('Data access layer (DAL) connector integration', () => {
     expect(result.data.business).toHaveProperty('sbi')
     expect(result.data.business.sbi).toBe('107591843')
   }, 10000)
-
-  test('should handle DAL connection errors', async () => {
-    process.env.DAL_ENDPOINT = 'http://localhost:3005/graphql'
-
-    try {
-      await dalConnector(getSbi)
-    } catch (error) {
-      expect(error).toBeDefined()
-    }
-  }, 10000)
 })

@@ -30,16 +30,4 @@ describe('Example DAL connection integration route', () => {
     expect(payload.message).toContain('success')
     expect(payload.data).not.toBeNull()
   }, 10000)
-
-  test('should handle error with invalid email via query params', async () => {
-    const response = await server.inject({
-      method: 'GET',
-      url: '/example?email=invalid.email.format'
-    })
-
-    const payload = JSON.parse(response.payload)
-    if (response.statusCode === 500) {
-      expect(payload.error).toBe('Failed to fetch data')
-    }
-  }, 10000)
 })

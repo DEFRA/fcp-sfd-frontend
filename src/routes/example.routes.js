@@ -1,5 +1,4 @@
 import { constants as httpConstants } from 'http2'
-import { createLogger } from '../utils/logger.js'
 import { dalConnector } from '../../src/dal/connector.js'
 import { getSbi } from '../dal/queries/get-sbi.js'
 
@@ -10,20 +9,13 @@ const exampleDalConnectionRoute = {
   method: 'GET',
   path: '/example',
   handler: async (_request, h) => {
-    const logger = createLogger()
+    const dal = await dalConnector(getSbi, variables, email)
+    const dalData = dal.data
 
-    try {
-      const dal = await dalConnector(getSbi, variables, email)
-      const dalData = dal.data
-
-      return h.response({
-        message: 'success',
-        data: dalData
-      }).code(httpConstants.HTTP_STATUS_OK)
-    } catch (error) {
-      logger.error(error, 'Error fetching data from DAL')
-      return h.response({ error: 'Failed to fetch data' }).code(httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
-    }
+    return h.response({
+      message: 'success',
+      data: dalData
+    }).code(httpConstants.HTTP_STATUS_OK)
   }
 }
 

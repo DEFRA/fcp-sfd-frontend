@@ -3,19 +3,18 @@ import { createServer } from '../../../../src/server.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
 import { getSbi } from '../../../../src/dal/queries/get-sbi.js'
 
-const originalDalEndpoint = process.env.DAL_ENDPOINT
+
+const { config } = await import('../../../../src/config/index.js')
 
 describe('Data access layer (DAL) connector integration', () => {
   let server
 
   beforeAll(async () => {
-    process.env.DAL_ENDPOINT = 'http://localhost:3005/graphql'
     server = await createServer()
     await server.initialize()
   })
 
   afterAll(async () => {
-    process.env.DAL_ENDPOINT = originalDalEndpoint
     await server.stop()
   })
 
@@ -27,4 +26,19 @@ describe('Data access layer (DAL) connector integration', () => {
     expect(result.data.business).toHaveProperty('sbi')
     expect(result.data.business.sbi).toBe('107591843')
   }, 10000)
+
+    test('should handle network errors by setting config directly', async () => {
+  
+  
+  const originalEndpoint = config.get('dalConfig.endpoint')
+  
+  try {
+    config.set('dalConfig.endpoint', 'http://nonexistent-domain-12345.invalid/graphql')
+    
+    await expect(dalConnector(getSbi, { sbi: 107591843 }, 'test.user11@defra.gov.uk'))
+      .rejects.toThrow()
+  } finally {
+    config.set('dalConfig.endpoint', originalEndpoint)
+  }
+}, 15000)
 })

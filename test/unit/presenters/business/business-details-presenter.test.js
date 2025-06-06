@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Thing under test
-import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details.presenter.js'
+import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
 
 describe('businessDetailsPresenter', () => {
   let data

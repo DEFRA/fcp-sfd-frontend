@@ -2,7 +2,7 @@
 import { describe, test, expect } from 'vitest'
 
 // Thing under test
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details.service.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 describe('fetchBusinessDetailsService', () => {
   describe('when called', () => {

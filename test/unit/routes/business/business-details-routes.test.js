@@ -2,14 +2,14 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { businessDetailsService } from '../../../../src/services/business/business-details.service.js'
+import { businessDetailsService } from '../../../../src/services/business/business-details-service.js'
 
 // Thing under test
-import { businessDetailsRoutes } from '../../../../src/routes/business/business-details.routes.js'
+import { businessDetailsRoutes } from '../../../../src/routes/business/business-details-routes.js'
 const [getBusinessDetails] = businessDetailsRoutes
 
 // Mock the service
-vi.mock('../../../../src/services/business/business-details.service.js', () => ({
+vi.mock('../../../../src/services/business/business-details-service.js', () => ({
   businessDetailsService: vi.fn()
 }))
 

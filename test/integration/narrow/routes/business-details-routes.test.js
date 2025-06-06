@@ -31,6 +31,7 @@ describe('business details', () => {
   let server
 
   beforeEach(async () => {
+    vi.clearAllMocks()
     server = await resetAndCreateServer()
   }, hookTimeout)
 

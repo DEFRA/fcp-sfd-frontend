@@ -25,5 +25,5 @@ describe('Example DAL connection integration route', () => {
     expect(response.statusCode).toBe(200)
     expect(payload.message).toContain('success')
     expect(payload.data).not.toBeNull()
-  })
+  }, 10000)
 })

@@ -36,7 +36,7 @@ services:
       - fcp-sfd
 
   fcp-dal-api:
-    image: defradigital/fcp-dal-api
+    image: defradigital/fcp-dal-api:0.41.0
     ports: 
       - 3005:3005
     depends_on:

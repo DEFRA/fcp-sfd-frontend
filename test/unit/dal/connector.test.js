@@ -1,7 +1,7 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { dalConnector } from '../../../src/dal/connector.js'
 import { config } from '../../../src/config/index.js'
-import { mockQuery } from '../../mocks/query.js'
+import { getSbi } from '../../../src/dal/queries/get-sbi.js'
 
 describe('Handle DAL (data access layer) connection', () => {
   const mockEmail = 'mockemail@test.com'
@@ -24,7 +24,7 @@ describe('Handle DAL (data access layer) connection', () => {
     global.fetch.mockResolvedValue({
       json: vi.fn().mockResolvedValue(mockResponse)
     })
-    const result = await dalConnector(mockQuery, mockVariables, mockEmail)
+    const result = await dalConnector(getSbi, mockVariables, mockEmail)
 
     expect(global.fetch).toHaveBeenCalledWith(config.get('dalConfig.endpoint'), {
       method: 'POST',
@@ -33,7 +33,7 @@ describe('Handle DAL (data access layer) connection', () => {
         email: 'mockemail@test.com'
       },
       body: JSON.stringify({
-        query: mockQuery,
+        query: getSbi,
         variables: mockVariables
       })
     })
@@ -45,6 +45,6 @@ describe('Handle DAL (data access layer) connection', () => {
     const mockError = new Error('Network error')
     global.fetch.mockRejectedValue(mockError)
 
-    await expect(dalConnector(mockQuery, mockVariables, mockEmail)).rejects.toThrow('Network error')
+    await expect(dalConnector(getSbi, mockVariables, mockEmail)).rejects.toThrow('Network error')
   })
 })

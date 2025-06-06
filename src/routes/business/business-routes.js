@@ -10,7 +10,7 @@ import { businessEmailCheckRoutes } from './business-email-check-routes.js'
 import { getBusinessLegalStatusChange } from './business-legal-status-change-routes.js'
 import { getBusinessTypeChange } from './business-type-change-routes.js'
 
-export const businessDetailsRoutes = [
+export const businessRoutes = [
   getBusinessDetails,
   ...businessNameChangeRoutes,
   ...businessNameCheckRoutes,

@@ -39,19 +39,8 @@
     {% endset %}
 
     {% set displayBusinessPhone %}
-      Telephone:
-      {% if businessTelephone %}
-      <div class="govuk-hint" style="display: inline;">{{businessTelephone}}</div>
-      {% else %}
-        <div class="govuk-hint" style="display: inline;">Not added</div>
-      {% endif %}
-
-      Mobile:
-      {% if businessMobile %}
-        <div class="govuk-hint" style="display: inline;">{{businessMobile}}</div>
-      {% else %}
-        <div class="govuk-hint" style="display: inline;">Not added</div>
-      {% endif %}
+      Telephone: <div class="govuk-hint" style="display: inline;">{{businessTelephone}}</div>
+      Mobile: <div class="govuk-hint" style="display: inline;">{{businessMobile}}</div>
     {% endset %}
 
     {{ govukSummaryList({

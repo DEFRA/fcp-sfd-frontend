@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business/business-phone-numbers-change.routes.js'
+import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business/business-phone-numbers-change-routes.js'
 
 const [getBusinessPhoneNumbersChange, postBusinessPhoneNumbersChange] = businessPhoneNumbersChangeRoutes
 

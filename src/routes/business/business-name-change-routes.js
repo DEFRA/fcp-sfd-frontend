@@ -1,4 +1,4 @@
-import { businessNameSchema } from '../../schemas/business/business-name.schema.js'
+import { businessNameSchema } from '../../schemas/business/business-name-schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 

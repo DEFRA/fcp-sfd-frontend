@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { businessEmailCheckRoutes } from '../../../../src/routes/business/business-email-check.routes.js'
+import { businessEmailCheckRoutes } from '../../../../src/routes/business/business-email-check-routes.js'
 
 const [getBusinessEmailCheck, postBusinessEmailCheck] = businessEmailCheckRoutes
 

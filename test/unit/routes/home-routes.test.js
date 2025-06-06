@@ -1,5 +1,5 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { home } from '../../../src/routes/home.routes.js'
+import { home } from '../../../src/routes/home-routes.js'
 
 const mockView = vi.fn()
 

@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { getBusinessDetails } from '../../../../src/routes/business/business-details.routes.js'
+import { getBusinessDetails } from '../../../../src/routes/business/business-details-routes.js'
 
 const defaultViewData = {
   showSuccessBanner: true,

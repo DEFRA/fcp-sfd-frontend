@@ -15,8 +15,8 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   afterAll(async () => {
-    await server.stop()
     process.env.DAL_ENDPOINT = originalDalEndpoint
+    await server.stop()
   })
 
   test('should successfully call DAL and return data', async () => {
@@ -29,7 +29,7 @@ describe('Data access layer (DAL) connector integration', () => {
   }, 10000)
 
   test('should handle DAL connection errors', async () => {
-    process.env.DAL_ENDPOINT = 'http://localhost:9999/invalid'
+    process.env.DAL_ENDPOINT = 'http://localhost:3005/graphql'
 
     try {
       await dalConnector(getSbi)

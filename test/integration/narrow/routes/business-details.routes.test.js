@@ -35,7 +35,6 @@ describe('business details', () => {
     server = await resetAndCreateServer()
 
     // Mock yar session manager
-    // Check does this need to be mocked
     server.ext('onPreHandler', (request, h) => {
       request.yar = {
         flash: vi.fn().mockReturnValue([])

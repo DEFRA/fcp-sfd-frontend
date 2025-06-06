@@ -1,4 +1,4 @@
-import { businessDetailsService } from '../../services/business/business-details.service.js'
+import { businessDetailsService } from '../../services/business/business-details-service.js'
 
 const getBusinessDetails = {
   method: 'GET',

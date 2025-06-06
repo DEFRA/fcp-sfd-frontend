@@ -1,6 +1,6 @@
 import { businessAddressRoutes } from './business-address-enter.routes.js'
 import { businessAddressCheckRoutes } from './business-address-check.routes.js'
-import { businessDetailsRoutes } from './business-details.routes.js'
+import { businessDetailsRoutes } from './business-details-routes.js'
 import { businessEmailChangeRoutes } from './business-email-change.routes.js'
 import { businessEmailCheckRoutes } from './business-email-check.routes.js'
 import { businessLegalStatusRoutes } from './business-legal-status-change.routes.js'

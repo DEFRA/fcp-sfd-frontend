@@ -23,14 +23,14 @@ export const dalConnector = async (query, variables, email) => {
 
     return responseData.errors
       ? {
-        data: null,
-        statusCode: responseData.errors[0].extensions.response.status,
-        errors: responseData.errors
-      }
+          data: null,
+          statusCode: responseData.errors[0].extensions.response.status,
+          errors: responseData.errors
+        }
       : {
-        data: responseData.data,
-        errors: null
-      }
+          data: responseData.data,
+          errors: null
+        }
   } catch (err) {
     logger.error(err, 'Error connecting to DAL')
 

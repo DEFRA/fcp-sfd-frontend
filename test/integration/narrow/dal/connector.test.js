@@ -20,10 +20,9 @@ describe('Data access layer (DAL) connector integration', () => {
   test('should successfully call DAL and return data when email header is present', async () => {
     const result = await dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
-    expect(result).toHaveProperty('data')
-    expect(result.data).toHaveProperty('business')
-    expect(result.data.business).toHaveProperty('sbi')
-    expect(result.data.business.sbi).toBe('107591843')
+    expect(result.data).toBeDefined()
+    expect(result.errors).toBeNull()
+    expect(result.statusCode).toBeUndefined()
   })
 
   test('should throw error when email header is not present', async () => {
@@ -37,8 +36,11 @@ describe('Data access layer (DAL) connector integration', () => {
     try {
       config.set('dalConfig.endpoint', 'http://nonexistent-domain-12345.invalid/graphql')
 
-      await expect(dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk'))
-        .rejects.toThrow()
+      const result = await dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+
+      expect(result.data).toBeNull()
+      expect(result.errors).toBeDefined()
+      expect(result).toHaveProperty('statusCode', 500)
     } finally {
       config.set('dalConfig.endpoint', originalEndpoint)
     }

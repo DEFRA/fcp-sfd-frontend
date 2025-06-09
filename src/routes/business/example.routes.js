@@ -1,6 +1,6 @@
 import { constants as httpConstants } from 'http2'
-import { dalConnector } from '../../src/dal/connector.js'
-import { getSbiInfo } from '../dal/queries/get-sbi-info.js'
+import { dalConnector } from '../../dal/connector.js'
+import { getSbiInfo } from '../../dal/queries/get-sbi-info.js'
 
 const email = 'test.user11@defra.gov.uk'
 const variables = { sbi: 107591843 }

@@ -4,6 +4,10 @@ import { config } from '../config/index.js'
 const logger = createLogger()
 
 export const dalConnector = async (query, variables, email) => {
+  if (!email) {
+    throw new Error('DAL connection cannot be made if email header is missing')
+  }
+
   try {
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',

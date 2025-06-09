@@ -17,14 +17,19 @@ describe('Data access layer (DAL) connector integration', () => {
     await server.stop()
   })
 
-  test('should successfully call DAL and return data', async () => {
+  test('should successfully call DAL and return data when email header is present', async () => {
     const result = await dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
     expect(result).toHaveProperty('data')
     expect(result.data).toHaveProperty('business')
     expect(result.data.business).toHaveProperty('sbi')
     expect(result.data.business.sbi).toBe('107591843')
-  }, 10000)
+  })
+
+  test('should throw error when email header is not present', async () => {
+    await expect(dalConnector(getSbiInfo, { sbi: 107591843 }))
+      .rejects.toThrow('DAL connection cannot be made if email header is missing')
+  })
 
   test('should handle network errors by setting config directly', async () => {
     const originalEndpoint = config.get('dalConfig.endpoint')
@@ -37,5 +42,5 @@ describe('Data access layer (DAL) connector integration', () => {
     } finally {
       config.set('dalConfig.endpoint', originalEndpoint)
     }
-  }, 15000)
+  })
 })

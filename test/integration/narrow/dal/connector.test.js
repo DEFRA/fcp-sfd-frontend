@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest'
 import { createServer } from '../../../../src/server.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
-import { getSbi } from '../../../../src/dal/queries/get-sbi.js'
+import { getSbiInfo } from '../../../../src/dal/queries/get-sbi-info.js'
 
 const { config } = await import('../../../../src/config/index.js')
 
@@ -18,7 +18,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should successfully call DAL and return data', async () => {
-    const result = await dalConnector(getSbi, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+    const result = await dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
     expect(result).toHaveProperty('data')
     expect(result.data).toHaveProperty('business')
@@ -32,7 +32,7 @@ describe('Data access layer (DAL) connector integration', () => {
     try {
       config.set('dalConfig.endpoint', 'http://nonexistent-domain-12345.invalid/graphql')
 
-      await expect(dalConnector(getSbi, { sbi: 107591843 }, 'test.user11@defra.gov.uk'))
+      await expect(dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk'))
         .rejects.toThrow()
     } finally {
       config.set('dalConfig.endpoint', originalEndpoint)

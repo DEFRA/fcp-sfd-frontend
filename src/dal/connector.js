@@ -1,3 +1,4 @@
+import { constants as httpConstants } from 'http2'
 import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
 
@@ -20,9 +21,23 @@ export const dalConnector = async (query, variables, email) => {
 
     const responseData = await response.json()
 
-    return responseData
+    return responseData.errors
+      ? {
+        data: null,
+        statusCode: responseData.errors[0].extensions.response.status,
+        errors: responseData.errors
+      }
+      : {
+        data: responseData.data,
+        errors: null
+      }
   } catch (err) {
     logger.error(err, 'Error connecting to DAL')
-    throw err
+
+    return {
+      data: null,
+      statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+      errors: err
+    }
   }
 }

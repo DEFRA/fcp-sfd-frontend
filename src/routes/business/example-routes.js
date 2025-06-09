@@ -9,12 +9,22 @@ const exampleDalConnectionRoute = {
   method: 'GET',
   path: '/example',
   handler: async (_request, h) => {
-    const dal = await dalConnector(getSbiInfo, variables, email)
-    const dalData = dal.data
+    const response = await dalConnector(getSbiInfo, variables, email)
+    const responseData = response.data
+
+    if (response.errors) {
+      return h.response({
+        data: response.data,
+        errors: response.errors.map(err => ({
+          message: err.message,
+          code: err.extensions?.code
+        }))
+      }).code(response.statusCode)
+    }
 
     return h.response({
       message: 'success',
-      data: dalData
+      data: responseData
     }).code(httpConstants.HTTP_STATUS_OK)
   }
 }

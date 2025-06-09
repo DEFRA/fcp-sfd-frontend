@@ -81,7 +81,7 @@ describe('example DAL connection route', () => {
       }]
     })
 
-    expect(mockResponse.code).toHaveBeenCalledWith(404)
+    expect(mockResponse.code).toHaveBeenCalledWith(httpConstants.HTTP_STATUS_NOT_FOUND)
     expect(response).toBe(mockResponse)
   })
 })

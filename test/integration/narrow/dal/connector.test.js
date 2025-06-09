@@ -25,7 +25,7 @@ describe('Data access layer (DAL) connector integration', () => {
     expect(result.statusCode).toBeUndefined()
   })
 
-  test('should throw error when email header is not present', async () => {
+  test('should throw error when email header is missing', async () => {
     await expect(dalConnector(getSbiInfo, { sbi: 107591843 }))
       .rejects.toThrow('DAL connection cannot be made if email header is missing')
   })

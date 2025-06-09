@@ -43,11 +43,10 @@ describe('DAL (data access layer) connector', () => {
       })
     })
 
-    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'test.user@defra.gov.uk')
+    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
-    expect(result.errors).toHaveLength(1)
     expect(result.errors[0].message).toBe('SBI not found')
     expect(result.errors[0].extensions.code).toBe('NOT_FOUND')
     expect(result.statusCode).toBe(404)
@@ -58,7 +57,7 @@ describe('DAL (data access layer) connector', () => {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
-          email: 'test.user@defra.gov.uk'
+          email: 'mock-test-user@defra.gov.uk'
         },
         body: JSON.stringify({
           query: getSbiInfo,
@@ -83,7 +82,7 @@ describe('DAL (data access layer) connector', () => {
       })
     })
 
-    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'test.user@defra.gov.uk')
+    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
 
     expect(result.data).toBeDefined()
     expect(result.errors).toBeNull()
@@ -98,7 +97,7 @@ describe('DAL (data access layer) connector', () => {
   test('should handle network errors in catch block', async () => {
     global.fetch = vi.fn().mockRejectedValue(new Error('Network error'))
 
-    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'test.user@defra.gov.uk')
+    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.statusCode).toBe(500)

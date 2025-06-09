@@ -4,8 +4,8 @@ import {
   defaultAddress,
   emptyAddress,
   newAddress
-} from '../../constants/test-addresses'
-import { businessAddressCheckRoutes } from '../../../../src/routes/business/business-address-check.routes.js'
+} from '../../constants/test-addresses.js'
+import { businessAddressCheckRoutes } from '../../../../src/routes/business/business-address-check-routes.js'
 
 const [
   getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes

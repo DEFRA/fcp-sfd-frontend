@@ -28,7 +28,7 @@ describe('Static asset routes', () => {
       }
     }))
 
-    const { staticAssetRoutes: routes } = await import('../../../src/routes/static-assets.routes.js')
+    const { staticAssetRoutes: routes } = await import('../../../src/routes/static-assets-routes.js')
     const { config: configModule } = await import('../../../src/config/index.js')
 
     staticAssetRoutes = routes

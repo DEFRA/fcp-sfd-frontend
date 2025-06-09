@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { businessTypeRoutes } from '../../../../src/routes/business/business-type-change.routes.js'
+import { businessTypeRoutes } from '../../../../src/routes/business/business-type-change-routes.js'
 const [getBusinessTypeChange] = businessTypeRoutes
 
 describe('change business type', () => {

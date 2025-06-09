@@ -6,14 +6,11 @@
 {% from "common/navigation/back-link.njk" import appBackLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
-{% set pageTitle = "What is your business name?" %}
-{% set metaDescription = "Update the name for your business." %}
-
 {% block beforeContent %}
     {{ subHeader(
     businessName=businessName, 
-    sbi="123456789", 
-    userName="Alfred Waldron"
+    sbi=sbi, 
+    userName=userName
 ) }}
 
     {{ appBackLink() }}
@@ -44,7 +41,7 @@
           },
           id: "business-name",
           name: "businessName",
-          value: businessName,
+          value: business-name,
           errorMessage: errors.businessName and {
             text: errors.businessName.text
           }
@@ -52,7 +49,8 @@
       </div>
 
       {{ govukButton({
-        text: "Continue"
+        text: "Continue",
+        preventDoubleClick: true
       }) }}
 
       <p class="govuk-body">

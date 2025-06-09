@@ -1,17 +1,15 @@
 import { businessNameSchema } from '../../schemas/business/business-name-schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { businessNameChangeService } from '../../services/business/business-name-change.service.js'
 
 const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
-  handler: (request, h) => {
-    const currentBusinessName = request.state.businessName || 'Agile Farm Ltd'
-    const originalBusinessName = request.state.originalBusinessName || currentBusinessName
+  handler: async (request, h) => {
+    const pageData = await businessNameChangeService(request.state)
 
-    return h.view('business/business-name-change', {
-      businessName: currentBusinessName
-    }).state('originalBusinessName', originalBusinessName)
+    return h.view('business/business-name-change', pageData)
   }
 }
 

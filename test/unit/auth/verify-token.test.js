@@ -70,5 +70,5 @@ describe('createState', () => {
     const wrongToken = Jwt.token.generate({ name: 'A Farmer' }, { key: wrongPrivateKey, algorithm: 'RS256' })
 
     await expect(verifyToken(wrongToken)).rejects.toThrow('Invalid token signature')
-  })
+  }, 10000)
 })

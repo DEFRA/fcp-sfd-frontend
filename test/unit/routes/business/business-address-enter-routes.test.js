@@ -5,7 +5,7 @@ import {
   newAddress,
   emptyAddress
 } from '../../constants/test-addresses.js'
-import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter.routes.js'
+import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
 
 const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 

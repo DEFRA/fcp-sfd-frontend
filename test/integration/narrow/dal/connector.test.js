@@ -55,7 +55,7 @@ describe('Data access layer (DAL) connector integration', () => {
       query Business($sbi: ID!) {
         business(sbi: $sbi) {
           sbi
-          invalidSyntaxHere {{{
+          invalidSyntax {{{
       }
     `
 
@@ -63,7 +63,7 @@ describe('Data access layer (DAL) connector integration', () => {
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
-    expect(result.errors[0].message).toBe("Syntax Error: Expected Name, found \"{\".")
+    expect(result.errors[0].message).toBe('Syntax Error: Expected Name, found "{".')
     expect(result.statusCode).toBe(400)
   })
 
@@ -72,7 +72,7 @@ describe('Data access layer (DAL) connector integration', () => {
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
-    expect(result.errors[0].message).toBe("Variable \"$sbi\" of required type \"ID!\" was not provided.")
+    expect(result.errors[0].message).toBe('Variable "$sbi" of required type "ID!" was not provided.')
     expect(result.statusCode).toBe(400)
   })
 })

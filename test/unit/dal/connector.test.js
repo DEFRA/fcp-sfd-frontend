@@ -90,8 +90,12 @@ describe('DAL (data access layer) connector', () => {
   })
 
   test('should throw error when email header is missing', async () => {
-    await expect(dalConnector(getSbiInfo, { sbi: 123456789 }))
-      .rejects.toThrow('DAL connection cannot be made if email header is missing')
+    const result = await dalConnector(getSbiInfo, { sbi: 123456789 })
+
+    expect(result.data).toBeNull()
+    expect(result.statusCode).toBe(400)
+    expect(result.errors).toBeDefined()
+    expect(result.errors[0].message).toBe('DAL connection cannot be made if email header is missing')
   })
 
   test('should handle network errors in catch block', async () => {

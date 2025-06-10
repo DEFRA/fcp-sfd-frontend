@@ -6,7 +6,15 @@ const logger = createLogger()
 
 export const dalConnector = async (query, variables, email) => {
   if (!email) {
-    throw new Error('DAL connection cannot be made if email header is missing')
+    return {
+      data: null,
+      statusCode: httpConstants.HTTP_STATUS_BAD_REQUEST,
+      errors: [
+        {
+          message: 'DAL connection cannot be made if email header is missing'
+        }
+      ]
+    }
   }
 
   try {

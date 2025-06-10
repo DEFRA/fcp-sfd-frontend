@@ -27,18 +27,20 @@ export const dalConnector = async (query, variables, email) => {
       body: JSON.stringify({ query, variables })
     })
 
-    const responseData = await response.json()
+    const responseBody = await response.json()
 
-    return responseData.errors
-      ? {
-          data: null,
-          statusCode: responseData.errors[0].extensions.response.status,
-          errors: responseData.errors
-        }
-      : {
-          data: responseData.data,
-          errors: null
-        }
+    if (responseBody.errors) {
+      return {
+        data: null,
+        statusCode: responseBody.errors[0].extensions.response.status,
+        errors: responseBody.errors
+      }
+    } else {
+      return {
+        data: responseBody.data,
+        errors: null
+      }
+    }
   } catch (err) {
     logger.error(err, 'Error connecting to DAL')
 

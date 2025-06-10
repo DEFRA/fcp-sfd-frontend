@@ -10,7 +10,6 @@ const exampleDalConnectionRoute = {
   path: '/example',
   handler: async (_request, h) => {
     const response = await dalConnector(getSbiInfo, variables, email)
-    const responseData = response.data
 
     if (response.errors) {
       return h.response({
@@ -24,7 +23,7 @@ const exampleDalConnectionRoute = {
 
     return h.response({
       message: 'success',
-      data: responseData
+      data: response.data
     }).code(httpConstants.HTTP_STATUS_OK)
   }
 }

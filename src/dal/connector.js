@@ -32,7 +32,7 @@ export const dalConnector = async (query, variables, email) => {
     if (responseBody.errors) {
       return {
         data: null,
-        statusCode: responseBody.errors[0].extensions.response.status,
+        statusCode: responseBody.errors[0]?.extensions?.response?.status || httpConstants.HTTP_STATUS_BAD_REQUEST,
         errors: responseBody.errors
       }
     } else {
@@ -47,7 +47,7 @@ export const dalConnector = async (query, variables, email) => {
     return {
       data: null,
       statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-      errors: err
+      errors: [err]
     }
   }
 }

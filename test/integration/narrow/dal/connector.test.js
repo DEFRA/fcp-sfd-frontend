@@ -25,7 +25,7 @@ describe('Data access layer (DAL) connector integration', () => {
     expect(result.statusCode).toBeUndefined()
   })
 
-  test('should throw error when email header is missing', async () => {
+  test('should return error when email header is missing', async () => {
     const result = await dalConnector(getSbiInfo, { sbi: 107591843 })
 
     expect(result.data).toBeNull()
@@ -48,5 +48,31 @@ describe('Data access layer (DAL) connector integration', () => {
     } finally {
       config.set('dalConfig.endpoint', originalEndpoint)
     }
+  })
+
+  test('should handle invalid GraphQL query syntax as bad request (400) error', async () => {
+    const invalidQuery = `
+      query Business($sbi: ID!) {
+        business(sbi: $sbi) {
+          sbi
+          invalidSyntaxHere {{{
+      }
+    `
+
+    const result = await dalConnector(invalidQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+
+    expect(result.data).toBeNull()
+    expect(result.errors).toBeDefined()
+    expect(result.errors[0].message).toBe("Syntax Error: Expected Name, found \"{\".")
+    expect(result.statusCode).toBe(400)
+  })
+
+  test('should handle missing required query params as bad request (400) error', async () => {
+    const result = await dalConnector(getSbiInfo, {}, 'test.user11@defra.gov.uk')
+
+    expect(result.data).toBeNull()
+    expect(result.errors).toBeDefined()
+    expect(result.errors[0].message).toBe("Variable \"$sbi\" of required type \"ID!\" was not provided.")
+    expect(result.statusCode).toBe(400)
   })
 })

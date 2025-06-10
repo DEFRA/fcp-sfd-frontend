@@ -105,6 +105,6 @@ describe('DAL (data access layer) connector', () => {
 
     expect(result.data).toBeNull()
     expect(result.statusCode).toBe(500)
-    expect(result.errors.message).toBe('Network error')
+    expect(result.errors[0].message).toBe('Network error')
   })
 })

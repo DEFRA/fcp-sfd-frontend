@@ -1,26 +1,23 @@
+import { getBusinessEmailChangeService } from '../../services/business/get-business-email-change-service .js'
+import { saveBusinessEmailChangeService } from '../../services/business/save-business-email-change-service.js'
+import { businessEmailChangePresenter } from '../../presenters/business/business-email-change-presenter.js'
 const getBusinessEmailCheck = {
   method: 'GET',
   path: '/business-email-check',
-  handler: (request, h) => {
-    const businessEmail = request.state.businessEmail || ''
+  handler: async (request, h) => {
+    const businessEmailChange = await getBusinessEmailChangeService(request)
+    const pageData = businessEmailChangePresenter(businessEmailChange, request.yar)
 
-    return h.view('business/business-email-check', {
-      businessEmail
-    })
+    return h.view('business/business-email-check.njk', pageData)
   }
 }
 
 const postBusinessEmailCheck = {
   method: 'POST',
   path: '/business-email-check',
-  handler: (request, h) => {
-    const businessEmail = request.state.businessEmail
-
+  handler: async (request, h) => {
+    await saveBusinessEmailChangeService(request.yar)
     return h.redirect('/business-details')
-      .state('showSuccessBanner', 'true')
-      .state('successField', 'BUSINESS_EMAIL_ADDRESS')
-      .state('businessEmail', businessEmail)
-      .unstate('originalBusinessEmail')
   }
 }
 

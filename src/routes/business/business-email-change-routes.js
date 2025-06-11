@@ -1,3 +1,6 @@
+import { getBusinessEmailChangeService } from '../../services/business/get-business-email-change-service .js'
+import { setBusinessEmailChangeService } from '../../services/business/set-business-email-change-service.js'
+import { businessEmailChangePresenter } from '../../presenters/business/business-email-change-presenter.js'
 import { businessEmailSchema } from '../../schemas/business/business-email-schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
@@ -5,13 +8,11 @@ import { BAD_REQUEST } from '../../constants/status-codes.js'
 const getBusinessEmailChange = {
   method: 'GET',
   path: '/business-email-change',
-  handler: (request, h) => {
-    const currentBusinessEmail = request.state.businessEmail || ''
-    const originalBusinessEmail = request.state.originalBusinessEmail || currentBusinessEmail
+  handler: async (request, h) => {
+    const businessEmailChange = await getBusinessEmailChangeService(request)
+    const pageData = businessEmailChangePresenter(businessEmailChange, request.yar)
 
-    return h.view('business/business-email-change', {
-      businessEmail: currentBusinessEmail
-    }).state('originalBusinessEmail', originalBusinessEmail)
+    return h.view('business/business-email-change.njk', pageData)
   }
 }
 
@@ -33,11 +34,11 @@ const postBusinessEmailChange = {
         }).code(BAD_REQUEST).takeover()
       }
     },
-    handler: (request, h) => {
-      const { businessEmail } = request.payload
+    handler: async (request, h) => {
+      await setBusinessEmailChangeService(request.payload.businessEmail, request.yar )
 
       return h.redirect('/business-email-check')
-        .state('businessEmail', businessEmail)
+
     }
   }
 }

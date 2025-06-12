@@ -1,12 +1,10 @@
 const getBusinessNameCheck = {
   method: 'GET',
   path: '/business-name-check',
-  handler: (request, h) => {
-    const businessName = request.state.businessName || ''
+  handler: async (request, h) => {
+    const pageData = await businessNameCheckService(request.state)
 
-    return h.view('business/business-name-check', {
-      businessName
-    })
+    return h.view('business/business-name-check', pageData)
   }
 }
 

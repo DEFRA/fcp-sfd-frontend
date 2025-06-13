@@ -1,21 +1,19 @@
-export const formatValidationErrors = (details) => {
-  const errors = {}
+export const formatValidationErrors = (errors) => {
+  const formattedErrors = {}
 
-  details.forEach(detail => {
-    const path = detail.path[0]
+  errors.forEach(error => {
+    const { type, context, message: text, path } = error
 
-    if (detail.type === 'object.missing' && Array.isArray(detail.context?.peers)) {
-      detail.context.peers.forEach(peer => {
-        errors[peer] = {
-          text: detail.message
-        }
+    // If the error type is 'object.missing' and multiple input fields (peers) are involved
+    if (type === 'object.missing' && Array.isArray(context?.peers)) {
+      context.peers.forEach(peer => {
+        formattedErrors[peer] = { text }
       })
     } else {
-      errors[path] = {
-        text: detail.message
-      }
+      // Handle individual input field error
+      formattedErrors[path[0]] = { text }
     }
   })
 
-  return errors
+  return formattedErrors
 }

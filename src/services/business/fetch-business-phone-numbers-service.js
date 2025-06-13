@@ -3,12 +3,17 @@
  * @module fetchBusinessDetailsService
  */
 
-const fetchBusinessPhoneNumbersService = async (_request) => {
-  // Refactor: Remove stubbed data and instead call the API to get the business details associated with the users log in
-  // This will be using the consolidated view API
+const fetchBusinessPhoneNumbersService = async (request) => {
+  const businessDetails = request.yar.get('businessDetails')
+  if (!businessDetails.changeBusinessTelephone && !businessDetails.changeBusinessMobile) {
+    return {
+      businessTelephone: businessDetails.businessTelephone,
+      businessMobile: businessDetails.businessMobile
+    }
+  }
   return {
-    businessTelephone: '0118 999 881 999 119 725 3',
-    businessMobile: '0118 999 881 999 119 725 3',
+    businessTelephone: businessDetails.changeBusinessTelephone,
+    businessMobile: businessDetails.changeBusinessMobile
   }
 }
 

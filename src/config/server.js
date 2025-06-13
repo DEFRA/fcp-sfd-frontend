@@ -141,11 +141,6 @@ export const serverConfig = {
           default: 'session',
           env: 'SESSION_CACHE_NAME'
         },
-        segment: {
-          doc: 'The cache segment.',
-          format: String,
-          default: 'session'
-        },
         ttl: {
           doc: 'server side session cache ttl',
           format: Number,

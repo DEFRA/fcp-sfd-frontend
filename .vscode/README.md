@@ -15,7 +15,7 @@ To use them, open the VSCode command palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) a
 | 🪵 **Log Frontend** | View real-time logs for all frontend containers. |
 | ✅ **Test Frontend** | Run the full test suite in a clean Docker container. |
 | ‼️ **Only Test Frontend** | Run tests for the currently open file using Vitest. |
-| 🔍 **Lint Frontend** | Run linting (`eslint` and `stylelint`) via `npm-run-all`. |
+| 🔍 **Lint Frontend** | Run linting (`standard` and `stylelint`). |
 | 🧹 **Clean Frontend** | Stop containers, remove local images and volumes. |
 | ⏯️ **Restart Frontend** | Restart all running frontend containers. |
 

@@ -1,15 +1,17 @@
 import { constants as httpConstants } from 'http2'
 import { dalConnector } from '../../dal/connector.js'
-import { getSbiInfo } from '../../dal/queries/get-sbi-info.js'
+import { exampleQuery } from '../../dal/queries/example-query.js'
 
 const email = 'test.user11@defra.gov.uk'
-const variables = { sbi: 107591843 }
+const variables = {
+  sbi: 107591843
+}
 
 const exampleDalConnectionRoute = {
   method: 'GET',
   path: '/example',
   handler: async (_request, h) => {
-    const response = await dalConnector(getSbiInfo, variables, email)
+    const response = await dalConnector(exampleQuery, variables, email)
 
     if (response.errors) {
       return h.response({

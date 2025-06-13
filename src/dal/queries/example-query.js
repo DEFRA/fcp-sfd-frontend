@@ -1,5 +1,5 @@
-export const getSbiInfo = `
-  query Business($sbi: ID!) {
+export const exampleQuery = `
+  query ExampleQuery($sbi: ID!) {
     business(sbi: $sbi) {
       sbi
       info {

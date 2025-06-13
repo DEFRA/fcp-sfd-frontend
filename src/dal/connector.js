@@ -4,6 +4,8 @@ import { config } from '../config/index.js'
 
 const logger = createLogger()
 
+// TODO: helper for formatting repsonseBody
+
 export const dalConnector = async (query, variables, email) => {
   if (!email) {
     return {
@@ -30,16 +32,27 @@ export const dalConnector = async (query, variables, email) => {
     const responseBody = await response.json()
 
     if (responseBody.errors) {
+      const extendedErrors = responseBody.errors.map(err => {
+        const ext = err.extensions
+        const parsedBody = ext.parsedBody
+
+        return {
+          message: `${err.message}: ${parsedBody.message}`,
+          statusCode: parsedBody.statusCode
+        }
+      })
+
       return {
         data: null,
-        statusCode: responseBody.errors[0]?.extensions?.response?.status || httpConstants.HTTP_STATUS_BAD_REQUEST,
-        errors: responseBody.errors
+        statusCode: extendedErrors[0]?.statusCode,
+        errors: extendedErrors
       }
-    } else {
-      return {
-        data: responseBody.data,
-        errors: null
-      }
+    }
+
+    return {
+      data: responseBody.data,
+      statusCode: httpConstants.HTTP_STATUS_OK,
+      errors: null
     }
   } catch (err) {
     logger.error(err, 'Error connecting to DAL')

@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest'
 import { createServer } from '../../../../src/server.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
-import { getSbiInfo } from '../../../../src/dal/queries/get-sbi-info.js'
+import { exampleQuery } from '../../../../src/dal/queries/example-query.js'
 
 const { config } = await import('../../../../src/config/index.js')
 
@@ -18,7 +18,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should successfully call DAL and return data when email header is present', async () => {
-    const result = await dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
     expect(result.data).toBeDefined()
     expect(result.errors).toBeNull()
@@ -26,7 +26,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should return error when email header is missing', async () => {
-    const result = await dalConnector(getSbiInfo, { sbi: 107591843 })
+    const result = await dalConnector(exampleQuery, { sbi: 107591843 })
 
     expect(result.data).toBeNull()
     expect(result.statusCode).toBe(400)
@@ -40,7 +40,7 @@ describe('Data access layer (DAL) connector integration', () => {
     try {
       config.set('dalConfig.endpoint', 'http://nonexistent-domain-12345.invalid/graphql')
 
-      const result = await dalConnector(getSbiInfo, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+      const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -68,7 +68,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should handle missing required query params as bad request (400) error', async () => {
-    const result = await dalConnector(getSbiInfo, {}, 'test.user11@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, {}, 'test.user11@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()

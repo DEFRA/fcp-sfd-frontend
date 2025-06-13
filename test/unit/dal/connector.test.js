@@ -1,6 +1,6 @@
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest'
 import { dalConnector } from '../../../src/dal/connector.js'
-import { getSbiInfo } from '../../../src/dal/queries/get-sbi-info.js'
+import { exampleQuery } from '../../../src/dal/queries/example-query.js'
 
 vi.mock('../../../src/config/index.js', () => ({
   config: {
@@ -43,7 +43,7 @@ describe('DAL (data access layer) connector', () => {
       })
     })
 
-    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
@@ -60,7 +60,7 @@ describe('DAL (data access layer) connector', () => {
           email: 'mock-test-user@defra.gov.uk'
         },
         body: JSON.stringify({
-          query: getSbiInfo,
+          query: exampleQuery,
           variables: {
             sbi: 123456789
           }
@@ -82,15 +82,15 @@ describe('DAL (data access layer) connector', () => {
       })
     })
 
-    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
 
     expect(result.data).toBeDefined()
     expect(result.errors).toBeNull()
-    expect(result.statusCode).toBeUndefined()
+    expect(result.statusCode).toBe(200)
   })
 
   test('should throw error when email header is missing', async () => {
-    const result = await dalConnector(getSbiInfo, { sbi: 123456789 })
+    const result = await dalConnector(exampleQuery, { sbi: 123456789 })
 
     expect(result.data).toBeNull()
     expect(result.statusCode).toBe(400)
@@ -101,7 +101,7 @@ describe('DAL (data access layer) connector', () => {
   test('should handle network errors in catch block', async () => {
     global.fetch = vi.fn().mockRejectedValue(new Error('Network error'))
 
-    const result = await dalConnector(getSbiInfo, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.statusCode).toBe(500)

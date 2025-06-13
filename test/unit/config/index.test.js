@@ -116,4 +116,17 @@ describe('Config', () => {
       expect(config.get('defraId.refreshTokens')).toBe(true)
     })
   })
+
+  describe('Data access layer (DAL)', () => {
+    beforeEach(() => {
+      vi.resetModules()
+      process.env.DAL_ENDPOINT = 'http://mock-fcp-dal-api:3005/graphql'
+    })
+
+    test('should return dal endpoint from environment variable if set', async () => {
+      const { config } = await import('../../../src/config/index.js')
+
+      expect(config.get('dalConfig.endpoint')).toBe('http://mock-fcp-dal-api:3005/graphql')
+    })
+  })
 })

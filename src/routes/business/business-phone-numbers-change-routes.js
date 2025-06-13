@@ -1,36 +1,17 @@
 import { businessPhoneSchema } from '../../schemas/business/business-phone-schema.js'
 import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { businessPhoneNumberPresenter } from '../../presenters/business/business-phone-numbers-presenter.js'
+import { fetchBusinessPhoneNumbersService } from './fetch-business-phone-numbers-service.js'
 
 const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   handler: (request, h) => {
-    const currentBusinessTelephone =
-      request.state.tempBusinessTelephone ??
-      request.state.businessTelephone ??
-      ''
-    const currentBusinessMobile =
-      request.state.tempBusinessMobile ??
-      request.state.businessMobile ??
-      ''
+    const data = fetchBusinessPhoneNumbersService()
+    const pageData = businessPhoneNumberPresenter(data, request.yar)
 
-    const originalBusinessTelephone =
-      request.state.originalBusinessTelephone ??
-      request.state.businessTelephone ??
-      ''
-
-    const originalBusinessMobile =
-      request.state.originalBusinessMobile ??
-      request.state.businessMobile ??
-      ''
-
-    return h.view('business/business-phone-numbers-change', {
-      businessTelephone: currentBusinessTelephone,
-      businessMobile: currentBusinessMobile
-    })
-      .state('originalBusinessTelephone', originalBusinessTelephone)
-      .state('originalBusinessMobile', originalBusinessMobile)
+    return h.view('business/business-phone-numbers-change', pageData)
   }
 }
 

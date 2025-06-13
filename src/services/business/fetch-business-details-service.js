@@ -3,11 +3,11 @@
  * @module fetchBusinessDetailsService
  */
 
-const fetchBusinessDetailsService = async (_request) => {
+const fetchBusinessDetailsService = async (yar) => {
   // Refactor: Remove stubbed data and instead call the API to get the business details associated with the users log in
   // This will be using the consolidated view API
   // The data needed for the business details page.
-  return {
+  return yar.get('businessDetails') ? yar.get('businessDetails') : {
     businessName: 'Agile Farm Ltd',
     businessAddress: {
       address1: '10 Skirbeck Way',

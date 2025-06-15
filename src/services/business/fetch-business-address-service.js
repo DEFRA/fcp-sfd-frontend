@@ -3,9 +3,9 @@
  * @module fetchBusinessAddressService
  */
 
-const fetchBusinessAddressService = async (_request) => {
+const fetchBusinessAddressService = async () => {
   // Refactor: Remove stubbed data and instead call the API to get the business address associated with the users log in
-  // The data needed for the business address page.
+  // The data needed for the business address enter page.
   return {
     businessName: 'Agile Farm Ltd',
     businessAddress: {

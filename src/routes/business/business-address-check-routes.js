@@ -4,18 +4,18 @@ const getBusinessAddressCheck = {
   handler: (request, h) => {
     const address1 = request.state.address1 || ''
     const address2 = request.state.address2 || ''
-    const addressCity = request.state.addressCity || ''
-    const addressCounty = request.state.addressCounty || ''
-    const addressPostcode = request.state.addressPostcode || ''
-    const addressCountry = request.state.addressCountry || ''
+    const city = request.state.city || ''
+    const county = request.state.county || ''
+    const postcode = request.state.postcode || ''
+    const country = request.state.country || ''
 
     return h.view('business/business-address-check', {
       address1,
       address2,
-      addressCity,
-      addressCounty,
-      addressPostcode,
-      addressCountry
+      city,
+      county,
+      postcode,
+      country
     })
   }
 }
@@ -26,20 +26,20 @@ const postBusinessAddressCheck = {
   handler: (request, h) => {
     const address1 = request.state.address1 || ''
     const address2 = request.state.address2 || ''
-    const addressCity = request.state.addressCity || ''
-    const addressCounty = request.state.addressCounty || ''
-    const addressPostcode = request.state.addressPostcode || ''
-    const addressCountry = request.state.addressCountry || ''
+    const city = request.state.city || ''
+    const county = request.state.county || ''
+    const postcode = request.state.postcode || ''
+    const country = request.state.country || ''
 
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
       .state('successField', 'BUSINESS_ADDRESS')
       .state('address1', address1)
       .state('address2', address2)
-      .state('addressCity', addressCity)
-      .state('addressCounty', addressCounty)
-      .state('addressPostcode', addressPostcode)
-      .state('addressCountry', addressCountry)
+      .state('city', city)
+      .state('county', county)
+      .state('postcode', postcode)
+      .state('country', country)
       .unstate('originalBusinessName')
   }
 }

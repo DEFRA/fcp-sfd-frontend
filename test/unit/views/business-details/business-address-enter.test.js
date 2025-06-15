@@ -9,10 +9,10 @@ describe('enter business address', () => {
     const html = renderTemplate('business/business-address-enter.njk', {
       address1: '123 Farm Lane',
       address2: '',
-      addressCity: 'York',
-      addressCounty: 'North Yorkshire',
-      addressPostcode: 'Y01 7HG',
-      addressCountry: 'United Kingdom',
+      city: 'York',
+      county: 'North Yorkshire',
+      postcode: 'Y01 7HG',
+      country: 'United Kingdom',
       errors: {}
     })
 
@@ -23,10 +23,10 @@ describe('enter business address', () => {
   test.each([
     ['address line 1', '#address1', 'address1', '123 Farm Lane'],
     ['address line 2', '#address2', 'address2', ''],
-    ['town/city', '#addressCity', 'addressCity', 'York'],
-    ['addressCounty', '#addressCounty', 'addressCounty', 'North Yorkshire'],
-    ['postcode', '#addressPostcode', 'addressPostcode', 'Y01 7HG'],
-    ['country', '#addressCountry', 'addressCountry', 'United Kingdom']
+    ['town/city', '#city', 'city', 'York'],
+    ['county', '#county', 'county', 'North Yorkshire'],
+    ['postcode', '#postcode', 'postcode', 'Y01 7HG'],
+    ['country', '#country', 'country', 'United Kingdom']
   ])('should render the correct value in the input field for %s', (_, selector, name, value) => {
     const input = document.querySelector(selector)
 

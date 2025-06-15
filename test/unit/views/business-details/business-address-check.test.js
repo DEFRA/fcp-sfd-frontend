@@ -10,10 +10,10 @@ describe('check business address', () => {
     const html = renderTemplate('business/business-address-check.njk', {
       address1: '123 Farm Lane',
       address2: '',
-      addressCity: 'York',
-      addressCounty: 'North Yorkshire',
-      addressPostcode: 'Y01 7HG',
-      addressCountry: 'United Kingdom'
+      city: 'York',
+      county: 'North Yorkshire',
+      postcode: 'Y01 7HG',
+      country: 'United Kingdom'
     })
 
     const dom = new JSDOM(html)

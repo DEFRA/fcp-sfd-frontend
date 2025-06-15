@@ -4,7 +4,7 @@ export const defaultAddress = {
   city: 'Maidstone',
   county: '',
   postcode: 'SK22 1DL',
-  addressCountry: 'United Kingdom'
+  country: 'United Kingdom'
 }
 
 export const testAddress = {
@@ -13,7 +13,7 @@ export const testAddress = {
   city: 'Test City',
   county: 'Test County',
   postcode: 'TE5 7ST',
-  addressCountry: 'Test Country'
+  country: 'Test Country'
 }
 
 export const newAddress = {
@@ -22,7 +22,7 @@ export const newAddress = {
   city: 'New City',
   county: 'New County',
   postcode: 'NE1 2ST',
-  addressCountry: 'New Country'
+  country: 'New Country'
 }
 
 export const emptyAddress = {
@@ -31,5 +31,5 @@ export const emptyAddress = {
   city: '',
   county: '',
   postcode: '',
-  addressCountry: ''
+  country: ''
 }

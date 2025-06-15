@@ -7,7 +7,7 @@ const getBusinessAddressCheck = {
     const city = request.state.city || ''
     const county = request.state.county || ''
     const postcode = request.state.postcode || ''
-    const addressCountry = request.state.addressCountry || ''
+    const country = request.state.country || ''
 
     return h.view('business/business-address-check', {
       address1,
@@ -15,7 +15,7 @@ const getBusinessAddressCheck = {
       city,
       county,
       postcode,
-      addressCountry
+      country
     })
   }
 }
@@ -29,7 +29,7 @@ const postBusinessAddressCheck = {
     const city = request.state.city || ''
     const county = request.state.county || ''
     const postcode = request.state.postcode || ''
-    const addressCountry = request.state.addressCountry || ''
+    const country = request.state.country || ''
 
     return h.redirect('/business-details')
       .state('showSuccessBanner', 'true')
@@ -39,7 +39,7 @@ const postBusinessAddressCheck = {
       .state('city', city)
       .state('county', county)
       .state('postcode', postcode)
-      .state('addressCountry', addressCountry)
+      .state('country', country)
       .unstate('originalBusinessName')
   }
 }

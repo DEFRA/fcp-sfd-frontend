@@ -12,7 +12,7 @@ describe('enter business address', () => {
       city: 'York',
       county: 'North Yorkshire',
       postcode: 'Y01 7HG',
-      addressCountry: 'United Kingdom',
+      country: 'United Kingdom',
       errors: {}
     })
 
@@ -26,7 +26,7 @@ describe('enter business address', () => {
     ['town/city', '#city', 'city', 'York'],
     ['county', '#county', 'county', 'North Yorkshire'],
     ['postcode', '#postcode', 'postcode', 'Y01 7HG'],
-    ['country', '#addressCountry', 'addressCountry', 'United Kingdom']
+    ['country', '#country', 'country', 'United Kingdom']
   ])('should render the correct value in the input field for %s', (_, selector, name, value) => {
     const input = document.querySelector(selector)
 

@@ -11,7 +11,7 @@ const getBusinessAddressEnter = {
     const city = request.state.city || 'Maidstone'
     const county = request.state.county || ''
     const postcode = request.state.postcode || 'SK22 1DL'
-    const addressCountry = request.state.addressCountry || 'United Kingdom'
+    const country = request.state.country || 'United Kingdom'
 
     const originalAddress = {
       address1,
@@ -19,7 +19,7 @@ const getBusinessAddressEnter = {
       city,
       county,
       postcode,
-      addressCountry
+      country
     }
 
     return h.view('business/business-address-enter', {
@@ -28,7 +28,7 @@ const getBusinessAddressEnter = {
       city,
       county,
       postcode,
-      addressCountry
+      country
     }).state('originalAddress', JSON.stringify(originalAddress))
   }
 }
@@ -51,7 +51,7 @@ const postBusinessAddressEnter = {
           city: request.payload?.city || '',
           county: request.payload?.county || '',
           postcode: request.payload?.postcode || '',
-          addressCountry: request.payload?.addressCountry || '',
+          country: request.payload?.country || '',
           errors
         }).code(BAD_REQUEST).takeover()
       }
@@ -63,7 +63,7 @@ const postBusinessAddressEnter = {
         city,
         county,
         postcode,
-        addressCountry
+        country
       } = request.payload
 
       return h.redirect('/business-address-check')
@@ -72,7 +72,7 @@ const postBusinessAddressEnter = {
         .state('city', city)
         .state('county', county)
         .state('postcode', postcode)
-        .state('addressCountry', addressCountry)
+        .state('country', country)
         .unstate('originalAddress')
     }
   }

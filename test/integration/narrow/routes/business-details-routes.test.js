@@ -97,7 +97,7 @@ describe('business details', () => {
             city: 'Maidstone',
             county: '',
             postcode: 'SK22 1DL',
-            addressCountry: 'United Kingdom'
+            country: 'United Kingdom'
           }
         ],
         [
@@ -161,7 +161,7 @@ describe('business details', () => {
         city: 'Maidstone',
         county: '',
         postcode: 'SK22 1DL',
-        addressCountry: 'United Kingdom'
+        country: 'United Kingdom'
       }
 
       test.each([
@@ -217,7 +217,7 @@ describe('business details', () => {
           'missing country',
           {
             ...businessAddress,
-            addressCountry: ''
+            country: ''
           },
           'Enter a country'
         ],
@@ -225,7 +225,7 @@ describe('business details', () => {
           'country is too long',
           {
             ...businessAddress,
-            addressCountry: 'a'.repeat(COUNTRY_MAX + 1)
+            country: 'a'.repeat(COUNTRY_MAX + 1)
           },
           `Country must be ${COUNTRY_MAX} characters or less`
         ]

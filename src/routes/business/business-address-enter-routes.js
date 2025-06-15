@@ -3,8 +3,7 @@ import { formatValidationErrors } from '../../utils/validation-error-handler.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessAddressEnterPresenter } from '../../presenters/business/business-address-enter-presenter.js'
 import { fetchBusinessAddressService } from '../../services/business/fetch-business-address-service.js'
-// import { submitBusinessAddressEnterService } from '../../services/business/submit-business-address-enter-service.js'
-import { setSessionDataService } from '../../services/set-session-data-service.js'
+import { setSessionData } from '../../utils/session/set-session-data.js'
 
 const getBusinessAddressEnter = {
   method: 'GET',
@@ -28,7 +27,7 @@ const postBusinessAddressEnter = {
       method: (request, h) => {
         const { yar, payload, pre } = request
 
-        pre.sessionData = setSessionDataService(payload, yar, 'businessAddressEnterData', 'businessAddress')
+        pre.sessionData = setSessionData(payload, yar, 'businessAddressEnterData', 'businessAddress')
 
         return h.continue
       }

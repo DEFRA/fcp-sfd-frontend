@@ -8,7 +8,7 @@ const getBusinessAddressEnter = {
   handler: (request, h) => {
     const address1 = request.state.address1 || '10 Skirbeck Way'
     const address2 = request.state.address2 || ''
-    const addressCity = request.state.addressCity || 'Maidstone'
+    const city = request.state.city || 'Maidstone'
     const addressCounty = request.state.addressCounty || ''
     const postcode = request.state.postcode || 'SK22 1DL'
     const addressCountry = request.state.addressCountry || 'United Kingdom'
@@ -16,7 +16,7 @@ const getBusinessAddressEnter = {
     const originalAddress = {
       address1,
       address2,
-      addressCity,
+      city,
       addressCounty,
       postcode,
       addressCountry
@@ -25,7 +25,7 @@ const getBusinessAddressEnter = {
     return h.view('business/business-address-enter', {
       address1,
       address2,
-      addressCity,
+      city,
       addressCounty,
       postcode,
       addressCountry
@@ -48,7 +48,7 @@ const postBusinessAddressEnter = {
         return h.view('business/business-address-enter', {
           address1: request.payload?.address1 || '',
           address2: request.payload?.address2 || '',
-          addressCity: request.payload?.addressCity || '',
+          city: request.payload?.city || '',
           addressCounty: request.payload?.addressCounty || '',
           postcode: request.payload?.postcode || '',
           addressCountry: request.payload?.addressCountry || '',
@@ -60,7 +60,7 @@ const postBusinessAddressEnter = {
       const {
         address1,
         address2,
-        addressCity,
+        city,
         addressCounty,
         postcode,
         addressCountry
@@ -69,7 +69,7 @@ const postBusinessAddressEnter = {
       return h.redirect('/business-address-check')
         .state('address1', address1)
         .state('address2', address2)
-        .state('addressCity', addressCity)
+        .state('city', city)
         .state('addressCounty', addressCounty)
         .state('postcode', postcode)
         .state('addressCountry', addressCountry)

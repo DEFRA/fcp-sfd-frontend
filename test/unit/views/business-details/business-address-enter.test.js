@@ -9,7 +9,7 @@ describe('enter business address', () => {
     const html = renderTemplate('business/business-address-enter.njk', {
       address1: '123 Farm Lane',
       address2: '',
-      addressCity: 'York',
+      city: 'York',
       addressCounty: 'North Yorkshire',
       postcode: 'Y01 7HG',
       addressCountry: 'United Kingdom',
@@ -23,7 +23,7 @@ describe('enter business address', () => {
   test.each([
     ['address line 1', '#address1', 'address1', '123 Farm Lane'],
     ['address line 2', '#address2', 'address2', ''],
-    ['town/city', '#addressCity', 'addressCity', 'York'],
+    ['town/city', '#city', 'city', 'York'],
     ['addressCounty', '#addressCounty', 'addressCounty', 'North Yorkshire'],
     ['postcode', '#postcode', 'postcode', 'Y01 7HG'],
     ['country', '#addressCountry', 'addressCountry', 'United Kingdom']

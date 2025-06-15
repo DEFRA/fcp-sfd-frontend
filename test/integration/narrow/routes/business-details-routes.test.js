@@ -94,7 +94,7 @@ describe('business details', () => {
           {
             address1: '10 Skirbeck Way',
             address2: '',
-            addressCity: 'Maidstone',
+            city: 'Maidstone',
             addressCounty: '',
             postcode: 'SK22 1DL',
             addressCountry: 'United Kingdom'
@@ -158,7 +158,7 @@ describe('business details', () => {
       const businessAddress = {
         address1: '10 Skirbeck Way',
         address2: '',
-        addressCity: 'Maidstone',
+        city: 'Maidstone',
         addressCounty: '',
         postcode: 'SK22 1DL',
         addressCountry: 'United Kingdom'
@@ -185,7 +185,7 @@ describe('business details', () => {
           'missing town/city',
           {
             ...businessAddress,
-            addressCity: ''
+            city: ''
           },
           'Enter town or city'
         ],
@@ -193,7 +193,7 @@ describe('business details', () => {
           'town/city is too long',
           {
             ...businessAddress,
-            addressCity: 'a'.repeat(TOWN_CITY_MAX + 1)
+            city: 'a'.repeat(TOWN_CITY_MAX + 1)
           },
           `Town or city must be ${TOWN_CITY_MAX} characters or less`
         ],

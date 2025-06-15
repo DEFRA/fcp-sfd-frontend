@@ -76,7 +76,7 @@ describe('enter business address', () => {
       const err = {
         details: [
           { path: ['address1'], message: 'Enter address line 1, typically the building and street' },
-          { path: ['addressCity'], message: 'Enter town or city' },
+          { path: ['city'], message: 'Enter town or city' },
           { path: ['addressCountry'], message: 'Enter a country' }
         ]
       }
@@ -87,7 +87,7 @@ describe('enter business address', () => {
         ...emptyAddress,
         errors: {
           address1: { text: err.details[0].message },
-          addressCity: { text: err.details[1].message },
+          city: { text: err.details[1].message },
           addressCountry: { text: err.details[2].message }
         }
       })

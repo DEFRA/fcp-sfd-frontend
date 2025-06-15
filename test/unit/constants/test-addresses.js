@@ -1,7 +1,7 @@
 export const defaultAddress = {
   address1: '10 Skirbeck Way',
   address2: '',
-  addressCity: 'Maidstone',
+  city: 'Maidstone',
   addressCounty: '',
   postcode: 'SK22 1DL',
   addressCountry: 'United Kingdom'
@@ -10,7 +10,7 @@ export const defaultAddress = {
 export const testAddress = {
   address1: 'Test Address 1',
   address2: 'Test Address 2',
-  addressCity: 'Test City',
+  city: 'Test City',
   addressCounty: 'Test County',
   postcode: 'TE5 7ST',
   addressCountry: 'Test Country'
@@ -19,7 +19,7 @@ export const testAddress = {
 export const newAddress = {
   address1: 'New Address 1',
   address2: 'New Address 2',
-  addressCity: 'New City',
+  city: 'New City',
   addressCounty: 'New County',
   postcode: 'NE1 2ST',
   addressCountry: 'New Country'
@@ -28,7 +28,7 @@ export const newAddress = {
 export const emptyAddress = {
   address1: '',
   address2: '',
-  addressCity: '',
+  city: '',
   addressCounty: '',
   postcode: '',
   addressCountry: ''

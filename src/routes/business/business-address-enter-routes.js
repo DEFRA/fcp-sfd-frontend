@@ -9,7 +9,7 @@ const getBusinessAddressEnter = {
     const address1 = request.state.address1 || '10 Skirbeck Way'
     const address2 = request.state.address2 || ''
     const city = request.state.city || 'Maidstone'
-    const addressCounty = request.state.addressCounty || ''
+    const county = request.state.county || ''
     const postcode = request.state.postcode || 'SK22 1DL'
     const addressCountry = request.state.addressCountry || 'United Kingdom'
 
@@ -17,7 +17,7 @@ const getBusinessAddressEnter = {
       address1,
       address2,
       city,
-      addressCounty,
+      county,
       postcode,
       addressCountry
     }
@@ -26,7 +26,7 @@ const getBusinessAddressEnter = {
       address1,
       address2,
       city,
-      addressCounty,
+      county,
       postcode,
       addressCountry
     }).state('originalAddress', JSON.stringify(originalAddress))
@@ -49,7 +49,7 @@ const postBusinessAddressEnter = {
           address1: request.payload?.address1 || '',
           address2: request.payload?.address2 || '',
           city: request.payload?.city || '',
-          addressCounty: request.payload?.addressCounty || '',
+          county: request.payload?.county || '',
           postcode: request.payload?.postcode || '',
           addressCountry: request.payload?.addressCountry || '',
           errors
@@ -61,7 +61,7 @@ const postBusinessAddressEnter = {
         address1,
         address2,
         city,
-        addressCounty,
+        county,
         postcode,
         addressCountry
       } = request.payload
@@ -70,7 +70,7 @@ const postBusinessAddressEnter = {
         .state('address1', address1)
         .state('address2', address2)
         .state('city', city)
-        .state('addressCounty', addressCounty)
+        .state('county', county)
         .state('postcode', postcode)
         .state('addressCountry', addressCountry)
         .unstate('originalAddress')

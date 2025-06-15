@@ -95,7 +95,7 @@ describe('business details', () => {
             address1: '10 Skirbeck Way',
             address2: '',
             city: 'Maidstone',
-            addressCounty: '',
+            county: '',
             postcode: 'SK22 1DL',
             addressCountry: 'United Kingdom'
           }
@@ -159,7 +159,7 @@ describe('business details', () => {
         address1: '10 Skirbeck Way',
         address2: '',
         city: 'Maidstone',
-        addressCounty: '',
+        county: '',
         postcode: 'SK22 1DL',
         addressCountry: 'United Kingdom'
       }
@@ -201,7 +201,7 @@ describe('business details', () => {
           'county is too long',
           {
             ...businessAddress,
-            addressCounty: 'a'.repeat(COUNTY_MAX + 1)
+            county: 'a'.repeat(COUNTY_MAX + 1)
           },
           `County must be ${COUNTY_MAX} characters or less`
         ],

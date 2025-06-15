@@ -10,7 +10,7 @@ describe('enter business address', () => {
       address1: '123 Farm Lane',
       address2: '',
       city: 'York',
-      addressCounty: 'North Yorkshire',
+      county: 'North Yorkshire',
       postcode: 'Y01 7HG',
       addressCountry: 'United Kingdom',
       errors: {}
@@ -24,7 +24,7 @@ describe('enter business address', () => {
     ['address line 1', '#address1', 'address1', '123 Farm Lane'],
     ['address line 2', '#address2', 'address2', ''],
     ['town/city', '#city', 'city', 'York'],
-    ['addressCounty', '#addressCounty', 'addressCounty', 'North Yorkshire'],
+    ['county', '#county', 'county', 'North Yorkshire'],
     ['postcode', '#postcode', 'postcode', 'Y01 7HG'],
     ['country', '#addressCountry', 'addressCountry', 'United Kingdom']
   ])('should render the correct value in the input field for %s', (_, selector, name, value) => {

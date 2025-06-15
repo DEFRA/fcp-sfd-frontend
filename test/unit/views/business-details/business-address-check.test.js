@@ -11,7 +11,7 @@ describe('check business address', () => {
       address1: '123 Farm Lane',
       address2: '',
       city: 'York',
-      addressCounty: 'North Yorkshire',
+      county: 'North Yorkshire',
       postcode: 'Y01 7HG',
       addressCountry: 'United Kingdom'
     })

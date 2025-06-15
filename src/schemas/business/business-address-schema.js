@@ -22,7 +22,7 @@ export const businessAddressSchema = Joi.object({
     .messages({
       'string.max': `Address line 2 must be ${ADDRESS_LINE_MAX} characters or less`
     }),
-  city: Joi.string()
+  addressCity: Joi.string()
     .required()
     .max(TOWN_CITY_MAX)
     .messages({
@@ -30,19 +30,19 @@ export const businessAddressSchema = Joi.object({
       'string.max': `Town or city must be ${TOWN_CITY_MAX} characters or less`,
       'any.required': 'Enter town or city'
     }),
-  county: Joi.string()
+  addressCounty: Joi.string()
     .allow('')
     .max(COUNTY_MAX)
     .messages({
       'string.max': `County must be ${COUNTY_MAX} characters or less`
     }),
-  postcode: Joi.string()
+  addressPostcode: Joi.string()
     .allow('')
     .max(POSTCODE_MAX)
     .messages({
       'string.max': `Postal code or zip code must be ${POSTCODE_MAX} characters or less`
     }),
-  country: Joi.string()
+  addressCountry: Joi.string()
     .required()
     .max(COUNTRY_MAX)
     .messages({

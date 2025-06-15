@@ -12,7 +12,7 @@ describe('check business address', () => {
       address2: '',
       addressCity: 'York',
       addressCounty: 'North Yorkshire',
-      addressPostcode: 'Y01 7HG',
+      postcode: 'Y01 7HG',
       addressCountry: 'United Kingdom'
     })
 

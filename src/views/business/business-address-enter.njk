@@ -11,8 +11,8 @@
 
 {% block beforeContent %}
     {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
+    businessName=businessName,
+    sbi="123456789",
     userName="Alfred Waldron"
 ) }}
 
@@ -100,12 +100,12 @@
             text: "Postal code or zip code (if you have one)"
           },
           classes: "govuk-input--width-10",
-          id: "addressPostcode",
-          name: "addressPostcode",
-          value: addressPostcode,
+          id: "postcode",
+          name: "postcode",
+          value: postcode,
           autocomplete: "postal-code",
-          errorMessage: errors.addressPostcode and {
-            text: errors.addressPostcode.text
+          errorMessage: errors.postcode and {
+            text: errors.postcode.text
           }
         }) }}
 
@@ -127,7 +127,7 @@
       {{ govukButton({
         text: "Continue"
       }) }}
-      
+
       <p class="govuk-body"><a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
     </form>
   </div>

@@ -96,7 +96,7 @@ describe('business details', () => {
             address2: '',
             addressCity: 'Maidstone',
             addressCounty: '',
-            addressPostcode: 'SK22 1DL',
+            postcode: 'SK22 1DL',
             addressCountry: 'United Kingdom'
           }
         ],
@@ -160,7 +160,7 @@ describe('business details', () => {
         address2: '',
         addressCity: 'Maidstone',
         addressCounty: '',
-        addressPostcode: 'SK22 1DL',
+        postcode: 'SK22 1DL',
         addressCountry: 'United Kingdom'
       }
 
@@ -209,7 +209,7 @@ describe('business details', () => {
           'postcode is too long',
           {
             ...businessAddress,
-            addressPostcode: 'a'.repeat(POSTCODE_MAX + 1)
+            postcode: 'a'.repeat(POSTCODE_MAX + 1)
           },
           `Postal code or zip code must be ${POSTCODE_MAX} characters or less`
         ],

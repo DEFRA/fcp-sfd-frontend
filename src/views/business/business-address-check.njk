@@ -10,8 +10,8 @@
 
 {% block beforeContent %}
     {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
+    businessName=businessName,
+    sbi="123456789",
     userName="Alfred Waldron"
 ) }}
 
@@ -34,19 +34,19 @@
           <dd class="govuk-summary-list__value">
             <!-- Address line 1 -->
             {% if address1 %}{{ address1 }}<br>{% endif %}
-            
+
             <!-- Address line 2 -->
             {% if address2 %}{{ address2 }}<br>{% endif %}
-            
+
             <!-- Town or city -->
             {% if addressCity %}{{ addressCity }}<br>{% endif %}
-            
+
             <!-- County -->
             {% if addressCounty %}{{ addressCounty }}<br>{% endif %}
-            
+
             <!-- Postcode -->
-            {% if addressPostcode %}{{ addressPostcode }}<br>{% endif %}
-            
+            {% if postcode %}{{ postcode }}<br>{% endif %}
+
             <!-- Country -->
             {% if addressCountry %}{{ addressCountry }}{% endif %}
           </dd>

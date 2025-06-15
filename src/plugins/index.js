@@ -12,5 +12,6 @@ export const plugins = [
   secureContext,
   pulse,
   vision,
-  router
+  router,
+  session
 ]

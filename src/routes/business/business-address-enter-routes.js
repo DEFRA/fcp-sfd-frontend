@@ -1,5 +1,5 @@
 import { businessAddressSchema } from '../../schemas/business/business-address-schema.js'
-import { formatValidationErrors } from '../../utils/validation-error-handler.js'
+import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessAddressEnterPresenter } from '../../presenters/business/business-address-enter-presenter.js'
 import { fetchBusinessAddressService } from '../../services/business/fetch-business-address-service.js'

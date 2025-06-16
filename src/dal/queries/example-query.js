@@ -2,15 +2,7 @@ export const exampleQuery = `
   query ExampleQuery($sbi: ID!, $crn: ID!) {
     business(sbi: $sbi) {
       sbi
-      info {
-        name
-        email {
-          address
-        }
-        legalStatus {
-          type
-        }
-      }
+      organisationId
       customer(crn: $crn) {
         crn
         firstName

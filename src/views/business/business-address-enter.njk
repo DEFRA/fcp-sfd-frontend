@@ -11,8 +11,8 @@
 
 {% block beforeContent %}
     {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
+    businessName=businessName,
+    sbi="123456789",
     userName="Alfred Waldron"
 ) }}
 
@@ -73,12 +73,12 @@
             text: "Town or city"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCity",
-          name: "addressCity",
-          value: addressCity,
+          id: "city",
+          name: "city",
+          value: city,
           autocomplete: "address-level2",
-          errorMessage: errors.addressCity and {
-            text: errors.addressCity.text
+          errorMessage: errors.city and {
+            text: errors.city.text
           }
         }) }}
 
@@ -87,11 +87,11 @@
             text: "County (optional)"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCounty",
-          name: "addressCounty",
-          value: addressCounty,
-          errorMessage: errors.addressCounty and {
-            text: errors.addressCounty.text
+          id: "county",
+          name: "county",
+          value: county,
+          errorMessage: errors.county and {
+            text: errors.county.text
           }
         }) }}
 
@@ -100,12 +100,12 @@
             text: "Postal code or zip code (if you have one)"
           },
           classes: "govuk-input--width-10",
-          id: "addressPostcode",
-          name: "addressPostcode",
-          value: addressPostcode,
+          id: "postcode",
+          name: "postcode",
+          value: postcode,
           autocomplete: "postal-code",
-          errorMessage: errors.addressPostcode and {
-            text: errors.addressPostcode.text
+          errorMessage: errors.postcode and {
+            text: errors.postcode.text
           }
         }) }}
 
@@ -114,12 +114,12 @@
             text: "Country"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCountry",
-          name: "addressCountry",
-          value: addressCountry,
+          id: "country",
+          name: "country",
+          value: country,
           autocomplete: "country-name",
-          errorMessage: errors.addressCountry and {
-            text: errors.addressCountry.text
+          errorMessage: errors.country and {
+            text: errors.country.text
           }
         }) }}
       </fieldset>
@@ -127,7 +127,7 @@
       {{ govukButton({
         text: "Continue"
       }) }}
-      
+
       <p class="govuk-body"><a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
     </form>
   </div>

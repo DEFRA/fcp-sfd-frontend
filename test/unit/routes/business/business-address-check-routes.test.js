@@ -28,12 +28,12 @@ describe('check business address', () => {
         'partial address from state',
         {
           address1: defaultAddress.address1,
-          addressPostcode: defaultAddress.addressPostcode
+          postcode: defaultAddress.postcode
         },
         {
           ...emptyAddress,
           address1: defaultAddress.address1,
-          addressPostcode: defaultAddress.addressPostcode
+          postcode: defaultAddress.postcode
         }
       ]
     ])('should render view with %s', (_, stateMock, expectedAddress) => {
@@ -59,12 +59,12 @@ describe('check business address', () => {
         'partial address from state',
         {
           address1: defaultAddress.address1,
-          addressPostcode: defaultAddress.addressPostcode
+          postcode: defaultAddress.postcode
         },
         {
           ...emptyAddress,
           address1: defaultAddress.address1,
-          addressPostcode: defaultAddress.addressPostcode
+          postcode: defaultAddress.postcode
         }
       ]
     ])('should redirect with %s', (_, stateMock, expectedAddress) => {

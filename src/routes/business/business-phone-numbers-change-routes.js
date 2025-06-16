@@ -1,5 +1,5 @@
 import { businessPhoneSchema } from '../../schemas/business/business-phone-schema.js'
-import { formatValidationErrors } from '../../utils/validation-error-handler.js'
+import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessPhoneNumberPresenter } from '../../presenters/business/business-phone-numbers-presenter.js'
 import { fetchBusinessPhoneNumbersService } from '../../services/business/fetch-business-phone-numbers-service.js'

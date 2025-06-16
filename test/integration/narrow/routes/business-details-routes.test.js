@@ -94,10 +94,10 @@ describe('business details', () => {
           {
             address1: '10 Skirbeck Way',
             address2: '',
-            addressCity: 'Maidstone',
-            addressCounty: '',
-            addressPostcode: 'SK22 1DL',
-            addressCountry: 'United Kingdom'
+            city: 'Maidstone',
+            county: '',
+            postcode: 'SK22 1DL',
+            country: 'United Kingdom'
           }
         ],
         [
@@ -158,10 +158,10 @@ describe('business details', () => {
       const businessAddress = {
         address1: '10 Skirbeck Way',
         address2: '',
-        addressCity: 'Maidstone',
-        addressCounty: '',
-        addressPostcode: 'SK22 1DL',
-        addressCountry: 'United Kingdom'
+        city: 'Maidstone',
+        county: '',
+        postcode: 'SK22 1DL',
+        country: 'United Kingdom'
       }
 
       test.each([
@@ -185,7 +185,7 @@ describe('business details', () => {
           'missing town/city',
           {
             ...businessAddress,
-            addressCity: ''
+            city: ''
           },
           'Enter town or city'
         ],
@@ -193,7 +193,7 @@ describe('business details', () => {
           'town/city is too long',
           {
             ...businessAddress,
-            addressCity: 'a'.repeat(TOWN_CITY_MAX + 1)
+            city: 'a'.repeat(TOWN_CITY_MAX + 1)
           },
           `Town or city must be ${TOWN_CITY_MAX} characters or less`
         ],
@@ -201,7 +201,7 @@ describe('business details', () => {
           'county is too long',
           {
             ...businessAddress,
-            addressCounty: 'a'.repeat(COUNTY_MAX + 1)
+            county: 'a'.repeat(COUNTY_MAX + 1)
           },
           `County must be ${COUNTY_MAX} characters or less`
         ],
@@ -209,7 +209,7 @@ describe('business details', () => {
           'postcode is too long',
           {
             ...businessAddress,
-            addressPostcode: 'a'.repeat(POSTCODE_MAX + 1)
+            postcode: 'a'.repeat(POSTCODE_MAX + 1)
           },
           `Postal code or zip code must be ${POSTCODE_MAX} characters or less`
         ],
@@ -217,7 +217,7 @@ describe('business details', () => {
           'missing country',
           {
             ...businessAddress,
-            addressCountry: ''
+            country: ''
           },
           'Enter a country'
         ],
@@ -225,7 +225,7 @@ describe('business details', () => {
           'country is too long',
           {
             ...businessAddress,
-            addressCountry: 'a'.repeat(COUNTRY_MAX + 1)
+            country: 'a'.repeat(COUNTRY_MAX + 1)
           },
           `Country must be ${COUNTRY_MAX} characters or less`
         ]

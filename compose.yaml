@@ -15,11 +15,42 @@ services:
       PORT: 3002
       NODE_ENV: development
       ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS}
+      DAL_ENDPOINT: ${DAL_ENDPOINT:-http://fcp-dal-api:3005/graphql}
     networks:
       - fcp-sfd
     volumes:
       - ./src:/home/node/src
       - ./package.json:/home/node/package.json
+
+  kits-mock:
+    image: defradigital/fcp-dal-upstream-mock
+    ports:
+      - '3100:3100'
+    environment:
+      MOCK_LOG_LEVEL: info
+      MOCK_SERVER_COLLECTION: all
+      NODE_ENV: development
+      PORT: 3100
+    networks:
+      - fcp-sfd
+
+  fcp-dal-api:
+    image: defradigital/fcp-dal-api:0.41.0
+    ports: 
+      - 3005:3005
+    depends_on:
+      - kits-mock
+    environment:
+      ALL_SCHEMA_ON: true
+      LOG_LEVEL: info
+      NODE_ENV: development
+      PORT: 3005
+      ENVIRONMENT: dev
+      DISABLE_AUTH: true
+      RP_KITS_GATEWAY_INTERNAL_URL: http://kits-mock:3100/v1/
+      GRAPHQL_DASHBOARD_ENABLED: true
+    networks:
+      - fcp-sfd
 
   redis:
     image: redis:7.2.3-alpine3.18

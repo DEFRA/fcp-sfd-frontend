@@ -2,7 +2,7 @@ import { getBusinessEmailChangeService } from '../../services/business/get-busin
 import { setBusinessEmailChangeService } from '../../services/business/set-business-email-change-service.js'
 import { businessEmailChangePresenter } from '../../presenters/business/business-email-change-presenter.js'
 import { businessEmailSchema } from '../../schemas/business/business-email-schema.js'
-import { formatValidationErrors } from '../../utils/validation-error-handler.js'
+import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getBusinessEmailChange = {

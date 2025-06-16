@@ -9,7 +9,7 @@ const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   handler: async (request, h) => {
-    const businessPhoneChange = await fetchBusinessPhoneNumbersService(request)
+    const businessPhoneChange = await fetchBusinessPhoneNumbersService(request.yar)
     const pageData = businessPhoneNumberPresenter(businessPhoneChange)
 
     return h.view('business/business-phone-numbers-change', pageData)
@@ -37,7 +37,7 @@ const postBusinessPhoneNumbersChange = {
     },
     handler: async (request, h) => {
       const { businessTelephone, businessMobile } = request.payload
-      await setBusinessPhoneNumberService({businessMobile, businessTelephone}, request.yar)
+      await setBusinessPhoneNumberService({ businessMobile, businessTelephone }, request.yar)
 
       return h.redirect('/business-phone-numbers-check')
     }

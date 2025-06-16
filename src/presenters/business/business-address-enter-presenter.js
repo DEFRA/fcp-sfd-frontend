@@ -3,12 +3,12 @@
  * @module businessAddressEnterPresenter
  */
 
-const businessAddressEnterPresenter = (data) => {
+const businessAddressEnterPresenter = (data, payload) => {
   return {
     backLink: { href: '/business-details' },
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
-    address: data.businessAddress,
+    address: payload ?? data.businessAddress,
     businessName: data.businessName ?? null,
     singleBusinessIdentifier: data.singleBusinessIdentifier ?? null,
     userName: data.userName ?? null

@@ -6,6 +6,7 @@ import { businessAddressEnterPresenter } from '../../../../src/presenters/busine
 
 describe('businessAddressEnterPresenter', () => {
   let data
+  let payload
 
   beforeEach(() => {
     data = {
@@ -84,6 +85,26 @@ describe('businessAddressEnterPresenter', () => {
         const result = businessAddressEnterPresenter(data)
 
         expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "address" property', () => {
+    describe('when provided with a payload', () => {
+      beforeEach(() => {
+        payload = {
+          address1: 'A different address',
+          city: 'Maidstone',
+          county: 'A new county',
+          postcode: 'BA123 ABC',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should return the payload as the address', () => {
+        const result = businessAddressEnterPresenter(data, payload)
+
+        expect(result.address).toEqual(payload)
       })
     })
   })

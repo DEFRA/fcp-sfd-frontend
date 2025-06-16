@@ -8,27 +8,27 @@ const getBusinessAddressEnter = {
   handler: (request, h) => {
     const address1 = request.state.address1 || '10 Skirbeck Way'
     const address2 = request.state.address2 || ''
-    const addressCity = request.state.addressCity || 'Maidstone'
-    const addressCounty = request.state.addressCounty || ''
-    const addressPostcode = request.state.addressPostcode || 'SK22 1DL'
-    const addressCountry = request.state.addressCountry || 'United Kingdom'
+    const city = request.state.city || 'Maidstone'
+    const county = request.state.county || ''
+    const postcode = request.state.postcode || 'SK22 1DL'
+    const country = request.state.country || 'United Kingdom'
 
     const originalAddress = {
       address1,
       address2,
-      addressCity,
-      addressCounty,
-      addressPostcode,
-      addressCountry
+      city,
+      county,
+      postcode,
+      country
     }
 
     return h.view('business/business-address-enter', {
       address1,
       address2,
-      addressCity,
-      addressCounty,
-      addressPostcode,
-      addressCountry
+      city,
+      county,
+      postcode,
+      country
     }).state('originalAddress', JSON.stringify(originalAddress))
   }
 }
@@ -48,10 +48,10 @@ const postBusinessAddressEnter = {
         return h.view('business/business-address-enter', {
           address1: request.payload?.address1 || '',
           address2: request.payload?.address2 || '',
-          addressCity: request.payload?.addressCity || '',
-          addressCounty: request.payload?.addressCounty || '',
-          addressPostcode: request.payload?.addressPostcode || '',
-          addressCountry: request.payload?.addressCountry || '',
+          city: request.payload?.city || '',
+          county: request.payload?.county || '',
+          postcode: request.payload?.postcode || '',
+          country: request.payload?.country || '',
           errors
         }).code(BAD_REQUEST).takeover()
       }
@@ -60,19 +60,19 @@ const postBusinessAddressEnter = {
       const {
         address1,
         address2,
-        addressCity,
-        addressCounty,
-        addressPostcode,
-        addressCountry
+        city,
+        county,
+        postcode,
+        country
       } = request.payload
 
       return h.redirect('/business-address-check')
         .state('address1', address1)
         .state('address2', address2)
-        .state('addressCity', addressCity)
-        .state('addressCounty', addressCounty)
-        .state('addressPostcode', addressPostcode)
-        .state('addressCountry', addressCountry)
+        .state('city', city)
+        .state('county', county)
+        .state('postcode', postcode)
+        .state('country', country)
         .unstate('originalAddress')
     }
   }

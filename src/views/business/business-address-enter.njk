@@ -13,15 +13,10 @@
 
 {% block content %}
   {{ appBackLink(backLink) }}
-  {% if error %}
+  {% if errors %}
     {{ govukErrorSummary({
-      titleText: 'There is a problem',
-      errorList: [
-        {
-          text: error.text,
-          href: '#business-address-enter'
-        }
-      ]
+        titleText: "There is a problem",
+        errorList: errors | toErrorList
     }) }}
   {% endif %}
 
@@ -130,4 +125,3 @@
   </div>
 </div>
 {% endblock %}
-

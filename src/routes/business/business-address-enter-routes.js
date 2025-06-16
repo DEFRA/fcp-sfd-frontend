@@ -39,7 +39,7 @@ const postBusinessAddressEnter = {
         const errors = formatValidationErrors(err.details ?? [])
         const pageData = businessAddressEnterPresenter(request.pre.sessionData)
 
-        return h.view('business/business-address-enter', { pageData, ...errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-address-enter', { ...pageData, ...errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: (_request, h) => {

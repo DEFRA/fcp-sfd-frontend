@@ -11,12 +11,11 @@ export const exampleQuery = `
           type
         }
       }
-    }
-    customer(crn: $crn) {
-      info {
-        email {
-          address
-        }
+      customer(crn: $crn) {
+        crn
+        firstName
+        lastName
+        role
       }
     }
   }

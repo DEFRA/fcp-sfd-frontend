@@ -18,11 +18,18 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should successfully call DAL and return data when email header is present', async () => {
-    const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+    const result = await dalConnector(
+      exampleQuery,
+      {
+        sbi: '107591843',
+        crn: '9477368292'
+      },
+      'test.user11@defra.gov.uk'
+    )
 
     expect(result.data).toBeDefined()
     expect(result.errors).toBeNull()
-    expect(result.statusCode).toBeUndefined()
+    expect(result.statusCode).toBe(200)
   })
 
   test('should return error when email header is missing', async () => {

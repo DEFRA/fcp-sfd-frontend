@@ -34,11 +34,13 @@ export const dalConnector = async (query, variables, email) => {
     if (responseBody.errors) {
       const extendedErrors = responseBody.errors.map(err => {
         const ext = err.extensions
-        const parsedBody = ext.parsedBody
+        const parsedMessage = ext?.parsedBody?.message
+        const statusCode = ext?.parsedBody?.statusCode || ext?.response?.status || httpConstants.HTTP_STATUS_BAD_REQUEST
 
         return {
-          message: `${err.message}: ${parsedBody.message}`,
-          statusCode: parsedBody.statusCode
+          message: parsedMessage ? `${err.message}: ${parsedMessage}` : err.message,
+          statusCode,
+          extensions: ext
         }
       })
 

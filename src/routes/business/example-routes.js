@@ -4,7 +4,8 @@ import { exampleQuery } from '../../dal/queries/example-query.js'
 
 const email = 'test.user11@defra.gov.uk'
 const variables = {
-  sbi: 107591843
+  sbi: '107591843',
+  crn: '9477368292'
 }
 
 const exampleDalConnectionRoute = {

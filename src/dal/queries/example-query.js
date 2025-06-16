@@ -1,5 +1,5 @@
 export const exampleQuery = `
-  query ExampleQuery($sbi: ID!) {
+  query ExampleQuery($sbi: ID!, $crn: ID!) {
     business(sbi: $sbi) {
       sbi
       info {
@@ -9,6 +9,13 @@ export const exampleQuery = `
         }
         legalStatus {
           type
+        }
+      }
+    }
+    customer(crn: $crn) {
+      info {
+        email {
+          address
         }
       }
     }

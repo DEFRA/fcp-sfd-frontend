@@ -45,13 +45,8 @@ describe('business address check', () => {
   describe('POST /business-address-check', () => {
     describe('when a request succeeds', () => {
       beforeEach(() => {
-        const responseStub = {
-          code: vi.fn().mockReturnThis(),
-          takeover: vi.fn().mockReturnThis()
-        }
-
         h = {
-          redirect: vi.fn(() => h),
+          redirect: vi.fn(() => h)
         }
       })
 
@@ -91,7 +86,7 @@ const getPageData = () => {
     changeLink: '/business-address-enter',
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
-    address:[
+    address: [
       '10 Skirbeck Way',
       'Maidstone',
       'SK22 1DL',

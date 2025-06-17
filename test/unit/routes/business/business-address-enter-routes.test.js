@@ -74,32 +74,38 @@ describe('business address enter', () => {
       // Mock yar.set for session
       request.yar = {
         set: vi.fn(),
-        get: vi.fn()
+        get: vi.fn().mockReturnValue(getMockData())
       }
 
-      request.payload = getMockData()
+      request.payload = {
+        address1: 'New address 1',
+        address2: '',
+        city: 'Sandford',
+        county: '',
+        postcode: 'SK22 1DL',
+        country: 'United Kingdom'
+      }
       request.pre = { sessionData: request.payload }
     })
 
     describe('when a request succeeds', () => {
-      test('sets the payload on the yar state', async () => {
-        // Calling the pre method handler
-        await postBusinessAddressEnter.options.pre[0].method(request, h)
-
-        expect(setSessionData).toHaveBeenCalledWith(
-          request.payload,
-          request.yar,
-          'businessAddressEnterData',
-          'businessAddress'
-        )
-      })
-
       describe('and the validation passes', () => {
         test('it redirects to the /business-address-check page', async () => {
-          // Calling the handler
           await postBusinessAddressEnter.options.handler(request, h)
 
           expect(h.redirect).toHaveBeenCalledWith('/business-address-check')
+        })
+
+        test('sets the payload on the yar state', async () => {
+          await postBusinessAddressEnter.options.handler(request, h)
+
+
+          expect(setSessionData).toHaveBeenCalledWith(
+            request.yar,
+            'businessAddressEnterData',
+            'businessAddress',
+            request.payload
+          )
         })
       })
 
@@ -168,9 +174,9 @@ const getPageDataError = () => {
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
     address: {
-      address1: '10 Skirbeck Way',
+      address1: 'New address 1',
       address2: '',
-      city: 'Maidstone',
+      city: 'Sandford',
       county: '',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
@@ -178,8 +184,10 @@ const getPageDataError = () => {
     businessName: 'Agile Farm Ltd',
     singleBusinessIdentifier: '123456789',
     userName: 'Alfred Waldron',
-    postcode: {
-      text: 'Postal code or zip code must be 10 characters or less'
+    errors: {
+      postcode: {
+        text: 'Postal code or zip code must be 10 characters or less'
+      }
     }
   }
 }

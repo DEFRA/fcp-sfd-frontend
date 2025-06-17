@@ -23,26 +23,20 @@ const postBusinessAddressEnter = {
   method: 'POST',
   path: '/business-address-enter',
   options: {
-    pre: [{
-      method: (request, h) => {
-        const { yar, payload, pre } = request
-
-        pre.sessionData = setSessionData(payload, yar, 'businessAddressEnterData', 'businessAddress')
-
-        return h.continue
-      }
-    }],
     validate: {
       payload: businessAddressSchema,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details ?? [])
-        const pageData = businessAddressEnterPresenter(request.pre.sessionData)
+        const sessionData = request.yar.get('businessAddressEnterData')
+        const pageData = businessAddressEnterPresenter(sessionData, request.payload)
 
-        return h.view('business/business-address-enter', { ...pageData, ...errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-address-enter', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
-    handler: (_request, h) => {
+    handler: (request, h) => {
+      setSessionData(request.yar, 'businessAddressEnterData', 'businessAddress', request.payload)
+
       return h.redirect('/business-address-check')
     }
   }

@@ -4,8 +4,6 @@
  */
 
 const businessDetailsPresenter = (data, yar) => {
-  yar.set('businessDetails', data)
-
   return {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your business details',

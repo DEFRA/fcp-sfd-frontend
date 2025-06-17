@@ -7,7 +7,8 @@ const fetchBusinessDetailsService = async (yar) => {
   // Refactor: Remove stubbed data and instead call the API to get the business details associated with the users log in
   // This will be using the consolidated view API
   // The data needed for the business details page.
-  return yar.get('businessDetails')
+
+  const businessDetails = yar.get('businessDetails')
     ? yar.get('businessDetails')
     : {
         businessName: 'Agile Farm Ltd',
@@ -31,6 +32,8 @@ const fetchBusinessDetailsService = async (yar) => {
         businessType: 'Central or local government',
         userName: 'Alfred Waldron'
       }
+  yar.set('businessDetails', businessDetails)
+  return businessDetails
 }
 
 export {

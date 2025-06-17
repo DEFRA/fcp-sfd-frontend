@@ -1,4 +1,4 @@
-import { getBusinessEmailChangeService } from '../../services/business/get-business-email-change-service .js'
+import { fetchBusinessEmailChangeService } from '../../services/business/fetch-business-email-change-service.js'
 import { setBusinessEmailChangeService } from '../../services/business/set-business-email-change-service.js'
 import { businessEmailChangePresenter } from '../../presenters/business/business-email-change-presenter.js'
 import { businessEmailSchema } from '../../schemas/business/business-email-schema.js'
@@ -9,7 +9,7 @@ const getBusinessEmailChange = {
   method: 'GET',
   path: '/business-email-change',
   handler: async (request, h) => {
-    const businessEmailChange = await getBusinessEmailChangeService(request)
+    const businessEmailChange = await fetchBusinessEmailChangeService(request)
     const pageData = businessEmailChangePresenter(businessEmailChange, request.yar)
 
     return h.view('business/business-email-change.njk', pageData)

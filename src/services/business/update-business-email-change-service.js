@@ -1,9 +1,11 @@
+import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 /**
  * Fetches the business details associated with the logged in users business
- * @module saveBusinessEmailChangeService
+ * @module updateBusinessEmailChangeService
  */
 
-const saveBusinessEmailChangeService = async (yar) => {
+const updateBusinessEmailChangeService = async (yar) => {
+  await fetchBusinessDetailsService(yar)
   const businessDetails = yar.get('businessDetails')
   businessDetails.businessEmail = businessDetails.changeBusinessEmail
 
@@ -11,5 +13,5 @@ const saveBusinessEmailChangeService = async (yar) => {
 }
 
 export {
-  saveBusinessEmailChangeService
+  updateBusinessEmailChangeService
 }

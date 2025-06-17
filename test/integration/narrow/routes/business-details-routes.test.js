@@ -26,18 +26,16 @@ describe('business details', () => {
     return server
   }
 
-  const hookTimeout = 50000
-
   let server
 
   beforeEach(async () => {
     vi.clearAllMocks()
     server = await resetAndCreateServer()
-  }, hookTimeout)
+  })
 
   afterEach(async () => {
     await server.stop()
-  }, hookTimeout)
+  })
 
   describe('with error views enabled', () => {
     beforeAll(() => {

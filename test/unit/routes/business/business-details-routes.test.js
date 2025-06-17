@@ -80,12 +80,13 @@ const getMockData = () => {
 
 const getPageData = () => {
   return {
+    pageTitle: 'View and update your business details',
+    metaDescription: 'View and change the details for your business.',
+    notification: null,
     businessName: 'Agile Farm Ltd',
     businessAddress: {
       address1: '10 Skirbeck Way',
-      address2: '',
       city: 'Maidstone',
-      county: '',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
@@ -93,7 +94,7 @@ const getPageData = () => {
     businessMobile: '01234567890',
     businessEmail: 'a.farmer@farms.com',
     singleBusinessIdentifier: '123456789',
-    vatNumber: '',
+    vatNumber: null,
     tradeNumber: '987654',
     vendorRegistrationNumber: '699368',
     countyParishHoldingNumber: '12/563/0998',

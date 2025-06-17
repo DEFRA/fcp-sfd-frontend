@@ -1,11 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 import {
   BUSINESS_NAME_MAX,
-  ADDRESS_LINE_MAX,
-  TOWN_CITY_MAX,
-  COUNTY_MAX,
-  POSTCODE_MAX,
-  COUNTRY_MAX,
   PHONE_NUMBER_MIN,
   PHONE_NUMBER_MAX,
   EMAIL_MAX
@@ -63,7 +58,6 @@ describe('business details', () => {
         ['business details', '/business-details'],
         ['change business name', '/business-name-change'],
         ['check business name', '/business-name-check'],
-        ['enter business address', '/business-address-enter'],
         ['check business address', '/business-address-check'],
         ['change business phone numbers', '/business-phone-numbers-change'],
         ['check business phone numbers', '/business-phone-numbers-check'],
@@ -86,18 +80,6 @@ describe('business details', () => {
           '/business-name-change',
           {
             businessName: 'Test Farms Ltd'
-          }
-        ],
-        [
-          'enter business address',
-          '/business-address-enter',
-          {
-            address1: '10 Skirbeck Way',
-            address2: '',
-            city: 'Maidstone',
-            county: '',
-            postcode: 'SK22 1DL',
-            country: 'United Kingdom'
           }
         ],
         [
@@ -146,93 +128,6 @@ describe('business details', () => {
         const response = await server.inject({
           method: 'POST',
           url: '/business-name-change',
-          payload
-        })
-
-        expect(response.statusCode).toBe(400)
-        expect(response.payload).toContain(errorMessage)
-      })
-    })
-
-    describe('schema validation: business address', () => {
-      const businessAddress = {
-        address1: '10 Skirbeck Way',
-        address2: '',
-        city: 'Maidstone',
-        county: '',
-        postcode: 'SK22 1DL',
-        country: 'United Kingdom'
-      }
-
-      test.each([
-        [
-          'missing address line 1',
-          {
-            ...businessAddress,
-            address1: ''
-          },
-          'Enter address line 1, typically the building and street'
-        ],
-        [
-          'address line is too long',
-          {
-            ...businessAddress,
-            address2: 'a'.repeat(ADDRESS_LINE_MAX + 1)
-          },
-          `Address line 2 must be ${ADDRESS_LINE_MAX} characters or less`
-        ],
-        [
-          'missing town/city',
-          {
-            ...businessAddress,
-            city: ''
-          },
-          'Enter town or city'
-        ],
-        [
-          'town/city is too long',
-          {
-            ...businessAddress,
-            city: 'a'.repeat(TOWN_CITY_MAX + 1)
-          },
-          `Town or city must be ${TOWN_CITY_MAX} characters or less`
-        ],
-        [
-          'county is too long',
-          {
-            ...businessAddress,
-            county: 'a'.repeat(COUNTY_MAX + 1)
-          },
-          `County must be ${COUNTY_MAX} characters or less`
-        ],
-        [
-          'postcode is too long',
-          {
-            ...businessAddress,
-            postcode: 'a'.repeat(POSTCODE_MAX + 1)
-          },
-          `Postal code or zip code must be ${POSTCODE_MAX} characters or less`
-        ],
-        [
-          'missing country',
-          {
-            ...businessAddress,
-            country: ''
-          },
-          'Enter a country'
-        ],
-        [
-          'country is too long',
-          {
-            ...businessAddress,
-            country: 'a'.repeat(COUNTRY_MAX + 1)
-          },
-          `Country must be ${COUNTRY_MAX} characters or less`
-        ]
-      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
-        const response = await server.inject({
-          method: 'POST',
-          url: '/business-address-enter',
           payload
         })
 

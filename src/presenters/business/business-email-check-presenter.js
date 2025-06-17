@@ -4,7 +4,6 @@
  */
 
 const businessDetailsPresenter = (data, yar) => {
-
   yar.set('businessDetails', data)
 
   return {

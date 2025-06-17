@@ -35,10 +35,9 @@ const postBusinessEmailChange = {
       }
     },
     handler: async (request, h) => {
-      await setBusinessEmailChangeService(request.payload.businessEmail, request.yar )
+      await setBusinessEmailChangeService(request.payload.businessEmail, request.yar)
 
       return h.redirect('/business-email-check')
-
     }
   }
 }

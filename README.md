@@ -73,7 +73,7 @@ docker compose build
 
 After building the image, run the service locally in a container alongside `fcp-dal-api` and `fcp-dal-upstream-mock`:
 ```
-docker-compose up --build
+docker compose up
 ```
 Use the `-d` at the end of the above command to run in detached mode e.g. if you wish to view logs in another application such as Docker Desktop.
 

@@ -1,22 +1,14 @@
+import { businessAddressCheckPresenter } from '../../presenters/business/business-address-check-presenter.js'
+import { flashNotification } from '../../utils/notifications/flash-notification.js'
+
 const getBusinessAddressCheck = {
   method: 'GET',
   path: '/business-address-check',
   handler: (request, h) => {
-    const address1 = request.state.address1 || ''
-    const address2 = request.state.address2 || ''
-    const city = request.state.city || ''
-    const county = request.state.county || ''
-    const postcode = request.state.postcode || ''
-    const country = request.state.country || ''
+    const sessionData = request.yar.get('businessAddressEnterData')
+    const pageData = businessAddressCheckPresenter(sessionData)
 
-    return h.view('business/business-address-check', {
-      address1,
-      address2,
-      city,
-      county,
-      postcode,
-      country
-    })
+    return h.view('business/business-address-check', pageData)
   }
 }
 
@@ -24,23 +16,9 @@ const postBusinessAddressCheck = {
   method: 'POST',
   path: '/business-address-check',
   handler: (request, h) => {
-    const address1 = request.state.address1 || ''
-    const address2 = request.state.address2 || ''
-    const city = request.state.city || ''
-    const county = request.state.county || ''
-    const postcode = request.state.postcode || ''
-    const country = request.state.country || ''
+    flashNotification(request.yar, 'Success', 'You have updated your business address')
 
     return h.redirect('/business-details')
-      .state('showSuccessBanner', 'true')
-      .state('successField', 'BUSINESS_ADDRESS')
-      .state('address1', address1)
-      .state('address2', address2)
-      .state('city', city)
-      .state('county', county)
-      .state('postcode', postcode)
-      .state('country', country)
-      .unstate('originalBusinessName')
   }
 }
 

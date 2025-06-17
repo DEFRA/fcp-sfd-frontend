@@ -5,7 +5,6 @@ import { requestTracing } from './request-tracing.js'
 import { router } from './router.js'
 import { pulse } from './pulse.js'
 import { session } from './session.js'
-import { sso } from './sso.js'
 
 export const plugins = [
   requestLogger,
@@ -14,6 +13,5 @@ export const plugins = [
   pulse,
   vision,
   router,
-  session,
-  sso
+  session
 ]

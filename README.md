@@ -60,24 +60,24 @@ npm run dev
 ```
 This will start the server and watch for changes to both server and client files.
 
-### Local development with Docker
+### Building the Docker image
 
-#### Build the image
-
-Container images are built using Docker Compose. It's important to note that in order to successfully run the [fcp-dal-api](https://github.com/defra/fcp-dal-api) and its [upstream-mock](https://github.com/defra/fcp-dal-upstream-mock) you _must_ run this service as a Docker container. This is because the [Docker Compose configuration](./compose.yaml) for this repository pulls and runs the Docker images for the `fcp-dal-api` and `fcp-dal-upstream-mock` (a.k.a. the `kits-mock`) from the Docker registry.
+Container images are built using Docker Compose. It's important to note that in order to successfully run the [fcp-dal-api](https://github.com/defra/fcp-dal-api) and its [upstream-mock](https://github.com/defra/fcp-dal-upstream-mock) to interact with the Data Access Layer (DAL), you _must_ run this service as a Docker container. This is because the [Docker Compose configuration](./compose.yaml) for this repository pulls and runs the Docker images for the `fcp-dal-api` and `fcp-dal-upstream-mock` (a.k.a. the `kits-mock`) from the Docker registry.
 
 First, build the Docker image:
 ```
 docker compose build
 ```
 
-### Start the image
+### Starting the Docker container
 
 After building the image, run the service locally in a container alongside `fcp-dal-api` and `fcp-dal-upstream-mock`:
 ```
 docker-compose up --build
 ```
 Use the `-d` at the end of the above command to run in detached mode e.g. if you wish to view logs in another application such as Docker Desktop.
+
+You can find further information on how SFD integrates with the DAL on [Confluence](https://eaflood.atlassian.net/wiki/spaces/SFD/pages/5712838853/Single+Front+Door+Integration+with+Data+Access+Layer).
 
 ## Tests
 

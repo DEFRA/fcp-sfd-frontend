@@ -40,10 +40,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Enter address line 1, typically the building and street',
-            path: [ 'address1' ],
-            type: 'any.required',
-          }))
+          message: 'Enter address line 1, typically the building and street',
+          path: ['address1'],
+          type: 'any.required'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -57,10 +57,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Address line 1 must be 100 characters or less',
-            path: [ 'address1' ],
-            type: 'string.max'
-          }))
+          message: 'Address line 1 must be 100 characters or less',
+          path: ['address1'],
+          type: 'string.max'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -74,10 +74,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Address line 2 must be 100 characters or less',
-            path: [ 'address2' ],
-            type: 'string.max'
-          }))
+          message: 'Address line 2 must be 100 characters or less',
+          path: ['address2'],
+          type: 'string.max'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -91,10 +91,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Enter town or city',
-            path: [ 'city' ],
-            type: 'any.required'
-          }))
+          message: 'Enter town or city',
+          path: ['city'],
+          type: 'any.required'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -108,10 +108,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Town or city must be 100 characters or less',
-            path: [ 'city' ],
-            type: 'string.max'
-          }))
+          message: 'Town or city must be 100 characters or less',
+          path: ['city'],
+          type: 'string.max'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -125,10 +125,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'County must be 100 characters or less',
-            path: [ 'county' ],
-            type: 'string.max'
-          }))
+          message: 'County must be 100 characters or less',
+          path: ['county'],
+          type: 'string.max'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -142,10 +142,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Postal code or zip code must be 10 characters or less',
-            path: [ 'postcode' ],
-            type: 'string.max'
-          }))
+          message: 'Postal code or zip code must be 10 characters or less',
+          path: ['postcode'],
+          type: 'string.max'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -159,10 +159,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Enter a country',
-            path: [ 'country' ],
-            type: 'any.required'
-          }))
+          message: 'Enter a country',
+          path: ['country'],
+          type: 'any.required'
+        }))
         expect(value).toEqual(payload)
       })
     })
@@ -176,10 +176,10 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-            message: 'Country must be 60 characters or less',
-            path: [ 'country' ],
-            type: 'string.max'
-          }))
+          message: 'Country must be 60 characters or less',
+          path: ['country'],
+          type: 'string.max'
+        }))
         expect(value).toEqual(payload)
       })
     })

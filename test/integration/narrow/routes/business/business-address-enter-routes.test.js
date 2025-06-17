@@ -1,17 +1,17 @@
 // Test framework dependencies
-import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest'
 
 describe('business address enter routes', () => {
   const SERVER_MODULE_PATH = '../../../../../src/server.js'
 
   const resetAndCreateServer = async () => {
-  vi.resetModules()
+    vi.resetModules()
 
-  const { createServer } = await import(SERVER_MODULE_PATH)
+    const { createServer } = await import(SERVER_MODULE_PATH)
 
-  const server = await createServer()
-  await server.initialize()
-  return server
+    const server = await createServer()
+    await server.initialize()
+    return server
   }
 
   const hookTimeout = 50000

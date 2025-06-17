@@ -19,8 +19,8 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
 }))
 
 describe('business address enter', () => {
+  const request = {}
   let h
-  let request = {}
   let mockData
   let err
 
@@ -98,7 +98,6 @@ describe('business address enter', () => {
 
         test('sets the payload on the yar state', async () => {
           await postBusinessAddressEnter.options.handler(request, h)
-
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,

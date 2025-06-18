@@ -4,15 +4,14 @@
  */
 
 const businessNameCheckPresenter = (data) => {
-    // Sort back link
-    // Deal with error messages
     return {
-        backLink: '/business-details',
-        businessName: 'Agile Farm Ltd',
-        sbi: '12345678',
-        userName: 'Andrew Farmer',
-        pageTitle: 'What is your business name?',
-        metaDescription: 'Update the name for your business.',
+        backLink: { href: '/business-name-change' },
+        cancelLink: '/business-details',
+        pageTitle: 'Check your business name is correct before submitting',
+        metaDescription: 'Check the name for your business is correct.',
+        businessName: data.businessName ?? null,
+        sbi: data.sbi ?? null,
+        userName: data.userName ?? null
     }
 }
 

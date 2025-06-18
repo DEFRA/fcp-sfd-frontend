@@ -3,16 +3,14 @@
  * @module businessNameChange
  */
 
-const businessNameChangePresenter = (data) => {
-    // Sort back link
-    // Deal with error messages
+const businessNameChangePresenter = (data, payload) => {
     return {
         backLink: '/business-details',
-        businessName: 'Agile Farm Ltd',
-        sbi: '12345678',
-        userName: 'Andrew Farmer',
         pageTitle: 'What is your business name?',
         metaDescription: 'Update the name for your business.',
+        businessName: data.businessName ?? null,
+        sbi: data.sbi ?? null,
+        userName: data.userName ?? null
     }
 }
 

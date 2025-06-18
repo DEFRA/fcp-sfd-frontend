@@ -18,7 +18,7 @@ describe('businessAddressCheckPresenter', () => {
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       },
-      singleBusinessIdentifier: '123456789',
+      sbi: '123456789',
       userName: 'Alfred Waldron'
     }
   })
@@ -42,7 +42,7 @@ describe('businessAddressCheckPresenter', () => {
           'United Kingdom'
         ],
         businessName: 'Agile Farm Ltd',
-        singleBusinessIdentifier: '123456789',
+        sbi: '123456789',
         userName: 'Alfred Waldron'
       })
     })
@@ -62,16 +62,16 @@ describe('businessAddressCheckPresenter', () => {
     })
   })
 
-  describe('the "singleBusinessIdentifier" property', () => {
-    describe('when the singleBusinessIdentifier property is missing', () => {
+  describe('the "sbi" property', () => {
+    describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
       beforeEach(() => {
-        delete data.singleBusinessIdentifier
+        delete data.sbi
       })
 
-      test('it should return singleBusinessIdentifier as null', () => {
+      test('it should return sbi as null', () => {
         const result = businessAddressCheckPresenter(data)
 
-        expect(result.singleBusinessIdentifier).toEqual(null)
+        expect(result.sbi).toEqual(null)
       })
     })
   })

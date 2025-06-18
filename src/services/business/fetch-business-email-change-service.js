@@ -4,9 +4,9 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
  * @module fetchBusinessEmailChangeService
  */
 
-const fetchBusinessEmailChangeService = async (request) => {
-  await fetchBusinessDetailsService(request.yar)
-  const changeBusinessEmail = request.yar.get('businessDetails').changeBusinessEmail ? request.yar.get('businessDetails').changeBusinessEmail : request.yar.get('businessDetails').businessEmail
+const fetchBusinessEmailChangeService = async (yar) => {
+  await fetchBusinessDetailsService(yar)
+  const changeBusinessEmail = yar.get('businessDetails').changeBusinessEmail ? yar.get('businessDetails').changeBusinessEmail : yar.get('businessDetails').businessEmail
   return {
     changeBusinessEmail
   }

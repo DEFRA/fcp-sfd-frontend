@@ -8,7 +8,6 @@ const updateBusinessEmailChangeService = async (yar) => {
   await fetchBusinessDetailsService(yar)
   const businessDetails = yar.get('businessDetails')
   businessDetails.businessEmail = businessDetails.changeBusinessEmail
-
   yar.set('businessDetails', businessDetails)
 }
 

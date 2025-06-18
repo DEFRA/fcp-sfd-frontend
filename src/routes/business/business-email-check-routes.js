@@ -5,7 +5,7 @@ const getBusinessEmailCheck = {
   method: 'GET',
   path: '/business-email-check',
   handler: async (request, h) => {
-    const businessEmailChange = await fetchBusinessEmailChangeService(request)
+    const businessEmailChange = await fetchBusinessEmailChangeService(request.yar)
     const pageData = businessEmailChangePresenter(businessEmailChange, request.yar)
 
     return h.view('business/business-email-check.njk', pageData)

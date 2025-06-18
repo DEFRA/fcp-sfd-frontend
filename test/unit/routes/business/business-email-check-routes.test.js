@@ -67,7 +67,7 @@ describe('check business email', () => {
 
     test('should render business/business-email-check.njk view with page data', async () => {
       await getBusinessEmailCheck.handler(request, h)
-      expect(fetchBusinessEmailChangeService).toHaveBeenCalled(request)
+      expect(fetchBusinessEmailChangeService).toHaveBeenCalled(request.yar)
       expect(h.view).toHaveBeenCalledWith('business/business-email-check.njk', pageData)
     })
   })

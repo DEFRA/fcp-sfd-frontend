@@ -80,7 +80,7 @@ describe('change business email', () => {
 
     test('should render business-email-change.njk view with page data', async () => {
       await getBusinessEmailChange.handler(request, h)
-      expect(fetchBusinessEmailChangeService).toHaveBeenCalled(request)
+      expect(fetchBusinessEmailChangeService).toHaveBeenCalled(request.yar)
       expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', pageData)
     })
   })

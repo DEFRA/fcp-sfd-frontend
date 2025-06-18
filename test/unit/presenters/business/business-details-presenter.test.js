@@ -36,7 +36,9 @@ describe('businessDetailsPresenter', () => {
 
     // Mock yar session manager
     yar = {
-      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }])
+      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
+      set: vi.fn().mockReturnValue(data),
+      get: vi.fn().mockReturnValue(data)
     }
   })
 

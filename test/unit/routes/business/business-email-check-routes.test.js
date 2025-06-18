@@ -1,9 +1,12 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { businessEmailCheckRoutes } from '../../../../src/routes/business/business-email-check-routes.js'
+import { fetchBusinessEmailChangeService } from '../../../../src/services/business/fetch-business-email-change-service.js'
+import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service.js'
+import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter.js'
 
 const [getBusinessEmailCheck, postBusinessEmailCheck] = businessEmailCheckRoutes
 
-const createMockRequest = (state = {}) => ({ state })
+const businessEmail = 'name@example.com'
 
 const createMockResponse = () => {
   const stateMock = vi.fn().mockReturnThis()
@@ -20,33 +23,52 @@ const createMockResponse = () => {
   }
 }
 
+vi.mock('../../../../src/services/business/fetch-business-email-change-service.js', () => ({
+  fetchBusinessEmailChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/business/update-business-email-change-service.js', () => ({
+  updateBusinessEmailChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/presenters/business/business-email-change-presenter.js', () => ({
+  businessEmailChangePresenter: vi.fn()
+}))
+
 describe('check business email', () => {
+  let h
+  let request
+  let businessEmailChange
+  let pageData
+  beforeEach(() => {
+    vi.clearAllMocks()
+    h = {
+      view: vi.fn().mockReturnValue({})
+    }
+
+    businessEmailChange = {}
+    pageData = {}
+    request = {
+      payload: {
+        businessEmail
+      },
+      yar: {}
+    }
+
+    fetchBusinessEmailChangeService.mockResolvedValue(businessEmailChange)
+    businessEmailChangePresenter.mockReturnValue(pageData)
+  })
+
   describe('GET /business-email-check', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessEmailCheck.method).toBe('GET')
       expect(getBusinessEmailCheck.path).toBe('/business-email-check')
     })
 
-    test('should render the view with business email from state', () => {
-      const request = createMockRequest({ businessEmail: 'name@example.com' })
-      const { h, view } = createMockResponse()
-
-      getBusinessEmailCheck.handler(request, h)
-
-      expect(view).toHaveBeenCalledWith('business/business-email-check', {
-        businessEmail: 'name@example.com'
-      })
-    })
-
-    test('should render the view with empty email when none provided', () => {
-      const request = createMockRequest()
-      const { h, view } = createMockResponse()
-
-      getBusinessEmailCheck.handler(request, h)
-
-      expect(view).toHaveBeenCalledWith('business/business-email-check', {
-        businessEmail: ''
-      })
+    test('should render business/business-email-check.njk view with page data', async () => {
+      await getBusinessEmailCheck.handler(request, h)
+      expect(fetchBusinessEmailChangeService).toHaveBeenCalled(request.yar)
+      expect(h.view).toHaveBeenCalledWith('business/business-email-check.njk', pageData)
     })
   })
 
@@ -56,28 +78,12 @@ describe('check business email', () => {
       expect(postBusinessEmailCheck.path).toBe('/business-email-check')
     })
 
-    test('should redirect with success banner and email in state', () => {
-      const request = createMockRequest({ businessEmail: 'name@example.com' })
-      const { h, stateMock, unstateMock, redirect } = createMockResponse()
+    test('should redirect to business-details on successful submission', async () => {
+      const { h } = createMockResponse()
+      await postBusinessEmailCheck.handler(request, h)
 
-      postBusinessEmailCheck.handler(request, h)
-
-      expect(redirect).toHaveBeenCalledWith('/business-details')
-      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(stateMock).toHaveBeenCalledWith('businessEmail', 'name@example.com')
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessEmail')
-    })
-
-    test('should handle missing business email in state', () => {
-      const request = createMockRequest()
-      const { h, stateMock, unstateMock, redirect } = createMockResponse()
-
-      postBusinessEmailCheck.handler(request, h)
-
-      expect(redirect).toHaveBeenCalledWith('/business-details')
-      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(stateMock).toHaveBeenCalledWith('businessEmail', undefined)
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessEmail')
+      expect(updateBusinessEmailChangeService).toHaveBeenCalledWith({})
+      expect(h.redirect).toHaveBeenCalledWith('/business-details')
     })
   })
 

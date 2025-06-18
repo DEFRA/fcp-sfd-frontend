@@ -16,7 +16,7 @@ const fetchBusinessAddressService = async () => {
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    singleBusinessIdentifier: '123456789',
+    sbi: '123456789',
     userName: 'Alfred Waldron'
   }
 }

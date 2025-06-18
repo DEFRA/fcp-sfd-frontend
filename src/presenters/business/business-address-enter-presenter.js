@@ -10,7 +10,7 @@ const businessAddressEnterPresenter = (data, payload) => {
     metaDescription: 'Enter the address for your business.',
     address: payload ?? data.businessAddress,
     businessName: data.businessName ?? null,
-    singleBusinessIdentifier: data.singleBusinessIdentifier ?? null,
+    sbi: data.sbi ?? null,
     userName: data.userName ?? null
   }
 }

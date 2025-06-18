@@ -143,7 +143,7 @@ const getMockData = () => {
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    singleBusinessIdentifier: '123456789',
+    sbi: '123456789',
     userName: 'Alfred Waldron'
   }
 }
@@ -162,7 +162,7 @@ const getPageData = () => {
       country: 'United Kingdom'
     },
     businessName: 'Agile Farm Ltd',
-    singleBusinessIdentifier: '123456789',
+    sbi: '123456789',
     userName: 'Alfred Waldron'
   }
 }
@@ -181,7 +181,7 @@ const getPageDataError = () => {
       country: 'United Kingdom'
     },
     businessName: 'Agile Farm Ltd',
-    singleBusinessIdentifier: '123456789',
+    sbi: '123456789',
     userName: 'Alfred Waldron',
     errors: {
       postcode: {

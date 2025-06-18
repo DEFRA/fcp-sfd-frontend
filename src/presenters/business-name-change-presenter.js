@@ -1,11 +1,11 @@
 /**
  * Formats data ready for presenting in the `/business-name-change` page
- * @module businessNameChange
+ * @module businessNameChangePresenter
  */
 
 const businessNameChangePresenter = (data, payload) => {
     return {
-        backLink: '/business-details',
+        backLink: { href: '/business-details' },
         pageTitle: 'What is your business name?',
         metaDescription: 'Update the name for your business.',
         businessName: data.businessName ?? null,

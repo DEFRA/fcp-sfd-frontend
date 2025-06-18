@@ -48,7 +48,7 @@
     },
     {
       "label": "✅ Test Frontend",
-      "detail": "Run the unit tests for Frontend",
+      "detail": "Run all unit tests for Frontend",
       "type": "shell",
       "command": "docker compose down -v && docker compose -f compose.yaml -f compose.test.yaml run --build --rm 'fcp-sfd-frontend'",
       "group": "test",
@@ -63,7 +63,7 @@
     },
     {
       "label": "‼️ Only Test Frontend",
-      "detail": "Run the unit tests for Frontend",
+      "detail": "Run the currently selected test file for frontend",
       "type": "shell",
       "command" : "docker compose down -v && docker compose -f compose.yaml -f compose.test.yaml run --rm fcp-sfd-frontend npx vitest run ${relativeFile}",
       "group": "test",

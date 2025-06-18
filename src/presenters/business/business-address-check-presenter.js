@@ -12,7 +12,7 @@ const businessAddressCheckPresenter = (data) => {
     metaDescription: 'Check the address for your business is correct.',
     address: formatAddress(data.businessAddress),
     businessName: data.businessName ?? null,
-    singleBusinessIdentifier: data.singleBusinessIdentifier ?? null,
+    sbi: data.sbi ?? null,
     userName: data.userName ?? null
   }
 }

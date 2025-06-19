@@ -8,13 +8,25 @@ const businessNameChangePresenter = (data, payload) => {
     backLink: { href: '/business-details' },
     pageTitle: 'What is your business name?',
     metaDescription: 'Update the name for your business.',
-    businessName: payload ?? data.businessName,
+    businessName: businessName(payload, data),
     subHeader: {
       businessName: data.businessName ?? null,
       sbi: data.sbi ?? null,
       userName: data.userName ?? null
     }
   }
+}
+
+const businessName = (payload, data) => {
+  if(payload) {
+    return payload
+  }
+
+  if(data.newBusinessName) {
+    return data.newBusinessName
+  }
+
+  return data.businessName
 }
 
 export {

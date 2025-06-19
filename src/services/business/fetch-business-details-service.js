@@ -4,14 +4,14 @@
  */
 
 const fetchBusinessDetailsService = async (yar) => {
-  const sessionData  = yar.get('businessDetailsData')
+  const sessionData = yar.get('businessDetailsData')
 
   // If sessionData is null it means it has never been set and therefore this is the first time the user
   // has hit the page. In this case return the mock data (this will be replaced with an API call)
 
   // If the sessionData.businessDetailsUpdated is true then it means the user has updated the data on the change pages
   // and therefore we need to return the mock data (this will be replaced with an API call)
-  if(sessionData === null || sessionData.businessDetailsUpdated === true) {
+  if (sessionData === null || sessionData.businessDetailsUpdated === true) {
     return {
       businessName: 'Agile Farm Ltd',
       businessAddress: {

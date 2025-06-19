@@ -19,8 +19,8 @@ vi.mock('../../../../src/presenters/business/business-details-presenter.js', () 
 }))
 
 describe('business details', () => {
+  const request = {}
   let h
-  let request
   let mockData
   let pageData
 
@@ -35,9 +35,12 @@ describe('business details', () => {
           view: vi.fn().mockReturnValue({})
         }
 
+        request.yar = {
+          set: vi.fn()
+        }
+
         mockData = getMockData()
         pageData = getPageData()
-        request = {}
 
         fetchBusinessDetailsService.mockResolvedValue(mockData)
         businessDetailsPresenter.mockReturnValue(pageData)
@@ -48,6 +51,12 @@ describe('business details', () => {
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
+      })
+
+      test('it sets the fetched data on the yar state', async () => {
+        await getBusinessDetails.handler(request, h)
+
+        expect(request.yar.set).toHaveBeenCalledWith('businessDetailsData', mockData)
       })
     })
   })
@@ -80,6 +89,9 @@ const getMockData = () => {
 
 const getPageData = () => {
   return {
+    pageTitle: 'View and update your business details',
+    metaDescription: 'View and change the details for your business.',
+    notification: null,
     businessName: 'Agile Farm Ltd',
     businessAddress: {
       address1: '10 Skirbeck Way',
@@ -93,7 +105,7 @@ const getPageData = () => {
     businessMobile: '01234567890',
     businessEmail: 'a.farmer@farms.com',
     sbi: '123456789',
-    vatNumber: '',
+    vatNumber: null,
     tradeNumber: '987654',
     vendorRegistrationNumber: '699368',
     countyParishHoldingNumber: '12/563/0998',

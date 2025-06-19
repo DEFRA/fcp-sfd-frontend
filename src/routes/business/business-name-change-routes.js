@@ -10,9 +10,11 @@ const getBusinessNameChange = {
   path: '/business-name-change',
   handler: async (request, h) => {
     const data = await fetchBusinessNameService()
+
     request.yar.set('businessNameChangeData', data)
 
     const pageData = businessNameChangePresenter(data)
+
     return h.view('business/business-name-change', pageData)
   }
 }
@@ -29,9 +31,7 @@ const postBusinessNameChange = {
         const sessionData = request.yar.get('businessNameChangeData')
         const pageData = businessNameChangePresenter(sessionData, request.payload)
 
-        return h.view('business/business-name-change', {
-          ...pageData, errors
-        }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-name-change', {...pageData, errors}).code(BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {

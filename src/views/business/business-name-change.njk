@@ -7,43 +7,36 @@
 {% from "common/sub-header/macro.njk" import subHeader %}
 
 {% block beforeContent %}
-    {{ subHeader(
-    businessName=businessName, 
-    sbi=sbi, 
-    userName=userName
-) }}
-
-    {{ appBackLink() }}
+    {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
 {% endblock %}
 
 {% block content %}
+  {{ appBackLink(backLink) }}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: {
+            text: errors.businessName.text,
+            href: "#business-name"
+        }
+    }) }}
+  {% endif %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    {% if errors %}
-        {{ govukErrorSummary({
-            titleText: "There is a problem",
-            errorList: [
-                {
-                    text: errors.businessName.text,
-                    href: "#business-name"
-                }
-            ]
-        }) }}
-    {% endif %}
-
     <form method="post" novalidate>
       <div class="govuk-form-group">
         {{ govukInput({
           label: {
-            text: "What is your business name?",
+            text: pageTitle,
             classes: "govuk-label--l",
             isPageHeading: true
           },
           id: "business-name",
           name: "businessName",
-          value: business-name,
-          errorMessage: errors.businessName and {
-            text: errors.businessName.text
+          value: enterBusinessName,
+          errorMessage: errors.enterBusinessName and {
+            text: errors.enterBusinessName.text
           }
         }) }}
       </div>
@@ -53,9 +46,7 @@
         preventDoubleClick: true
       }) }}
 
-      <p class="govuk-body">
-        <a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a>
-      </p>
+      <p class="govuk-body"><a href="{{backLink.href}}" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
     </form>
   </div>
 </div>

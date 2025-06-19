@@ -7,7 +7,7 @@
 {% from "common/sub-header/macro.njk" import subHeader %}
 
 {% block beforeContent %}
-    {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+    {{ subHeader(businessName=subHeader.businessName, sbi=subHeader.sbi, userName=subHeader.userName) }}
 {% endblock %}
 
 {% block content %}

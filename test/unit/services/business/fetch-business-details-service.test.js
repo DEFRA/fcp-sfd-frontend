@@ -59,7 +59,7 @@ describe('fetchBusinessDetailsService', () => {
         businessTelephone: '01234567890',
         businessMobile: '01234567890',
         businessEmail: 'a.farmer@farms.com',
-        singleBusinessIdentifier: '123456789',
+        sbi: '123456789',
         vatNumber: '',
         tradeNumber: '987654',
         vendorRegistrationNumber: '699368',

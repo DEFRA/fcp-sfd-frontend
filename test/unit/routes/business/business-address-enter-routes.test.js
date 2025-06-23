@@ -2,7 +2,6 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessAddressService } from '../../../../src/services/business/fetch-business-address-service.js'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 
 // Thing under test
@@ -10,10 +9,6 @@ import { businessAddressRoutes } from '../../../../src/routes/business/business-
 const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-address-service.js', () => ({
-  fetchBusinessAddressService: vi.fn()
-}))
-
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
@@ -36,18 +31,18 @@ describe('business address enter', () => {
         }
 
         // Mock the yar object with a set method
-        request.yar = {
-          set: vi.fn()
-        }
-
         mockData = getMockData()
-        fetchBusinessAddressService.mockResolvedValue(mockData)
+
+        request.yar = {
+          set: vi.fn(),
+          get: vi.fn().mockReturnValue(mockData)
+        }
       })
 
-      test('it calls the fetchBusinessAddressService', async () => {
+      test('it fetches the data from the session', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(fetchBusinessAddressService).toHaveBeenCalled(request)
+        expect(request.yar.get).toHaveBeenCalledWith('businessDetailsData')
         expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
       })
 

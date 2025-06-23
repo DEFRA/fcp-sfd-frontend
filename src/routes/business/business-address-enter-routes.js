@@ -2,14 +2,13 @@ import { businessAddressSchema } from '../../schemas/business/business-address-s
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessAddressEnterPresenter } from '../../presenters/business/business-address-enter-presenter.js'
-import { fetchBusinessAddressService } from '../../services/business/fetch-business-address-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 
 const getBusinessAddressEnter = {
   method: 'GET',
   path: '/business-address-enter',
   handler: async (request, h) => {
-    const data = await fetchBusinessAddressService()
+    const data = request.yar.get('businessDetailsData')
 
     request.yar.set('businessAddressEnterData', data)
 

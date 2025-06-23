@@ -2,6 +2,8 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest'
 
 describe('business address enter routes', () => {
+  let businessDetailsCookie
+  let businessAddressEnterCookie
   const SERVER_MODULE_PATH = '../../../../../src/server.js'
 
   const resetAndCreateServer = async () => {
@@ -21,6 +23,10 @@ describe('business address enter routes', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
     server = await resetAndCreateServer()
+
+    // To set the session we need to hit the business details page first
+    const getResponse = await server.inject({ method: 'GET', url: '/business-details' })
+    businessDetailsCookie = getResponse.headers['set-cookie'][0].split(';')[0] // Extract cookie string
   }, hookTimeout)
 
   afterEach(async () => {
@@ -29,7 +35,13 @@ describe('business address enter routes', () => {
 
   describe('GET routes', () => {
     test('when the request succeeds', async () => {
-      const response = await server.inject({ method: 'GET', url: '/business-address-enter' })
+      const response = await server.inject({
+        method: 'GET',
+        url: '/business-address-enter',
+        headers: {
+          cookie: businessDetailsCookie
+        }
+      })
 
       expect(response.statusCode).toBe(200)
       expect(response.payload).contain('Enter your business address')
@@ -38,10 +50,12 @@ describe('business address enter routes', () => {
 
   describe('POST routes', () => {
     describe('when the request succeeds', () => {
-      test('it redirects to the /business-address-check page', async () => {
-        const getResponse = await server.inject({ method: 'GET', url: '/business-address-enter' })
-        const cookie = getResponse.headers['set-cookie'][0].split(';')[0] // Extract cookie string
+      beforeEach(async () => {
+        const getResponse = await server.inject({ method: 'GET', url: '/business-address-enter', headers: { cookie: businessDetailsCookie } })
+        businessAddressEnterCookie = getResponse.headers['set-cookie'][0].split(';')[0] // Extract cookie string
+      })
 
+      test('it redirects to the /business-address-check page', async () => {
         const response = await server.inject({
           method: 'POST',
           url: '/business-address-enter',
@@ -54,7 +68,7 @@ describe('business address enter routes', () => {
             country: 'United Kingdom'
           },
           headers: {
-            cookie
+            cookie: businessAddressEnterCookie
           }
         })
 
@@ -64,9 +78,6 @@ describe('business address enter routes', () => {
 
       describe('and the validation fails', () => {
         test('it returns the page successfully with the error summary banner', async () => {
-          const getResponse = await server.inject({ method: 'GET', url: '/business-address-enter' })
-          const cookie = getResponse.headers['set-cookie'][0].split(';')[0] // Extract cookie string
-
           const response = await server.inject({
             method: 'POST',
             url: '/business-address-enter',
@@ -78,7 +89,7 @@ describe('business address enter routes', () => {
               country: 'United Kingdom'
             },
             headers: {
-              cookie
+              cookie: businessAddressEnterCookie
             }
           })
 

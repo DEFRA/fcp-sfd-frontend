@@ -19,8 +19,8 @@ vi.mock('../../../../src/presenters/business/business-details-presenter.js', () 
 }))
 
 describe('business details', () => {
+  const request = {}
   let h
-  let request
   let mockData
   let pageData
 
@@ -35,9 +35,12 @@ describe('business details', () => {
           view: vi.fn().mockReturnValue({})
         }
 
+        request.yar = {
+          set: vi.fn()
+        }
+
         mockData = getMockData()
         pageData = getPageData()
-        request = {}
 
         fetchBusinessDetailsService.mockResolvedValue(mockData)
         businessDetailsPresenter.mockReturnValue(pageData)
@@ -48,6 +51,12 @@ describe('business details', () => {
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
+      })
+
+      test('it sets the fetched data on the yar state', async () => {
+        await getBusinessDetails.handler(request, h)
+
+        expect(request.yar.set).toHaveBeenCalledWith('businessDetailsData', mockData)
       })
     })
   })

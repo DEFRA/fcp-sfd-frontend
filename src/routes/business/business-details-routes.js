@@ -5,7 +5,8 @@ const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService()
+    const businessDetails = await fetchBusinessDetailsService(request.yar)
+    request.yar.set('businessDetailsData', businessDetails)
     const pageData = businessDetailsPresenter(businessDetails, request.yar)
 
     return h.view('business/business-details.njk', pageData)

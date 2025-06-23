@@ -51,7 +51,7 @@ describe('business address enter routes', () => {
   describe('POST routes', () => {
     describe('when the request succeeds', () => {
       beforeEach(async () => {
-        const getResponse = await server.inject({ method: 'GET', url: '/business-address-enter', headers: { cookie: businessDetailsCookie }})
+        const getResponse = await server.inject({ method: 'GET', url: '/business-address-enter', headers: { cookie: businessDetailsCookie } })
         businessAddressEnterCookie = getResponse.headers['set-cookie'][0].split(';')[0] // Extract cookie string
       })
 

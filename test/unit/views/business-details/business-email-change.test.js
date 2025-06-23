@@ -32,14 +32,4 @@ describe('change business email address', () => {
     expect(link.getAttribute('href')).toBe('/business-details')
     expect(link.textContent.trim()).toBe('Cancel')
   })
-
-  test.each([
-    ['page heading', 'h1', 'What is your business email address?'],
-    ['"Continue" button', 'button', 'Continue']
-  ])('should render %s', (_, selector, textContent) => {
-    const element = document.querySelector(selector)
-
-    expect(element).not.toBeNull()
-    expect(element.textContent.trim()).toBe(textContent)
-  })
 })

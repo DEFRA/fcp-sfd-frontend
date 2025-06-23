@@ -4,12 +4,16 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Thing under test
 import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
-
+import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 const businessEmail = 'business.email@test.com'
 const changeBusinessEmail = 'change_business.email@test.com'
 
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
   fetchBusinessDetailsService: vi.fn()
+}))
+
+vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
+  flashNotification: vi.fn()
 }))
 
 describe('updateBusinessEmailChangeService', () => {
@@ -33,7 +37,7 @@ describe('updateBusinessEmailChangeService', () => {
       businessMobile: '01234567890',
       businessEmail,
       changeBusinessEmail,
-      singleBusinessIdentifier: '123456789',
+      sbi: '123456789',
       vatNumber: '',
       tradeNumber: '987654',
       vendorRegistrationNumber: '699368',
@@ -53,6 +57,7 @@ describe('updateBusinessEmailChangeService', () => {
     test('it correctly returns the data', async () => {
       await updateBusinessEmailChangeService(yar)
       expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+      expect(flashNotification).toHaveBeenCalled()
       expect(yar.get).toHaveBeenCalledWith('businessDetails')
       expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
     })

@@ -33,7 +33,7 @@ describe('fetchBusinessEmailChangeService', () => {
       businessMobile: '01234567890',
       businessEmail,
       changeBusinessEmail,
-      singleBusinessIdentifier: '123456789',
+      sbi: '123456789',
       vatNumber: '',
       tradeNumber: '987654',
       vendorRegistrationNumber: '699368',

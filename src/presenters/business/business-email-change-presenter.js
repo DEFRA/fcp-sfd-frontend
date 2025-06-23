@@ -1,14 +1,12 @@
-/**
- * Formats data ready for presenting in the `/business-details` page
- * @module businessEmailChangePresenter
- */
-
-const businessEmailChangePresenter = (data, yar) => {
+const businessEmailChangePresenter = (data) => {
   return {
-    notification: yar ? yar.flash('notification')[0] : null,
+    backLink: { href: '/business-details' },
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
-    businessEmail: data.changeBusinessEmail
+    businessEmail: data.changeBusinessEmail,
+    businessName: data.businessName,
+    sbi: data.sbi,
+    userName: data.userName
   }
 }
 

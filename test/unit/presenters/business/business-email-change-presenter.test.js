@@ -27,7 +27,7 @@ describe('businessEmailChangePresenter', () => {
       businessMobile: '01234567890',
       businessEmail,
       changeBusinessEmail,
-      singleBusinessIdentifier: '123456789',
+      sbi: '123456789',
       vatNumber: '',
       tradeNumber: '987654',
       vendorRegistrationNumber: '699368',
@@ -49,10 +49,13 @@ describe('businessEmailChangePresenter', () => {
     const result = businessEmailChangePresenter(data, yar)
 
     expect(result).toEqual({
-      notification: { title: 'Update', text: 'Business details updated successfully' },
+      backLink: { href: '/business-details' },
       pageTitle: 'View and update your business details',
       metaDescription: 'View and change the details for your business.',
-      businessEmail: changeBusinessEmail
+      businessEmail: data.changeBusinessEmail,
+      businessName: data.businessName,
+      sbi: data.sbi,
+      userName: data.userName
     })
   })
 
@@ -60,10 +63,13 @@ describe('businessEmailChangePresenter', () => {
     const result = businessEmailChangePresenter(data, null)
 
     expect(result).toEqual({
-      notification: null,
+      backLink: { href: '/business-details' },
       pageTitle: 'View and update your business details',
       metaDescription: 'View and change the details for your business.',
-      businessEmail: changeBusinessEmail
+      businessEmail: data.changeBusinessEmail,
+      businessName: data.businessName,
+      sbi: data.sbi,
+      userName: data.userName
     })
   })
 })

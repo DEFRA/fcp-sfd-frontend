@@ -1,7 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { businessEmailChangeRoutes } from '../../../../src/routes/business/business-email-change-routes.js'
 import { fetchBusinessEmailChangeService } from '../../../../src/services/business/fetch-business-email-change-service.js'
-import { setBusinessEmailChangeService } from '../../../../src/services/business/set-business-email-change-service.js'
+import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter.js'
 
 const [getBusinessEmailChange, postBusinessEmailChange] = businessEmailChangeRoutes
@@ -40,8 +40,8 @@ vi.mock('../../../../src/services/business/fetch-business-email-change-service.j
   fetchBusinessEmailChangeService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/set-business-email-change-service.js', () => ({
-  setBusinessEmailChangeService: vi.fn()
+vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
+  setSessionData: vi.fn()
 }))
 
 vi.mock('../../../../src/presenters/business/business-email-change-presenter.js', () => ({
@@ -119,7 +119,7 @@ describe('change business email', () => {
       const { h } = createMockResponse()
       await postBusinessEmailChange.options.handler(request, h)
 
-      expect(setBusinessEmailChangeService).toHaveBeenCalledWith(businessEmail, {})
+      expect(setSessionData).toHaveBeenCalledWith(request.yar, 'businessDetails', 'changeBusinessEmail', request.payload.businessEmail)
       expect(h.redirect).toHaveBeenCalledWith('/business-email-check')
     })
 
@@ -134,11 +134,11 @@ describe('change business email', () => {
 
         await postBusinessEmailChange.options.validate.failAction(request, h, err)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
-          businessEmail: '',
+        expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', {
           errors: {
             businessEmail: { text: 'Enter business email address' }
-          }
+          },
+          ...pageData
         })
 
         expect(h.code).toHaveBeenCalledWith(400)
@@ -151,9 +151,9 @@ describe('change business email', () => {
 
         await postBusinessEmailChange.options.validate.failAction(request, h, {})
 
-        expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
-          businessEmail: '',
-          errors: {}
+        expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', {
+          errors: {},
+          ...pageData
         })
 
         expect(h.code).toHaveBeenCalledWith(400)

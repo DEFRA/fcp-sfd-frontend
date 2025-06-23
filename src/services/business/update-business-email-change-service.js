@@ -1,14 +1,12 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
-/**
- * Fetches the business details associated with the logged in users business
- * @module updateBusinessEmailChangeService
- */
+import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
 const updateBusinessEmailChangeService = async (yar) => {
   await fetchBusinessDetailsService(yar)
   const businessDetails = yar.get('businessDetails')
   businessDetails.businessEmail = businessDetails.changeBusinessEmail
   yar.set('businessDetails', businessDetails)
+  flashNotification(yar, 'Success', 'You have updated your business email')
 }
 
 export {

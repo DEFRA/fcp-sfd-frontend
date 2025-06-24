@@ -1,142 +1,187 @@
-import { describe, test, expect, vi } from 'vitest'
-import {
-  defaultAddress,
-  testAddress,
-  newAddress,
-  emptyAddress
-} from '../../constants/test-addresses.js'
-import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 
+// Things we need to mock
+import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+
+// Thing under test
+import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
 const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 
-vi.mock('../../../../src/schemas/business/business-address.js', () => ({
-  businessAddressSchema: {
-    validate: vi.fn()
-  }
+// Mocks
+vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
+  setSessionData: vi.fn()
 }))
 
-const viewPath = 'business/business-address-enter'
+describe('business address enter', () => {
+  const request = {}
+  let h
+  let mockData
+  let err
 
-const createViewHandler = () => {
-  const state = vi.fn().mockReturnThis()
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
 
-  return {
-    view: vi.fn().mockReturnValue({ state }),
-    state
-  }
-}
-
-const createRedirectHandler = () => {
-  const state = vi.fn().mockReturnThis()
-  const unstate = vi.fn().mockReturnThis()
-
-  return {
-    redirect: vi.fn().mockReturnValue({ state, unstate }),
-    state,
-    unstate
-  }
-}
-
-describe('enter business address', () => {
   describe('GET /business-address-enter', () => {
-    test('should have the correct method and path', () => {
-      expect(getBusinessAddressEnter.method).toBe('GET')
-      expect(getBusinessAddressEnter.path).toBe('/business-address-enter')
-    })
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
+        }
 
-    test.each([
-      ['with test address in state', testAddress, testAddress],
-      ['with empty state', {}, defaultAddress]
-    ])('should render view %s', (_, stateMock, expectedAddress) => {
-      const request = { state: stateMock }
-      const { view, state } = createViewHandler()
+        // Mock the yar object with a set method
+        mockData = getMockData()
 
-      getBusinessAddressEnter.handler(request, { view })
+        request.yar = {
+          set: vi.fn(),
+          get: vi.fn().mockReturnValue(mockData)
+        }
+      })
 
-      expect(view).toHaveBeenCalledWith(viewPath, expectedAddress)
-      expect(state).toHaveBeenCalledWith('originalAddress', JSON.stringify(expectedAddress))
+      test('it fetches the data from the session', async () => {
+        await getBusinessAddressEnter.handler(request, h)
+
+        expect(request.yar.get).toHaveBeenCalledWith('businessDetailsData')
+        expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
+      })
+
+      test('it sets the fetched data on the yar state', async () => {
+        await getBusinessAddressEnter.handler(request, h)
+
+        expect(request.yar.set).toHaveBeenCalledWith('businessAddressEnterData', mockData)
+      })
     })
   })
 
   describe('POST /business-address-enter', () => {
-    test('should have the correct method and path', () => {
-      expect(postBusinessAddressEnter.method).toBe('POST')
-      expect(postBusinessAddressEnter.path).toBe('/business-address-enter')
-    })
-
-    test('should handle validation failure with detailed errors', async () => {
-      const request = { payload: emptyAddress }
-
-      const h = {
-        view: vi.fn().mockReturnThis(),
+    beforeEach(() => {
+      const responseStub = {
         code: vi.fn().mockReturnThis(),
         takeover: vi.fn().mockReturnThis()
       }
 
-      const err = {
-        details: [
-          { path: ['address1'], message: 'Enter address line 1, typically the building and street' },
-          { path: ['city'], message: 'Enter town or city' },
-          { path: ['country'], message: 'Enter a country' }
-        ]
+      h = {
+        redirect: vi.fn(() => h),
+        view: vi.fn(() => responseStub)
       }
 
-      await postBusinessAddressEnter.options.validate.failAction(request, h, err)
+      // Mock yar.set for session
+      request.yar = {
+        set: vi.fn(),
+        get: vi.fn().mockReturnValue(getMockData())
+      }
 
-      expect(h.view).toHaveBeenCalledWith(viewPath, {
-        ...emptyAddress,
-        errors: {
-          address1: { text: err.details[0].message },
-          city: { text: err.details[1].message },
-          country: { text: err.details[2].message }
-        }
+      request.payload = {
+        address1: 'New address 1',
+        address2: '',
+        city: 'Sandford',
+        county: '',
+        postcode: 'SK22 1DL',
+        country: 'United Kingdom'
+      }
+      request.pre = { sessionData: request.payload }
+    })
+
+    describe('when a request succeeds', () => {
+      describe('and the validation passes', () => {
+        test('it redirects to the /business-address-check page', async () => {
+          await postBusinessAddressEnter.options.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-address-check')
+        })
+
+        test('sets the payload on the yar state', async () => {
+          await postBusinessAddressEnter.options.handler(request, h)
+
+          expect(setSessionData).toHaveBeenCalledWith(
+            request.yar,
+            'businessAddressEnterData',
+            'businessAddress',
+            request.payload
+          )
+        })
       })
 
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
-    })
+      describe('and the validation fails', () => {
+        beforeEach(() => {
+          err = {
+            details: [
+              {
+                message: 'Postal code or zip code must be 10 characters or less',
+                path: ['postcode'],
+                type: 'string.max'
+              }
+            ]
+          }
+        })
 
-    test('should handle validation failure with no error details', async () => {
-      const request = { payload: emptyAddress }
+        test('it returns the page successfully with the error summary banner', async () => {
+          // Calling the fail action handler
+          await postBusinessAddressEnter.options.validate.failAction(request, h, err)
 
-      const h = {
-        view: vi.fn().mockReturnThis(),
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
-
-      const err = {}
-
-      await postBusinessAddressEnter.options.validate.failAction(request, h, err)
-
-      expect(h.view).toHaveBeenCalledWith(viewPath, {
-        ...emptyAddress,
-        errors: {}
+          expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageDataError())
+        })
       })
-
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
     })
-
-    test('should redirect to check page on successful submission', () => {
-      const request = { payload: newAddress }
-      const { redirect, state, unstate } = createRedirectHandler()
-
-      postBusinessAddressEnter.options.handler(request, { redirect })
-
-      expect(redirect).toHaveBeenCalledWith('/business-address-check')
-      expect(unstate).toHaveBeenCalledWith('originalAddress')
-
-      for (const [key, value] of Object.entries(newAddress)) {
-        expect(state).toHaveBeenCalledWith(key, value)
-      }
-    })
-  })
-
-  test('should export all routes', () => {
-    expect(businessAddressRoutes).toEqual([
-      getBusinessAddressEnter,
-      postBusinessAddressEnter
-    ])
   })
 })
+
+const getMockData = () => {
+  return {
+    businessName: 'Agile Farm Ltd',
+    businessAddress: {
+      address1: '10 Skirbeck Way',
+      address2: '',
+      city: 'Maidstone',
+      county: '',
+      postcode: 'SK22 1DL',
+      country: 'United Kingdom'
+    },
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'Enter your business address',
+    metaDescription: 'Enter the address for your business.',
+    address: {
+      address1: '10 Skirbeck Way',
+      address2: '',
+      city: 'Maidstone',
+      county: '',
+      postcode: 'SK22 1DL',
+      country: 'United Kingdom'
+    },
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}
+
+const getPageDataError = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'Enter your business address',
+    metaDescription: 'Enter the address for your business.',
+    address: {
+      address1: 'New address 1',
+      address2: '',
+      city: 'Sandford',
+      county: '',
+      postcode: 'SK22 1DL',
+      country: 'United Kingdom'
+    },
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron',
+    errors: {
+      postcode: {
+        text: 'Postal code or zip code must be 10 characters or less'
+      }
+    }
+  }
+}

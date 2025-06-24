@@ -1,98 +1,101 @@
-import { describe, test, expect, vi } from 'vitest'
-import {
-  testAddress,
-  defaultAddress,
-  emptyAddress,
-  newAddress
-} from '../../constants/test-addresses.js'
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
+
+// Thing we need to mock
+import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+
+// Thing under test
 import { businessAddressCheckRoutes } from '../../../../src/routes/business/business-address-check-routes.js'
+const [getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
 
-const [
-  getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
+// Mocks
+vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
+  flashNotification: vi.fn()
+}))
 
-const createViewHandler = () => ({
-  view: vi.fn().mockReturnThis()
-})
+describe('business address check', () => {
+  const request = {}
+  let h
 
-describe('check business address', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   describe('GET /business-address-check', () => {
-    test('should have the correct method and path', () => {
-      expect(getBusinessAddressCheck.method).toBe('GET')
-      expect(getBusinessAddressCheck.path).toBe('/business-address-check')
-    })
-
-    test.each([
-      ['full address from state', testAddress, { ...testAddress }],
-      ['empty address from state', {}, { ...emptyAddress }],
-      [
-        'partial address from state',
-        {
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
-        },
-        {
-          ...emptyAddress,
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
         }
-      ]
-    ])('should render view with %s', (_, stateMock, expectedAddress) => {
-      const h = createViewHandler()
-      const request = { state: stateMock }
 
-      getBusinessAddressCheck.handler(request, h)
+        // Mock the yar object with a set method
+        request.yar = {
+          get: vi.fn().mockReturnValue(getMockData())
+        }
+      })
 
-      expect(h.view).toHaveBeenCalledWith('business/business-address-check', expectedAddress)
+      test('it returns the page successfully', async () => {
+        await getBusinessAddressCheck.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-address-check', getPageData())
+      })
     })
   })
 
   describe('POST /business-address-check', () => {
-    test('should have the correct method and path', () => {
-      expect(postBusinessAddressCheck.method).toBe('POST')
-      expect(postBusinessAddressCheck.path).toBe('/business-address-check')
-    })
-
-    test.each([
-      ['new address from state', newAddress, { ...newAddress }],
-      ['empty address from state', {}, { ...emptyAddress }],
-      [
-        'partial address from state',
-        {
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
-        },
-        {
-          ...emptyAddress,
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
+    describe('when a request succeeds', () => {
+      beforeEach(() => {
+        h = {
+          redirect: vi.fn(() => h)
         }
-      ]
-    ])('should redirect with %s', (_, stateMock, expectedAddress) => {
-      const request = { state: stateMock }
-      const state = vi.fn().mockReturnThis()
-      const unstate = vi.fn().mockReturnThis()
+      })
 
-      const h = {
-        redirect: vi.fn().mockReturnValue({ state, unstate })
-      }
+      test('it redirects to the /business-details page', async () => {
+        await postBusinessAddressCheck.handler(request, h)
 
-      postBusinessAddressCheck.handler(request, h)
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+      })
 
-      expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(state).toHaveBeenCalledWith('showSuccessBanner', 'true')
+      test('it sets the notification message title to "Success", and the text to "You have updated your business address"', async () => {
+        await postBusinessAddressCheck.handler(request, h)
 
-      for (const [key, value] of Object.entries(expectedAddress)) {
-        expect(state).toHaveBeenCalledWith(key, value)
-      }
-
-      expect(unstate).toHaveBeenCalledWith('originalBusinessName')
+        expect(flashNotification).toHaveBeenCalledWith(request.yar, 'Success', 'You have updated your business address')
+      })
     })
-  })
-
-  test('should export all routes', () => {
-    expect(businessAddressCheckRoutes).toEqual([
-      getBusinessAddressCheck,
-      postBusinessAddressCheck
-    ])
   })
 })
+
+const getMockData = () => {
+  return {
+    businessName: 'Agile Farm Ltd',
+    businessAddress: {
+      address1: '10 Skirbeck Way',
+      address2: '',
+      city: 'Maidstone',
+      county: '',
+      postcode: 'SK22 1DL',
+      country: 'United Kingdom'
+    },
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-address-enter' },
+    cancelLink: '/business-details',
+    changeLink: '/business-address-enter',
+    pageTitle: 'Check your business address is correct before submitting',
+    metaDescription: 'Check the address for your business is correct.',
+    address: [
+      '10 Skirbeck Way',
+      'Maidstone',
+      'SK22 1DL',
+      'United Kingdom'
+    ],
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}

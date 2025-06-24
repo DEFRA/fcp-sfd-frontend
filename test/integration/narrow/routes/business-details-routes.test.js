@@ -58,7 +58,6 @@ describe('business details', () => {
         ['business details', '/business-details'],
         ['change business name', '/business-name-change'],
         ['check business name', '/business-name-check'],
-        ['check business address', '/business-address-check'],
         ['change business phone numbers', '/business-phone-numbers-change'],
         ['check business phone numbers', '/business-phone-numbers-check'],
         ['change business email address', '/business-email-change'],

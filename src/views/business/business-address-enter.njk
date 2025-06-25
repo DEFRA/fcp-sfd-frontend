@@ -6,28 +6,19 @@
 {% from "common/navigation/back-link.njk" import appBackLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
-{% set pageTitle = "Enter your business address" %}
-{% set metaDescription = "Enter the address for your business." %}
-
 {% block beforeContent %}
-    {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
-    userName="Alfred Waldron"
-) }}
-
-    {{ appBackLink() }}
-
+  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
 {% endblock %}
 
-{% block content %}
 
-{% if errors %}
+{% block content %}
+  {{ appBackLink(backLink) }}
+  {% if errors %}
     {{ govukErrorSummary({
         titleText: "There is a problem",
         errorList: errors | toErrorList
     }) }}
-{% endif %}
+  {% endif %}
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
@@ -35,7 +26,7 @@
       <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Enter your business address
+            {{ pageTitle }}
           </h1>
         </legend>
 
@@ -46,10 +37,10 @@
           hint: {
             text: "Include flat and floor numbers, where appropriate"
           },
-          id: "address1",
+          id: "address-1",
           name: "address1",
-          value: address1,
-          autocomplete: "address-line1",
+          value: address.address1,
+          autocomplete: "address-1",
           errorMessage: errors.address1 and {
             text: errors.address1.text
           }
@@ -59,10 +50,10 @@
           label: {
             text: "Address line 2 (optional)"
           },
-          id: "address2",
+          id: "address-2",
           name: "address2",
-          value: address2,
-          autocomplete: "address-line2",
+          value: address.address2,
+          autocomplete: "address-2",
           errorMessage: errors.address2 and {
             text: errors.address2.text
           }
@@ -73,12 +64,12 @@
             text: "Town or city"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCity",
-          name: "addressCity",
-          value: addressCity,
+          id: "city",
+          name: "city",
+          value: address.city,
           autocomplete: "address-level2",
-          errorMessage: errors.addressCity and {
-            text: errors.addressCity.text
+          errorMessage: errors.city and {
+            text: errors.city.text
           }
         }) }}
 
@@ -87,11 +78,11 @@
             text: "County (optional)"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCounty",
-          name: "addressCounty",
-          value: addressCounty,
-          errorMessage: errors.addressCounty and {
-            text: errors.addressCounty.text
+          id: "county",
+          name: "county",
+          value: address.county,
+          errorMessage: errors.county and {
+            text: errors.county.text
           }
         }) }}
 
@@ -100,12 +91,12 @@
             text: "Postal code or zip code (if you have one)"
           },
           classes: "govuk-input--width-10",
-          id: "addressPostcode",
-          name: "addressPostcode",
-          value: addressPostcode,
+          id: "postcode",
+          name: "postcode",
+          value: address.postcode,
           autocomplete: "postal-code",
-          errorMessage: errors.addressPostcode and {
-            text: errors.addressPostcode.text
+          errorMessage: errors.postcode and {
+            text: errors.postcode.text
           }
         }) }}
 
@@ -114,21 +105,22 @@
             text: "Country"
           },
           classes: "govuk-!-width-two-thirds",
-          id: "addressCountry",
-          name: "addressCountry",
-          value: addressCountry,
+          id: "country",
+          name: "country",
+          value: address.country,
           autocomplete: "country-name",
-          errorMessage: errors.addressCountry and {
-            text: errors.addressCountry.text
+          errorMessage: errors.country and {
+            text: errors.country.text
           }
         }) }}
       </fieldset>
 
       {{ govukButton({
-        text: "Continue"
+        text: "Continue",
+        preventDoubleClick: true
       }) }}
-      
-      <p class="govuk-body"><a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
+
+      <p class="govuk-body"><a href="{{backLink.href}}" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
     </form>
   </div>
 </div>

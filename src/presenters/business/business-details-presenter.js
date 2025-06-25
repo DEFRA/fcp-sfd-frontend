@@ -13,7 +13,7 @@ const businessDetailsPresenter = (data, yar) => {
     businessTelephone: data.businessTelephone ?? 'Not added',
     businessMobile: data.businessMobile ?? 'Not added',
     businessEmail: data.businessEmail,
-    singleBusinessIdentifier: data.singleBusinessIdentifier ?? null,
+    sbi: data.sbi ?? null,
     vatNumber: data.vatNumber ?? null,
     tradeNumber: data.tradeNumber ?? null,
     vendorRegistrationNumber: data.vendorRegistrationNumber ?? null,

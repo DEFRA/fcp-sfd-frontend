@@ -16,27 +16,30 @@ Frontend service for the Single Front Door (SFD) service. This service provides 
 
 | Name | Default Value | Required | Description |
 | --- | --- | --- | --- |
-| ALLOW_ERROR_VIEWS | false | No | Enable error route views in local development to inspect error pages |
+| ALLOW_ERROR_VIEWS | `false` | No | Enable error route views in local development to inspect error pages |
 | DEFRA_ID_WELL_KNOWN_URL | null | No | The Defra Identity well known URL - Readable endpoint for DefraId |
 | DEFRA_ID_POLICY | null | No | The Defra Identity policy - Enables multiple microservices to share same DefraId active token (Must be the same for all FCP microservices) |
 | DEFRA_ID_CLIENT_ID | null | No | The Defra Identity client ID - Unique code for identifying fcp-sfd-frontend |
 | DEFRA_ID_CLIENT_SECRET | null | No | The Defra Identity client secret - client secret for fcp-sfd-frontend |
 | DEFRA_ID_SERVICE_ID | null | No |The Defra Identity service ID - Service ID for SFD |
-| DEFRA_ID_REDIRECT_URL | null | No | The Defra Identity redirect URl - URL of the page to be redirected immediatly after user has succesfully signed in |
-| DEFRA_ID_SIGN_OUT_REDIRECT_URL | null | No | The Defra Identity sign out redirect URL - URL of the page to be redirected after user has succesfully signed out |
-| DEFRA_ID_REFRESH_TOKENS | true | No | Defra Identity refresh tokens - Set to true to enable auto refresh of Defra Identity tokens |
+| DEFRA_ID_REDIRECT_URL | null | No | The Defra Identity redirect URl - URL of the page to be redirected immediately after the user has successfully signed in |
+| DEFRA_ID_SIGN_OUT_REDIRECT_URL | null | No | The Defra Identity sign out redirect URL - URL of the page to be redirected after the user has successfully signed out |
+| DEFRA_ID_REFRESH_TOKENS | `true` | No | Defra Identity refresh tokens - Set to true to enable auto refresh of Defra Identity tokens |
+| DAL_ENDPOINT | `http://fcp-dal-api:3005/graphql`| No | Data access layer (DAL) endpoint |
 
 ## Setup
 
 Clone the repository and install dependencies:
+```
 git clone https://github.com/DEFRA/fcp-sfd-frontend.git
 cd fcp-sfd-frontend
 npm install
+```
 
-Create a `.env` file in the root of the project with the required environment variables:
-ALLOW_ERROR_VIEWS=true/false
+## Environment variables
 
-The following DEFRA_ID variables are also to be added onto the `.env` file, values for the variables are [here](https://defra.sharepoint.com/teams/Team1974/FCP%20Front%20Door%20team/Forms/AllItems.aspx?id=%2Fteams%2FTeam1974%2FFCP%20Front%20Door%20team%2FTechnology%2FProtected%5FData&viewid=9296ac29%2D76a0%2D4373%2Db652%2Dd876b3b8e35f)
+Create a `.env` file in the root of the project with the required environment variables. 
+The following DEFRA_ID variables are need to be added onto the `.env` file, values for the variables are [here](https://defra.sharepoint.com/teams/Team1974/FCP%20Front%20Door%20team/Forms/AllItems.aspx?id=%2Fteams%2FTeam1974%2FFCP%20Front%20Door%20team%2FTechnology%2FProtected%5FData&viewid=9296ac29%2D76a0%2D4373%2Db652%2Dd876b3b8e35f)
 ```bash
 DEFRA_ID_WELL_KNOWN_URL
 DEFRA_ID_CLIENT_ID
@@ -47,67 +50,52 @@ DEFRA_ID_POLICY
 
 ## Running the application
 
-We recommend using the [fcp-sfd-core](https://github.com/DEFRA/fcp-sfd-core) repository for local development. You can howerver run this service independently by following the instructions below.
+You can either run this service independently or alternatively run the [fcp-sfd-core](https://github.com/DEFRA/fcp-sfd-core) repository for local development if you need to run more services simultaneously. 
 
 ### Local development
 
-To run the application in development mode with hot reloading without container:
+To run the application in development mode with hot reloading without starting up a container:
 ```
 npm run dev
 ```
 This will start the server and watch for changes to both server and client files.
 
-### Build container image
+### Building the Docker image
 
-Container images are built using Docker Compose
+Container images are built using Docker Compose. It's important to note that in order to successfully run the [fcp-dal-api](https://github.com/defra/fcp-dal-api) and its [upstream-mock](https://github.com/defra/fcp-dal-upstream-mock) to interact with the Data Access Layer (DAL), you _must_ run this service as a Docker container. This is because the [Docker Compose configuration](./compose.yaml) for this repository pulls and runs the Docker images for the `fcp-dal-api` and `fcp-dal-upstream-mock` (a.k.a. the `kits-mock`) from the Docker registry.
 
-When using the Docker Compose files in development the local `app` folder will
-be mounted on top of the `app` folder within the Docker container, hiding the CSS files that were generated during the Docker build.  For the site to render correctly locally `npm run build` must be run on the host system.
-
-
-By default, the start script will build (or rebuild) images so there will
-rarely be a need to build images manually. However, this can be achieved
-through the Docker Compose
-[build](https://docs.docker.com/compose/reference/build/) command:
+First, build the Docker image:
 ```
-# Build container images
-docker-compose build
+docker compose build
 ```
 
-### Start
+### Starting the Docker container
 
-Use Docker Compose to run service locally.
+After building the image, run the service locally in a container alongside `fcp-dal-api` and `fcp-dal-upstream-mock`:
+```
+docker compose up
+```
+Use the `-d` at the end of the above command to run in detached mode e.g. if you wish to view logs in another application such as Docker Desktop.
 
-```
-docker-compose up --build
-```
+You can find further information on how SFD integrates with the DAL on [Confluence](https://eaflood.atlassian.net/wiki/spaces/SFD/pages/5712838853/Single+Front+Door+Integration+with+Data+Access+Layer).
 
 ## Tests
-
-### Test structure
-
-The tests have been structured into subfolders:
-
-- `test/unit` - Unit tests for individual modules
-- `test/integration` - Integration tests for API endpoints and server functionality
 
 ### Running tests
 
 Run the tests with:
+```
 npm test
+```
 
-## Project Structure
-
-- `src/` - Application source code
-  - `client/` - Frontend assets (JavaScript, SCSS)
-  - `config/` - Configuration files
-  - `constants/` - Application constants
-  - `plugins/` - Hapi server plugins
-  - `routes/` - API routes and handlers
-  - `schemas/` - Validation schemas
-  - `utils/` - Utility functions
-  - `views/` - Nunjucks templates
-- `test/` - Test files
+You can also run the tests in a container:
+```
+npm run docker:test
+```
+Or to run the tests in watch mode:
+```
+npm run docker:test:watch
+```
 
 ## Server-side Caching
 

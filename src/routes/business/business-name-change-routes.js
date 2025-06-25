@@ -1,5 +1,5 @@
 import { businessNameSchema } from '../../schemas/business/business-name-schema.js'
-import { formatValidationErrors } from '../../utils/validation-error-handler.js'
+import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessNameChangePresenter } from '../../presenters/business/business-name-change-presenter.js'
 import { fetchBusinessNameService } from '../../services/business/fetch-business-name-service.js'

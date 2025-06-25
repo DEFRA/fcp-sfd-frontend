@@ -83,9 +83,7 @@ const getPageData = () => {
     businessName: 'Agile Farm Ltd',
     businessAddress: {
       address1: '10 Skirbeck Way',
-      address2: '',
       city: 'Maidstone',
-      county: '',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },

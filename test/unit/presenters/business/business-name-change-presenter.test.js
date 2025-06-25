@@ -12,7 +12,7 @@ describe('businessAddressEnterPresenter', () => {
     data = {
       sbi: '123456789',
       userName: 'Alfred Waldron',
-      businessName: 'Agile Farm Ltd',
+      businessName: 'Agile Farm Ltd'
     }
   })
 

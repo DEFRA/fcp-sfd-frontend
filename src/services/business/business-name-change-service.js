@@ -4,16 +4,16 @@
  */
 
 const businessNameChangeService = async (state) => {
-    // Incorrect at the moment need to sort the state out
-    const data = request.param
+  // Incorrect at the moment need to sort the state out
+  const data = request.param
 
-    const pageData = businessNameChangePresenter(data)
+  const pageData = businessNameChangePresenter(data)
 
-    return {
-        pageData
-    }
+  return {
+    pageData
+  }
 }
 
 export {
-    businessNameChangeService
+  businessNameChangeService
 }

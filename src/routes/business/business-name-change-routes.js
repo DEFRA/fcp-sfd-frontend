@@ -31,7 +31,7 @@ const postBusinessNameChange = {
         const sessionData = request.yar.get('businessNameChangeData')
         const pageData = businessNameChangePresenter(sessionData, request.payload)
 
-        return h.view('business/business-name-change', {...pageData, errors}).code(BAD_REQUEST).takeover()
+        return h.view('business/business-name-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {

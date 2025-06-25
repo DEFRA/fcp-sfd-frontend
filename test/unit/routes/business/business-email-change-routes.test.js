@@ -1,15 +1,20 @@
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { businessEmailChangeRoutes } from '../../../../src/routes/business/business-email-change-routes.js'
+import { fetchBusinessEmailChangeService } from '../../../../src/services/business/fetch-business-email-change-service.js'
+import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter.js'
 
 const [getBusinessEmailChange, postBusinessEmailChange] = businessEmailChangeRoutes
 
+const businessEmail = 'name@example.com'
+
 const createMockRequest = (overrides = {}) => ({
   payload: {
-    businessEmail: 'name@example.com',
+    businessEmail,
     ...overrides
   },
   state: {
-    businessEmail: 'name@example.com',
+    businessEmail,
     ...overrides
   }
 })
@@ -31,28 +36,52 @@ const createMockResponse = () => {
   }
 }
 
+vi.mock('../../../../src/services/business/fetch-business-email-change-service.js', () => ({
+  fetchBusinessEmailChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
+  setSessionData: vi.fn()
+}))
+
+vi.mock('../../../../src/presenters/business/business-email-change-presenter.js', () => ({
+  businessEmailChangePresenter: vi.fn()
+}))
+
 describe('change business email', () => {
+  let h
+  let request
+  let businessEmailChange
+  let pageData
+  beforeEach(() => {
+    vi.clearAllMocks()
+    h = {
+      view: vi.fn().mockReturnValue({})
+    }
+
+    businessEmailChange = {}
+    pageData = {}
+    request = {
+      payload: {
+        businessEmail
+      },
+      yar: {}
+    }
+
+    fetchBusinessEmailChangeService.mockResolvedValue(businessEmailChange)
+    businessEmailChangePresenter.mockReturnValue(pageData)
+  })
+
   describe('GET /business-email-change', () => {
     test('should have the correct method and path', () => {
       expect(getBusinessEmailChange.method).toBe('GET')
       expect(getBusinessEmailChange.path).toBe('/business-email-change')
     })
 
-    test('should render the correct view with data', () => {
-      const request = createMockRequest()
-      const stateMock = vi.fn().mockReturnThis()
-
-      const h = {
-        view: vi.fn().mockReturnValue({ state: stateMock })
-      }
-
-      getBusinessEmailChange.handler(request, h)
-
-      expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
-        businessEmail: 'name@example.com'
-      })
-
-      expect(stateMock).toHaveBeenCalledWith('originalBusinessEmail', 'name@example.com')
+    test('should render business-email-change.njk view with page data', async () => {
+      await getBusinessEmailChange.handler(request, h)
+      expect(fetchBusinessEmailChangeService).toHaveBeenCalled(request.yar)
+      expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', pageData)
     })
   })
 
@@ -80,24 +109,18 @@ describe('change business email', () => {
       })
 
       test('should accept valid email', () => {
-        const result = schema.validate({ businessEmail: 'name@example.com' })
+        const result = schema.validate({ businessEmail })
 
         expect(result.error).toBeFalsy()
       })
     })
 
-    test('should redirect on successful submission', () => {
-      const request = createMockRequest()
-      const stateMock = vi.fn().mockReturnThis()
+    test('should redirect to business-email-check on successful submission', async () => {
+      const { h } = createMockResponse()
+      await postBusinessEmailChange.options.handler(request, h)
 
-      const h = {
-        redirect: vi.fn().mockReturnValue({ state: stateMock })
-      }
-
-      postBusinessEmailChange.options.handler(request, h)
-
+      expect(setSessionData).toHaveBeenCalledWith(request.yar, 'businessDetails', 'changeBusinessEmail', request.payload.businessEmail)
       expect(h.redirect).toHaveBeenCalledWith('/business-email-check')
-      expect(stateMock).toHaveBeenCalledWith('businessEmail', 'name@example.com')
     })
 
     describe('validation failAction', () => {
@@ -111,11 +134,11 @@ describe('change business email', () => {
 
         await postBusinessEmailChange.options.validate.failAction(request, h, err)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
-          businessEmail: '',
+        expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', {
           errors: {
             businessEmail: { text: 'Enter business email address' }
-          }
+          },
+          ...pageData
         })
 
         expect(h.code).toHaveBeenCalledWith(400)
@@ -128,9 +151,9 @@ describe('change business email', () => {
 
         await postBusinessEmailChange.options.validate.failAction(request, h, {})
 
-        expect(h.view).toHaveBeenCalledWith('business/business-email-change', {
-          businessEmail: '',
-          errors: {}
+        expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', {
+          errors: {},
+          ...pageData
         })
 
         expect(h.code).toHaveBeenCalledWith(400)

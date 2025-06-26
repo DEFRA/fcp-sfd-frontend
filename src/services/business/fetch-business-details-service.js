@@ -14,10 +14,13 @@ const fetchBusinessDetailsService = async (yar) => {
   // If the sessionData.businessDetailsUpdated is true then it means the user has updated the data on the change pages
   // and therefore we need to return the mock data (this will be replaced with an API call)
   if (sessionData === null || sessionData.businessDetailsUpdated === true) {
-    const variables = { sbi: '107183280', crn: '9477368292' } // replace when defraid is setup
-    const email = 'not-a-real-email@test.co.uk' // replace when defraid is setup
+    // replace variables and email when defraid is setup
+    const variables = { sbi: '107183280', crn: '9477368292' }
+    const email = 'not-a-real-email@test.co.uk'
     const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
-    return !dalResponse.errors ? dalResponse.data : dalResponse // what should this module return when the dalConnector throws an error
+    return !dalResponse.errors ? dalResponse.data : dalResponse
+    // what should this module return when the dalConnector throws an error
+    // probably handle it all here and then throw
   }
 
   // Otherwise the data has not been updated so return the session data

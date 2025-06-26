@@ -8,19 +8,19 @@ const businessDetailsPresenter = (data, yar) => {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
-    address: formatAddress(data.businessAddress),
-    businessName: data.businessName,
-    businessTelephone: data.businessTelephone ?? 'Not added',
-    businessMobile: data.businessMobile ?? 'Not added',
-    businessEmail: data.businessEmail,
-    sbi: data.sbi ?? null,
-    vatNumber: data.vatNumber ?? null,
-    tradeNumber: data.tradeNumber ?? null,
-    vendorRegistrationNumber: data.vendorRegistrationNumber ?? null,
-    countyParishHoldingNumber: data.countyParishHoldingNumber ?? null,
-    businessLegalStatus: data.businessLegalStatus ?? null,
-    businessType: data.businessType ?? null,
-    userName: data.userName
+    address: formatAddress(data.business.info.address),
+    businessName: data.business.info.name,
+    businessTelephone: data.business.info.phone.landline ?? 'Not added',
+    businessMobile: data.business.info.phone.mobile ?? 'Not added',
+    businessEmail: data.business.info.email.address,
+    sbi: data.business.sbi ?? null,
+    vatNumber: data.business.info.vat ?? null,
+    tradeNumber: data.business.info.traderNumber ?? null,
+    vendorRegistrationNumber: data.business.info.vendorNumber ?? null,
+    countyParishHoldingNumber: null,
+    businessLegalStatus: data.business.info.legalStatus.type ?? null,
+    businessType: data.business.info.type.type ?? null,
+    userName: `${data.customer.info.name.title} ${data.customer.info.name.first} ${data.customer.info.name.last}`
   }
 }
 

@@ -1,5 +1,5 @@
 export const businessDetailsQuery = `
- query Business($sbi: ID!, $crn: ID!) {
+  query Business($sbi: ID!, $crn: ID!) {
   business(sbi: $sbi) {
     organisationId
     sbi
@@ -27,6 +27,11 @@ export const businessDetailsQuery = `
         country
         dependentLocality
         doubleDependentLocality
+        line1
+        line2
+        line3
+        line4
+        line5
       }
       email {
         address
@@ -47,5 +52,4 @@ export const businessDetailsQuery = `
     }
   }
 }
-
 `

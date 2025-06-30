@@ -1,8 +1,13 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
+const mockDalConnector = vi.fn()
+vi.mock('../../../../src/dal/connector.js', () => ({
+  dalConnector: mockDalConnector
+}))
+
 // Thing under test
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+const { fetchBusinessDetailsService } = await import('../../../../src/services/business/fetch-business-details-service.js')
 
 describe('fetchBusinessDetailsService', () => {
   let yar
@@ -18,10 +23,10 @@ describe('fetchBusinessDetailsService', () => {
       }
     })
 
-    test('it correctly returns the mock data', async () => {
+    test('it correctly returns data from the DAL', async () => {
+      mockDalConnector.mockResolvedValue(getMockData())
       const result = await fetchBusinessDetailsService(yar)
-
-      expect(result).toEqual(getMockData())
+      expect(result).toMatchObject(getMockData().data)
     })
   })
 
@@ -32,10 +37,10 @@ describe('fetchBusinessDetailsService', () => {
       }
     })
 
-    test('it correctly returns the mock data', async () => {
+    test('it correctly returns data from the DAL', async () => {
+      mockDalConnector.mockResolvedValue(getMockData())
       const result = await fetchBusinessDetailsService(yar)
-
-      expect(result).toEqual(getMockData())
+      expect(result).toEqual(getMockData().data)
     })
   })
 
@@ -56,51 +61,25 @@ describe('fetchBusinessDetailsService', () => {
 
 const getSessionData = (businessDetailsUpdated) => {
   return {
-    businessName: 'Other farm name',
-    businessAddress: {
-      address1: 'Other address name',
-      address2: '',
-      city: 'Maidstone',
-      county: '',
-      postcode: 'SK22 1DL',
-      country: 'United Kingdom'
+    data: {
+      business: {
+        info: {
+          name: 'Farm Name'
+        }
+      }
     },
-    businessTelephone: '01234567890',
-    businessMobile: '01234567890',
-    businessEmail: 'a.farmer@farms.com',
-    sbi: '123456789',
-    vatNumber: '',
-    tradeNumber: '987654',
-    vendorRegistrationNumber: '699368',
-    countyParishHoldingNumber: '12/563/0998',
-    businessLegalStatus: 'Sole proprietorship',
-    businessType: 'Central or local government',
-    userName: 'Other user name',
     businessDetailsUpdated
   }
 }
 
 const getMockData = () => {
   return {
-    businessName: 'Agile Farm Ltd',
-    businessAddress: {
-      address1: '10 Skirbeck Way',
-      address2: '',
-      city: 'Maidstone',
-      county: '',
-      postcode: 'SK22 1DL',
-      country: 'United Kingdom'
-    },
-    businessTelephone: '01234567890',
-    businessMobile: '01234567890',
-    businessEmail: 'a.farmer@farms.com',
-    sbi: '123456789',
-    vatNumber: '',
-    tradeNumber: '987654',
-    vendorRegistrationNumber: '699368',
-    countyParishHoldingNumber: '12/563/0998',
-    businessLegalStatus: 'Sole proprietorship',
-    businessType: 'Central or local government',
-    userName: 'Alfred Waldron'
+    data: {
+      business: {
+        info: {
+          name: 'Farm Name'
+        }
+      }
+    }
   }
 }

@@ -29,7 +29,34 @@ const businessDetailsPresenter = (data, yar) => {
  * @private
  */
 const formatAddress = (businessAddress) => {
-  return Object.values(businessAddress).filter(Boolean)
+  // if the named addresses are true
+  // then use them
+  const addressFromLookup = {
+    flatname: businessAddress.flatName,
+    number: businessAddress.buildingNumberRange,
+    buildingName: businessAddress.buildingName,
+    street: businessAddress.street,
+    city: businessAddress.city,
+    county: businessAddress.county
+  }
+
+  const manualAddress = {
+    line1: businessAddress.line1,
+    line2: businessAddress.line2,
+    line3: businessAddress.line3,
+    line4: businessAddress.line4,
+    line5: businessAddress.line5,
+    postcode: businessAddress.postalCode,
+    country: businessAddress.country
+  }
+  if (Object.values(addressFromLookup).filter(Boolean).length === 0) {
+    return manualAddress
+  }
+  return Array.from(Object.values({
+    ...addressFromLookup,
+    postcode: businessAddress.postalCode,
+    country: businessAddress.country
+  }))
 }
 
 export {

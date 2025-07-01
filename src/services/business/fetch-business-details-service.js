@@ -20,8 +20,10 @@ const fetchBusinessDetailsService = async (yar) => {
           postcode: 'SK22 1DL',
           country: 'United Kingdom'
         },
-        businessTelephone: '01234567890',
-        businessMobile: '01234567890',
+        businessPhones: {
+          telephone: '01234567890',
+          mobile: '01234567811'
+        },
         businessEmail: 'a.farmer@farms.com',
         sbi: '123456789',
         vatNumber: '',

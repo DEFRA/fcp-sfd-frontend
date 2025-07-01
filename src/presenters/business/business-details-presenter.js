@@ -25,12 +25,16 @@ const businessDetailsPresenter = (data, yar) => {
 }
 
 /**
- * Formats the business address by removing any falsy values (e.g. empty strings, null, undefined)
+ * Identify the correct array of address fields to use from the DAL response
+ * If **any** field in `addressFromLookup` is non-`null`, its values
+ * are returned as an array; otherwise the `manualInput` is returned as an array.
+ * Postcode and county are common to both address inputs and appended.
  * @private
+ * @param {Object} businessAddress the complete address object for the buisness
+  * @returns {string[]} An array of address fields (either from lookup or manual)
  */
+
 const formatAddress = (businessAddress) => {
-  // if the named addresses are true
-  // then use them
   const addressFromLookup = {
     flatname: businessAddress.flatName,
     number: businessAddress.buildingNumberRange,
@@ -40,20 +44,21 @@ const formatAddress = (businessAddress) => {
     county: businessAddress.county
   }
 
-  const manualAddress = {
+  const manualInput = {
     line1: businessAddress.line1,
     line2: businessAddress.line2,
     line3: businessAddress.line3,
     line4: businessAddress.line4,
     line5: businessAddress.line5,
-    postcode: businessAddress.postalCode,
-    country: businessAddress.country
+
   }
-  if (Object.values(addressFromLookup).filter(Boolean).length === 0) {
-    return manualAddress
-  }
+
+  const validLookupAddress = Object.values(addressFromLookup).some(values => values !== null)
+  const userAddress = validLookupAddress ? addressFromLookup : manualInput
+  const filteredUserAddress = Object.values(userAddress).filter(Boolean)
+
   return Array.from(Object.values({
-    ...addressFromLookup,
+    ...filteredUserAddress,
     postcode: businessAddress.postalCode,
     country: businessAddress.country
   }))

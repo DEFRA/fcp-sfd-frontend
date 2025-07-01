@@ -49,6 +49,70 @@ describe('businessNameChangePresenter', () => {
         expect(result.businessName).toEqual(null)
       })
     })
+
+    describe('when the businessName property is undefined', () => {
+      beforeEach(() => {
+        data.businessName = undefined
+      })
+
+      test('it should return businessName as null', () => {
+        const result = businessNameChangePresenter(data)
+
+        expect(result.businessName).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "changeBusinessName" property', () => {
+    describe('when the changeBusinessName property is missing', () => {
+      beforeEach(() => {
+        delete data.changeBusinessName
+      })
+
+      test('it should fallback to businessName value', () => {
+        const result = businessNameChangePresenter(data)
+
+        expect(result.changeBusinessName).toEqual('Agile Farm Ltd')
+      })
+    })
+
+    describe('when the changeBusinessName property is undefined', () => {
+      beforeEach(() => {
+        data.changeBusinessName = undefined
+      })
+
+      test('it should fallback to businessName value', () => {
+        const result = businessNameChangePresenter(data)
+
+        expect(result.changeBusinessName).toEqual('Agile Farm Ltd')
+      })
+    })
+
+    describe('when both changeBusinessName and businessName are missing', () => {
+      beforeEach(() => {
+        delete data.changeBusinessName
+        delete data.businessName
+      })
+
+      test('it should return changeBusinessName as null', () => {
+        const result = businessNameChangePresenter(data)
+
+        expect(result.changeBusinessName).toEqual(null)
+      })
+    })
+
+    describe('when changeBusinessName is missing but businessName is undefined', () => {
+      beforeEach(() => {
+        delete data.changeBusinessName
+        data.businessName = undefined
+      })
+
+      test('it should return changeBusinessName as null', () => {
+        const result = businessNameChangePresenter(data)
+
+        expect(result.changeBusinessName).toEqual(null)
+      })
+    })
   })
 
   describe('the "sbi" property', () => {
@@ -63,12 +127,36 @@ describe('businessNameChangePresenter', () => {
         expect(result.sbi).toEqual(null)
       })
     })
+
+    describe('when the sbi property is undefined', () => {
+      beforeEach(() => {
+        data.sbi = undefined
+      })
+
+      test('it should return sbi as null', () => {
+        const result = businessNameChangePresenter(data)
+
+        expect(result.sbi).toEqual(null)
+      })
+    })
   })
 
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
         delete data.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = businessNameChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
+
+    describe('when the userName property is undefined', () => {
+      beforeEach(() => {
+        data.userName = undefined
       })
 
       test('it should return userName as null', () => {

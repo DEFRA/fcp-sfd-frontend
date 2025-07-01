@@ -30,7 +30,7 @@ const businessDetailsPresenter = (data, yar) => {
  * are returned as an array; otherwise the `manualInput` is returned as an array.
  * Postcode and county are common to both address inputs and appended.
  * @private
- * @param {Object} businessAddress the complete address object for the buisness
+ * @param {Object} businessAddress the complete address object for the business
   * @returns {string[]} An array of address fields (either from lookup or manual)
  */
 
@@ -49,8 +49,7 @@ const formatAddress = (businessAddress) => {
     line2: businessAddress.line2,
     line3: businessAddress.line3,
     line4: businessAddress.line4,
-    line5: businessAddress.line5,
-
+    line5: businessAddress.line5
   }
 
   const validLookupAddress = Object.values(addressFromLookup).some(values => values !== null)

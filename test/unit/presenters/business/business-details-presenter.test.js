@@ -10,7 +10,7 @@ describe('businessDetailsPresenter', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    
+
     data = {
       business: {
         organisationId: '5565448',

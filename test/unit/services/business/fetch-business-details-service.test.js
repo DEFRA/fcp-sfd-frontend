@@ -1,4 +1,3 @@
-// Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 const mockDalConnector = vi.fn()
@@ -10,10 +9,19 @@ vi.mock('../../../../src/dal/connector.js', () => ({
 const { fetchBusinessDetailsService } = await import('../../../../src/services/business/fetch-business-details-service.js')
 
 describe('fetchBusinessDetailsService', () => {
+  let data
   let yar
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    data = dalData
+
+    yar = {
+      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
+      set: vi.fn().mockReturnValue(data),
+      get: vi.fn().mockReturnValue(data)
+    }
   })
 
   describe('when sessionData is null', () => {

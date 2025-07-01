@@ -6,7 +6,9 @@ import { businessDetailsQuery } from '../../dal/queries/business-details.js'
  */
 
 const fetchBusinessDetailsService = async (yar) => {
-  const sessionData = yar.get('businessDetailsData')
+  // Refactor: Remove stubbed data and instead call the API to get the business details associated with the users log in
+  // This will be using the consolidated view API
+  // The data needed for the business details page.
 
   // If sessionData is null it means it has never been set and therefore this is the first time the user
   // has hit the page. In this case return the mock data (this will be replaced with an API call)

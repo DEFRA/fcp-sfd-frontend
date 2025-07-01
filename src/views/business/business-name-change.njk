@@ -7,18 +7,18 @@
 {% from "common/sub-header/macro.njk" import subHeader %}
 
 {% block beforeContent %}
-    {{ subHeader(businessName=subHeader.businessName, sbi=subHeader.sbi, userName=subHeader.userName) }}
+    {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+    {{ appBackLink() }}
 {% endblock %}
 
 {% block content %}
-  {{ appBackLink(backLink) }}
   {% if errors %}
     {{ govukErrorSummary({
         titleText: "There is a problem",
-        errorList: {
+        errorList: [{
             text: errors.businessName.text,
             href: "#business-name"
-        }
+        }]
     }) }}
   {% endif %}
 
@@ -34,9 +34,9 @@
           },
           id: "business-name",
           name: "businessName",
-          value: enterBusinessName,
-          errorMessage: errors.enterBusinessName and {
-            text: errors.enterBusinessName.text
+          value: businessName,
+          errorMessage: errors.businessName and {
+            text: errors.businessName.text
           }
         }) }}
       </div>

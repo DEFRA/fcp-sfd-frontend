@@ -28,7 +28,7 @@ const postBusinessNameChange = {
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
         const businessNameChange = await fetchBusinessNameChangeService(request.yar)
-        const pageData = businessNameChangePresenter(businessNameChange)
+        const pageData = businessNameChangePresenter(businessNameChange, request.yar)
 
         return h.view('business/business-name-change.njk', {
           errors, ...pageData

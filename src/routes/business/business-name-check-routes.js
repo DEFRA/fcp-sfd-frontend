@@ -1,23 +1,23 @@
+import { fetchBusinessNameChangeService } from '../../services/business/fetch-business-name-change-service.js'
+import { updateBusinessNameChangeService } from '../../services/business/update-business-name-change-service.js'
 import { businessNameCheckPresenter } from '../../presenters/business/business-name-check-presenter.js'
-import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
 const getBusinessNameCheck = {
   method: 'GET',
   path: '/business-name-check',
   handler: async (request, h) => {
-    const sessionData = request.yar.get('businessNameEnterData')
-    const pageData = businessNameCheckPresenter(sessionData)
+    const businessNameChange = await fetchBusinessNameChangeService(request.yar)
+    const pageData = businessNameCheckPresenter(businessNameChange, request.yar)
 
-    return h.view('business/business-name-check', pageData)
+    return h.view('business/business-name-check.njk', pageData)
   }
 }
 
 const postBusinessNameCheck = {
   method: 'POST',
   path: '/business-name-check',
-  handler: (request, h) => {
-    flashNotification(request.yar, 'Success', 'You have updated your business name')
-
+  handler: async (request, h) => {
+    await updateBusinessNameChangeService(request.yar)
     return h.redirect('/business-details')
   }
 }

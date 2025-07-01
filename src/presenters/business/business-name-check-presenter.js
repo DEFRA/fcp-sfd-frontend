@@ -3,7 +3,7 @@
  * @module businessNameCheckPresenter
  */
 
-const businessNameCheckPresenter = (data) => {
+const businessNameCheckPresenter = (data, yar) => {
   return {
     backLink: { href: '/business-name-change' },
     cancelLink: '/business-details',
@@ -11,6 +11,7 @@ const businessNameCheckPresenter = (data) => {
     pageTitle: 'Check your business name is correct before submitting',
     metaDescription: 'Check the name for your business is correct.',
     businessName: data.businessName ?? null,
+    changeBusinessName: data.changeBusinessName ?? data.businessName ?? null,
     sbi: data.sbi ?? null,
     userName: data.userName ?? null
   }

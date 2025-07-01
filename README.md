@@ -38,7 +38,7 @@ npm install
 
 ## Environment variables
 
-Create a `.env` file in the root of the project with the required environment variables. 
+Create a `.env` file in the root of the project with the required environment variables.
 The following DEFRA_ID variables are need to be added onto the `.env` file, values for the variables are [here](https://defra.sharepoint.com/teams/Team1974/FCP%20Front%20Door%20team/Forms/AllItems.aspx?id=%2Fteams%2FTeam1974%2FFCP%20Front%20Door%20team%2FTechnology%2FProtected%5FData&viewid=9296ac29%2D76a0%2D4373%2Db652%2Dd876b3b8e35f)
 ```bash
 DEFRA_ID_WELL_KNOWN_URL
@@ -48,17 +48,14 @@ DEFRA_ID_SERVICE
 DEFRA_ID_POLICY
 ```
 
+For working with the Data Access Layer, you will need to add the following environment variable to your `.env` file. The value can be found in the table above.
+```bash
+DAL_ENDPOINT
+```
+
 ## Running the application
 
-You can either run this service independently or alternatively run the [fcp-sfd-core](https://github.com/DEFRA/fcp-sfd-core) repository for local development if you need to run more services simultaneously. 
-
-### Local development
-
-To run the application in development mode with hot reloading without starting up a container:
-```
-npm run dev
-```
-This will start the server and watch for changes to both server and client files.
+You can either run this service independently or alternatively run the [fcp-sfd-core](https://github.com/DEFRA/fcp-sfd-core) repository for local development if you need to run more services simultaneously.
 
 ### Building the Docker image
 
@@ -84,11 +81,7 @@ You can find further information on how SFD integrates with the DAL on [Confluen
 ### Running tests
 
 Run the tests with:
-```
-npm test
-```
 
-You can also run the tests in a container:
 ```
 npm run docker:test
 ```

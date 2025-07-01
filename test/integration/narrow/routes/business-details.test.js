@@ -5,9 +5,6 @@ import { createServer } from '../../../../src/server.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
 import { businessDetailsQuery } from '../../../../src/dal/queries/business-details.js'
 
-// new query isnt returning CPH and that means teh DAL connector is saying 'no data' because of how ti handles errors
-// gql can return errors and data
-
 describe('/business-details', async () => {
   const url = '/business-details'
   const dataFromDal = await dalConnector(businessDetailsQuery, { sbi: '107183280', crn: '9477368292' }, 'mr-farmer@test.co.uk')
@@ -31,10 +28,7 @@ describe('/business-details', async () => {
 
       test('it should display the correct business address', async () => {
         const $businessAddress = $businessContactDetails.find('.govuk-summary-list__value').eq(1).text().replace(/\s+/g, ' ').trim()
-        const addressObject = dataFromDal.data.business.info.address
-        const formattedAddress = Object.values(addressObject).filter(Boolean).join(' ')
-        console.log(formattedAddress)
-        expect($businessAddress).toBe(formattedAddress)
+        expect($businessAddress).toBe('THE COACH HOUSE 7 STOCKWELL HALL HAREWOOD AVENUE DARLINGTON Dorset CO9 3LS United Kingdom')
       })
 
       test('it should display the correct business landline phone number', async () => {

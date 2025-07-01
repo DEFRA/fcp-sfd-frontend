@@ -33,9 +33,9 @@ describe('businessDetailsPresenter', () => {
             country: 'United Kingdom',
             dependentLocality: 'ELLICOMBE',
             doubleDependentLocality: 'WOODTHORPE',
-            line1: 'Estate Office',
-            line2: 'Crawley',
-            line3: null,
+            line1: '76 Robinswood Road',
+            line2: 'UPPER CHUTE',
+            line3: 'Child Okeford',
             line4: null,
             line5: null
           },
@@ -69,7 +69,16 @@ describe('businessDetailsPresenter', () => {
         pageTitle: 'View and update your business details',
         metaDescription: 'View and change the details for your business.',
         // address needs seperate test
-        // address: ['10 Skirbeck Way', 'Lonely Lane', 'Maidstone', 'Somerset', 'SK22 1DL', 'United Kingdom'],
+        address: [
+          'THE COACH HOUSE',
+          '7',
+          'STOCKWELL HALL',
+          'HAREWOOD AVENUE',
+          'DARLINGTON',
+          'Dorset',
+          'CO9 3LS',
+          'United Kingdom',
+        ],
         businessName: data.business.info.name,
         businessTelephone: data.business.info.phone.landline,
         businessMobile: data.business.info.phone.mobile ?? 'Not added',
@@ -98,37 +107,51 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the address has no named properties', () => {
-      console.log(data)
-      // remove the fields
-      test('it should use the lined properties ', () => {
+    describe('when the named properties include a building number', () => {
+      test('it should prefix the street with the number', () => {
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.address).toEqual(['Estate Office', 'Crawley'])
+        expect(result.address).toStrictEqual(['THE COACH HOUSE', 'STOCKWELL HALL', '7 HAREWOOD AVENUE', 'DARLINGTON', 'Dorset', 'CO9 3LS', 'United Kingdom'])
       })
     })
 
-    describe('the "businessTelephone" property', () => {
-      describe('when the businessAddress property is missing', () => {
-        beforeEach(() => {
-          data.business.info.phone.landline = null
-        })
+    describe('when the address has no named properties', () => {
+      // remove the fields
+      test('it should use the lined properties ', () => {
+        data.business.info.address.flatName = null
+        data.business.info.address.buildingNumberRange = null
+        data.business.info.address.buildingName = null
+        data.business.info.address.street = null
+        data.business.info.address.city = null
+        data.business.info.address.county = null
 
-        test('it should return the text "Not added', () => {
-          const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar)
 
-          expect(result.businessTelephone).toEqual('Not added')
-        })
+        expect(result.address).toEqual(['76 Robinswood Road', 'UPPER CHUTE', 'Child Okeford', 'CO9 3LS', 'United Kingdom'])
       })
     })
+  })
 
-    describe('the "businessMobile" property', () => {
-      describe('when the businessMobile property is missing', () => {
-        test('it should return the text "Not added', () => {
-          const result = businessDetailsPresenter(data, yar)
+  describe('the "businessTelephone" property', () => {
+    describe('when the businessAddress property is missing', () => {
+      beforeEach(() => {
+        data.business.info.phone.landline = null
+      })
 
-          expect(result.businessMobile).toEqual('Not added')
-        })
+      test('it should return the text "Not added', () => {
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.businessTelephone).toEqual('Not added')
+      })
+    })
+  })
+
+  describe('the "businessMobile" property', () => {
+    describe('when the businessMobile property is missing', () => {
+      test('it should return the text "Not added', () => {
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.businessMobile).toEqual('Not added')
       })
     })
   })

@@ -75,7 +75,7 @@ describe('businessDetailsPresenter', () => {
           'DARLINGTON',
           'Dorset',
           'CO9 3LS',
-          'United Kingdom',
+          'United Kingdom'
         ],
         businessName: data.business.info.name,
         businessTelephone: data.business.info.phone.landline,

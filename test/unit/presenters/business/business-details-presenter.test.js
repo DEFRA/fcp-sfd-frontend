@@ -73,9 +73,8 @@ describe('businessDetailsPresenter', () => {
         // address needs seperate test
         address: [
           'THE COACH HOUSE',
-          '7',
           'STOCKWELL HALL',
-          'HAREWOOD AVENUE',
+          '7 HAREWOOD AVENUE',
           'DARLINGTON',
           'Dorset',
           'CO9 3LS',
@@ -105,7 +104,7 @@ describe('businessDetailsPresenter', () => {
       test('it should use the named properties ', () => {
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.address).toStrictEqual(['THE COACH HOUSE', '7', 'STOCKWELL HALL', 'HAREWOOD AVENUE', 'DARLINGTON', 'Dorset', 'CO9 3LS', 'United Kingdom'])
+        expect(result.address).toStrictEqual(['THE COACH HOUSE', 'STOCKWELL HALL', '7 HAREWOOD AVENUE', 'DARLINGTON', 'Dorset', 'CO9 3LS', 'United Kingdom'])
       })
     })
 
@@ -114,6 +113,15 @@ describe('businessDetailsPresenter', () => {
         const result = businessDetailsPresenter(data, yar)
 
         expect(result.address).toStrictEqual(['THE COACH HOUSE', 'STOCKWELL HALL', '7 HAREWOOD AVENUE', 'DARLINGTON', 'Dorset', 'CO9 3LS', 'United Kingdom'])
+      })
+    })
+
+    describe('when the named properties does not have a building number', () => {
+      test('it should leave the street property unchanged', () => {
+        data.business.info.address.buildingNumberRange = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.address).toStrictEqual(['THE COACH HOUSE', 'STOCKWELL HALL', 'HAREWOOD AVENUE', 'DARLINGTON', 'Dorset', 'CO9 3LS', 'United Kingdom'])
       })
     })
 

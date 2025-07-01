@@ -6,25 +6,22 @@ import { businessDetailsQuery } from '../../dal/queries/business-details.js'
  */
 
 const fetchBusinessDetailsService = async (yar) => {
-  // Refactor: Remove stubbed data and instead call the API to get the business details associated with the users log in
-  // This will be using the consolidated view API
-  // The data needed for the business details page.
+  const businessDetails = yar.get('businessDetails') ?? await getFromDal(yar)
+  // map and validate the data
+  return businessDetails
+}
 
-  // If sessionData is null it means it has never been set and therefore this is the first time the user
-  // has hit the page. In this case return the mock data (this will be replaced with an API call)
+const getFromDal = async (yar) => {
+  // replace variables and email when defraid is setup
+  const variables = { sbi: '107183280', crn: '9477368292' }
+  const email = 'not-a-real-email@test.co.uk'
 
-  // If the sessionData.businessDetailsUpdated is true then it means the user has updated the data on the change pages
-  // and therefore we need to return the mock data (this will be replaced with an API call)
-  if (sessionData === null || sessionData.businessDetailsUpdated === true) {
-    // replace variables and email when defraid is setup
-    const variables = { sbi: '107183280', crn: '9477368292' }
-    const email = 'not-a-real-email@test.co.uk'
-    const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
-    return !dalResponse.errors ? dalResponse.data : dalResponse
+  const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
+  if (dalResponse.data) {
+    yar.set('businessDetails', dalResponse.data)
+    return dalResponse.data
   }
-
-  // Otherwise the data has not been updated so return the session data
-  return sessionData
+  return dalResponse
 }
 
 export {

@@ -19,8 +19,6 @@ const fetchBusinessDetailsService = async (yar) => {
     const email = 'not-a-real-email@test.co.uk'
     const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
     return !dalResponse.errors ? dalResponse.data : dalResponse
-    // what should this module return when the dalConnector throws an error
-    // probably handle it all here and then throw
   }
 
   // Otherwise the data has not been updated so return the session data

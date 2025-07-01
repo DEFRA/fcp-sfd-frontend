@@ -68,7 +68,6 @@ describe('businessDetailsPresenter', () => {
         notification: { title: 'Update', text: 'Business details updated successfully' },
         pageTitle: 'View and update your business details',
         metaDescription: 'View and change the details for your business.',
-        // address needs seperate test
         address: [
           'THE COACH HOUSE',
           'STOCKWELL HALL',
@@ -124,7 +123,6 @@ describe('businessDetailsPresenter', () => {
     })
 
     describe('when the address has no named properties', () => {
-      // remove the fields
       test('it should use the lined properties ', () => {
         data.business.info.address.flatName = null
         data.business.info.address.buildingNumberRange = null

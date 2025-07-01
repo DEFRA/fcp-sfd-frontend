@@ -55,6 +55,12 @@ const formatAddress = (businessAddress) => {
 
   const validLookupAddress = Object.values(addressFromLookup).some(values => values !== null)
   const userAddress = validLookupAddress ? addressFromLookup : manualInput
+  // if there is a number and a street
+  //  combine them and delete the number only
+  if (userAddress.number && userAddress.street) {
+    userAddress.street = `${userAddress.number} ${userAddress.street}`
+    userAddress.number = null
+  }
   const filteredUserAddress = Object.values(userAddress).filter(Boolean)
 
   return Array.from(Object.values({

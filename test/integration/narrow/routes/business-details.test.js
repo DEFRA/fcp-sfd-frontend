@@ -28,7 +28,7 @@ describe('/business-details', async () => {
 
       test('it should display the correct business address', async () => {
         const $businessAddress = $businessContactDetails.find('.govuk-summary-list__value').eq(1).text().replace(/\s+/g, ' ').trim()
-        expect($businessAddress).toBe('THE COACH HOUSE 7 STOCKWELL HALL HAREWOOD AVENUE DARLINGTON Dorset CO9 3LS United Kingdom')
+        expect($businessAddress).toBe('THE COACH HOUSE STOCKWELL HALL 7 HAREWOOD AVENUE DARLINGTON Dorset CO9 3LS United Kingdom')
       })
 
       test('it should display the correct business landline phone number', async () => {

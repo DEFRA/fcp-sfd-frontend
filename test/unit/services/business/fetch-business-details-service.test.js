@@ -1,4 +1,5 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { dalData } from '../../../mockObjects/mock-business-details.js'
 
 const mockDalConnector = vi.fn()
 vi.mock('../../../../src/dal/connector.js', () => ({
@@ -24,69 +25,51 @@ describe('fetchBusinessDetailsService', () => {
     }
   })
 
-  describe('when sessionData is null', () => {
+  describe('when there is no session data in cache', () => {
     beforeEach(() => {
       yar = {
-        get: vi.fn().mockReturnValue(null)
+        get: vi.fn().mockReturnValue(null),
+        set: vi.fn()
       }
     })
 
     test('it correctly returns data from the DAL', async () => {
-      mockDalConnector.mockResolvedValue(getMockData())
+      mockDalConnector.mockResolvedValue(getMockData)
       const result = await fetchBusinessDetailsService(yar)
-      expect(result).toMatchObject(getMockData().data)
+      expect(result).toMatchObject(getMockData.data)
     })
   })
 
-  describe('when businessDetailsUpdated is true', () => {
+  describe('when there is session data in cache', () => {
     beforeEach(() => {
       yar = {
-        get: vi.fn().mockReturnValue(getSessionData(true))
+        get: vi.fn().mockReturnValue(getSessionData),
+        set: vi.fn()
       }
     })
 
-    test('it correctly returns data from the DAL', async () => {
-      mockDalConnector.mockResolvedValue(getMockData())
+    test('it correctly returns session data', async () => {
       const result = await fetchBusinessDetailsService(yar)
-      expect(result).toEqual(getMockData().data)
-    })
-  })
-
-  describe('when businessDetailsUpdated is false', () => {
-    beforeEach(() => {
-      yar = {
-        get: vi.fn().mockReturnValue(getSessionData(false))
-      }
-    })
-
-    test('it correctly returns the session data', async () => {
-      const result = await fetchBusinessDetailsService(yar)
-
-      expect(result).toEqual(getSessionData(false))
+      expect(result).toMatchObject(getSessionData)
     })
   })
 })
 
-const getSessionData = (businessDetailsUpdated) => {
-  return {
-    data: {
-      business: {
-        info: {
-          name: 'Farm Name'
-        }
+const getSessionData = {
+  data: {
+    business: {
+      info: {
+        name: 'Farm Name From Cache'
       }
-    },
-    businessDetailsUpdated
+    }
   }
 }
 
-const getMockData = () => {
-  return {
-    data: {
-      business: {
-        info: {
-          name: 'Farm Name'
-        }
+const getMockData = {
+  data: {
+    business: {
+      info: {
+        name: 'Farm Name'
       }
     }
   }

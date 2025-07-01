@@ -3,7 +3,7 @@
  * @module businessNameCheckPresenter
  */
 
-const businessNameCheckPresenter = (data, yar) => {
+const businessNameCheckPresenter = (data) => {
   return {
     backLink: { href: '/business-name-change' },
     cancelLink: '/business-details',

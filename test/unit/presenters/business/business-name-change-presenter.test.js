@@ -7,7 +7,6 @@ import { businessNameChangePresenter } from '../../../../src/presenters/business
 describe('businessNameChangePresenter', () => {
   let data
   let presenterData
-  let yar
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -17,12 +16,6 @@ describe('businessNameChangePresenter', () => {
       changeBusinessName: 'Agile Farm Ltd',
       sbi: '123456789',
       userName: 'Alfred Waldron'
-    }
-
-    yar = {
-      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
-      set: vi.fn().mockReturnValue(data),
-      get: vi.fn().mockReturnValue(data)
     }
 
     presenterData = {
@@ -83,20 +76,6 @@ describe('businessNameChangePresenter', () => {
 
         expect(result.userName).toEqual(null)
       })
-    })
-  })
-
-  describe('when called with yar parameter', () => {
-    test('it correctly presents data when provided with valid yar', () => {
-      const result = businessNameChangePresenter(data, yar)
-
-      expect(result).toEqual(presenterData)
-    })
-
-    test('it correctly presents data when provided with no yar', () => {
-      const result = businessNameChangePresenter(data, null)
-
-      expect(result).toEqual(presenterData)
     })
   })
 })

@@ -1,4 +1,9 @@
-const businessNameChangePresenter = (data, yar) => {
+/**
+ * Formats data ready for presenting in the `/business-name-change` page
+ * @module businessNameChangePresenter
+ */
+
+const businessNameChangePresenter = (data) => {
   return {
     backLink: { href: '/business-details' },
     pageTitle: 'What is your business name?',

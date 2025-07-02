@@ -10,9 +10,9 @@
 
 {% block beforeContent %}
     {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
-    userName="Alfred Waldron"
+    businessName=businessName,
+    sbi=sbi,
+    userName=userName
 ) }}
 
     {{ appBackLink() }}
@@ -34,7 +34,7 @@
                 text: "Business name"
               },
               value: {
-                text: businessName
+                text: changeBusinessName
               },
               actions: {
                 items: [

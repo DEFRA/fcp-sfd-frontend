@@ -45,6 +45,20 @@ describe('businessPhoneNumbersCheckPresenter', () => {
     expect(result).toEqual(presenterData)
   })
 
+  test('confirm Business-Telephone is empty when changeBusinessPhones.telephone value is Not added', () => {
+    data.changeBusinessPhones.telephone = null
+    const result = businessPhoneNumbersCheckPresenter(data, yar)
+
+    expect(result.businessTelephone).toEqual('Not added')
+  })
+
+  test('confirm Business-Mobile is empty when changeBusinessPhones.mobile value is Not added', () => {
+    data.changeBusinessPhones.mobile = null
+    const result = businessPhoneNumbersCheckPresenter(data, yar)
+
+    expect(result.businessMobile).toEqual('Not added')
+  })
+
   test('it correctly presents null notification value when provided with no yar', () => {
     const result = businessPhoneNumbersCheckPresenter(data, null)
 

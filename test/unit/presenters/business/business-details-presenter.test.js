@@ -21,8 +21,10 @@ describe('businessDetailsPresenter', () => {
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       },
-      businessTelephone: '01234567890',
-      businessMobile: '01234567890',
+      businessPhones: {
+        telephone: '01234567890',
+        mobile: '01234567890'
+      },
       businessEmail: 'a.farmer@farms.com',
       sbi: '123456789',
       vatNumber: '',
@@ -91,7 +93,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "businessTelephone" property', () => {
     describe('when the businessAddress property is missing', () => {
       beforeEach(() => {
-        data.businessTelephone = null
+        data.businessPhones.telephone = null
       })
 
       test('it should return the text "Not added', () => {
@@ -105,7 +107,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "businessMobile" property', () => {
     describe('when the businessMobile property is missing', () => {
       beforeEach(() => {
-        data.businessMobile = null
+        data.businessPhones.mobile = null
       })
 
       test('it should return the text "Not added', () => {

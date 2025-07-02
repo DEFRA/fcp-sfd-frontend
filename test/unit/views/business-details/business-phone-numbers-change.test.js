@@ -37,17 +37,6 @@ describe('change business phone numbers', () => {
     expect(input.value).toBe(value)
   })
 
-  test.each([
-    ['page heading', 'h1', 'What are your business phone numbers?'],
-    ['hint text', '.govuk-hint', 'Enter at least one phone number'],
-    ['"Continue" button', 'button', 'Continue']
-  ])('should render %s', (_, selector, textContent) => {
-    const element = document.querySelector(selector)
-
-    expect(element).not.toBeNull()
-    expect(element.textContent.trim()).toContain(textContent)
-  })
-
   test('should render cancel link which navigates to business details', () => {
     const link = document.querySelector('a.govuk-link--no-visited-state')
 

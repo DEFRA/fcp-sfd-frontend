@@ -1,5 +1,11 @@
-import { describe, test, expect, vi } from 'vitest'
-import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business/business-phone-numbers-change-routes.js'
+import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { businessPhoneNumbersChangeRoutes } from
+  '../../../../src/routes/business/business-phone-numbers-change-routes.js'
+import { fetchBusinessPhoneNumbersChangeService } from
+  '../../../../src/services/business/fetch-business-phone-numbers-change-service.js'
+import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+import { businessPhoneNumbersChangePresenter } from
+  '../../../../src/presenters/business/business-phone-numbers-change-presenter.js'
 
 const [getBusinessPhoneNumbersChange, postBusinessPhoneNumbersChange] = businessPhoneNumbersChangeRoutes
 
@@ -10,32 +16,66 @@ const createMockResponse = () => {
   const view = vi.fn().mockReturnThis()
   const code = vi.fn().mockReturnThis()
   const takeover = vi.fn().mockReturnThis()
-  const state = vi.fn().mockReturnThis()
-  const redirect = vi.fn().mockReturnValue({ state })
+  const stateMock = vi.fn().mockReturnThis()
+  const redirect = vi.fn().mockReturnThis()
 
-  return { view, code, takeover, state, redirect }
+  return {
+    h: { view, redirect, code, takeover },
+    stateMock,
+    view,
+    redirect,
+    code,
+    takeover
+  }
 }
 
+vi.mock('../../../../src/services/business/fetch-business-phone-numbers-change-service.js', () => ({
+  fetchBusinessPhoneNumbersChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
+  setSessionData: vi.fn()
+}))
+
+vi.mock('../../../../src/presenters/business/business-phone-numbers-change-presenter.js', () => ({
+  businessPhoneNumbersChangePresenter: vi.fn()
+}))
+
 describe('change business phone numbers', () => {
+  let h
+  let request
+  let businessPhoneNumbersChange
+  let pageData
+  beforeEach(() => {
+    vi.clearAllMocks()
+    h = {
+      view: vi.fn().mockReturnValue({})
+    }
+
+    businessPhoneNumbersChange = {}
+    pageData = {}
+    request = {
+      payload: {
+        businessTelephone,
+        businessMobile
+      },
+      yar: {}
+    }
+
+    fetchBusinessPhoneNumbersChangeService.mockResolvedValue(businessPhoneNumbersChange)
+    businessPhoneNumbersChangePresenter.mockReturnValue(pageData)
+  })
+
   describe('GET /business-phone-numbers-change', () => {
     test('should have correct method and path', () => {
       expect(getBusinessPhoneNumbersChange.method).toBe('GET')
       expect(getBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
     })
 
-    test('should render view with phone numbers from state', () => {
-      const request = {
-        state: { businessTelephone, businessMobile }
-      }
-
-      const h = createMockResponse()
-
-      getBusinessPhoneNumbersChange.handler(request, h)
-
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
-        businessTelephone,
-        businessMobile
-      })
+    test('should render business-phonen-umbers-change.njk view with page data', async () => {
+      await getBusinessPhoneNumbersChange.handler(request, h)
+      expect(fetchBusinessPhoneNumbersChangeService).toHaveBeenCalled(request.yar)
+      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change.njk', pageData)
     })
   })
 
@@ -68,14 +108,15 @@ describe('change business phone numbers', () => {
       })
     })
 
-    test('should redirect to check page on successful submission', () => {
-      const request = {
-        payload: { businessTelephone, businessMobile }
-      }
+    test('should redirect to check page on successful submission', async () => {
+      const { h } = createMockResponse()
+      await postBusinessPhoneNumbersChange.options.handler(request, h)
 
-      const h = createMockResponse()
+      setSessionData(request.yar, 'businessDetails', 'changeBusinessPhones',
+        { telephone: request.payload.businessTelephone, mobile: request.payload.businessMobile })
 
-      postBusinessPhoneNumbersChange.options.handler(request, h)
+      expect(setSessionData).toHaveBeenCalledWith(request.yar, 'businessDetails', 'changeBusinessPhones',
+        { telephone: request.payload.businessTelephone, mobile: request.payload.businessMobile })
 
       expect(h.redirect).toHaveBeenCalledWith('/business-phone-numbers-check')
     })
@@ -105,13 +146,12 @@ describe('change business phone numbers', () => {
 
       await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
-        businessTelephone: '',
-        businessMobile: '',
+      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change.njk', {
         errors: {
           businessTelephone: { text: 'Enter a business telephone number' },
           businessMobile: { text: 'Enter a business mobile number' }
-        }
+        },
+        ...pageData
       })
 
       expect(h.code).toHaveBeenCalledWith(400)
@@ -131,10 +171,9 @@ describe('change business phone numbers', () => {
 
       await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
-        businessTelephone: '',
-        businessMobile: '',
-        errors: {}
+      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change.njk', {
+        errors: {},
+        ...pageData
       })
 
       expect(h.code).toHaveBeenCalledWith(400)

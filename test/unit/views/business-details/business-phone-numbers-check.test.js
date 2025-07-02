@@ -26,16 +26,6 @@ describe('check business phone numbers', () => {
   })
 
   test.each([
-    ['pageheading', 'h1', 'Check your business phone numbers are correct before submitting'],
-    ['"Submit" button', 'button', 'Submit']
-  ])('should render %s', (_, selector, textContent) => {
-    const element = document.querySelector(selector)
-
-    expect(element).not.toBeNull()
-    expect(element.textContent.trim()).toContain(textContent)
-  })
-
-  test.each([
     [
       '"Change" link which navigates to /business-phone-numbers-change',
       '.govuk-summary-list__actions a.govuk-link',

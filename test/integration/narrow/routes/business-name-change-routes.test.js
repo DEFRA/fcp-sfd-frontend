@@ -55,7 +55,7 @@ describe('business name change routes', () => {
         })
 
         expect(response.statusCode).toBe(302)
-        expect(response.headers['content-type']).toContain('text/html')
+        expect(response.headers.location).toBe('/business-name-check')
       })
     })
 

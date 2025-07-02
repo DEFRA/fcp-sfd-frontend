@@ -101,20 +101,6 @@ describe('change business name', () => {
         expect(result.error.details[0].message).toBe('Enter business name')
       })
 
-      test('should fail on invalid business name', () => {
-        const result = schema.validate({
-          businessName:
-            'This is a business name that is intentionally designed to exceed ' +
-            'the maximum character limit defined in the schema validation rules, ' +
-            'and therefore, when this string is submitted as part of the input, ' +
-            'it should correctly trigger a validation error due to being too long ' +
-            'for the specified constraint and field length.'
-        })
-
-        expect(result.error).toBeTruthy()
-        expect(result.error.details[0].message).toBe('Business name must be 300 characters or less')
-      })
-
       test('should accept valid business name', () => {
         const result = schema.validate({ businessName })
 

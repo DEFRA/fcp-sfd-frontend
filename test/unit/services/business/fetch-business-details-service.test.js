@@ -38,6 +38,15 @@ describe('fetchBusinessDetailsService', () => {
       const result = await fetchBusinessDetailsService(yar)
       expect(result).toMatchObject(getMockData.data)
     })
+
+    describe('When the dal response contains no data property', () => {
+      test('it returns the full response object', async () => {
+        const dalErrorResponse = { error: 'error response from dal' }
+        mockDalConnector.mockResolvedValue(dalErrorResponse)
+        const result = await fetchBusinessDetailsService(yar)
+        expect(result).toMatchObject(dalErrorResponse)
+      })
+    })
   })
 
   describe('when there is session data in cache', () => {

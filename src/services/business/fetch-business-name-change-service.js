@@ -1,3 +1,8 @@
+/**
+ * Fetches the business name change data
+ * @module fetchBusinessNameChangeService
+ */
+
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 
 const fetchBusinessNameChangeService = async (yar) => {

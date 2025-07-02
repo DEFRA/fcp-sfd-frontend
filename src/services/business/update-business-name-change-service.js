@@ -1,3 +1,8 @@
+/**
+ * Updates the business name change data
+ * @module updateBusinessNameChangeService
+ */
+
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 

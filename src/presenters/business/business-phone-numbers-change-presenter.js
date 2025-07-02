@@ -1,8 +1,8 @@
 const businessPhoneNumbersChangePresenter = (data) => {
   return {
     backLink: { href: '/business-details' },
-    pageTitle: 'View and update your business details',
-    metaDescription: 'View and change the details for your business.',
+    pageTitle: 'What are your business phone numbers?',
+    metaDescription: 'Update the phone numbers for your business.',
     businessTelephone: data.changeBusinessPhones?.telephone ?? '',
     businessMobile: data.changeBusinessPhones?.mobile ?? '',
     businessName: data.businessName,

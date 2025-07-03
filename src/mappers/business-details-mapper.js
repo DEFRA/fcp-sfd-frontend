@@ -23,8 +23,8 @@ export const mapBusinessDetails = (raw) => {
     address: {
       lookup: {
         buildingNumberRange: value.business.info.address.buildingNumberRange,
-        buildingName: value.business.info.address.buildingName,
         flatName: value.business.info.address.flatName,
+        buildingName: value.business.info.address.buildingName,
         street: value.business.info.address.street,
         city: value.business.info.address.city,
         county: value.business.info.address.county

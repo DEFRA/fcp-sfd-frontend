@@ -5,55 +5,14 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
 
 describe('businessDetailsPresenter', () => {
-  let data
   let yar
+  let data
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
-
-    data = {
-      business: {
-        organisationId: '5565448',
-        sbi: '107183280',
-        info: {
-          name: 'HENLEY, RE',
-          vat: 'GB123456789',
-          traderNumber: '010203040506070880980',
-          vendorNumber: '694523',
-          legalStatus: { code: 102111, type: 'Sole Proprietorship' },
-          type: { code: 101443, type: 'Not Specified' },
-          address: {
-            buildingNumberRange: '7',
-            buildingName: 'STOCKWELL HALL',
-            flatName: 'THE COACH HOUSE',
-            street: 'HAREWOOD AVENUE',
-            city: 'DARLINGTON',
-            county: 'Dorset',
-            postalCode: 'CO9 3LS',
-            country: 'United Kingdom',
-            dependentLocality: 'ELLICOMBE',
-            doubleDependentLocality: 'WOODTHORPE',
-            line1: '76 Robinswood Road',
-            line2: 'UPPER CHUTE',
-            line3: 'Child Okeford',
-            line4: null,
-            line5: null
-          },
-          email: { address: 'henleyrej@eryelnehk.com.test' },
-          phone: { mobile: null, landline: '01234031859' }
-        }
-      },
-      customer: {
-        info: {
-          name: {
-            first: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese',
-            last: 'Cook',
-            title: 'Mrs.'
-          }
-        }
-      }
-    }
-
+    vi.resetModules() // vi is weird about clearing modules after each test, you must import AFTER calling reset
+    const { mappedData } = await import('../../../mockObjects/mock-business-details.js')
+    data = mappedData
     // Mock yar session manager
     yar = {
       flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
@@ -79,27 +38,26 @@ describe('businessDetailsPresenter', () => {
           'CO9 3LS',
           'United Kingdom'
         ],
-        businessName: data.business.info.name,
-        businessTelephone: data.business.info.phone.landline,
-        businessMobile: data.business.info.phone.mobile ?? 'Not added',
-        businessEmail: data.business.info.email.address,
-        sbi: data.business.sbi,
-        vatNumber: data.business.info.vat,
-        tradeNumber: data.business.info.traderNumber,
-        vendorRegistrationNumber: data.business.info.vendorNumber,
+        businessName: data.info.businessName,
+        businessTelephone: data.contact.landline,
+        businessMobile: data.mobile ?? 'Not added',
+        businessEmail: data.contact.email,
+        sbi: data.info.sbi,
+        vatNumber: data.info.vat,
+        tradeNumber: data.info.traderNumber,
+        vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumber: null, // CPH not available yet
-        businessLegalStatus: data.business.info.legalStatus.type,
-        businessType: data.business.info.type.type,
-        userName: `${data.customer.info.name.title} ${data.customer.info.name.first} ${data.customer.info.name.last}`
+        businessLegalStatus: data.info.legalStatus,
+        businessType: data.info.type,
+        userName: data.customer.fullName
       })
     })
   })
 
   describe('the "address" property', () => {
+    beforeEach(() => {
+    })
     describe('when the address has line properties and named properties', () => {
-      beforeEach(() => {
-      })
-
       test('it should use the named properties ', () => {
         const result = businessDetailsPresenter(data, yar)
 
@@ -117,7 +75,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the named properties does not have a building number', () => {
       test('it should leave the street property unchanged', () => {
-        data.business.info.address.buildingNumberRange = null
+        data.address.lookup.buildingNumberRange = null
         const result = businessDetailsPresenter(data, yar)
 
         expect(result.address).toStrictEqual(['THE COACH HOUSE', 'STOCKWELL HALL', 'HAREWOOD AVENUE', 'DARLINGTON', 'Dorset', 'CO9 3LS', 'United Kingdom'])
@@ -126,12 +84,12 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the address has no named properties', () => {
       test('it should use the lined properties ', () => {
-        data.business.info.address.flatName = null
-        data.business.info.address.buildingNumberRange = null
-        data.business.info.address.buildingName = null
-        data.business.info.address.street = null
-        data.business.info.address.city = null
-        data.business.info.address.county = null
+        data.address.lookup.flatName = null
+        data.address.lookup.buildingNumberRange = null
+        data.address.lookup.buildingName = null
+        data.address.lookup.street = null
+        data.address.lookup.city = null
+        data.address.lookup.county = null
 
         const result = businessDetailsPresenter(data, yar)
 
@@ -143,7 +101,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "businessTelephone" property', () => {
     describe('when the businessAddress property is missing', () => {
       beforeEach(() => {
-        data.business.info.phone.landline = null
+        data.contact.landline = null
       })
 
       test('it should return the text "Not added', () => {

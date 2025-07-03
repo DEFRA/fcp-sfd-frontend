@@ -4,12 +4,16 @@ import { dalData } from '../../../mockObjects/mock-business-details'
 
 describe('fetchBusinessDetailsService', () => {
   let data
+  let mappedDalData
   let yar
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
+    vi.resetModules()
 
-    data = dalData
+    const { mappedData, dalData } = await import('../../../mockObjects/mock-business-details.js')
+    data = { data: dalData }
+    mappedDalData = mappedData
 
     yar = {
       flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),

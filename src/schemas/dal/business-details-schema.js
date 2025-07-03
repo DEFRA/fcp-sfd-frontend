@@ -39,7 +39,7 @@ export const rawBusinessDetailsSchema = Joi.object({
       }),
       phone: Joi.object({
         mobile: Joi.string().allow(null),
-        landline: Joi.string().allow(null),
+        landline: Joi.string().allow(null)
       })
     })
   }).required(),

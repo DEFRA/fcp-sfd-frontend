@@ -4,7 +4,7 @@ import { flashNotification } from '../../utils/notifications/flash-notification.
 const updateBusinessEmailChangeService = async (yar) => {
   await fetchBusinessDetailsService(yar)
   const businessDetails = yar.get('businessDetails')
-  businessDetails.business.info.email.address = businessDetails.changeBusinessEmail
+  businessDetails.contact.email = businessDetails.changeBusinessEmail
   yar.set('businessDetails', businessDetails)
   flashNotification(yar, 'Success', 'You have updated your business email')
 }

@@ -21,18 +21,16 @@ describe('business details', () => {
     return server
   }
 
-  const hookTimeout = 50000
-
   let server
 
   beforeEach(async () => {
     vi.clearAllMocks()
     server = await resetAndCreateServer()
-  }, hookTimeout)
+  })
 
   afterEach(async () => {
     await server.stop()
-  }, hookTimeout)
+  })
 
   describe('with error views enabled', () => {
     beforeAll(() => {
@@ -65,7 +63,11 @@ describe('business details', () => {
         ['change business legal status', '/business-legal-status-change'],
         ['change business type', '/business-type-change']
       ])('%s GET route responds correctly', async (_, url) => {
-        const response = await server.inject({ method: 'GET', url })
+        const options = {
+          method: 'GET',
+          url
+        }
+        const response = await server.inject(options)
 
         expect(response.statusCode).toBe(200)
         expect(response.headers['content-type']).toContain('text/html')

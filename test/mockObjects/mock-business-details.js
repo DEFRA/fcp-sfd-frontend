@@ -54,9 +54,9 @@ const mappedData = {
   },
   address: {
     lookup: {
+      flatName: 'THE COACH HOUSE',
       buildingNumberRange: '7',
       buildingName: 'STOCKWELL HALL',
-      flatName: 'THE COACH HOUSE',
       street: 'HAREWOOD AVENUE',
       city: 'DARLINGTON',
       county: 'Dorset'

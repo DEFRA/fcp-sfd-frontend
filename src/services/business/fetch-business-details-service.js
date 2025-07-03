@@ -1,5 +1,6 @@
 import { dalConnector } from '../../dal/connector.js'
 import { businessDetailsQuery } from '../../dal/queries/business-details.js'
+import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 /**
  * Fetches the business details associated with the logged in users business
  * @module fetchBusinessDetailsService
@@ -18,8 +19,9 @@ const getFromDal = async (yar) => {
 
   const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
   if (dalResponse.data) {
-    yar.set('businessDetails', dalResponse.data)
-    return dalResponse.data
+    const mappedResponse = mapBusinessDetails(dalResponse.data)
+    yar.set('businessDetails', mappedResponse)
+    return mappedResponse
   }
   return dalResponse
 }

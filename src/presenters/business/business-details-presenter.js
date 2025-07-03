@@ -8,19 +8,19 @@ const businessDetailsPresenter = (data, yar) => {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
-    address: formatAddress(data.business.info.address),
-    businessName: data.business.info.name,
-    businessTelephone: data.business.info.phone.landline ?? 'Not added',
-    businessMobile: data.business.info.phone.mobile ?? 'Not added',
-    businessEmail: data.business.info.email.address,
-    sbi: data.business.sbi ?? null,
-    vatNumber: data.business.info.vat ?? null,
-    tradeNumber: data.business.info.traderNumber ?? null,
-    vendorRegistrationNumber: data.business.info.vendorNumber ?? null,
+    address: formatAddress(data.address),
+    businessName: data.info.businessName,
+    businessTelephone: data.contact.landline ?? 'Not added',
+    businessMobile: data.contact.mobile ?? 'Not added',
+    businessEmail: data.contact.email,
+    sbi: data.info.sbi ?? null,
+    vatNumber: data.info.vat ?? null,
+    tradeNumber: data.info.traderNumber ?? null,
+    vendorRegistrationNumber: data.info.vendorNumber ?? null,
     countyParishHoldingNumber: null,
-    businessLegalStatus: data.business.info.legalStatus.type ?? null,
-    businessType: data.business.info.type.type ?? null,
-    userName: `${data.customer.info.name.title} ${data.customer.info.name.first} ${data.customer.info.name.last}`
+    businessLegalStatus: data.info.legalStatus ?? null,
+    businessType: data.info.type ?? null,
+    userName: data.customer.fullName
   }
 }
 
@@ -34,38 +34,24 @@ const businessDetailsPresenter = (data, yar) => {
   * @returns {string[]} An array of address fields (either from lookup or manual)
  */
 
-const formatAddress = (businessAddress) => {
-  const addressFromLookup = {
-    flatname: businessAddress.flatName,
-    number: businessAddress.buildingNumberRange,
-    buildingName: businessAddress.buildingName,
-    street: businessAddress.street,
-    city: businessAddress.city,
-    county: businessAddress.county
-  }
-
-  const manualInput = {
-    line1: businessAddress.line1,
-    line2: businessAddress.line2,
-    line3: businessAddress.line3,
-    line4: businessAddress.line4,
-    line5: businessAddress.line5
-  }
+const formatAddress = (address) => {
+  const addressFromLookup = address.lookup
+  const manualInput = address.manual
 
   const validLookupAddress = Object.values(addressFromLookup).some(values => values !== null)
   const userAddress = validLookupAddress ? addressFromLookup : manualInput
 
-  if (userAddress.number && userAddress.street) {
+  if (userAddress.buildingNumberRange && userAddress.street) {
     // without this the number and street are sperate entitiys and displayed on seperate lines
-    userAddress.street = `${userAddress.number} ${userAddress.street}`
-    userAddress.number = null
+    userAddress.street = `${userAddress.buildingNumberRange} ${userAddress.street}`
+    userAddress.buildingNumberRange = null
   }
   const filteredUserAddress = Object.values(userAddress).filter(Boolean)
 
   return Array.from(Object.values({
     ...filteredUserAddress,
-    postcode: businessAddress.postalCode,
-    country: businessAddress.country
+    postcode: address.postCode,
+    country: address.country
   }))
 }
 

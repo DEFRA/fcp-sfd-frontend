@@ -1,5 +1,4 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
-import { dalData } from '../../../mockObjects/mock-business-details.js'
 
 const mockDalConnector = vi.fn()
 vi.mock('../../../../src/dal/connector.js', () => ({
@@ -11,12 +10,16 @@ const { fetchBusinessDetailsService } = await import('../../../../src/services/b
 
 describe('fetchBusinessDetailsService', () => {
   let data
+  let mappedDalData
   let yar
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks()
+    vi.resetModules()
 
-    data = dalData
+    const { mappedData, dalData } = await import('../../../mockObjects/mock-business-details.js')
+    data = { data: dalData }
+    mappedDalData = mappedData
 
     yar = {
       flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
@@ -34,9 +37,9 @@ describe('fetchBusinessDetailsService', () => {
     })
 
     test('it correctly returns data from the DAL', async () => {
-      mockDalConnector.mockResolvedValue(getMockData)
+      mockDalConnector.mockResolvedValue(data)
       const result = await fetchBusinessDetailsService(yar)
-      expect(result).toMatchObject(getMockData.data)
+      expect(result).toMatchObject(mappedDalData)
     })
 
     describe('When the dal response contains no data property', () => {
@@ -69,16 +72,6 @@ const getSessionData = {
     business: {
       info: {
         name: 'Farm Name From Cache'
-      }
-    }
-  }
-}
-
-const getMockData = {
-  data: {
-    business: {
-      info: {
-        name: 'Farm Name'
       }
     }
   }

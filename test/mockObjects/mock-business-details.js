@@ -41,6 +41,47 @@ const dalData = {
   }
 }
 
+const mappedData = {
+  info: {
+    sbi: '107183280',
+    businessName: 'HENLEY, RE',
+    vat: 'GB123456789',
+    traderNumber: '010203040506070880980',
+    vendorNumber: '694523',
+    legalStatus: 'Sole Proprietorship',
+    type: 'Not Specified',
+    cph: null
+  },
+  address: {
+    lookup: {
+      buildingNumberRange: '7',
+      buildingName: 'STOCKWELL HALL',
+      flatName: 'THE COACH HOUSE',
+      street: 'HAREWOOD AVENUE',
+      city: 'DARLINGTON',
+      county: 'Dorset'
+    },
+    manual: {
+      line1: '76 Robinswood Road',
+      line2: 'UPPER CHUTE',
+      line3: 'Child Okeford',
+      line4: null,
+      line5: null
+    },
+    postCode: 'CO9 3LS',
+    country: 'United Kingdom'
+  },
+  contact: {
+    email: 'henleyrej@eryelnehk.com.test',
+    landline: '01234031859',
+    mobile: null
+  },
+  customer: {
+    fullName: 'Mrs. Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
+  }
+}
+
 export {
-  dalData
+  dalData,
+  mappedData
 }

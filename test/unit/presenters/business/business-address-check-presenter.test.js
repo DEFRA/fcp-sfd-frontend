@@ -5,27 +5,29 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { businessAddressCheckPresenter } from '../../../../src/presenters/business/business-address-check-presenter.js'
 
 describe('businessAddressCheckPresenter', () => {
-  let data
+  let businessDetailsData
+  let sessionData
 
   beforeEach(() => {
-    data = {
+    businessDetailsData = {
       businessName: 'Agile Farm Ltd',
-      businessAddress: {
-        address1: '10 Skirbeck Way',
-        address2: 'Lonely Lane',
-        city: 'Maidstone',
-        county: 'Somerset',
-        postcode: 'SK22 1DL',
-        country: 'United Kingdom'
-      },
       sbi: '123456789',
       userName: 'Alfred Waldron'
+    }
+
+    sessionData = {
+      address1: '10 Skirbeck Way',
+      address2: 'Lonely Lane',
+      city: 'Maidstone',
+      county: 'Somerset',
+      postcode: 'SK22 1DL',
+      country: 'United Kingdom'
     }
   })
 
   describe('when provided with business address check data', () => {
     test('it correctly presents the data', () => {
-      const result = businessAddressCheckPresenter(data)
+      const result = businessAddressCheckPresenter(businessDetailsData, sessionData)
 
       expect(result).toEqual({
         backLink: { href: '/business-address-enter' },
@@ -51,11 +53,11 @@ describe('businessAddressCheckPresenter', () => {
   describe('the "businessName" property', () => {
     describe('when the businessName property is missing', () => {
       beforeEach(() => {
-        delete data.businessName
+        delete businessDetailsData.businessName
       })
 
       test('it should return businessName as null', () => {
-        const result = businessAddressCheckPresenter(data)
+        const result = businessAddressCheckPresenter(businessDetailsData, sessionData)
 
         expect(result.businessName).toEqual(null)
       })
@@ -65,11 +67,11 @@ describe('businessAddressCheckPresenter', () => {
   describe('the "sbi" property', () => {
     describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
       beforeEach(() => {
-        delete data.sbi
+        delete businessDetailsData.sbi
       })
 
       test('it should return sbi as null', () => {
-        const result = businessAddressCheckPresenter(data)
+        const result = businessAddressCheckPresenter(businessDetailsData, sessionData)
 
         expect(result.sbi).toEqual(null)
       })
@@ -79,11 +81,11 @@ describe('businessAddressCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.userName
+        delete businessDetailsData.userName
       })
 
       test('it should return userName as null', () => {
-        const result = businessAddressCheckPresenter(data)
+        const result = businessAddressCheckPresenter(businessDetailsData, sessionData)
 
         expect(result.userName).toEqual(null)
       })
@@ -93,7 +95,7 @@ describe('businessAddressCheckPresenter', () => {
   describe('the "address" property', () => {
     describe('when the address has missing fields', () => {
       beforeEach(() => {
-        data.businessAddress = {
+        sessionData = {
           address1: '10 Skirbeck Way',
           address2: 'Lonely Lane',
           city: '',
@@ -104,7 +106,7 @@ describe('businessAddressCheckPresenter', () => {
       })
 
       test('it should remove them and return the address as an array', () => {
-        const result = businessAddressCheckPresenter(data)
+        const result = businessAddressCheckPresenter(businessDetailsData, sessionData)
 
         expect(result.address).toEqual(['10 Skirbeck Way', 'Lonely Lane', 'Somerset', 'SK22 1DL'])
       })

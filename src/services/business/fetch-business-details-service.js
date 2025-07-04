@@ -7,9 +7,7 @@ import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
  */
 
 const fetchBusinessDetailsService = async (yar) => {
-  const businessDetails = yar.get('businessDetails') ?? await getFromDal(yar)
-  // map and validate the data
-  return businessDetails
+  return yar.get('businessDetails') ?? await getFromDal(yar)
 }
 
 const getFromDal = async (yar) => {

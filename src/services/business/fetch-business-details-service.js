@@ -1,8 +1,11 @@
 import { dalConnector } from '../../dal/connector.js'
 import { businessDetailsQuery } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
+
 /**
- * Fetches the business details associated with the logged in users business
+ * Returns the businessDetails from the session cache if defined
+ * otherwise queries the DAL, maps the response, updates the cache
+ * and returns the mapped payload
  * @module fetchBusinessDetailsService
  */
 

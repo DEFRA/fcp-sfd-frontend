@@ -10,7 +10,7 @@ const businessAddressCheckPresenter = (businessDetails, session) => {
     changeLink: '/business-address-enter',
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
-    address: formatAddress(session),
+    address: formatAddress(session ?? businessDetails.businessAddress),
     businessName: businessDetails.businessName ?? null,
     sbi: businessDetails.sbi ?? null,
     userName: businessDetails.userName ?? null

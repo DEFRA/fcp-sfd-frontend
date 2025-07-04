@@ -31,7 +31,7 @@ describe('business address check routes', () => {
     test('when the request succeeds', async () => {
       // Due to the session cookie being set by the GET route for business
       // address enter we need to hit that page first
-      const getResponse = await server.inject({ method: 'GET', url: '/business-address-enter' })
+      const getResponse = await server.inject({ method: 'GET', url: '/business-details' })
       const cookie = getResponse.headers['set-cookie'][0].split(';')[0] // Extract cookie string
 
       const response = await server.inject({
@@ -50,7 +50,12 @@ describe('business address check routes', () => {
   describe('POST routes', () => {
     describe('when the request succeeds', () => {
       test('it redirects to the /business-details page', async () => {
-        const response = await server.inject({ method: 'POST', url: '/business-address-check' })
+        // Due to the session cookie being set by the GET route for business
+        // address enter we need to hit that page first
+        const getResponse = await server.inject({ method: 'GET', url: '/business-details' })
+        const cookie = getResponse.headers['set-cookie'][0].split(';')[0] // Extract cookie string
+
+        const response = await server.inject({ method: 'POST', url: '/business-address-check', headers: { cookie } })
 
         expect(response.statusCode).toBe(302)
         expect(response.headers.location).toBe('/business-details')

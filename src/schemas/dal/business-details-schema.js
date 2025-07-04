@@ -6,9 +6,9 @@ export const rawBusinessDetailsSchema = Joi.object({
     sbi: Joi.string().required(),
     info: Joi.object({
       name: Joi.string().required(),
-      vat: Joi.string().required(),
-      traderNumber: Joi.string().required(),
-      vendorNumber: Joi.string().required(),
+      vat: Joi.string().allow(null),
+      traderNumber: Joi.string().allow(null),
+      vendorNumber: Joi.string().allow(null),
       legalStatus: Joi.object({
         code: Joi.number().required(),
         type: Joi.string().required()

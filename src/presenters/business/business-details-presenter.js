@@ -13,13 +13,13 @@ const businessDetailsPresenter = (data, yar) => {
     businessTelephone: data.contact.landline ?? 'Not added',
     businessMobile: data.contact.mobile ?? 'Not added',
     businessEmail: data.contact.email,
-    sbi: data.info.sbi ?? null,
+    sbi: data.info.sbi,
     vatNumber: data.info.vat ?? null,
     tradeNumber: data.info.traderNumber ?? null,
     vendorRegistrationNumber: data.info.vendorNumber ?? null,
     countyParishHoldingNumber: null,
-    businessLegalStatus: data.info.legalStatus ?? null,
-    businessType: data.info.type ?? null,
+    businessLegalStatus: data.info.legalStatus,
+    businessType: data.info.type,
     userName: data.customer.fullName
   }
 }

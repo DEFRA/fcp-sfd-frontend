@@ -121,4 +121,48 @@ describe('businessDetailsPresenter', () => {
       })
     })
   })
+
+  describe('the "vatNumber" property', () => {
+    describe('when the property is null', () => {
+      test('it should return null', () => {
+        data.info.vat = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.vatNumber).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "traderNumber" property', () => {
+    describe('when the property is null', () => {
+      test('it should return null', () => {
+        data.info.traderNumber = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.tradeNumber).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "vendorRegistrationNumber" property', () => {
+    describe('when the property is null', () => {
+      test('it should return null', () => {
+        data.info.vendorNumber = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.vendorRegistrationNumber).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "notification" property', () => {
+    describe('when yar is falsey', () => {
+      test('it should return null', () => {
+        yar = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.notification).toEqual(null)
+      })
+    })
+  })
 })

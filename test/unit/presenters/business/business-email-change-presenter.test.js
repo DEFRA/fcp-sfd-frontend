@@ -1,6 +1,6 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter'
-import { dalData } from '../../../mockObjects/mock-business-details'
+import { dalData } from '../../../mocks/mock-business-details'
 
 const businessEmail = 'business.email@test.com'
 const changeBusinessEmail = 'change_business.email@test.com'

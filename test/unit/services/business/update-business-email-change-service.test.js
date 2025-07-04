@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
-import { mappedData } from '../../../mockObjects/mock-business-details'
+import { mappedData } from '../../../mocks/mock-business-details.js'
 
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
   fetchBusinessDetailsService: vi.fn()

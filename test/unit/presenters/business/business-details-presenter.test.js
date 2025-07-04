@@ -11,7 +11,7 @@ describe('businessDetailsPresenter', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
     vi.resetModules() // vi is weird about clearing modules after each test, you must import AFTER calling reset
-    const { mappedData } = await import('../../../mockObjects/mock-business-details.js')
+    const { mappedData } = await import('../../../mocks/mock-business-details.js')
     data = mappedData
     // Mock yar session manager
     yar = {

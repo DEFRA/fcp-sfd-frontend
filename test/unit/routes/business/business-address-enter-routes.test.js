@@ -1,22 +1,14 @@
 // Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
-// Things we need to mock
-import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-
 // Thing under test
 import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
 const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
 
-// Mocks
-vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
-  setSessionData: vi.fn()
-}))
-
 describe('business address enter', () => {
   const request = {}
   let h
-  let mockData
+  let businessDetailsData
   let err
 
   beforeEach(() => {
@@ -31,25 +23,25 @@ describe('business address enter', () => {
         }
 
         // Mock the yar object with a set method
-        mockData = getMockData()
+        businessDetailsData = getBusinessDetailsData()
 
         request.yar = {
           set: vi.fn(),
-          get: vi.fn().mockReturnValue(mockData)
+          get: vi.fn().mockReturnValueOnce(businessDetailsData).mockReturnValueOnce(getAddress())
         }
       })
 
-      test('it fetches the data from the session', async () => {
+      test('it fetches the business details data', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(request.yar.get).toHaveBeenCalledWith('businessDetailsData')
+        expect(request.yar.get).toHaveBeenCalledWith('businessDetails')
         expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
       })
 
-      test('it sets the fetched data on the yar state', async () => {
+      test('it sets fetches the business address data previously entered by the user', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(request.yar.set).toHaveBeenCalledWith('businessAddressEnterData', mockData)
+        expect(request.yar.get).toHaveBeenCalledWith('businessAddress')
       })
     })
   })
@@ -69,7 +61,7 @@ describe('business address enter', () => {
       // Mock yar.set for session
       request.yar = {
         set: vi.fn(),
-        get: vi.fn().mockReturnValue(getMockData())
+        get: vi.fn().mockReturnValue(getBusinessDetailsData())
       }
 
       request.payload = {
@@ -94,12 +86,7 @@ describe('business address enter', () => {
         test('sets the payload on the yar state', async () => {
           await postBusinessAddressEnter.options.handler(request, h)
 
-          expect(setSessionData).toHaveBeenCalledWith(
-            request.yar,
-            'businessAddressEnterData',
-            'businessAddress',
-            request.payload
-          )
+          expect(request.yar.set).toHaveBeenCalledWith('businessAddress', request.payload)
         })
       })
 
@@ -127,7 +114,7 @@ describe('business address enter', () => {
   })
 })
 
-const getMockData = () => {
+const getBusinessDetailsData = () => {
   return {
     businessName: 'Agile Farm Ltd',
     businessAddress: {
@@ -140,6 +127,17 @@ const getMockData = () => {
     },
     sbi: '123456789',
     userName: 'Alfred Waldron'
+  }
+}
+
+const getAddress = () => {
+  return {
+    address1: '10 Skirbeck Way',
+    address2: '',
+    city: 'Maidstone',
+    county: '',
+    postcode: 'SK22 1DL',
+    country: 'United Kingdom'
   }
 }
 

@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest'
 import { rawBusinessDetailsSchema } from '../../../../src/schemas/dal/business-details-schema.js'
-import { dalData } from '../../../mockObjects/mock-business-details.js'
+import { dalData } from '../../../mocks/mock-business-details.js'
 
 describe('businessDetailsSchema', () => {
   const validData = dalData

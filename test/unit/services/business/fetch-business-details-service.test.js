@@ -17,7 +17,7 @@ describe('fetchBusinessDetailsService', () => {
     vi.clearAllMocks()
     vi.resetModules()
 
-    const { mappedData, dalData } = await import('../../../mockObjects/mock-business-details.js')
+    const { mappedData, dalData } = await import('../../../mocks/mock-business-details.js')
     data = { data: dalData }
     mappedDalData = mappedData
 

@@ -6,8 +6,11 @@ const getBusinessAddressCheck = {
   method: 'GET',
   path: '/business-address-check',
   handler: (request, h) => {
+    const businessDetailsData = request.yar.get('businessDetails')
+
     const sessionData = request.yar.get('businessAddressEnterData')
-    const pageData = businessAddressCheckPresenter(sessionData)
+
+    const pageData = businessAddressCheckPresenter(businessDetailsData, sessionData)
 
     return h.view('business/business-address-check', pageData)
   }
@@ -18,7 +21,7 @@ const postBusinessAddressCheck = {
   path: '/business-address-check',
   handler: (request, h) => {
     const sessionData = request.yar.get('businessAddressEnterData')
-    setSessionData(request.yar, 'businessDetailsData', 'businessAddress', sessionData.businessAddress)
+    setSessionData(request.yar, 'businessDetails', 'businessAddress', sessionData)
 
     flashNotification(request.yar, 'Success', 'You have updated your business address')
 

@@ -8,28 +8,51 @@ const businessDetailsPresenter = (data, yar) => {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
-    address: formatAddress(data.businessAddress),
-    businessName: data.businessName,
-    businessTelephone: data.businessTelephone ?? 'Not added',
-    businessMobile: data.businessMobile ?? 'Not added',
-    businessEmail: data.businessEmail,
-    sbi: data.sbi ?? null,
-    vatNumber: data.vatNumber ?? null,
-    tradeNumber: data.tradeNumber ?? null,
-    vendorRegistrationNumber: data.vendorRegistrationNumber ?? null,
-    countyParishHoldingNumber: data.countyParishHoldingNumber ?? null,
-    businessLegalStatus: data.businessLegalStatus ?? null,
-    businessType: data.businessType ?? null,
-    userName: data.userName
+    address: formatAddress(data.address),
+    businessName: data.info.businessName,
+    businessTelephone: data.contact.landline ?? 'Not added',
+    businessMobile: data.contact.mobile ?? 'Not added',
+    businessEmail: data.contact.email,
+    sbi: data.info.sbi,
+    vatNumber: data.info.vat ?? null,
+    tradeNumber: data.info.traderNumber ?? null,
+    vendorRegistrationNumber: data.info.vendorNumber ?? null,
+    countyParishHoldingNumber: null,
+    businessLegalStatus: data.info.legalStatus,
+    businessType: data.info.type,
+    userName: data.customer.fullName
   }
 }
 
 /**
- * Formats the business address by removing any falsy values (e.g. empty strings, null, undefined)
+ * Identify the correct array of address fields to use from the DAL response
+ * If **any** field in `addressFromLookup` is non-`null`, its values
+ * are returned as an array; otherwise the `manualInput` is returned as an array.
+ * Postcode and country are common to both address inputs and appended.
  * @private
+ * @param {Object} businessAddress the complete address object for the business
+  * @returns {string[]} An array of address fields (either from lookup or manual)
  */
-const formatAddress = (businessAddress) => {
-  return Object.values(businessAddress).filter(Boolean)
+
+const formatAddress = (address) => {
+  const addressFromLookup = address.lookup
+  const manualInput = address.manual
+
+  const validLookupAddress = Object.values(addressFromLookup).some(values => values !== null)
+  const userAddress = validLookupAddress ? addressFromLookup : manualInput
+
+  if (userAddress.buildingNumberRange && userAddress.street) {
+    // without this the number and street are sperate entitiys and displayed on seperate lines
+    userAddress.street = `${userAddress.buildingNumberRange} ${userAddress.street}`
+    userAddress.buildingNumberRange = null
+  }
+  const filteredUserAddress = Object.values(userAddress).filter(Boolean)
+
+  return Array.from(Object.values({
+    ...filteredUserAddress,
+    postcode: address.postCode,
+    country: address.country
+  }))
 }
 
 export {

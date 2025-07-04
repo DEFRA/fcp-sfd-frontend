@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessEmailChangeService } from '../../../../src/services/business/fetch-business-email-change-service'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
-import { dalData } from '../../../mockObjects/mock-business-details'
+import { mappedData } from '../../../mocks/mock-business-details'
 
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
   fetchBusinessDetailsService: vi.fn()
@@ -14,7 +14,7 @@ describe('fetchBusinessEmailChangeService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    data = dalData
+    data = mappedData
 
     yar = {
       set: vi.fn().mockReturnValue(data),

@@ -1,16 +1,21 @@
 import { businessAddressCheckPresenter } from '../../presenters/business/business-address-check-presenter.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { fetchUpdatedBusinessDataService } from '../../services/business/fetch-updated-business-data-service.js'
+
 
 const getBusinessAddressCheck = {
   method: 'GET',
   path: '/business-address-check',
-  handler: (request, h) => {
-    const businessDetailsData = request.yar.get('businessDetails')
+  handler: async (request, h) => {
+    const businessAddressEnterData = await fetchUpdatedBusinessDataService(request.yar, 'businessAddress')
+    console.log('🚀 businessAddressEnterData:', businessAddressEnterData)
 
-    const sessionData = request.yar.get('businessAddress')
+    // const businessDetailsData = request.yar.get('businessDetails')
 
-    const pageData = businessAddressCheckPresenter(businessDetailsData, sessionData)
+    // const sessionData = request.yar.get('businessAddress')
+
+    const pageData = businessAddressCheckPresenter(businessAddressEnterData)
 
     return h.view('business/business-address-check', pageData)
   }

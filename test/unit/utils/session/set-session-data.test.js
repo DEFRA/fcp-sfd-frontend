@@ -15,7 +15,7 @@ describe('setSessionData', () => {
       vi.clearAllMocks()
 
       const sessionData = {
-        businessAddressEnterData: {
+        businessAddress: {
           businessName: 'Diddly Squat Farm',
           businessAddress: {
             address1: '10 Skirbeck Way',
@@ -38,7 +38,7 @@ describe('setSessionData', () => {
         country: 'United Kingdom'
       }
 
-      key = 'businessAddressEnterData'
+      key = 'businessAddress'
       value = 'businessAddress'
     })
 

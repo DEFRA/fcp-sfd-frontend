@@ -28,7 +28,7 @@ const businessDetailsPresenter = (data, yar) => {
  * Identify the correct array of address fields to use from the DAL response
  * If **any** field in `addressFromLookup` is non-`null`, its values
  * are returned as an array; otherwise the `manualInput` is returned as an array.
- * Postcode and county are common to both address inputs and appended.
+ * Postcode and country are common to both address inputs and appended.
  * @private
  * @param {Object} businessAddress the complete address object for the business
   * @returns {string[]} An array of address fields (either from lookup or manual)

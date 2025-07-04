@@ -1,5 +1,4 @@
 import { describe, test, expect, vi } from 'vitest'
-// import { mapBusinessDetails } from '../../../src/mappers/business-details-mapper.js'
 import { dalData, mappedData } from '../../mocks/mock-business-details.js'
 
 vi.mock('../../../src/utils/logger.js', () => ({

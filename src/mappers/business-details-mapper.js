@@ -1,6 +1,12 @@
 import { rawBusinessDetailsSchema } from '../schemas/dal/business-details-schema.js'
 import { createLogger } from '../utils/logger.js'
 
+/**
+ * Takes the raw data and maps it to a more usable format
+ * @param {Object} raw the raw response payload from the DAL
+ * @returns {Object} formatted business details data
+ */
+
 export const mapBusinessDetails = (raw) => {
   const logger = createLogger()
 

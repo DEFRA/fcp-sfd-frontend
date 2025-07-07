@@ -16,7 +16,6 @@ describe('businessDetailsMapper', () => {
   describe('when given valid raw DAL data ', () => {
     test('it should map the values to the correct format ', () => {
       const result = mapBusinessDetails(dalData)
-
       expect(result).toEqual(mappedData)
     })
 
@@ -43,6 +42,7 @@ describe('businessDetailsMapper', () => {
   describe('when given invalid raw DAL data ', () => {
     test('it should log a warning about invalid data ', () => {
       const invalidData = {}
+
       const wrapper = () => mapBusinessDetails(invalidData)
 
       expect(wrapper).toThrow()

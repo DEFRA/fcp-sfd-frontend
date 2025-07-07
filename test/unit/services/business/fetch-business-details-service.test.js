@@ -20,12 +20,6 @@ describe('fetchBusinessDetailsService', () => {
     const { mappedData, dalData } = await import('../../../mocks/mock-business-details.js')
     data = { data: dalData }
     mappedDalData = mappedData
-
-    yar = {
-      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
-      set: vi.fn().mockReturnValue(data),
-      get: vi.fn().mockReturnValue(data)
-    }
   })
 
   describe('when there is no session data in cache', () => {
@@ -38,7 +32,9 @@ describe('fetchBusinessDetailsService', () => {
 
     test('it correctly returns data from the DAL', async () => {
       mockDalConnector.mockResolvedValue(data)
+
       const result = await fetchBusinessDetailsService(yar)
+
       expect(result).toMatchObject(mappedDalData)
     })
 
@@ -46,7 +42,9 @@ describe('fetchBusinessDetailsService', () => {
       test('it returns the full response object', async () => {
         const dalErrorResponse = { error: 'error response from dal' }
         mockDalConnector.mockResolvedValue(dalErrorResponse)
+
         const result = await fetchBusinessDetailsService(yar)
+
         expect(result).toMatchObject(dalErrorResponse)
       })
     })
@@ -55,8 +53,7 @@ describe('fetchBusinessDetailsService', () => {
   describe('when there is session data in cache', () => {
     beforeEach(() => {
       yar = {
-        get: vi.fn().mockReturnValue(getSessionData),
-        set: vi.fn()
+        get: vi.fn().mockReturnValue(getSessionData)
       }
     })
 

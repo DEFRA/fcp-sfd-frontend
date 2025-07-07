@@ -20,9 +20,10 @@ describe('businessDetailsSchema', () => {
           ...validData.business,
           sbi: 1
         }
-
       }
+
       const result = rawBusinessDetailsSchema.validate(invalidData, { abortEarly: false })
+
       expect(result.error).toBeDefined()
       expect(result.error.details[0].message).toBe('"business.sbi" must be a string')
     })
@@ -38,12 +39,12 @@ describe('businessDetailsSchema', () => {
               ...validData.business.info.legalStatus,
               code: 'invalid'
             }
-
           }
         }
-
       }
+
       const result = rawBusinessDetailsSchema.validate(invalidData, { abortEarly: false })
+
       expect(result.error).toBeDefined()
       expect(result.error.details[0].message).toBe('"business.info.legalStatus.code" must be a number')
     })

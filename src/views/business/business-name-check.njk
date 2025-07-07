@@ -5,8 +5,8 @@
 {% from "common/navigation/back-link.njk" import appBackLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
-{% set pageTitle = "Check your business name is correct before submitting" %}
-{% set metaDescription = "Check the name for your business is correct." %}
+{% set pageTitle = pageTitle %}
+{% set metaDescription = metaDescription %}
 
 {% block beforeContent %}
     {{ subHeader(
@@ -24,7 +24,7 @@
     <form method="post" novalidate>
       <div class="govuk-form-group">
         <h1 class="govuk-heading-l">
-          Check your business name is correct before submitting
+          {{ pageTitle }}
         </h1>
 
         {{ govukSummaryList({
@@ -51,7 +51,8 @@
       </div>
 
       {{ govukButton({
-        text: "Submit"
+        text: "Submit",
+        preventDoubleClick: true
       }) }}
 
       <p class="govuk-body">

@@ -68,7 +68,7 @@ const mappedData = {
       line4: null,
       line5: null
     },
-    postCode: 'CO9 3LS',
+    postcode: 'CO9 3LS',
     country: 'United Kingdom'
   },
   contact: {

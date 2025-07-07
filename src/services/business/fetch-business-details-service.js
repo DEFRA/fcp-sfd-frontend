@@ -1,13 +1,14 @@
+/**
+ * Returns the `businessDetails` from the session cache if defined,
+ * otherwise queries the DAL, maps the response, updates the cache
+ * and returns the mapped payload
+ *
+ * @module fetchBusinessDetailsService
+ */
+
 import { dalConnector } from '../../dal/connector.js'
 import { businessDetailsQuery } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
-
-/**
- * Returns the businessDetails from the session cache if defined
- * otherwise queries the DAL, maps the response, updates the cache
- * and returns the mapped payload
- * @module fetchBusinessDetailsService
- */
 
 const fetchBusinessDetailsService = async (yar) => {
   // Refactor: Remove stubbed data and instead call the API to get the business details associated with the users log in

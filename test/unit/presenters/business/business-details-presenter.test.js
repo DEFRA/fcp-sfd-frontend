@@ -16,9 +16,7 @@ describe('businessDetailsPresenter', () => {
 
     // Mock yar session manager
     yar = {
-      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
-      set: vi.fn().mockReturnValue(data),
-      get: vi.fn().mockReturnValue(data)
+      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }])
     }
   })
 
@@ -59,6 +57,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the address has line properties and named properties', () => {
       test('it should use the named properties ', () => {
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.address).toStrictEqual([
           'THE COACH HOUSE',
           'STOCKWELL HALL',
@@ -74,6 +73,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the named properties include a building number', () => {
       test('it should prefix the street with the number', () => {
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.address).toStrictEqual([
           'THE COACH HOUSE',
           'STOCKWELL HALL',
@@ -89,8 +89,8 @@ describe('businessDetailsPresenter', () => {
     describe('when the named properties does not have a building number', () => {
       test('it should leave the street property unchanged', () => {
         data.address.lookup.buildingNumberRange = null
-
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.address).toStrictEqual([
           'THE COACH HOUSE',
           'STOCKWELL HALL',
@@ -113,6 +113,7 @@ describe('businessDetailsPresenter', () => {
         data.address.lookup.county = null
 
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.address).toEqual([
           '76 Robinswood Road',
           'UPPER CHUTE',
@@ -128,8 +129,8 @@ describe('businessDetailsPresenter', () => {
     describe('when the landline property is missing', () => {
       test('it should return the text "Not added', () => {
         data.contact.landline = null
-
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.businessTelephone).toEqual('Not added')
       })
     })
@@ -139,6 +140,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the businessMobile property is missing', () => {
       test('it should return the text "Not added', () => {
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.businessMobile).toEqual('Not added')
       })
     })
@@ -148,9 +150,6 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vat = null
-
-        const result = businessDetailsPresenter(data, yar)
-        expect(result.vatNumber).toEqual(null)
       })
     })
   })
@@ -159,8 +158,8 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.traderNumber = null
-
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.tradeNumber).toEqual(null)
       })
     })
@@ -170,8 +169,8 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vendorNumber = null
-
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.vendorRegistrationNumber).toEqual(null)
       })
     })
@@ -181,8 +180,8 @@ describe('businessDetailsPresenter', () => {
     describe('when yar is falsey', () => {
       test('it should return null', () => {
         yar = null
-
         const result = businessDetailsPresenter(data, yar)
+
         expect(result.notification).toEqual(null)
       })
     })

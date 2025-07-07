@@ -3,18 +3,22 @@ import { createLogger } from '../utils/logger.js'
 
 /**
  * Takes the raw data and maps it to a more usable format
- * @param {Object} raw the raw response payload from the DAL
- * @returns {Object} formatted business details data
+ *
+ * @param {Object} raw - The raw response payload from the DAL
+ *
+ * @returns {Object} Formatted business details data
  */
 
 export const mapBusinessDetails = (raw) => {
   const logger = createLogger()
 
   const { error, value } = rawBusinessDetailsSchema.validate(raw)
+
   if (error) {
     logger.error(`Validation fail for DAL response: ${error.message}`)
     throw new Error(`Validation fail for DAL response: ${error.message}`)
   }
+
   return {
     info: {
       sbi: value.business.sbi,
@@ -42,7 +46,7 @@ export const mapBusinessDetails = (raw) => {
         line4: value.business.info.address.line4,
         line5: value.business.info.address.line5
       },
-      postCode: value.business.info.address.postalCode,
+      postcode: value.business.info.address.postalCode,
       country: value.business.info.address.country
     },
     contact: {
@@ -53,6 +57,5 @@ export const mapBusinessDetails = (raw) => {
     customer: {
       fullName: `${value.customer.info.name.title} ${value.customer.info.name.first} ${value.customer.info.name.last}`
     }
-
   }
 }

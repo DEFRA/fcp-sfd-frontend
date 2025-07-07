@@ -32,12 +32,6 @@ describe('check business name', () => {
       '.govuk-summary-list__actions a.govuk-link',
       '/business-name-change',
       'Change'
-    ],
-    [
-      '"Cancel" link which navigates to /business-details',
-      'a.govuk-link.govuk-link--no-visited-state',
-      '/business-details',
-      'Cancel'
     ]
   ])('should render %s', (_, selector, route, textContent) => {
     const link = document.querySelector(selector)

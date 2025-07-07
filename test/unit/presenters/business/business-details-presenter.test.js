@@ -150,6 +150,9 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vat = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.vatNumber).toEqual(null)
       })
     })
   })

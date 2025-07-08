@@ -41,12 +41,6 @@ describe('check business phone numbers', () => {
       '.govuk-summary-list__actions a.govuk-link',
       '/business-phone-numbers-change',
       'Change'
-    ],
-    [
-      '"Cancel" link which navigates to /business-details',
-      'a.govuk-link--no-visited-state',
-      '/business-details',
-      'Cancel'
     ]
   ])('should render %s', (_, selector, route, textContent) => {
     const link = document.querySelector(selector)

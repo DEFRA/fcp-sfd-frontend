@@ -44,6 +44,7 @@ export const businessDetailsQuery = `
   }
   customer(crn: $crn) {
     info {
+      cph
       name {
         first
         last

@@ -70,7 +70,10 @@ describe('/business-details', async () => {
         expect($vendor).toBe(dataFromDal.data.business.info.vendorNumber)
       })
 
-      // TODO add a test around the CPH number once we introduce dynamic sections
+      test('it should display the cph number', async () => {
+        const $cph = $referenceNumbers.find('.govuk-summary-list__value').eq(4).text().trim()
+        expect($cph).toBe(dataFromDal.data.business.info.cph)
+      })
     })
 
     describe('the "Additional details" section should use data from the DAL associated with the given sbi', async () => {

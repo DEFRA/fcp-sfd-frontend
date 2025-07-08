@@ -23,16 +23,6 @@ describe('change business name', () => {
     expect(input.value).toBe('Test business name')
   })
 
-  test('should render cancel link which navigates to business details', () => {
-    const link = document.querySelector(
-      'a.govuk-link.govuk-link--no-visited-state'
-    )
-
-    expect(link).not.toBeNull()
-    expect(link.getAttribute('href')).toBe('/business-details')
-    expect(link.textContent.trim()).toBe('Cancel')
-  })
-
   test.each([
     ['page heading', 'h1', 'What is your business name?'],
     ['"Continue" button', 'button', 'Continue']

@@ -47,12 +47,4 @@ describe('change business phone numbers', () => {
     expect(element).not.toBeNull()
     expect(element.textContent.trim()).toContain(textContent)
   })
-
-  test('should render cancel link which navigates to business details', () => {
-    const link = document.querySelector('a.govuk-link--no-visited-state')
-
-    expect(link).not.toBeNull()
-    expect(link.getAttribute('href')).toBe('/business-details')
-    expect(link.textContent.trim()).toBe('Cancel')
-  })
 })

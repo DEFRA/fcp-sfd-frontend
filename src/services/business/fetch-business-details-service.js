@@ -11,7 +11,7 @@ import { businessDetailsQuery } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 
 const fetchBusinessDetailsService = async (yar) => {
-  return yar.get('businessDetails') ?? await getFromDal(yar)
+  return yar.get('businessDetails') ?? getFromDal(yar)
 }
 
 const getFromDal = async (yar) => {

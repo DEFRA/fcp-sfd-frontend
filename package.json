@@ -1,6 +1,6 @@
 {
   "name": "fcp-sfd-frontend",
-  "version": "0.42.0",
+  "version": "0.43.0",
   "description": "SFD Frontend",
   "sideEffects": false,
   "main": ".server/index.js",
@@ -38,7 +38,8 @@
     "Rana Salem <rana.salem@defra.gov.uk>",
     "Abidemi Adio <abidemi.adio@defra.gov.uk>",
     "John Watson <john.watson1@defra.gov.uk>",
-    "Rebecca Ransome <rebecca.ransome@defra.gov.uk>"
+    "Rebecca Ransome <rebecca.ransome@defra.gov.uk>",
+    "Simon Dunn <simon.dunn1@defra.gov.uk>"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {

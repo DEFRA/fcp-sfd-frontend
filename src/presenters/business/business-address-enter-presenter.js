@@ -9,9 +9,9 @@ const businessAddressEnterPresenter = (data, payload) => {
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
     address: payload ?? data.businessAddress,
-    businessName: data.businessName ?? null,
-    sbi: data.sbi ?? null,
-    userName: data.userName ?? null
+    businessName: data.info.businessName ?? null,
+    sbi: data.info.sbi ?? null,
+    userName: data.customer.userName ?? null
   }
 }
 

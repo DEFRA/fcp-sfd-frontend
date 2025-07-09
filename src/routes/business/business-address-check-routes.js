@@ -9,13 +9,11 @@ const getBusinessAddressCheck = {
   path: '/business-address-check',
   handler: async (request, h) => {
     const businessAddressEnterData = await fetchUpdatedBusinessDataService(request.yar, 'businessAddress')
-    console.log('🚀 businessAddressEnterData:', businessAddressEnterData)
+    const businessDetailsData = request.yar.get('businessDetails')
 
-    // const businessDetailsData = request.yar.get('businessDetails')
+    const sessionData = request.yar.get('businessAddress')
 
-    // const sessionData = request.yar.get('businessAddress')
-
-    const pageData = businessAddressCheckPresenter(businessAddressEnterData)
+    const pageData = businessAddressCheckPresenter(businessDetailsData, sessionData)
 
     return h.view('business/business-address-check', pageData)
   }

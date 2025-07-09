@@ -14,10 +14,10 @@ const fetchUpdatedBusinessDataService = async (yar, key) => {
   const updatedValue = businessDetails[`change${key}`] || businessDetails[key]
 
   console.log('🚀 updatedValue:', updatedValue)
-  return {
-    ...businessDetails,
-    { `change${key}`: updatedValue }
-  }
+  // return {
+  //   ...businessDetails,
+  //   { `change${key}`: updatedValue }
+  // }
 }
 
 export {

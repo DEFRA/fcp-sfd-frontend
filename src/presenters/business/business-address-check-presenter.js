@@ -3,14 +3,14 @@
  * @module businessAddressCheckPresenter
  */
 
-const businessAddressCheckPresenter = (businessDetails) => {
+const businessAddressCheckPresenter = (businessDetails, session) => {
   return {
     backLink: { href: '/business-address-enter' },
     cancelLink: '/business-details',
     changeLink: '/business-address-enter',
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
-    address: formatAddress(businessDetails.changeBusinessAddress),
+    address: formatAddress(session ?? businessDetails.changeBusinessAddress),
     businessName: businessDetails.businessName ?? null,
     sbi: businessDetails.sbi ?? null,
     userName: businessDetails.userName ?? null

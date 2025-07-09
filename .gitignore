@@ -12,3 +12,4 @@ coverage
 .eslintcache
 .env
 .public
+eslint.config.js

@@ -28,7 +28,7 @@ export const mapBusinessDetails = (raw) => {
       vendorNumber: value.business.info.vendorNumber,
       legalStatus: value.business.info.legalStatus.type,
       type: value.business.info.type.type,
-      cph: value.business.info.cph
+      countyParishHoldingNumber: value.business.info.cph
     },
     address: {
       lookup: {

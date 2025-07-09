@@ -80,7 +80,7 @@ describe('businessDetailsPresenter', () => {
         }
       })
 
-      test('it should remove them and return the address as an array', () => {
+      test('it should remove them from the address', () => {
         const result = businessDetailsPresenter(data, yar)
 
         expect(result.address).toEqual(['10 Skirbeck Way', 'Lonely Lane', 'Somerset', 'SK22 1DL'])

@@ -157,6 +157,17 @@ describe('businessDetailsPresenter', () => {
     })
   })
 
+  describe('the "cph" property', () => {
+    describe('when the property is null', () => {
+      test('it should return null', () => {
+        data.info.countyParishHoldingNumber = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.cph).toEqual(null)
+      })
+    })
+  })
+
   describe('the "traderNumber" property', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {

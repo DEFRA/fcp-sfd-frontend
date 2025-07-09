@@ -5,6 +5,7 @@ export const businessDetailsQuery = `
     sbi
     info {
       name
+      cph
       vat
       traderNumber
       vendorNumber

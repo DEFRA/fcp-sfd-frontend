@@ -163,7 +163,7 @@ describe('businessDetailsPresenter', () => {
         data.info.countyParishHoldingNumber = null
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.cph).toEqual(null)
+        expect(result.countyParishHoldingNumber).toEqual(null)
       })
     })
   })

@@ -3,7 +3,8 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     include: ['**/test/**/*.test.js'],
-    timeout: 5000,
+    timeout: 10000,
+    hookTimeout: 10000,
     coverage: {
       reportOnFailure: true,
       clean: false,

@@ -131,5 +131,29 @@ describe('businessAddressEnterPresenter', () => {
         expect(result.address).toEqual(payload)
       })
     })
+
+    describe('when no existing address is provided', () => {
+      beforeEach(() => {
+        delete data.address.manual.line1
+        delete data.address.manual.line2
+        delete data.address.manual.line4
+        delete data.address.manual.line5
+        delete data.address.postcode
+        delete data.address.country
+      })
+
+      test('it should return the address fields as null', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual({
+          address1: null,
+          address2: null,
+          city: null,
+          county: null,
+          country: null,
+          postcode: null
+        })
+      })
+    })
   })
 })

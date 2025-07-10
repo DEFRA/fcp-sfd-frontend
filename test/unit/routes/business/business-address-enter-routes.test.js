@@ -3,6 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Thing under test
 import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
@@ -13,10 +14,13 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
+  fetchBusinessDetailsService: vi.fn()
+}))
+
 describe('business address enter', () => {
-  const request = {}
+  const request = { yar: {}}
   let h
-  let mockData
   let err
 
   beforeEach(() => {
@@ -30,26 +34,14 @@ describe('business address enter', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        // Mock the yar object with a set method
-        mockData = getMockData()
-
-        request.yar = {
-          set: vi.fn(),
-          get: vi.fn().mockReturnValue(mockData)
-        }
+        fetchBusinessDetailsService.mockReturnValue(getMockData())
       })
 
       test('it fetches the data from the session', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(request.yar.get).toHaveBeenCalledWith('businessDetailsData')
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
         expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
-      })
-
-      test('it sets the fetched data on the yar state', async () => {
-        await getBusinessAddressEnter.handler(request, h)
-
-        expect(request.yar.set).toHaveBeenCalledWith('businessAddressEnterData', mockData)
       })
     })
   })
@@ -80,7 +72,6 @@ describe('business address enter', () => {
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       }
-      request.pre = { sessionData: request.payload }
     })
 
     describe('when a request succeeds', () => {
@@ -96,8 +87,8 @@ describe('business address enter', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessAddressEnterData',
-            'businessAddress',
+            'businessDetails',
+            'changeBusinessAddress',
             request.payload
           )
         })
@@ -129,17 +120,23 @@ describe('business address enter', () => {
 
 const getMockData = () => {
   return {
-    businessName: 'Agile Farm Ltd',
-    businessAddress: {
-      address1: '10 Skirbeck Way',
-      address2: '',
-      city: 'Maidstone',
-      county: '',
+    address: {
+      manual: {
+      line1: '10 Skirbeck Way',
+      line2: '',
+      line4: 'Maidstone',
+      line5: ''
+      },
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    sbi: '123456789',
-    userName: 'Alfred Waldron'
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron',
+    }
   }
 }
 

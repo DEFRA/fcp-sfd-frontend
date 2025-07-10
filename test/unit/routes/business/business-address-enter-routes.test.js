@@ -122,10 +122,10 @@ const getMockData = () => {
   return {
     address: {
       manual: {
-      line1: '10 Skirbeck Way',
-      line2: '',
-      line4: 'Maidstone',
-      line5: ''
+        line1: '10 Skirbeck Way',
+        line2: '',
+        line4: 'Maidstone',
+        line5: ''
       },
       postcode: 'SK22 1DL',
       country: 'United Kingdom'

@@ -5,7 +5,6 @@ export const businessDetailsQuery = `
     sbi
     info {
       name
-      cph
       vat
       traderNumber
       vendorNumber
@@ -41,6 +40,9 @@ export const businessDetailsQuery = `
         mobile
         landline
       }
+    }
+    countyParishHoldings {
+      cphNumber
     }
   }
   customer(crn: $crn) {

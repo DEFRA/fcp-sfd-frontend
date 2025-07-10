@@ -12,7 +12,7 @@ describe('businessAddressEnterPresenter', () => {
     data = {
       info: {
         businessName: 'Agile Farm Ltd',
-        sbi: '123456789',
+        sbi: '123456789'
       },
       customer: {
         fullName: 'Alfred Waldron'
@@ -22,7 +22,7 @@ describe('businessAddressEnterPresenter', () => {
           line1: '10 Skirbeck Way',
           line2: 'Lonely Lane',
           line4: 'Maidstone',
-          line5: 'Somerset',
+          line5: 'Somerset'
         },
         postcode: 'SK22 1DL',
         country: 'United Kingdom'

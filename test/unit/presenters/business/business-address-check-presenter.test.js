@@ -11,7 +11,7 @@ describe('businessAddressCheckPresenter', () => {
     data = {
       info: {
         businessName: 'Agile Farm Ltd',
-        sbi: '123456789',
+        sbi: '123456789'
       },
       customer: {
         fullName: 'Alfred Waldron'
@@ -37,12 +37,12 @@ describe('businessAddressCheckPresenter', () => {
         pageTitle: 'Check your business address is correct before submitting',
         metaDescription: 'Check the address for your business is correct.',
         address: [
-          "10 Skirbeck Way",
-          "Lonely Lane",
-          "Maidstone",
-          "Somerset",
-          "SK22 1DL",
-          "United Kingdom",
+          '10 Skirbeck Way',
+          'Lonely Lane',
+          'Maidstone',
+          'Somerset',
+          'SK22 1DL',
+          'United Kingdom'
         ],
         businessName: 'Agile Farm Ltd',
         sbi: '123456789',
@@ -109,11 +109,11 @@ describe('businessAddressCheckPresenter', () => {
         const result = businessAddressCheckPresenter(data)
 
         expect(result.address).toEqual([
-          "A different address",
-          "Maidstone",
-          "A new county",
-          "BA123 ABC",
-          "United Kingdom",
+          'A different address',
+          'Maidstone',
+          'A new county',
+          'BA123 ABC',
+          'United Kingdom'
         ])
       })
     })

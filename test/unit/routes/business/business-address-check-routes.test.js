@@ -19,7 +19,7 @@ vi.mock('../../../../src/services/business/update-business-address-change-servic
 }))
 
 describe('business address check', () => {
-  const request = { yar: {}}
+  const request = { yar: {} }
   let h
 
   beforeEach(() => {
@@ -48,7 +48,7 @@ describe('business address check', () => {
   describe('POST /business-address-check', () => {
     beforeEach(() => {
       h = {
-        redirect: vi.fn(() => h),
+        redirect: vi.fn(() => h)
       }
     })
 
@@ -83,7 +83,7 @@ const getMockData = () => {
       businessName: 'Agile Farm Ltd'
     },
     customer: {
-      fullName: 'Alfred Waldron',
+      fullName: 'Alfred Waldron'
     }
   }
 }

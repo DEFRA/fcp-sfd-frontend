@@ -19,7 +19,7 @@ vi.mock('../../../../src/services/business/fetch-business-details-service.js', (
 }))
 
 describe('business address enter', () => {
-  const request = { yar: {}}
+  const request = { yar: {} }
   let h
   let err
 
@@ -135,7 +135,7 @@ const getMockData = () => {
       businessName: 'Agile Farm Ltd'
     },
     customer: {
-      fullName: 'Alfred Waldron',
+      fullName: 'Alfred Waldron'
     }
   }
 }

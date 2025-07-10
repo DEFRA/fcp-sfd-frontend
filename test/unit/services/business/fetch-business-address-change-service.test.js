@@ -8,7 +8,7 @@ vi.mock('../../../../src/services/business/fetch-business-details-service', () =
 }))
 
 describe('fetchBusinessAddressChangeService', () => {
-  let data = mappedData
+  const data = mappedData
   let yar
 
   beforeEach(() => {
@@ -19,12 +19,12 @@ describe('fetchBusinessAddressChangeService', () => {
     describe('and there is no changed address', () => {
       beforeEach(() => {
         data.changeBusinessAddress = {
-          address1: "76 Robinswood Road",
-          address2: "UPPER CHUTE",
+          address1: '76 Robinswood Road',
+          address2: 'UPPER CHUTE',
           city: null,
-          country: "United Kingdom",
+          country: 'United Kingdom',
           county: null,
-          postcode: "CO9 3LS",
+          postcode: 'CO9 3LS'
         }
 
         yar = {

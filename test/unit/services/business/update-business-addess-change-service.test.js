@@ -28,7 +28,7 @@ describe('updateBusinessAddressChangeService', () => {
 
     fetchBusinessDetailsService.mockReturnValue(mappedData)
     yar = {
-      set: vi.fn().mockReturnValue(),
+      set: vi.fn().mockReturnValue()
     }
   })
 
@@ -51,7 +51,7 @@ describe('updateBusinessAddressChangeService', () => {
 const savedData = () => {
   return {
     address: {
-      country: "United Kingdom",
+      country: 'United Kingdom',
       lookup: {
         buildingName: null,
         buildingNumberRange: null,
@@ -61,31 +61,31 @@ const savedData = () => {
         street: null
       },
       manual: {
-        line1: "A different address",
+        line1: 'A different address',
         line2: null,
-        line3: "Child Okeford",
-        line4: "Maidstone",
-        line5: "A new county"
+        line3: 'Child Okeford',
+        line4: 'Maidstone',
+        line5: 'A new county'
       },
-      postcode: "BA123 ABC"
+      postcode: 'BA123 ABC'
     },
     contact: {
-      email: "henleyrej@eryelnehk.com.test",
-      landline: "01234031859",
+      email: 'henleyrej@eryelnehk.com.test',
+      landline: '01234031859',
       mobile: null
     },
     customer: {
-      fullName: "Mrs. Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook"
+      fullName: 'Mrs. Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
     },
     info: {
-      businessName: "HENLEY, RE",
+      businessName: 'HENLEY, RE',
       cph: null,
-      legalStatus: "Sole Proprietorship",
-      sbi: "107183280",
-      traderNumber: "010203040506070880980",
-      type: "Not Specified",
-      vat: "GB123456789",
-      vendorNumber: "694523"
+      legalStatus: 'Sole Proprietorship',
+      sbi: '107183280',
+      traderNumber: '010203040506070880980',
+      type: 'Not Specified',
+      vat: 'GB123456789',
+      vendorNumber: '694523'
     }
   }
 }

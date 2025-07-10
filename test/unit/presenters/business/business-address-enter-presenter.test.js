@@ -10,17 +10,23 @@ describe('businessAddressEnterPresenter', () => {
 
   beforeEach(() => {
     data = {
-      businessName: 'Agile Farm Ltd',
-      businessAddress: {
-        address1: '10 Skirbeck Way',
-        address2: 'Lonely Lane',
-        city: 'Maidstone',
-        county: 'Somerset',
+      info: {
+        businessName: 'Agile Farm Ltd',
+        sbi: '123456789',
+      },
+      customer: {
+        fullName: 'Alfred Waldron'
+      },
+      address: {
+        manual: {
+          line1: '10 Skirbeck Way',
+          line2: 'Lonely Lane',
+          line4: 'Maidstone',
+          line5: 'Somerset',
+        },
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
-      },
-      sbi: '123456789',
-      userName: 'Alfred Waldron'
+      }
     }
   })
 
@@ -50,7 +56,7 @@ describe('businessAddressEnterPresenter', () => {
   describe('the "businessName" property', () => {
     describe('when the businessName property is missing', () => {
       beforeEach(() => {
-        delete data.businessName
+        delete data.info.businessName
       })
 
       test('it should return businessName as null', () => {
@@ -64,7 +70,7 @@ describe('businessAddressEnterPresenter', () => {
   describe('the "sbi" property', () => {
     describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
       beforeEach(() => {
-        delete data.sbi
+        delete data.info.sbi
       })
 
       test('it should return sbi as null', () => {
@@ -78,7 +84,7 @@ describe('businessAddressEnterPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.userName
+        delete data.customer.fullName
       })
 
       test('it should return userName as null', () => {
@@ -90,9 +96,9 @@ describe('businessAddressEnterPresenter', () => {
   })
 
   describe('the "address" property', () => {
-    describe('when provided with a payload', () => {
+    describe('when provided with a changed business address', () => {
       beforeEach(() => {
-        payload = {
+        data.changeBusinessAddress = {
           address1: 'A different address',
           city: 'Maidstone',
           county: 'A new county',
@@ -101,7 +107,25 @@ describe('businessAddressEnterPresenter', () => {
         }
       })
 
-      test('it should return the payload as the address', () => {
+      test('it should return the changed address as the address', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual(data.changeBusinessAddress)
+      })
+    })
+
+    describe('when provided with a payload', () => {
+      beforeEach(() => {
+        payload = {
+          address1: 'A new new address',
+          city: 'New Address City',
+          county: 'A new new county',
+          postcode: 'BA123 NEW',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should return the changed address as the address', () => {
         const result = businessAddressEnterPresenter(data, payload)
 
         expect(result.address).toEqual(payload)

@@ -2,7 +2,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service.js'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
-import { dalData } from '../../../mockObjects/mock-business-details'
+import { mappedData } from '../../../mocks/mock-business-details.js'
 
 vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
   fetchBusinessDetailsService: vi.fn()
@@ -19,7 +19,7 @@ describe('updateBusinessNameChangeService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    data = dalData
+    data = mappedData
     yar = {
       get: vi.fn().mockReturnValue(data),
       set: vi.fn().mockReturnValue(data)

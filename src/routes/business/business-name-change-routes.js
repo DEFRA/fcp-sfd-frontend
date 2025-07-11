@@ -10,7 +10,7 @@ const getBusinessNameChange = {
   path: '/business-name-change',
   handler: async (request, h) => {
     const businessNameChange = await fetchBusinessNameChangeService(request.yar)
-    const pageData = businessNameChangePresenter(businessNameChange, request.yar)
+    const pageData = businessNameChangePresenter(businessNameChange)
 
     return h.view('business/business-name-change.njk', pageData)
   }
@@ -22,9 +22,7 @@ const postBusinessNameChange = {
   options: {
     validate: {
       payload: businessNameSchema,
-      options: {
-        abortEarly: false
-      },
+      options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
         const businessNameChange = await fetchBusinessNameChangeService(request.yar)
@@ -36,7 +34,6 @@ const postBusinessNameChange = {
       }
     },
     handler: async (request, h) => {
-      await fetchBusinessNameChangeService(request.yar)
       setSessionData(request.yar, 'businessDetails', 'changeBusinessName', request.payload.businessName)
 
       return h.redirect('/business-name-check')

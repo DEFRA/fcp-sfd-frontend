@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessNameChangeService } from '../../../../src/services/business/fetch-business-name-change-service.js'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
-import { dalData } from '../../../mockObjects/mock-business-details'
+import { dalData } from '../../../mocks/mock-business-details'
 
 vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
   fetchBusinessDetailsService: vi.fn()

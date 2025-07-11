@@ -1,8 +1,16 @@
+// Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
-import { fetchBusinessAddressChangeService } from '../../../../src/services/business/fetch-business-address-change-service.js'
+
+// Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+
+// Test helpers
 import { mappedData } from '../../../mocks/mock-business-details'
 
+// Thing under test
+import { fetchBusinessAddressChangeService } from '../../../../src/services/business/fetch-business-address-change-service.js'
+
+// Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
   fetchBusinessDetailsService: vi.fn()
 }))
@@ -13,6 +21,10 @@ describe('fetchBusinessAddressChangeService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    yar = {
+      set: vi.fn()
+    }
   })
 
   describe('when called', () => {
@@ -27,16 +39,14 @@ describe('fetchBusinessAddressChangeService', () => {
           postcode: 'CO9 3LS'
         }
 
-        yar = {
-          get: vi.fn().mockReturnValue(mappedData)
-        }
+        fetchBusinessDetailsService.mockResolvedValue(data)
       })
 
       test('it returns the correct data', async () => {
         const result = await fetchBusinessAddressChangeService(yar)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.get).toHaveBeenCalledWith('businessDetails')
+        expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual(data)
       })
     })
@@ -55,16 +65,14 @@ describe('fetchBusinessAddressChangeService', () => {
         mappedData.changeBusinessAddress = newAddress
         data.changeBusinessAddress = newAddress
 
-        yar = {
-          get: vi.fn().mockReturnValue(mappedData)
-        }
+        fetchBusinessDetailsService.mockResolvedValue(mappedData)
       })
 
       test('it returns the correct data', async () => {
         const result = await fetchBusinessAddressChangeService(yar)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.get).toHaveBeenCalledWith('businessDetails')
+        expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual(data)
       })
     })

@@ -8,11 +8,11 @@
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ appBackLink(backLink) }}
 {% endblock %}
 
 
 {% block content %}
-  {{ appBackLink(backLink) }}
   {% if errors %}
     {{ govukErrorSummary({
         titleText: "There is a problem",

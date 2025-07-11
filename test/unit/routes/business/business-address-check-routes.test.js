@@ -36,10 +36,20 @@ describe('business address check', () => {
         fetchBusinessAddressChangeService.mockReturnValue(getMockData())
       })
 
+      test('should have the correct method and path', () => {
+        expect(getBusinessAddressCheck.method).toBe('GET')
+        expect(getBusinessAddressCheck.path).toBe('/business-address-check')
+      })
+
       test('it fetches the data from the session', async () => {
         await getBusinessAddressCheck.handler(request, h)
 
         expect(fetchBusinessAddressChangeService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-address-check view with page data', async () => {
+        await getBusinessAddressCheck.handler(request, h)
+
         expect(h.view).toHaveBeenCalledWith('business/business-address-check', getPageData())
       })
     })

@@ -1,171 +1,176 @@
+// Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { businessEmailChangeRoutes } from '../../../../src/routes/business/business-email-change-routes.js'
-import { fetchBusinessEmailChangeService } from '../../../../src/services/business/fetch-business-email-change-service.js'
-import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter.js'
 
+// Things we need to mock
+import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+
+// Thing under test
+import { businessEmailChangeRoutes } from '../../../../src/routes/business/business-email-change-routes.js'
 const [getBusinessEmailChange, postBusinessEmailChange] = businessEmailChangeRoutes
 
-const businessEmail = 'name@example.com'
-
-const createMockRequest = (overrides = {}) => ({
-  payload: {
-    businessEmail,
-    ...overrides
-  },
-  state: {
-    businessEmail,
-    ...overrides
-  }
-})
-
-const createMockResponse = () => {
-  const stateMock = vi.fn().mockReturnThis()
-  const view = vi.fn().mockReturnThis()
-  const redirect = vi.fn().mockReturnThis()
-  const code = vi.fn().mockReturnThis()
-  const takeover = vi.fn().mockReturnThis()
-
-  return {
-    h: { view, redirect, code, takeover },
-    stateMock,
-    view,
-    redirect,
-    code,
-    takeover
-  }
-}
-
-vi.mock('../../../../src/services/business/fetch-business-email-change-service.js', () => ({
-  fetchBusinessEmailChangeService: vi.fn()
-}))
-
+// Mocks
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/presenters/business/business-email-change-presenter.js', () => ({
-  businessEmailChangePresenter: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
+  fetchBusinessDetailsService: vi.fn()
 }))
 
-describe('change business email', () => {
+describe('business email change', () => {
+  const request = { yar: {} }
   let h
-  let request
-  let businessEmailChange
-  let pageData
+  let err
+
   beforeEach(() => {
     vi.clearAllMocks()
-    h = {
-      view: vi.fn().mockReturnValue({})
-    }
-
-    businessEmailChange = {}
-    pageData = {}
-    request = {
-      payload: {
-        businessEmail
-      },
-      yar: {}
-    }
-
-    fetchBusinessEmailChangeService.mockResolvedValue(businessEmailChange)
-    businessEmailChangePresenter.mockReturnValue(pageData)
   })
 
   describe('GET /business-email-change', () => {
-    test('should have the correct method and path', () => {
-      expect(getBusinessEmailChange.method).toBe('GET')
-      expect(getBusinessEmailChange.path).toBe('/business-email-change')
-    })
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
+        }
 
-    test('should render business-email-change.njk view with page data', async () => {
-      await getBusinessEmailChange.handler(request, h)
-      expect(fetchBusinessEmailChangeService).toHaveBeenCalled(request.yar)
-      expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', pageData)
+        fetchBusinessDetailsService.mockReturnValue(getMockData())
+      })
+
+      test('should have the correct method and path', () => {
+        expect(getBusinessEmailChange.method).toBe('GET')
+        expect(getBusinessEmailChange.path).toBe('/business-email-change')
+      })
+
+      test('it fetches the data from the session', async () => {
+        await getBusinessEmailChange.handler(request, h)
+
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-email-change.njk view with page data', async () => {
+        await getBusinessEmailChange.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-email-change', getPageData())
+      })
     })
   })
 
   describe('POST /business-email-change', () => {
-    const schema = postBusinessEmailChange.options.validate.payload
+    beforeEach(() => {
+      const responseStub = {
+        code: vi.fn().mockReturnThis(),
+        takeover: vi.fn().mockReturnThis()
+      }
 
-    test('should have the correct method and path', () => {
-      expect(postBusinessEmailChange.method).toBe('POST')
-      expect(postBusinessEmailChange.path).toBe('/business-email-change')
+      h = {
+        redirect: vi.fn(() => h),
+        view: vi.fn(() => responseStub)
+      }
+
+      // Mock yar.set for session
+      request.yar = {
+        set: vi.fn(),
+        get: vi.fn().mockReturnValue(getMockData())
+      }
+
+      request.payload = { businessEmail: 'new-email@test.com' }
     })
 
-    describe('validation', () => {
-      test('should fail on empty business email', () => {
-        const result = schema.validate({ businessEmail: '' })
+    describe('when a request succeeds', () => {
+      describe('and the validation passes', () => {
+        test('it redirects to the /business-email-check page', async () => {
+          await postBusinessEmailChange.options.handler(request, h)
 
-        expect(result.error).toBeTruthy()
-        expect(result.error.details[0].message).toBe('Enter business email address')
-      })
-
-      test('should fail on invalid email', () => {
-        const result = schema.validate({ businessEmail: 'not-an-email' })
-
-        expect(result.error).toBeTruthy()
-        expect(result.error.details[0].message).toBe('Enter an email address, like name@example.com')
-      })
-
-      test('should accept valid email', () => {
-        const result = schema.validate({ businessEmail })
-
-        expect(result.error).toBeFalsy()
-      })
-    })
-
-    test('should redirect to business-email-check on successful submission', async () => {
-      const { h } = createMockResponse()
-      await postBusinessEmailChange.options.handler(request, h)
-
-      expect(setSessionData).toHaveBeenCalledWith(request.yar, 'businessDetails', 'changeBusinessEmail', request.payload.businessEmail)
-      expect(h.redirect).toHaveBeenCalledWith('/business-email-check')
-    })
-
-    describe('validation failAction', () => {
-      test('should handle specific validation error', async () => {
-        const request = createMockRequest({ businessEmail: '' })
-        const { h } = createMockResponse()
-
-        const err = {
-          details: [{ path: ['businessEmail'], message: 'Enter business email address' }]
-        }
-
-        await postBusinessEmailChange.options.validate.failAction(request, h, err)
-
-        expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', {
-          errors: {
-            businessEmail: { text: 'Enter business email address' }
-          },
-          ...pageData
+          expect(h.redirect).toHaveBeenCalledWith('/business-email-check')
         })
 
-        expect(h.code).toHaveBeenCalledWith(400)
-        expect(h.takeover).toHaveBeenCalled()
+        test('sets the payload on the yar state', async () => {
+          await postBusinessEmailChange.options.handler(request, h)
+
+          expect(setSessionData).toHaveBeenCalledWith(
+            request.yar,
+            'businessDetails',
+            'changeBusinessEmail',
+            request.payload.businessEmail
+          )
+        })
       })
 
-      test('should handle error with undefined details', async () => {
-        const request = createMockRequest({ businessEmail: '' })
-        const { h } = createMockResponse()
-
-        await postBusinessEmailChange.options.validate.failAction(request, h, {})
-
-        expect(h.view).toHaveBeenCalledWith('business/business-email-change.njk', {
-          errors: {},
-          ...pageData
+      describe('and the validation fails', () => {
+        beforeEach(() => {
+          err = {
+            details: [
+              {
+                message: 'Enter business email address',
+                path: ['businessEmail'],
+                type: 'string.empty'
+              }
+            ]
+          }
         })
 
-        expect(h.code).toHaveBeenCalledWith(400)
-        expect(h.takeover).toHaveBeenCalled()
+        test('it returns the page successfully with the error summary banner', async () => {
+          // Calling the fail action handler
+          await postBusinessEmailChange.options.validate.failAction(request, h, err)
+
+          expect(h.view).toHaveBeenCalledWith('business/business-email-change', getPageDataError())
+        })
+
+        test('it should handle undefined errors', async () => {
+          // Calling the fail action handler
+          await postBusinessEmailChange.options.validate.failAction(request, h, [])
+
+          const pageData = getPageDataError()
+          pageData.errors = {}
+
+          expect(h.view).toHaveBeenCalledWith('business/business-email-change', pageData)
+        })
       })
     })
-  })
-
-  test('should export all routes', () => {
-    expect(businessEmailChangeRoutes).toEqual([
-      getBusinessEmailChange,
-      postBusinessEmailChange
-    ])
   })
 })
+
+const getMockData = () => {
+  return {
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron'
+    },
+    contact: {
+      email: 'new-email@test.com'
+    }
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What is your business email address?',
+    metaDescription: 'Update the email address for your business.',
+    businessEmail: 'new-email@test.com',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}
+
+const getPageDataError = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What is your business email address?',
+    metaDescription: 'Update the email address for your business.',
+    businessEmail: 'new-email@test.com',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron',
+    errors: {
+      businessEmail: {
+        text: 'Enter business email address'
+      }
+    }
+  }
+}

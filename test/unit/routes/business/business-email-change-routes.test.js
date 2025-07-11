@@ -37,7 +37,6 @@ describe('business email change', () => {
         fetchBusinessDetailsService.mockReturnValue(getMockData())
       })
 
-
       test('should have the correct method and path', () => {
         expect(getBusinessEmailChange.method).toBe('GET')
         expect(getBusinessEmailChange.path).toBe('/business-email-change')
@@ -75,7 +74,7 @@ describe('business email change', () => {
         get: vi.fn().mockReturnValue(getMockData())
       }
 
-      request.payload = { businessEmail: 'new-email@test.com'}
+      request.payload = { businessEmail: 'new-email@test.com' }
     })
 
     describe('when a request succeeds', () => {

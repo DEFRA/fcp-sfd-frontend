@@ -48,7 +48,7 @@ describe('business address enter', () => {
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
       })
 
-      test('should render business-address-enter.njk view with page data', async () => {
+      test('should render business-address-enter view with page data', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
         expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())

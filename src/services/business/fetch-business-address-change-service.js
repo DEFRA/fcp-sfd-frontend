@@ -16,10 +16,10 @@ const fetchBusinessAddressChangeService = async (yar) => {
     }
   }
 
-  return {
-    ...businessDetails,
-    changeBusinessAddress
-  }
+  const updatedBusinessDetails = { ...businessDetails, changeBusinessAddress }
+  yar.set('businessDetails', updatedBusinessDetails)
+
+  return updatedBusinessDetails
 }
 
 export {

@@ -113,6 +113,16 @@ describe('business address enter', () => {
 
           expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageDataError())
         })
+
+        test('it should handle undefined errors', async () => {
+          // Calling the fail action handler
+          await postBusinessAddressEnter.options.validate.failAction(request, h, [])
+
+          const pageData = getPageDataError()
+          pageData.errors = {}
+
+          expect(h.view).toHaveBeenCalledWith('business/business-address-enter', pageData)
+        })
       })
     })
   })

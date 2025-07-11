@@ -21,7 +21,6 @@ describe('updateBusinessAddressChangeService', () => {
     mappedData.changeBusinessAddress = {
       address1: 'A different address',
       city: 'Maidstone',
-      county: 'A new county',
       postcode: 'BA123 ABC',
       country: 'United Kingdom'
     }
@@ -65,7 +64,7 @@ const savedData = () => {
         line2: null,
         line3: 'Child Okeford',
         line4: 'Maidstone',
-        line5: 'A new county'
+        line5: null
       },
       postcode: 'BA123 ABC'
     },

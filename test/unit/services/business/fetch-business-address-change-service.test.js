@@ -35,16 +35,13 @@ describe('fetchBusinessAddressChangeService', () => {
           postcode: 'CO9 3LS'
         }
 
-        yar = {
-          get: vi.fn().mockReturnValue(mappedData)
-        }
+        fetchBusinessDetailsService.mockResolvedValue(data)
       })
 
       test('it returns the correct data', async () => {
         const result = await fetchBusinessAddressChangeService(yar)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.get).toHaveBeenCalledWith('businessDetails')
         expect(result).toEqual(data)
       })
     })
@@ -63,16 +60,13 @@ describe('fetchBusinessAddressChangeService', () => {
         mappedData.changeBusinessAddress = newAddress
         data.changeBusinessAddress = newAddress
 
-        yar = {
-          get: vi.fn().mockReturnValue(mappedData)
-        }
+        fetchBusinessDetailsService.mockResolvedValue(mappedData)
       })
 
       test('it returns the correct data', async () => {
         const result = await fetchBusinessAddressChangeService(yar)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.get).toHaveBeenCalledWith('businessDetails')
         expect(result).toEqual(data)
       })
     })

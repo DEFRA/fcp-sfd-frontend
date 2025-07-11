@@ -7,7 +7,7 @@
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
-  {{ appBackLink() }}
+  {{ appBackLink({ href: '/business-email-change'}) }}
 {% endblock %}
 
 {% block content %}
@@ -45,10 +45,6 @@
       {{ govukButton({
         text: "Submit"
       }) }}
-
-      <p class="govuk-body">
-        <a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a>
-      </p>
     </form>
   </div>
 </div>

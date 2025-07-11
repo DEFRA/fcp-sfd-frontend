@@ -8,6 +8,8 @@
 
 {% block beforeContent %}
     {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+
+
     {{ appBackLink() }}
 {% endblock %}
 
@@ -45,8 +47,6 @@
         text: "Continue",
         preventDoubleClick: true
       }) }}
-
-      <p class="govuk-body"><a href="{{backLink.href}}" class="govuk-link govuk-link--no-visited-state">Cancel</a></p>
     </form>
   </div>
 </div>

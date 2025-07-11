@@ -12,12 +12,12 @@
 
 {% block beforeContent %}
   {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
+    businessName=businessName,
+    sbi="123456789",
     userName="Alfred Waldron"
 ) }}
 
-  {{ appBackLink() }}
+{{ appBackLink({ href: '/business-details'}) }}
 {% endblock %}
 
 {% block content %}
@@ -78,10 +78,6 @@
         {{ govukButton({
         text: "Continue"
       }) }}
-      
-        <p class="govuk-body">
-          <a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a>
-        </p>
       </form>
     </div>
   </div>

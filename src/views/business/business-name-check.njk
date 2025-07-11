@@ -15,7 +15,7 @@
     userName=userName
 ) }}
 
-    {{ appBackLink() }}
+{{ appBackLink({ href: '/business-name-change' }) }}
 {% endblock %}
 
 {% block content %}
@@ -54,10 +54,6 @@
         text: "Submit",
         preventDoubleClick: true
       }) }}
-
-      <p class="govuk-body">
-        <a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a>
-      </p>
     </form>
   </div>
 </div>

@@ -15,12 +15,12 @@
 
 {% block beforeContent %}
     {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
+    businessName=businessName,
+    sbi="123456789",
     userName="Alfred Waldron"
 ) }}
 
-    {{ appBackLink() }}
+{{ appBackLink({ href: '/business-phone-numbers-change'}) }}
 {% endblock %}
 
 {% block content %}
@@ -38,7 +38,7 @@
           </dt>
           <dd class="govuk-summary-list__value">
             <p class="govuk-body">
-              Telephone: 
+              Telephone:
               {% if businessTelephone %}
                 {{ businessTelephone }}
               {% else %}
@@ -47,7 +47,7 @@
                 </span>
               {% endif %}
               <br>
-              Mobile: 
+              Mobile:
               {% if businessMobile %}
                 {{ businessMobile }}
               {% else %}
@@ -66,10 +66,6 @@
         {{ govukButton({
           text: "Submit"
         }) }}
-
-        <p class="govuk-body">
-          <a href="/business-details" class="govuk-link govuk-link--no-visited-state">Cancel</a>
-        </p>
     </form>
   </div>
 </div>

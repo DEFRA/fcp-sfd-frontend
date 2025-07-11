@@ -22,14 +22,4 @@ describe('change business email address', () => {
     expect(input.name).toBe('businessEmail')
     expect(input.value).toBe('testbusiness@email.com')
   })
-
-  test('should render a cancel link which navigates to business details', () => {
-    const link = document.querySelector(
-      'a.govuk-link.govuk-link--no-visited-state'
-    )
-
-    expect(link).not.toBeNull()
-    expect(link.getAttribute('href')).toBe('/business-details')
-    expect(link.textContent.trim()).toBe('Cancel')
-  })
 })

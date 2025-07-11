@@ -27,8 +27,8 @@ describe('businessEmailCheckPresenter', () => {
       const result = businessEmailCheckPresenter(data)
 
       expect(result).toEqual({
-        backLink: { href: '/business-email-enter' },
-        changeLink: '/business-email-enter',
+        backLink: { href: '/business-email-change' },
+        changeLink: '/business-email-change',
         pageTitle: 'Check your business email address is correct before submitting',
         metaDescription: 'Check the email address for your business is correct.',
         businessName: 'Agile Farm Ltd',

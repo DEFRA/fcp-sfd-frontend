@@ -5,8 +5,8 @@
 
 const businessEmailCheckPresenter = (data) => {
   return {
-    backLink: { href: '/business-email-enter' },
-    changeLink: '/business-email-enter',
+    backLink: { href: '/business-email-change' },
+    changeLink: '/business-email-change',
     pageTitle: 'Check your business email address is correct before submitting',
     metaDescription: 'Check the email address for your business is correct.',
     businessEmail: data.changeBusinessEmail ?? data.contact.email,

@@ -7,7 +7,7 @@
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
-  {{ appBackLink() }}
+  {{ appBackLink({ href: '/business-email-change'}) }}
 {% endblock %}
 
 {% block content %}

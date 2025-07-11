@@ -9,12 +9,12 @@
 
 {% block beforeContent %}
   {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
+    businessName=businessName,
+    sbi="123456789",
     userName="Alfred Waldron"
 ) }}
 
-  {{ appBackLink() }}
+{{ appBackLink({ href: '/business-details'}) }}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,7 @@
         {{ businessType }}
       </p>
       <p class="govuk-body">If your business type is incorrect, contact the Rural Payments Agency to update it.</p>
-      
+
       <h2 class="govuk-heading-m">Contact the Rural Payments Agency</h2>
       {% include 'common/contact/contact-us.njk' %}
 

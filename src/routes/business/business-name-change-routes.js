@@ -1,17 +1,18 @@
+import { fetchBusinessNameChangeService } from '../../services/business/fetch-business-name-change-service.js'
+import { businessNameChangePresenter } from '../../presenters/business/business-name-change-presenter.js'
 import { businessNameSchema } from '../../schemas/business/business-name-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { setSessionData } from '../../utils/session/set-session-data.js'
 
 const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
-  handler: (request, h) => {
-    const currentBusinessName = request.state.businessName || 'Agile Farm Ltd'
-    const originalBusinessName = request.state.originalBusinessName || currentBusinessName
+  handler: async (request, h) => {
+    const businessNameChange = await fetchBusinessNameChangeService(request.yar)
+    const pageData = businessNameChangePresenter(businessNameChange)
 
-    return h.view('business/business-name-change', {
-      businessName: currentBusinessName
-    }).state('originalBusinessName', originalBusinessName)
+    return h.view('business/business-name-change.njk', pageData)
   }
 }
 
@@ -21,23 +22,21 @@ const postBusinessNameChange = {
   options: {
     validate: {
       payload: businessNameSchema,
-      options: {
-        abortEarly: false
-      },
+      options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
+        const businessNameChange = await fetchBusinessNameChangeService(request.yar)
+        const pageData = businessNameChangePresenter(businessNameChange, request.yar)
 
-        return h.view('business/business-name-change', {
-          businessName: request.payload?.businessName || '',
-          errors
+        return h.view('business/business-name-change.njk', {
+          errors, ...pageData
         }).code(BAD_REQUEST).takeover()
       }
     },
-    handler: (request, h) => {
-      const { businessName } = request.payload
+    handler: async (request, h) => {
+      setSessionData(request.yar, 'businessDetails', 'changeBusinessName', request.payload.businessName)
 
       return h.redirect('/business-name-check')
-        .state('businessName', businessName)
     }
   }
 }

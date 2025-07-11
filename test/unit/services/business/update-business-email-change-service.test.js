@@ -30,7 +30,7 @@ describe('updateBusinessEmailChangeService', () => {
     fetchBusinessDetailsService.mockReturnValue(mappedData)
 
     yar = {
-      set: vi.fn().mockReturnValue(),
+      set: vi.fn().mockReturnValue()
     }
   })
 

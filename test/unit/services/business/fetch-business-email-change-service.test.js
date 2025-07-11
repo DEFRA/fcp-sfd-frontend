@@ -21,6 +21,10 @@ describe('fetchBusinessEmailChangeService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    yar = {
+      set: vi.fn()
+    }
   })
 
   describe('when called', () => {
@@ -35,6 +39,7 @@ describe('fetchBusinessEmailChangeService', () => {
         const result = await fetchBusinessEmailChangeService(yar)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual(data)
       })
     })
@@ -53,6 +58,7 @@ describe('fetchBusinessEmailChangeService', () => {
         const result = await fetchBusinessEmailChangeService(yar)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual(data)
       })
     })

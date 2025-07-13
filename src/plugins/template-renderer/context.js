@@ -14,7 +14,7 @@ const manifestPath = path.join(
 
 let webpackManifest
 
-export const context = (request) => {
+export const context = async (request) => {
   if (!webpackManifest) {
     try {
       webpackManifest = JSON.parse(readFileSync(manifestPath, 'utf-8'))
@@ -22,13 +22,14 @@ export const context = (request) => {
       logger.error(`Webpack ${path.basename(manifestPath)} not found`)
     }
   }
-
+  const auth = !request.auth.isAuthenticated? null : await request.server.app.cache.get(request.auth.credentials.sessionId)
   return {
     assetPath: `${assetPath}/assets`,
     serviceName: config.get('server.serviceName'),
     serviceUrl: '/',
     breadcrumbs: [],
     navigation: getNavigationItems(request),
+    auth,
 
     getAssetPath (asset) {
       const webpackAssetPath = webpackManifest?.[asset]

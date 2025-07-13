@@ -1,10 +1,10 @@
 export const home = {
   method: 'GET',
-  path: '/',
+  path: '/home',
+  options: {
+    auth: { scope: ['user'] }
+  },
   handler: (_request, h) => {
-    return h.view('home', {
-      pageTitle: 'Home',
-      heading: 'Home'
-    })
+    return h.view('home')
   }
 }

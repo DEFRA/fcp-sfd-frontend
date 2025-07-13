@@ -17,7 +17,7 @@ async function getPermissions (crn, organisationId, token) {
 }
 
 async function getPersonId (headers) {
-  // simulate call to RPS API via common DAL
+  // simulate call to RPS API
   // Only id is needed for mapping roles, but other fields shown for context for what else is available
   // PATH: /person/3337243/summary
   // METHOD: GET
@@ -26,8 +26,7 @@ async function getPersonId (headers) {
   //   Authorization <headers.token>
 
   const mockResponse = {
-    headers,
-    data: {
+    _data: {
       id: '123456',
       customerReferenceNumber: '1234567890', // crn
       title: 'Mr',
@@ -52,7 +51,7 @@ async function getPersonId (headers) {
     }
   }
 
-  return mockResponse.data.id
+  return mockResponse._data.id
 }
 
 async function getRolesAndPrivileges (personId, organisationId, { headers }) {
@@ -65,9 +64,6 @@ async function getRolesAndPrivileges (personId, organisationId, { headers }) {
   //   Authorization <headers.token>
 
   const mockResponse = {
-    personId,
-    organisationId,
-    headers,
     data: {
       personRoles: [{
         personId: '123456',

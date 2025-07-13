@@ -45,6 +45,12 @@ export const createServer = async () => {
       strictHeader: false
     }
   })
+
+  server.app.cache = server.cache({
+    cache: config.get('server.session.cache.name'),
+    segment: config.get('server.session.cache.segment'),
+    expiresIn: config.get('server.session.cache.ttl')
+  })
   server.validator(Joi)
   await server.register(plugins)
 

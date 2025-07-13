@@ -4,6 +4,9 @@ import { businessDetailsPresenter } from '../../presenters/business/business-det
 const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
+  options: {
+    auth: { mode: 'try' }
+  },
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar)
     const pageData = businessDetailsPresenter(businessDetails, request.yar)

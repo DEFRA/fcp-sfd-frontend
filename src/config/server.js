@@ -34,7 +34,7 @@ export const serverConfig = {
     port: {
       doc: 'The port to bind.',
       format: 'port',
-      default: 3002,
+      default: 3000,
       env: 'PORT'
     },
     staticCacheTimeout: {

@@ -18,7 +18,7 @@ describe('businessNameChangePresenter', () => {
       userName: 'Alfred Waldron'
     }
 
-      data = {
+    data = {
       info: {
         businessName: 'Agile Farm Ltd',
         sbi: '123456789'

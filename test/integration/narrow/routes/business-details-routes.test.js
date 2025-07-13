@@ -1,6 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 import {
-  BUSINESS_NAME_MAX,
   PHONE_NUMBER_MIN,
   PHONE_NUMBER_MAX,
   EMAIL_MAX
@@ -54,8 +53,6 @@ describe('business details', () => {
         ['page not found', '/page-not-found'],
         ['service problem', '/service-problem'],
         ['business details', '/business-details'],
-        ['change business name', '/business-name-change'],
-        ['check business name', '/business-name-check'],
         ['check business address', '/business-address-check'],
         ['change business phone numbers', '/business-phone-numbers-change'],
         ['check business phone numbers', '/business-phone-numbers-check'],
@@ -77,13 +74,6 @@ describe('business details', () => {
 
     describe('POST routes', () => {
       test.each([
-        [
-          'change business name',
-          '/business-name-change',
-          {
-            businessName: 'Test Farms Ltd'
-          }
-        ],
         [
           'change business phone numbers',
           '/business-phone-numbers-change',
@@ -107,34 +97,6 @@ describe('business details', () => {
         })
 
         expect(response.statusCode).toBe(302)
-      })
-    })
-
-    describe('schema validation: business name', () => {
-      test.each([
-        [
-          'no business name provided',
-          {
-            businessName: ''
-          },
-          'Enter business name'
-        ],
-        [
-          'business name is too long',
-          {
-            businessName: 'a'.repeat(BUSINESS_NAME_MAX + 1)
-          },
-          `Business name must be ${BUSINESS_NAME_MAX} characters or less`
-        ]
-      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
-        const response = await server.inject({
-          method: 'POST',
-          url: '/business-name-change',
-          payload
-        })
-
-        expect(response.statusCode).toBe(400)
-        expect(response.payload).toContain(errorMessage)
       })
     })
 

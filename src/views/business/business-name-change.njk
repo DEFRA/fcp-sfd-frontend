@@ -8,9 +8,7 @@
 
 {% block beforeContent %}
     {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
-
-
-    {{ appBackLink() }}
+    {{ appBackLink(backLink) }}
 {% endblock %}
 
 {% block content %}

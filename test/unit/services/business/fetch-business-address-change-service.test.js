@@ -30,15 +30,6 @@ describe('fetchBusinessAddressChangeService', () => {
   describe('when called', () => {
     describe('and there is no changed address', () => {
       beforeEach(() => {
-        data.changeBusinessAddress = {
-          address1: '76 Robinswood Road',
-          address2: 'UPPER CHUTE',
-          city: null,
-          country: 'United Kingdom',
-          county: null,
-          postcode: 'CO9 3LS'
-        }
-
         fetchBusinessDetailsService.mockResolvedValue(data)
       })
 
@@ -47,11 +38,21 @@ describe('fetchBusinessAddressChangeService', () => {
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
         expect(yar.set).toHaveBeenCalled(data)
-        expect(result).toEqual(data)
+        expect(result).toEqual({
+          ...data,
+          changeBusinessAddress: {
+            address1: '76 Robinswood Road',
+            address2: 'UPPER CHUTE',
+            city: null,
+            country: 'United Kingdom',
+            county: null,
+            postcode: 'CO9 3LS'
+          }
+        })
       })
     })
 
-    describe('and there is is a changed address', () => {
+    describe('and there is a changed address', () => {
       beforeEach(() => {
         const newAddress = {
           address1: 'A different address',

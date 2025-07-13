@@ -30,8 +30,6 @@ describe('fetchBusinessEmailChangeService', () => {
   describe('when called', () => {
     describe('and there is no changed email', () => {
       beforeEach(() => {
-        data.changeBusinessEmail = 'henleyrej@eryelnehk.com.test'
-
         fetchBusinessDetailsService.mockResolvedValue(data)
       })
 
@@ -40,11 +38,11 @@ describe('fetchBusinessEmailChangeService', () => {
 
         expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
         expect(yar.set).toHaveBeenCalled(data)
-        expect(result).toEqual(data)
+        expect(result).toEqual({ ...data, changeBusinessEmail: 'henleyrej@eryelnehk.com.test' })
       })
     })
 
-    describe('and there is is a changed email', () => {
+    describe('and there is a changed email', () => {
       beforeEach(() => {
         const newEmail = 'new-email@new-email.com'
 

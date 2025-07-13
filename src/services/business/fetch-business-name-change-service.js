@@ -1,17 +1,15 @@
-/**
- * Fetches the business name change data
- * @module fetchBusinessNameChangeService
- */
-
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 
 const fetchBusinessNameChangeService = async (yar) => {
-  await fetchBusinessDetailsService(yar)
-  const changeBusinessName = yar.get('businessDetails').changeBusinessName || yar.get('businessDetails').businessName
-  return {
-    ...yar.get('businessDetails'),
-    changeBusinessName
-  }
+  const businessDetails = await fetchBusinessDetailsService(yar)
+
+  const changeBusinessName = businessDetails.changeBusinessName || businessDetails.info.businessName
+
+  const updatedBusinessDetails = { ...businessDetails, changeBusinessName }
+
+  yar.set('businessDetails', updatedBusinessDetails)
+
+  return updatedBusinessDetails
 }
 
 export {

@@ -26,28 +26,54 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessMobile = '01111 111111'
-    mappedData.changeBusinessTelephone = '02222 222222'
-
-    fetchBusinessDetailsService.mockReturnValue(mappedData)
-
     yar = {
       set: vi.fn().mockReturnValue()
     }
   })
 
   describe('when called', () => {
-    test('it correctly saves the data to the session', async () => {
-      await updateBusinessPhoneNumbersChangeService(yar)
+    describe('and the changeBusinessNumbers are null', async () => {
+      beforeEach(() => {
+        mappedData.changeBusinessMobile = null
+        mappedData.changeBusinessTelephone = null
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-      expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
+        fetchBusinessDetailsService.mockReturnValue(mappedData)
+      })
+
+      test('it correctly saves the data to the session', async () => {
+        await updateBusinessPhoneNumbersChangeService(yar)
+
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
+      })
+
+      test('adds a flash notification confirming the change in data', async () => {
+        await updateBusinessPhoneNumbersChangeService(yar)
+
+        expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
+      })
     })
 
-    test('adds a flash notification confirming the change in data', async () => {
-      await updateBusinessPhoneNumbersChangeService(yar)
+    describe('and the changeBusinessNumbers are not null', async () => {
+      beforeEach(() => {
+        mappedData.changeBusinessMobile = '01111 111111'
+        mappedData.changeBusinessTelephone = '02222 222222'
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
+        fetchBusinessDetailsService.mockReturnValue(mappedData)
+      })
+
+      test('it correctly saves the data to the session', async () => {
+        await updateBusinessPhoneNumbersChangeService(yar)
+
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
+      })
+
+      test('adds a flash notification confirming the change in data', async () => {
+        await updateBusinessPhoneNumbersChangeService(yar)
+
+        expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
+      })
     })
   })
 })

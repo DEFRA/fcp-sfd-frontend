@@ -74,7 +74,7 @@ describe('business phone numbers change', () => {
         get: vi.fn().mockReturnValue(getMockData())
       }
 
-      request.payload = { businessMobile: '01111 111111', businessTelephone: '02222 222222' }
+      request.payload = { businessMobile: null, businessTelephone: null }
     })
 
     describe('when a request succeeds', () => {
@@ -181,8 +181,8 @@ const getPageDataError = () => {
     businessName: 'Agile Farm Ltd',
     sbi: '123456789',
     userName: 'Alfred Waldron',
-    businessTelephone: '02222 222222',
-    businessMobile: '01111 111111',
+    businessTelephone: null,
+    businessMobile: null,
     errors: {
       businessMobile: {
         text: 'Business mobile number must be 10 characters or more'

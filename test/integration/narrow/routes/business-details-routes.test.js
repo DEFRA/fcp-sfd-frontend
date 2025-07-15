@@ -1,8 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
-import {
-  BUSINESS_NAME_MAX,
-  EMAIL_MAX
-} from '../../../../src/constants/validation-fields.js'
+import { BUSINESS_NAME_MAX } from '../../../../src/constants/validation-fields.js'
 
 describe('business details', () => {
   const originalEnv = process.env.ALLOW_ERROR_VIEWS
@@ -54,9 +51,6 @@ describe('business details', () => {
         ['business details', '/business-details'],
         ['change business name', '/business-name-change'],
         ['check business name', '/business-name-check'],
-        ['check business address', '/business-address-check'],
-        ['change business email address', '/business-email-change'],
-        ['check business email address', '/business-email-check'],
         ['change business legal status', '/business-legal-status-change'],
         ['change business type', '/business-type-change']
       ])('%s GET route responds correctly', async (_, url) => {
@@ -78,13 +72,6 @@ describe('business details', () => {
           '/business-name-change',
           {
             businessName: 'Test Farms Ltd'
-          }
-        ],
-        [
-          'change business email address',
-          '/business-email-change',
-          {
-            businessEmail: 'name@example.com'
           }
         ]
       ])('%s POST route is registered', async (_, url, payload) => {
@@ -118,41 +105,6 @@ describe('business details', () => {
         const response = await server.inject({
           method: 'POST',
           url: '/business-name-change',
-          payload
-        })
-
-        expect(response.statusCode).toBe(400)
-        expect(response.payload).toContain(errorMessage)
-      })
-    })
-
-    describe('schema validation: business email address', () => {
-      test.each([
-        [
-          'no business email address provided',
-          {
-            businessEmail: ''
-          },
-          'Enter business email address'
-        ],
-        [
-          'business email address is too long',
-          {
-            businessEmail: 'a'.repeat(EMAIL_MAX + 1)
-          },
-          `Business email address must be ${EMAIL_MAX} characters or less`
-        ],
-        [
-          'business email address format is invalid',
-          {
-            businessEmail: 'not-an-email'
-          },
-          'Enter an email address, like name@example.com'
-        ]
-      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
-        const response = await server.inject({
-          method: 'POST',
-          url: '/business-email-change',
           payload
         })
 

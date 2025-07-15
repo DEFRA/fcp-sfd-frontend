@@ -1,9 +1,14 @@
+// Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
+// Things we need to mock
 const mockDalConnector = vi.fn()
 vi.mock('../../../../src/dal/connector.js', () => ({
   dalConnector: mockDalConnector
 }))
+
+// Test helpers
+const { mappedData, dalData } = await import('../../../mocks/mock-business-details.js')
 
 // Thing under test
 const { fetchBusinessDetailsService } = await import('../../../../src/services/business/fetch-business-details-service.js')
@@ -17,7 +22,6 @@ describe('fetchBusinessDetailsService', () => {
     vi.clearAllMocks()
     vi.resetModules()
 
-    const { mappedData, dalData } = await import('../../../mocks/mock-business-details.js')
     data = { data: dalData }
     mappedDalData = mappedData
   })

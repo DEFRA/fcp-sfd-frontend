@@ -37,10 +37,20 @@ describe('business address enter', () => {
         fetchBusinessDetailsService.mockReturnValue(getMockData())
       })
 
+      test('should have the correct method and path', () => {
+        expect(getBusinessAddressEnter.method).toBe('GET')
+        expect(getBusinessAddressEnter.path).toBe('/business-address-enter')
+      })
+
       test('it fetches the data from the session', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-address-enter view with page data', async () => {
+        await getBusinessAddressEnter.handler(request, h)
+
         expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
       })
     })

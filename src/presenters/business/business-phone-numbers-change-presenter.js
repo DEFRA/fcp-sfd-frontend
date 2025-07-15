@@ -12,7 +12,7 @@ const businessPhoneNumbersChangePresenter = (data, payload) => {
     sbi: data.info.sbi ?? null,
     userName: data.customer.fullName ?? null,
     businessTelephone: formatBusinessNumber(payload?.businessTelephone, data.changeBusinessTelephone, data.contact.landline),
-    businessMobile: formatBusinessNumber(payload?.businessMobile, data.changeBusinessMobile, data.contact.mobile),
+    businessMobile: formatBusinessNumber(payload?.businessMobile, data.changeBusinessMobile, data.contact.mobile)
   }
 }
 

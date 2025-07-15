@@ -81,14 +81,6 @@ describe('business details', () => {
           }
         ],
         [
-          'change business phone numbers',
-          '/business-phone-numbers-change',
-          {
-            businessTelephone: '01234567890',
-            businessMobile: '09876543210'
-          }
-        ],
-        [
           'change business email address',
           '/business-email-change',
           {

@@ -41,8 +41,8 @@ describe('business phone schema', () => {
           path: [],
           type: 'object.missing',
           context: {
-            peers: [ 'businessTelephone', 'businessMobile' ],
-            peersWithLabels: [ 'businessTelephone', 'businessMobile' ],
+            peers: ['businessTelephone', 'businessMobile'],
+            peersWithLabels: ['businessTelephone', 'businessMobile'],
             label: 'value',
             value: {}
           }

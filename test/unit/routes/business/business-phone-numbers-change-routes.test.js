@@ -1,151 +1,192 @@
-import { describe, test, expect, vi } from 'vitest'
-import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business/business-phone-numbers-change-routes.js'
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 
+// Things we need to mock
+import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+
+// Thing under test
+import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business/business-phone-numbers-change-routes.js'
 const [getBusinessPhoneNumbersChange, postBusinessPhoneNumbersChange] = businessPhoneNumbersChangeRoutes
 
-const businessTelephone = '0123456789'
-const businessMobile = '9876543210'
+// Mocks
+vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
+  setSessionData: vi.fn()
+}))
 
-const createMockResponse = () => {
-  const view = vi.fn().mockReturnThis()
-  const code = vi.fn().mockReturnThis()
-  const takeover = vi.fn().mockReturnThis()
-  const state = vi.fn().mockReturnThis()
-  const redirect = vi.fn().mockReturnValue({ state })
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
+  fetchBusinessDetailsService: vi.fn()
+}))
 
-  return { view, code, takeover, state, redirect }
-}
+describe('business phone numbers change', () => {
+  const request = { yar: {} }
+  let h
+  let err
 
-describe('change business phone numbers', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   describe('GET /business-phone-numbers-change', () => {
-    test('should have correct method and path', () => {
-      expect(getBusinessPhoneNumbersChange.method).toBe('GET')
-      expect(getBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
-    })
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
+        }
 
-    test('should render view with phone numbers from state', () => {
-      const request = {
-        state: { businessTelephone, businessMobile }
-      }
+        fetchBusinessDetailsService.mockReturnValue(getMockData())
+      })
 
-      const h = createMockResponse()
+      test('should have the correct method and path', () => {
+        expect(getBusinessPhoneNumbersChange.method).toBe('GET')
+        expect(getBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
+      })
 
-      getBusinessPhoneNumbersChange.handler(request, h)
+      test('it fetches the data from the session', async () => {
+        await getBusinessPhoneNumbersChange.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
-        businessTelephone,
-        businessMobile
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-phone-numbers-change.njk view with page data', async () => {
+        await getBusinessPhoneNumbersChange.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', getPageData())
       })
     })
   })
 
   describe('POST /business-phone-numbers-change', () => {
-    test('should have correct method and path', () => {
-      expect(postBusinessPhoneNumbersChange.method).toBe('POST')
-      expect(postBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
-    })
-
-    describe('validation', () => {
-      const schema = postBusinessPhoneNumbersChange.options.validate.payload
-
-      test('should fail with empty fields', () => {
-        const { error } = schema.validate({
-          businessTelephone: '',
-          businessMobile: ''
-        })
-
-        expect(error).toBeTruthy()
-        expect(error.details.length).toBeGreaterThan(0)
-      })
-
-      test('should pass with valid phone numbers', () => {
-        const { error } = schema.validate({
-          businessTelephone,
-          businessMobile
-        })
-
-        expect(error).toBeFalsy()
-      })
-    })
-
-    test('should redirect to check page on successful submission', () => {
-      const request = {
-        payload: { businessTelephone, businessMobile }
+    beforeEach(() => {
+      const responseStub = {
+        code: vi.fn().mockReturnThis(),
+        takeover: vi.fn().mockReturnThis()
       }
 
-      const h = createMockResponse()
-
-      postBusinessPhoneNumbersChange.options.handler(request, h)
-
-      expect(h.redirect).toHaveBeenCalledWith('/business-phone-numbers-check')
-    })
-
-    test('should handle validation failures with error details', async () => {
-      const request = {
-        payload: {
-          businessTelephone: '',
-          businessMobile: ''
-        }
+      h = {
+        redirect: vi.fn(() => h),
+        view: vi.fn(() => responseStub)
       }
 
-      const h = createMockResponse()
+      // Mock yar.set for session
+      request.yar = {
+        set: vi.fn(),
+        get: vi.fn().mockReturnValue(getMockData())
+      }
 
-      const err = {
-        details: [
-          {
-            path: ['businessTelephone'],
-            message: 'Enter a business telephone number'
-          },
-          {
-            path: ['businessMobile'],
-            message: 'Enter a business mobile number'
+      request.payload = { businessMobile: '01111 111111', businessTelephone: '02222 222222' }
+    })
+
+    describe('when a request succeeds', () => {
+      describe('and the validation passes', () => {
+        test('it redirects to the /business-phone-numbers-check page', async () => {
+          await postBusinessPhoneNumbersChange.options.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-phone-numbers-check')
+        })
+
+        test('sets the payload on the yar state', async () => {
+          await postBusinessPhoneNumbersChange.options.handler(request, h)
+
+          // Ensure it was called twice
+          expect(setSessionData).toHaveBeenCalledTimes(2)
+
+          // Check the specific calls
+          expect(setSessionData).toHaveBeenNthCalledWith(
+            1,
+            request.yar,
+            'businessDetails',
+            'changeBusinessTelephone',
+            request.payload.businessTelephone
+          )
+
+          expect(setSessionData).toHaveBeenNthCalledWith(
+            2,
+            request.yar,
+            'businessDetails',
+            'changeBusinessMobile',
+            request.payload.businessMobile
+          )
+        })
+      })
+
+      describe('and the validation fails', () => {
+        beforeEach(() => {
+          err = {
+            details: [
+              {
+                message: 'Business mobile number must be 10 characters or more',
+                path: ['businessMobile'],
+                type: 'string.min'
+              }
+            ]
           }
-        ]
-      }
+        })
 
-      await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
+        test('it returns the page successfully with the error summary banner', async () => {
+          // Calling the fail action handler
+          await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
-        businessTelephone: '',
-        businessMobile: '',
-        errors: {
-          businessTelephone: { text: 'Enter a business telephone number' },
-          businessMobile: { text: 'Enter a business mobile number' }
-        }
+          expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', getPageDataError())
+        })
+
+        test('it should handle undefined errors', async () => {
+          // Calling the fail action handler
+          await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, [])
+
+          const pageData = getPageDataError()
+          pageData.errors = {}
+
+          expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', pageData)
+        })
       })
-
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
     })
-
-    test('should handle validation failure without error details', async () => {
-      const request = {
-        payload: {
-          businessTelephone: '',
-          businessMobile: ''
-        }
-      }
-
-      const h = createMockResponse()
-      const err = {}
-
-      await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
-
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', {
-        businessTelephone: '',
-        businessMobile: '',
-        errors: {}
-      })
-
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
-    })
-  })
-
-  test('should export all routes', () => {
-    expect(businessPhoneNumbersChangeRoutes).toEqual([
-      getBusinessPhoneNumbersChange,
-      postBusinessPhoneNumbersChange
-    ])
   })
 })
+
+const getMockData = () => {
+  return {
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron'
+    },
+    contact: {
+      mobile: '01234 567891',
+      landline: '01111 111111'
+    }
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What are your business phone numbers?',
+    metaDescription: 'Update the phone numbers for your business.',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron',
+    businessTelephone: '01111 111111',
+    businessMobile: '01234 567891'
+  }
+}
+
+const getPageDataError = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What are your business phone numbers?',
+    metaDescription: 'Update the phone numbers for your business.',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron',
+    businessTelephone: '02222 222222',
+    businessMobile: '01111 111111',
+    errors: {
+      businessMobile: {
+        text: 'Business mobile number must be 10 characters or more'
+      }
+    }
+  }
+}

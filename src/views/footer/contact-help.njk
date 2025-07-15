@@ -2,7 +2,7 @@
 {% from "common/navigation/back-link.njk" import appBackLink %}
 
 {% block beforeContent %}
-    {{ appBackLink() }}
+{{ appBackLink({ href: '/business-details'}) }}
 {% endblock %}
 
 {% block content %}

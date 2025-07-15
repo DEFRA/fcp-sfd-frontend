@@ -1,12 +1,17 @@
-const businessEmailChangePresenter = (data) => {
+/**
+ * Formats data ready for presenting in the `/business-email-change` page
+ * @module businessEmailEnterPresenter
+ */
+
+const businessEmailChangePresenter = (data, payload) => {
   return {
     backLink: { href: '/business-details' },
-    pageTitle: 'View and update your business details',
-    metaDescription: 'View and change the details for your business.',
-    businessEmail: data.changeBusinessEmail,
-    businessName: data.businessName,
-    sbi: data.sbi,
-    userName: data.userName
+    pageTitle: 'What is your business email address?',
+    metaDescription: 'Update the email address for your business.',
+    businessEmail: payload ?? data.changeBusinessEmail ?? data.contact.email,
+    businessName: data.info.businessName ?? null,
+    sbi: data.info.sbi ?? null,
+    userName: data.customer.fullName ?? null
   }
 }
 

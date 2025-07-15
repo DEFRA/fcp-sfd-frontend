@@ -1,36 +1,18 @@
 import { businessPhoneSchema } from '../../schemas/business/business-phone-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { businessPhoneNumbersChangePresenter } from '../../presenters/business/business-phone-numbers-change-presenter.js'
+import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
+import { setSessionData } from '../../utils/session/set-session-data.js'
 
 const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
-  handler: (request, h) => {
-    const currentBusinessTelephone =
-      request.state.tempBusinessTelephone ??
-      request.state.businessTelephone ??
-      ''
-    const currentBusinessMobile =
-      request.state.tempBusinessMobile ??
-      request.state.businessMobile ??
-      ''
+  handler: async (request, h) => {
+    const businessDetails = await fetchBusinessDetailsService(request.yar)
+    const pageData = businessPhoneNumbersChangePresenter(businessDetails)
 
-    const originalBusinessTelephone =
-      request.state.originalBusinessTelephone ??
-      request.state.businessTelephone ??
-      ''
-
-    const originalBusinessMobile =
-      request.state.originalBusinessMobile ??
-      request.state.businessMobile ??
-      ''
-
-    return h.view('business/business-phone-numbers-change', {
-      businessTelephone: currentBusinessTelephone,
-      businessMobile: currentBusinessMobile
-    })
-      .state('originalBusinessTelephone', originalBusinessTelephone)
-      .state('originalBusinessMobile', originalBusinessMobile)
+    return h.view('business/business-phone-numbers-change', pageData)
   }
 }
 
@@ -40,25 +22,20 @@ const postBusinessPhoneNumbersChange = {
   options: {
     validate: {
       payload: businessPhoneSchema,
-      options: {
-        abortEarly: false
-      },
+      options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
+        const businessDetailsData = request.yar.get('businessDetails')
+        const pageData = businessPhoneNumbersChangePresenter(businessDetailsData, request.payload)
 
-        return h.view('business/business-phone-numbers-change', {
-          businessTelephone: request.payload?.businessTelephone || '',
-          businessMobile: request.payload?.businessMobile || '',
-          errors
-        }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-phone-numbers-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {
-      const { businessTelephone, businessMobile } = request.payload
+      setSessionData(request.yar, 'businessDetails', 'changeBusinessTelephone', request.payload.businessTelephone ?? null)
+      setSessionData(request.yar, 'businessDetails', 'changeBusinessMobile', request.payload.businessMobile ?? null)
 
       return h.redirect('/business-phone-numbers-check')
-        .state('tempBusinessTelephone', businessTelephone)
-        .state('tempBusinessMobile', businessMobile)
     }
   }
 }

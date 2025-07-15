@@ -1,33 +1,25 @@
+import { businessPhoneNumbersCheckPresenter } from '../../presenters/business/business-phone-numbers-check-presenter.js'
+import { fetchBusinessPhoneNumbersChangeService } from '../../services/business/fetch-business-phone-numbers-change-service.js'
+import { updateBusinessPhoneNumbersChangeService } from '../../services/business/update-business-phone-numbers-change-service.js'
+
 const getBusinessPhoneNumbersCheck = {
   method: 'GET',
   path: '/business-phone-numbers-check',
-  handler: (request, h) => {
-    const businessTelephone = request.state.tempBusinessTelephone || ''
-    const businessMobile = request.state.tempBusinessMobile || ''
+  handler: async (request, h) => {
+    const businessDetails = await fetchBusinessPhoneNumbersChangeService(request.yar)
+    const pageData = businessPhoneNumbersCheckPresenter(businessDetails)
 
-    return h.view('business/business-phone-numbers-check', {
-      businessTelephone,
-      businessMobile
-    })
+    return h.view('business/business-phone-numbers-check', pageData)
   }
 }
 
 const postBusinessPhoneNumbersCheck = {
   method: 'POST',
   path: '/business-phone-numbers-check',
-  handler: (request, h) => {
-    const businessTelephone = request.state.tempBusinessTelephone
-    const businessMobile = request.state.tempBusinessMobile
+  handler: async (request, h) => {
+    await updateBusinessPhoneNumbersChangeService(request.yar)
 
     return h.redirect('/business-details')
-      .state('showSuccessBanner', 'true')
-      .state('successField', 'BUSINESS_PHONE_NUMBERS')
-      .state('businessTelephone', businessTelephone)
-      .state('businessMobile', businessMobile)
-      .unstate('originalBusinessTelephone')
-      .unstate('originalBusinessMobile')
-      .unstate('tempBusinessTelephone')
-      .unstate('tempBusinessMobile')
   }
 }
 

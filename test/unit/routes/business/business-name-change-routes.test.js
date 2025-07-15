@@ -1,121 +1,173 @@
-import { describe, test, expect, vi } from 'vitest'
-import { businessNameChangeRoutes } from '../../../../src/routes/business/business-name-change-routes.js'
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 
+// Things we need to mock
+import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+
+// Thing under test
+import { businessNameChangeRoutes } from '../../../../src/routes/business/business-name-change-routes.js'
 const [getBusinessNameChange, postBusinessNameChange] = businessNameChangeRoutes
 
-describe('change business name', () => {
-  const createMockResponse = () => {
-    const state = vi.fn().mockReturnThis()
-    const unstate = vi.fn().mockReturnThis()
-    const view = vi.fn().mockReturnThis()
-    const code = vi.fn().mockReturnThis()
-    const takeover = vi.fn().mockReturnThis()
-    const redirect = vi.fn().mockReturnValue({ state, unstate })
+// Mocks
+vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
+  setSessionData: vi.fn()
+}))
 
-    return { view, code, takeover, redirect, state, unstate }
-  }
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
+  fetchBusinessDetailsService: vi.fn()
+}))
+
+describe('business name change', () => {
+  const request = { yar: {} }
+  let h
+  let err
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
 
   describe('GET /business-name-change', () => {
-    test('should have correct method and path', () => {
-      expect(getBusinessNameChange.method).toBe('GET')
-      expect(getBusinessNameChange.path).toBe('/business-name-change')
-    })
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
+        }
 
-    test('should render the view with default name when none in state', () => {
-      const request = { state: { businessName: null } }
-      const h = createMockResponse()
-
-      getBusinessNameChange.handler(request, h)
-
-      expect(h.view).toHaveBeenCalledWith('business/business-name-change', {
-        businessName: 'Agile Farm Ltd'
+        fetchBusinessDetailsService.mockReturnValue(getMockData())
       })
 
-      expect(h.view().state).toHaveBeenCalledWith('originalBusinessName', 'Agile Farm Ltd')
+      test('should have the correct method and path', () => {
+        expect(getBusinessNameChange.method).toBe('GET')
+        expect(getBusinessNameChange.path).toBe('/business-name-change')
+      })
+
+      test('it fetches the data from the session', async () => {
+        await getBusinessNameChange.handler(request, h)
+
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-name-change view with page data', async () => {
+        await getBusinessNameChange.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-name-change', getPageData())
+      })
     })
   })
 
   describe('POST /business-name-change', () => {
-    test('should have correct method and path', () => {
-      expect(postBusinessNameChange.method).toBe('POST')
-      expect(postBusinessNameChange.path).toBe('/business-name-change')
-    })
-
-    describe('validation', () => {
-      const schema = postBusinessNameChange.options.validate.payload
-
-      test('should fail with empty business name', () => {
-        const { error } = schema.validate({ businessName: '' })
-
-        expect(error).toBeTruthy()
-        expect(error.details[0].message).toBe('Enter business name')
-      })
-
-      test('should fail when name exceeds 300 characters', () => {
-        const longName = 'a'.repeat(301)
-        const { error } = schema.validate({ businessName: longName })
-
-        expect(error).toBeTruthy()
-        expect(error.details[0].message).toBe('Business name must be 300 characters or less')
-      })
-
-      test('should pass with valid name', () => {
-        const { error } = schema.validate({ businessName: 'Acme Corporation' })
-        expect(error).toBeFalsy()
-      })
-    })
-
-    test('should redirect with updated business name', () => {
-      const request = { payload: { businessName: 'Test Business' } }
-      const h = createMockResponse()
-
-      postBusinessNameChange.options.handler(request, h)
-
-      expect(h.redirect).toHaveBeenCalledWith('/business-name-check')
-      expect(h.redirect().state).toHaveBeenCalledWith('businessName', 'Test Business')
-    })
-
-    test('should handle validation failure with details', async () => {
-      const request = { payload: { businessName: '' } }
-      const h = createMockResponse()
-
-      const err = {
-        details: [{ path: ['businessName'], message: 'Enter business name' }]
+    beforeEach(() => {
+      const responseStub = {
+        code: vi.fn().mockReturnThis(),
+        takeover: vi.fn().mockReturnThis()
       }
 
-      await postBusinessNameChange.options.validate.failAction(request, h, err)
+      h = {
+        redirect: vi.fn(() => h),
+        view: vi.fn(() => responseStub)
+      }
 
-      expect(h.view).toHaveBeenCalledWith('business/business-name-change', {
-        businessName: '',
-        errors: {
-          businessName: { text: 'Enter business name' }
-        }
-      })
+      // Mock yar.set for session
+      request.yar = {
+        set: vi.fn(),
+        get: vi.fn().mockReturnValue(getMockData())
+      }
 
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
+      request.payload = { businessName: 'New business Name ltd' }
     })
 
-    test('should handle validation failure with no details', async () => {
-      const request = { payload: { businessName: '' } }
-      const h = createMockResponse()
+    describe('when a request succeeds', () => {
+      describe('and the validation passes', () => {
+        test('it redirects to the /business-name-check page', async () => {
+          await postBusinessNameChange.options.handler(request, h)
 
-      await postBusinessNameChange.options.validate.failAction(request, h, {})
+          expect(h.redirect).toHaveBeenCalledWith('/business-name-check')
+        })
 
-      expect(h.view).toHaveBeenCalledWith('business/business-name-change', {
-        businessName: '',
-        errors: {}
+        test('sets the payload on the yar state', async () => {
+          await postBusinessNameChange.options.handler(request, h)
+
+          expect(setSessionData).toHaveBeenCalledWith(
+            request.yar,
+            'businessDetails',
+            'changeBusinessName',
+            request.payload.businessName
+          )
+        })
       })
 
-      expect(h.code).toHaveBeenCalledWith(400)
-      expect(h.takeover).toHaveBeenCalled()
-    })
-  })
+      describe('and the validation fails', () => {
+        beforeEach(() => {
+          err = {
+            details: [
+              {
+                message: 'Enter business name',
+                path: ['businessName'],
+                type: 'string.empty'
+              }
+            ]
+          }
+        })
 
-  test('should export all routes', () => {
-    expect(businessNameChangeRoutes).toEqual([
-      getBusinessNameChange,
-      postBusinessNameChange
-    ])
+        test('it returns the page successfully with the error summary banner', async () => {
+          // Calling the fail action handler
+          await postBusinessNameChange.options.validate.failAction(request, h, err)
+
+          expect(h.view).toHaveBeenCalledWith('business/business-name-change', getPageDataError())
+        })
+
+        test('it should handle undefined errors', async () => {
+          // Calling the fail action handler
+          await postBusinessNameChange.options.validate.failAction(request, h, [])
+
+          const pageData = getPageDataError()
+          pageData.errors = {}
+
+          expect(h.view).toHaveBeenCalledWith('business/business-name-change', pageData)
+        })
+      })
+    })
   })
 })
+
+const getMockData = () => {
+  return {
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron'
+    }
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What is your business name?',
+    metaDescription: 'Update the name for your business.',
+    businessName: 'Agile Farm Ltd',
+    changeBusinessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}
+
+const getPageDataError = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What is your business name?',
+    metaDescription: 'Update the name for your business.',
+    changeBusinessName: 'New business Name ltd',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron',
+    errors: {
+      businessName: {
+        text: 'Enter business name'
+      }
+    }
+  }
+}

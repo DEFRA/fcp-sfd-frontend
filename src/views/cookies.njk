@@ -155,31 +155,6 @@
           ]
         ]
       }) }}
-
-      <h2 class="govuk-heading-m">Change your cookie settings</h2>
-      {{ govukRadios({
-          name: "analyticsCookies",
-          fieldset: {
-            legend: {
-              text: "Do you want to accept analytics cookies?",
-              classes: "govuk-fieldset__legend--m"
-            }
-          },
-          items: [
-            {
-              value: "yes",
-              text: "Yes"
-            },
-            {
-              value: "no",
-              text: "No"
-            }
-          ]
-        }) }}
-
-        {{ govukButton({
-          text: "Save cookie settings"
-        }) }}
     </div>
   </div>
 {% endblock %}

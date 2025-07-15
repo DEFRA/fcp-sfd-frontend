@@ -7,7 +7,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block beforeContent %}
-    {{ appBackLink() }}
+  {{ appBackLink({ href: '/business-details'}) }}
 {% endblock %}
 
 {% block content %}

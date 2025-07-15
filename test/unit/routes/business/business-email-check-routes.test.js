@@ -26,7 +26,7 @@ describe('business email check', () => {
     vi.clearAllMocks()
   })
 
-  describe('GET /business-email-enter', () => {
+  describe('GET /business-email-check', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         h = {

@@ -23,7 +23,7 @@ describe('businessEmailChangePresenter', () => {
     }
   })
 
-  describe('when provided with business email enter data', () => {
+  describe('when provided with business email change data', () => {
     test('it correctly presents the data', () => {
       const result = businessEmailChangePresenter(data)
 
@@ -87,7 +87,7 @@ describe('businessEmailChangePresenter', () => {
         data.changeBusinessEmail = 'new-email@new-email.com'
       })
 
-      test('it should return userName as null', () => {
+      test('it should return the changed businessEmail as the businessEmail', () => {
         const result = businessEmailChangePresenter(data)
 
         expect(result.businessEmail).toEqual('new-email@new-email.com')
@@ -99,7 +99,7 @@ describe('businessEmailChangePresenter', () => {
         payload = 'even-newer-email@email.com'
       })
 
-      test('it should return userName as null', () => {
+      test('it should return the payload as the businessEmail', () => {
         const result = businessEmailChangePresenter(data, payload)
 
         expect(result.businessEmail).toEqual('even-newer-email@email.com')

@@ -87,7 +87,7 @@ describe('businessEmailCheckPresenter', () => {
         data.changeBusinessEmail = 'new-email@new-email.com'
       })
 
-      test('it should return userName as null', () => {
+      test('it should return the changed business email as the businessEmail', () => {
         const result = businessEmailCheckPresenter(data)
 
         expect(result.businessEmail).toEqual('new-email@new-email.com')

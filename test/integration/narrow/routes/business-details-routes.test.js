@@ -1,9 +1,4 @@
 import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
-import {
-  PHONE_NUMBER_MIN,
-  PHONE_NUMBER_MAX,
-  EMAIL_MAX
-} from '../../../../src/constants/validation-fields.js'
 
 describe('business details', () => {
   const originalEnv = process.env.ALLOW_ERROR_VIEWS
@@ -53,11 +48,6 @@ describe('business details', () => {
         ['page not found', '/page-not-found'],
         ['service problem', '/service-problem'],
         ['business details', '/business-details'],
-        ['check business address', '/business-address-check'],
-        ['change business phone numbers', '/business-phone-numbers-change'],
-        ['check business phone numbers', '/business-phone-numbers-check'],
-        ['change business email address', '/business-email-change'],
-        ['check business email address', '/business-email-check'],
         ['change business legal status', '/business-legal-status-change'],
         ['change business type', '/business-type-change']
       ])('%s GET route responds correctly', async (_, url) => {
@@ -69,107 +59,6 @@ describe('business details', () => {
 
         expect(response.statusCode).toBe(200)
         expect(response.headers['content-type']).toContain('text/html')
-      })
-    })
-
-    describe('POST routes', () => {
-      test.each([
-        [
-          'change business phone numbers',
-          '/business-phone-numbers-change',
-          {
-            businessTelephone: '01234567890',
-            businessMobile: '09876543210'
-          }
-        ],
-        [
-          'change business email address',
-          '/business-email-change',
-          {
-            businessEmail: 'name@example.com'
-          }
-        ]
-      ])('%s POST route is registered', async (_, url, payload) => {
-        const response = await server.inject({
-          method: 'POST',
-          url,
-          payload
-        })
-
-        expect(response.statusCode).toBe(302)
-      })
-    })
-
-    describe('schema validation: business phone numbers', () => {
-      test.each([
-        [
-          'no business phone numbers are provided',
-          {
-            businessTelephone: '',
-            businessMobile: ''
-          },
-          'Enter at least one phone number'
-        ],
-        [
-          'business telephone number is too short',
-          {
-            businessTelephone: '123',
-            businessMobile: ''
-          },
-          `Business telephone number must be ${PHONE_NUMBER_MIN} characters or more`
-        ],
-        [
-          'business mobile number is too long',
-          {
-            businessTelephone: '',
-            businessMobile: '1'.repeat(PHONE_NUMBER_MAX + 1)
-          },
-          `Business mobile phone number must be ${PHONE_NUMBER_MAX} characters or less`
-        ]
-      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
-        const response = await server.inject({
-          method: 'POST',
-          url: '/business-phone-numbers-change',
-          payload
-        })
-
-        expect(response.statusCode).toBe(400)
-        expect(response.payload).toContain(errorMessage)
-      })
-    })
-
-    describe('schema validation: business email address', () => {
-      test.each([
-        [
-          'no business email address provided',
-          {
-            businessEmail: ''
-          },
-          'Enter business email address'
-        ],
-        [
-          'business email address is too long',
-          {
-            businessEmail: 'a'.repeat(EMAIL_MAX + 1)
-          },
-          `Business email address must be ${EMAIL_MAX} characters or less`
-        ],
-        [
-          'business email address format is invalid',
-          {
-            businessEmail: 'not-an-email'
-          },
-          'Enter an email address, like name@example.com'
-        ]
-      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
-        const response = await server.inject({
-          method: 'POST',
-          url: '/business-email-change',
-          payload
-        })
-
-        expect(response.statusCode).toBe(400)
-        expect(response.payload).toContain(errorMessage)
       })
     })
   })

@@ -2,11 +2,10 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter.js'
+import { businessEmailCheckPresenter } from '../../../../src/presenters/business/business-email-check-presenter.js'
 
-describe('businessEmailChangePresenter', () => {
+describe('businessEmailCheckPresenter', () => {
   let data
-  let payload
 
   beforeEach(() => {
     data = {
@@ -23,14 +22,15 @@ describe('businessEmailChangePresenter', () => {
     }
   })
 
-  describe('when provided with business email change data', () => {
+  describe('when provided with business email check data', () => {
     test('it correctly presents the data', () => {
-      const result = businessEmailChangePresenter(data)
+      const result = businessEmailCheckPresenter(data)
 
       expect(result).toEqual({
-        backLink: { href: '/business-details' },
-        pageTitle: 'What is your business email address?',
-        metaDescription: 'Update the email address for your business.',
+        backLink: { href: '/business-email-change' },
+        changeLink: '/business-email-change',
+        pageTitle: 'Check your business email address is correct before submitting',
+        metaDescription: 'Check the email address for your business is correct.',
         businessName: 'Agile Farm Ltd',
         sbi: '123456789',
         userName: 'Alfred Waldron',
@@ -46,7 +46,7 @@ describe('businessEmailChangePresenter', () => {
       })
 
       test('it should return businessName as null', () => {
-        const result = businessEmailChangePresenter(data)
+        const result = businessEmailCheckPresenter(data)
 
         expect(result.businessName).toEqual(null)
       })
@@ -60,7 +60,7 @@ describe('businessEmailChangePresenter', () => {
       })
 
       test('it should return sbi as null', () => {
-        const result = businessEmailChangePresenter(data)
+        const result = businessEmailCheckPresenter(data)
 
         expect(result.sbi).toEqual(null)
       })
@@ -74,7 +74,7 @@ describe('businessEmailChangePresenter', () => {
       })
 
       test('it should return userName as null', () => {
-        const result = businessEmailChangePresenter(data)
+        const result = businessEmailCheckPresenter(data)
 
         expect(result.userName).toEqual(null)
       })
@@ -82,27 +82,15 @@ describe('businessEmailChangePresenter', () => {
   })
 
   describe('the "businessEmail" property', () => {
-    describe('when provided with a changed businessEmail', () => {
+    describe('when provided with a changed business email', () => {
       beforeEach(() => {
         data.changeBusinessEmail = 'new-email@new-email.com'
       })
 
-      test('it should return the changed businessEmail as the businessEmail', () => {
-        const result = businessEmailChangePresenter(data)
+      test('it should return the changed business email as the businessEmail', () => {
+        const result = businessEmailCheckPresenter(data)
 
         expect(result.businessEmail).toEqual('new-email@new-email.com')
-      })
-    })
-
-    describe('when provided with a payload', () => {
-      beforeEach(() => {
-        payload = 'even-newer-email@email.com'
-      })
-
-      test('it should return the payload as the businessEmail', () => {
-        const result = businessEmailChangePresenter(data, payload)
-
-        expect(result.businessEmail).toEqual('even-newer-email@email.com')
       })
     })
   })

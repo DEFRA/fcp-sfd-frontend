@@ -3,6 +3,7 @@ import { EMAIL_MAX } from '../../constants/validation-fields.js'
 
 export const businessEmailSchema = Joi.object({
   businessEmail: Joi.string()
+    .max(EMAIL_MAX)
     .email({
       minDomainSegments: 2,
       tlds: {
@@ -10,7 +11,6 @@ export const businessEmailSchema = Joi.object({
         min: 2
       }
     })
-    .max(EMAIL_MAX)
     .messages({
       'string.empty': 'Enter business email address',
       'string.max': `Business email address must be ${EMAIL_MAX} characters or less`,

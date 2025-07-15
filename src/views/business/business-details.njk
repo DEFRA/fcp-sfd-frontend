@@ -35,8 +35,8 @@
     {% endset %}
 
     {% set displayBusinessPhone %}
-      Telephone: <div class="govuk-hint" style="display: inline;">{{businessTelephone}}</div>
-      Mobile: <div class="govuk-hint" style="display: inline;">{{businessMobile}}</div>
+      <div>Telephone: <div class="govuk-hint" style="display: inline;">{{businessTelephone}}</div></div>
+      <div>Mobile: <div class="govuk-hint" style="display: inline;">{{businessMobile}}</div></div>
     {% endset %}
 
     {{ govukSummaryList({
@@ -131,7 +131,7 @@
             text: "VAT registration number"
           },
           value: {
-            text: vatNumber 
+            text: vatNumber
           }
         },
         {

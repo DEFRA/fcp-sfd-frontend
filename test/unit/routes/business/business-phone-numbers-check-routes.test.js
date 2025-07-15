@@ -1,105 +1,111 @@
-import { describe, test, expect, vi } from 'vitest'
-import { businessPhoneNumbersCheckRoutes } from '../../../../src/routes/business/business-phone-numbers-check-routes.js'
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 
+// Things we need to mock
+import { fetchBusinessPhoneNumbersChangeService } from '../../../../src/services/business/fetch-business-phone-numbers-change-service.js'
+import { updateBusinessPhoneNumbersChangeService } from '../../../../src/services/business/update-business-phone-numbers-change-service.js'
+
+// Thing under test
+import { businessPhoneNumbersCheckRoutes } from '../../../../src/routes/business/business-phone-numbers-check-routes.js'
 const [getBusinessPhoneNumbersCheck, postBusinessPhoneNumbersCheck] = businessPhoneNumbersCheckRoutes
 
-const businessTelephone = '0123456789'
-const businessMobile = '9876543210'
+// Mocks
+vi.mock('../../../../src/services/business/fetch-business-phone-numbers-change-service.js', () => ({
+  fetchBusinessPhoneNumbersChangeService: vi.fn()
+}))
 
-const createMockResponse = () => {
-  const view = vi.fn().mockReturnThis()
-  const code = vi.fn().mockReturnThis()
-  const takeover = vi.fn().mockReturnThis()
-  const state = vi.fn().mockReturnThis()
-  const unstate = vi.fn().mockReturnThis()
-  const redirect = vi.fn().mockReturnValue({ state, unstate })
+vi.mock('../../../../src/services/business/update-business-phone-numbers-change-service.js', () => ({
+  updateBusinessPhoneNumbersChangeService: vi.fn()
+}))
 
-  return { view, code, takeover, state, unstate, redirect }
-}
+describe('business phone numbers check', () => {
+  const request = { yar: {} }
+  let h
 
-describe('check business phone numbers', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
   describe('GET /business-phone-numbers-check', () => {
-    test('has correct method and path', () => {
-      expect(getBusinessPhoneNumbersCheck.method).toBe('GET')
-      expect(getBusinessPhoneNumbersCheck.path).toBe('/business-phone-numbers-check')
-    })
-
-    test('renders view with business phone numbers from state', () => {
-      const request = {
-        state: {
-          tempBusinessTelephone: businessTelephone,
-          tempBusinessMobile: businessMobile
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
         }
-      }
 
-      const h = createMockResponse()
-
-      getBusinessPhoneNumbersCheck.handler(request, h)
-
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-check', {
-        businessTelephone,
-        businessMobile
+        fetchBusinessPhoneNumbersChangeService.mockReturnValue(getMockData())
       })
-    })
 
-    test('renders view with empty strings when phone numbers are missing in state', () => {
-      const request = { state: {} }
-      const h = createMockResponse()
+      test('should have the correct method and path', () => {
+        expect(getBusinessPhoneNumbersCheck.method).toBe('GET')
+        expect(getBusinessPhoneNumbersCheck.path).toBe('/business-phone-numbers-check')
+      })
 
-      getBusinessPhoneNumbersCheck.handler(request, h)
+      test('it fetches the data from the session', async () => {
+        await getBusinessPhoneNumbersCheck.handler(request, h)
 
-      expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-check', {
-        businessTelephone: '',
-        businessMobile: ''
+        expect(fetchBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-phone-numbers-check view with page data', async () => {
+        await getBusinessPhoneNumbersCheck.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-check', getPageData())
       })
     })
   })
 
   describe('POST /business-phone-numbers-check', () => {
-    test('has correct method and path', () => {
-      expect(postBusinessPhoneNumbersCheck.method).toBe('POST')
-      expect(postBusinessPhoneNumbersCheck.path).toBe('/business-phone-numbers-check')
-    })
-
-    test('redirects to business-details with success banner and sets new phone numbers', () => {
-      const request = {
-        state: {
-          tempBusinessTelephone: businessTelephone,
-          tempBusinessMobile: businessMobile
-        }
+    beforeEach(() => {
+      h = {
+        redirect: vi.fn(() => h)
       }
-
-      const h = createMockResponse()
-
-      postBusinessPhoneNumbersCheck.handler(request, h)
-
-      expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(h.state).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(h.state).toHaveBeenCalledWith('businessTelephone', businessTelephone)
-      expect(h.state).toHaveBeenCalledWith('businessMobile', businessMobile)
-      expect(h.unstate).toHaveBeenCalledWith('originalBusinessTelephone')
-      expect(h.unstate).toHaveBeenCalledWith('originalBusinessMobile')
     })
 
-    test('handles missing phone numbers in state without crashing', () => {
-      const request = { state: {} }
-      const h = createMockResponse()
+    describe('when a request succeeds', () => {
+      test('it redirects to the /business-details page', async () => {
+        await postBusinessPhoneNumbersCheck.handler(request, h)
 
-      postBusinessPhoneNumbersCheck.handler(request, h)
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+      })
 
-      expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(h.state).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(h.state).toHaveBeenCalledWith('businessTelephone', undefined)
-      expect(h.state).toHaveBeenCalledWith('businessMobile', undefined)
-      expect(h.unstate).toHaveBeenCalledWith('originalBusinessTelephone')
-      expect(h.unstate).toHaveBeenCalledWith('originalBusinessMobile')
+      test('sets the payload on the yar state', async () => {
+        await postBusinessPhoneNumbersCheck.handler(request, h)
+
+        expect(updateBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar)
+      })
     })
-  })
-
-  test('exports all routes', () => {
-    expect(businessPhoneNumbersCheckRoutes).toEqual([
-      getBusinessPhoneNumbersCheck,
-      postBusinessPhoneNumbersCheck
-    ])
   })
 })
+
+const getMockData = () => {
+  return {
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron'
+    },
+    contact: {
+      landline: '02222 222222',
+      mobile: '01111 111111'
+    },
+    changeBusinessTelephone: '01111 111111',
+    changeBusinessMobile: null
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-phone-numbers-change' },
+    changeLink: '/business-phone-numbers-change',
+    pageTitle: 'Check your business phone numbers are correct before submitting',
+    metaDescription: 'Check the phone numbers for your business are correct.',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron',
+    businessMobile: null,
+    businessTelephone: '01111 111111'
+  }
+}

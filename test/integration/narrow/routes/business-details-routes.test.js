@@ -1,8 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest'
 import {
   BUSINESS_NAME_MAX,
-  PHONE_NUMBER_MIN,
-  PHONE_NUMBER_MAX,
   EMAIL_MAX
 } from '../../../../src/constants/validation-fields.js'
 
@@ -57,8 +55,6 @@ describe('business details', () => {
         ['change business name', '/business-name-change'],
         ['check business name', '/business-name-check'],
         ['check business address', '/business-address-check'],
-        ['change business phone numbers', '/business-phone-numbers-change'],
-        ['check business phone numbers', '/business-phone-numbers-check'],
         ['change business email address', '/business-email-change'],
         ['check business email address', '/business-email-check'],
         ['change business legal status', '/business-legal-status-change'],
@@ -82,14 +78,6 @@ describe('business details', () => {
           '/business-name-change',
           {
             businessName: 'Test Farms Ltd'
-          }
-        ],
-        [
-          'change business phone numbers',
-          '/business-phone-numbers-change',
-          {
-            businessTelephone: '01234567890',
-            businessMobile: '09876543210'
           }
         ],
         [
@@ -130,44 +118,6 @@ describe('business details', () => {
         const response = await server.inject({
           method: 'POST',
           url: '/business-name-change',
-          payload
-        })
-
-        expect(response.statusCode).toBe(400)
-        expect(response.payload).toContain(errorMessage)
-      })
-    })
-
-    describe('schema validation: business phone numbers', () => {
-      test.each([
-        [
-          'no business phone numbers are provided',
-          {
-            businessTelephone: '',
-            businessMobile: ''
-          },
-          'Enter at least one phone number'
-        ],
-        [
-          'business telephone number is too short',
-          {
-            businessTelephone: '123',
-            businessMobile: ''
-          },
-          `Business telephone number must be ${PHONE_NUMBER_MIN} characters or more`
-        ],
-        [
-          'business mobile number is too long',
-          {
-            businessTelephone: '',
-            businessMobile: '1'.repeat(PHONE_NUMBER_MAX + 1)
-          },
-          `Business mobile phone number must be ${PHONE_NUMBER_MAX} characters or less`
-        ]
-      ])('%s returns 400 and expected error message', async (_, payload, errorMessage) => {
-        const response = await server.inject({
-          method: 'POST',
-          url: '/business-phone-numbers-change',
           payload
         })
 

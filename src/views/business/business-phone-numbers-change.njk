@@ -7,17 +7,9 @@
 {% from "common/navigation/back-link.njk" import appBackLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
-{% set pageTitle = "What are your business phone numbers?" %}
-{% set metaDescription = "Update the phone numbers for your business." %}
-
 {% block beforeContent %}
-  {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
-    userName="Alfred Waldron"
-) }}
-
-  {{ appBackLink() }}
+  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ appBackLink(backLink) }}
 {% endblock %}
 
 {% block content %}
@@ -76,8 +68,9 @@
         </fieldset>
 
         {{ govukButton({
-        text: "Continue"
-      }) }}
+          text: "Continue",
+          preventDoubleClick: true
+        }) }}
       </form>
     </div>
   </div>

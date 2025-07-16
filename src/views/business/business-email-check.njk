@@ -7,7 +7,7 @@
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
-  {{ appBackLink() }}
+  {{ appBackLink(backLink) }}
 {% endblock %}
 
 {% block content %}
@@ -31,7 +31,7 @@
               actions: {
                 items: [
                   {
-                    href: "/business-email-change",
+                    href: changeLink,
                     text: "Change",
                     visuallyHiddenText: "business email"
                   }
@@ -43,7 +43,8 @@
       </div>
 
       {{ govukButton({
-        text: "Submit"
+        text: "Submit",
+        preventDoubleClick: true
       }) }}
     </form>
   </div>

@@ -8,24 +8,24 @@
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
-  {{ appBackLink() }}
+  {{ appBackLink(backLink)}}
 {% endblock %}
-   
+
 {% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [
+          {
+            text: errors.businessEmail.text,
+            href: "#business-email"
+          }
+        ]
+    }) }}
+  {% endif %}
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    {% if errors %}
-        {{ govukErrorSummary({
-            titleText: "There is a problem",
-            errorList: [
-                {
-                    text: errors.businessEmail.text,
-                    href: "#business-email"
-                }
-            ]
-        }) }}
-    {% endif %}
-
     <form method="post" novalidate>
       <div class="govuk-form-group">
         {{ govukInput({
@@ -45,7 +45,8 @@
       </div>
 
       {{ govukButton({
-        text: "Continue"
+        text: "Continue",
+        preventDoubleClick: true
       }) }}
     </form>
   </div>

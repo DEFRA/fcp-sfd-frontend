@@ -5,22 +5,9 @@
 {% from "common/navigation/back-link.njk" import appBackLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
-{% set pageTitle = "Check your business phone numbers are correct before submitting" %}
-{% set metaDescription = "Check the phone numbers for your business are correct." %}
-
-{% set businessPhoneNumbers %}
-  Telephone: {{ businessTelephone or '<span class="govuk-hint">Not added</span>' }}<br>
-  Mobile: {{ businessMobile or '<span class="govuk-hint">Not added</span>' }}
-{% endset %}
-
 {% block beforeContent %}
-    {{ subHeader(
-    businessName=businessName, 
-    sbi="123456789", 
-    userName="Alfred Waldron"
-) }}
-
-    {{ appBackLink() }}
+  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ appBackLink(backLink) }}
 {% endblock %}
 
 {% block content %}
@@ -38,7 +25,7 @@
           </dt>
           <dd class="govuk-summary-list__value">
             <p class="govuk-body">
-              Telephone: 
+              Telephone:
               {% if businessTelephone %}
                 {{ businessTelephone }}
               {% else %}
@@ -47,7 +34,7 @@
                 </span>
               {% endif %}
               <br>
-              Mobile: 
+              Mobile:
               {% if businessMobile %}
                 {{ businessMobile }}
               {% else %}
@@ -58,13 +45,14 @@
             </p>
           </dd>
           <dd class="govuk-summary-list__actions">
-            <a class="govuk-link" href="/business-phone-numbers-change">Change<span class="govuk-visually-hidden">business phone numbers</span></a>
+            <a class="govuk-link" href={{changeLink}}>Change<span class="govuk-visually-hidden">business phone numbers</span></a>
           </dd>
         </div>
       </dl>
 
         {{ govukButton({
-          text: "Submit"
+          text: "Submit",
+          preventDoubleClick: true
         }) }}
     </form>
   </div>

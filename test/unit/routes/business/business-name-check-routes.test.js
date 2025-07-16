@@ -1,86 +1,105 @@
-import { describe, test, expect, vi } from 'vitest'
-import { businessNameCheckRoutes } from '../../../../src/routes/business/business-name-check-routes.js'
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 
+// Things we need to mock
+import { fetchBusinessNameChangeService } from '../../../../src/services/business/fetch-business-name-change-service.js'
+import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service.js'
+
+// Thing under test
+import { businessNameCheckRoutes } from '../../../../src/routes/business/business-name-check-routes.js'
 const [getBusinessNameCheck, postBusinessNameCheck] = businessNameCheckRoutes
 
-const createMockRequest = (state = {}) => ({ state })
+// Mocks
+vi.mock('../../../../src/services/business/fetch-business-name-change-service.js', () => ({
+  fetchBusinessNameChangeService: vi.fn()
+}))
 
-const createMockResponse = () => {
-  const view = vi.fn().mockReturnThis()
-  const redirect = vi.fn()
-  const stateMock = vi.fn().mockReturnThis()
-  const unstateMock = vi.fn().mockReturnThis()
+vi.mock('../../../../src/services/business/update-business-name-change-service.js', () => ({
+  updateBusinessNameChangeService: vi.fn()
+}))
 
-  redirect.mockReturnValue({ state: stateMock, unstate: unstateMock })
+describe('business name check', () => {
+  const request = { yar: {} }
+  let h
 
-  return { h: { view, redirect }, view, redirect, stateMock, unstateMock }
-}
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
 
-describe('check business name', () => {
-  describe('GET /business-name-check', () => {
-    test('should have correct method and path', () => {
-      expect(getBusinessNameCheck.method).toBe('GET')
-      expect(getBusinessNameCheck.path).toBe('/business-name-check')
-    })
+  describe('GET /business-name-enter', () => {
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
+        }
 
-    test('should render view with business name from state', () => {
-      const request = createMockRequest({ businessName: 'Test Business' })
-      const { h, view } = createMockResponse()
-
-      getBusinessNameCheck.handler(request, h)
-
-      expect(view).toHaveBeenCalledWith('business/business-name-check', {
-        businessName: 'Test Business'
+        fetchBusinessNameChangeService.mockReturnValue(getMockData())
       })
-    })
 
-    test('should render view with empty string if no business name in state', () => {
-      const request = createMockRequest({})
-      const { h, view } = createMockResponse()
+      test('should have the correct method and path', () => {
+        expect(getBusinessNameCheck.method).toBe('GET')
+        expect(getBusinessNameCheck.path).toBe('/business-name-check')
+      })
 
-      getBusinessNameCheck.handler(request, h)
+      test('it fetches the data from the session', async () => {
+        await getBusinessNameCheck.handler(request, h)
 
-      expect(view).toHaveBeenCalledWith('business/business-name-check', {
-        businessName: ''
+        expect(fetchBusinessNameChangeService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-name-check view with page data', async () => {
+        await getBusinessNameCheck.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-name-check', getPageData())
       })
     })
   })
 
   describe('POST /business-name-check', () => {
-    test('should have correct method and path', () => {
-      expect(postBusinessNameCheck.method).toBe('POST')
-      expect(postBusinessNameCheck.path).toBe('/business-name-check')
+    beforeEach(() => {
+      h = {
+        redirect: vi.fn(() => h)
+      }
     })
 
-    test('should redirect to business-details with success banner and name state', () => {
-      const request = createMockRequest({ businessName: 'Test Business' })
-      const { h, redirect, stateMock, unstateMock } = createMockResponse()
+    describe('when a request succeeds', () => {
+      test('it redirects to the /business-details page', async () => {
+        await postBusinessNameCheck.handler(request, h)
 
-      postBusinessNameCheck.handler(request, h)
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+      })
 
-      expect(redirect).toHaveBeenCalledWith('/business-details')
-      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(stateMock).toHaveBeenCalledWith('businessName', 'Test Business')
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
+      test('sets the payload on the yar state', async () => {
+        await postBusinessNameCheck.handler(request, h)
+
+        expect(updateBusinessNameChangeService).toHaveBeenCalledWith(request.yar)
+      })
     })
-
-    test('should handle undefined business name in state gracefully', () => {
-      const request = createMockRequest({})
-      const { h, redirect, stateMock, unstateMock } = createMockResponse()
-
-      postBusinessNameCheck.handler(request, h)
-
-      expect(redirect).toHaveBeenCalledWith('/business-details')
-      expect(stateMock).toHaveBeenCalledWith('showSuccessBanner', 'true')
-      expect(stateMock).toHaveBeenCalledWith('businessName', undefined)
-      expect(unstateMock).toHaveBeenCalledWith('originalBusinessName')
-    })
-  })
-
-  test('should export both route handlers', () => {
-    expect(businessNameCheckRoutes).toEqual([
-      getBusinessNameCheck,
-      postBusinessNameCheck
-    ])
   })
 })
+
+const getMockData = () => {
+  return {
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron'
+    },
+    changeBusinessName: 'New Business Name Ltd'
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-name-change' },
+    changeLink: '/business-name-change',
+    pageTitle: 'Check your business name is correct before submitting',
+    metaDescription: 'Check the name for your business is correct.',
+    businessName: 'Agile Farm Ltd',
+    changeBusinessName: 'New Business Name Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}

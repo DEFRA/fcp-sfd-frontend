@@ -3,6 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Thing under test
 import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
@@ -13,10 +14,13 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
+  fetchBusinessDetailsService: vi.fn()
+}))
+
 describe('business address enter', () => {
-  const request = {}
+  const request = { yar: {} }
   let h
-  let mockData
   let err
 
   beforeEach(() => {
@@ -30,26 +34,24 @@ describe('business address enter', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        // Mock the yar object with a set method
-        mockData = getMockData()
+        fetchBusinessDetailsService.mockReturnValue(getMockData())
+      })
 
-        request.yar = {
-          set: vi.fn(),
-          get: vi.fn().mockReturnValue(mockData)
-        }
+      test('should have the correct method and path', () => {
+        expect(getBusinessAddressEnter.method).toBe('GET')
+        expect(getBusinessAddressEnter.path).toBe('/business-address-enter')
       })
 
       test('it fetches the data from the session', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(request.yar.get).toHaveBeenCalledWith('businessDetailsData')
-        expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
       })
 
-      test('it sets the fetched data on the yar state', async () => {
+      test('should render business-address-enter view with page data', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(request.yar.set).toHaveBeenCalledWith('businessAddressEnterData', mockData)
+        expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
       })
     })
   })
@@ -80,7 +82,6 @@ describe('business address enter', () => {
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       }
-      request.pre = { sessionData: request.payload }
     })
 
     describe('when a request succeeds', () => {
@@ -96,8 +97,8 @@ describe('business address enter', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessAddressEnterData',
-            'businessAddress',
+            'businessDetails',
+            'changeBusinessAddress',
             request.payload
           )
         })
@@ -122,6 +123,16 @@ describe('business address enter', () => {
 
           expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageDataError())
         })
+
+        test('it should handle undefined errors', async () => {
+          // Calling the fail action handler
+          await postBusinessAddressEnter.options.validate.failAction(request, h, [])
+
+          const pageData = getPageDataError()
+          pageData.errors = {}
+
+          expect(h.view).toHaveBeenCalledWith('business/business-address-enter', pageData)
+        })
       })
     })
   })
@@ -129,17 +140,23 @@ describe('business address enter', () => {
 
 const getMockData = () => {
   return {
-    businessName: 'Agile Farm Ltd',
-    businessAddress: {
-      address1: '10 Skirbeck Way',
-      address2: '',
-      city: 'Maidstone',
-      county: '',
+    address: {
+      manual: {
+        line1: '10 Skirbeck Way',
+        line2: '',
+        line4: 'Maidstone',
+        line5: ''
+      },
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    sbi: '123456789',
-    userName: 'Alfred Waldron'
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron'
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-import { fetchBusinessEmailChangeService } from '../../services/business/fetch-business-email-change-service.js'
+import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { businessEmailChangePresenter } from '../../presenters/business/business-email-change-presenter.js'
 import { businessEmailSchema } from '../../schemas/business/business-email-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
@@ -9,10 +9,10 @@ const getBusinessEmailChange = {
   method: 'GET',
   path: '/business-email-change',
   handler: async (request, h) => {
-    const businessEmailChange = await fetchBusinessEmailChangeService(request.yar)
-    const pageData = businessEmailChangePresenter(businessEmailChange, request.yar)
+    const businessDetails = await fetchBusinessDetailsService(request.yar)
+    const pageData = businessEmailChangePresenter(businessDetails)
 
-    return h.view('business/business-email-change.njk', pageData)
+    return h.view('business/business-email-change', pageData)
   }
 }
 
@@ -27,16 +27,13 @@ const postBusinessEmailChange = {
       },
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
-        const businessEmailChange = await fetchBusinessEmailChangeService(request.yar)
-        const pageData = businessEmailChangePresenter(businessEmailChange)
+        const businessDetailsData = request.yar.get('businessDetails')
+        const pageData = businessEmailChangePresenter(businessDetailsData, request.payload.businessEmail)
 
-        return h.view('business/business-email-change.njk', {
-          errors, ...pageData
-        }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-email-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {
-      await fetchBusinessEmailChangeService(request.yar)
       setSessionData(request.yar, 'businessDetails', 'changeBusinessEmail', request.payload.businessEmail)
 
       return h.redirect('/business-email-check')

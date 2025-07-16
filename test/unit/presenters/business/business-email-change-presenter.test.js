@@ -1,50 +1,109 @@
-import { describe, test, expect, beforeEach, vi } from 'vitest'
-import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter'
-import { dalData } from '../../../mocks/mock-business-details'
+// Test framework dependencies
+import { describe, test, expect, beforeEach } from 'vitest'
 
-const businessEmail = 'business.email@test.com'
-const changeBusinessEmail = 'change_business.email@test.com'
+// Thing under test
+import { businessEmailChangePresenter } from '../../../../src/presenters/business/business-email-change-presenter.js'
 
 describe('businessEmailChangePresenter', () => {
   let data
-  let presenterData
-  let yar
+  let payload
 
   beforeEach(() => {
-    vi.clearAllMocks()
-
     data = {
-      ...dalData,
-      changeBusinessEmail
-    }
-    data.businessEmail = businessEmail
-
-    yar = {
-      flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }]),
-      set: vi.fn().mockReturnValue(data),
-      get: vi.fn().mockReturnValue(data)
-    }
-
-    presenterData = {
-      backLink: { href: '/business-details' },
-      pageTitle: 'View and update your business details',
-      metaDescription: 'View and change the details for your business.',
-      businessEmail: data.changeBusinessEmail,
-      businessName: data.businessName,
-      sbi: data.sbi,
-      userName: data.userName
+      info: {
+        businessName: 'Agile Farm Ltd',
+        sbi: '123456789'
+      },
+      customer: {
+        fullName: 'Alfred Waldron'
+      },
+      contact: {
+        email: 'test@test.com'
+      }
     }
   })
 
-  test('it correctly presents notification value when provided with valid yar', () => {
-    const result = businessEmailChangePresenter(data, yar)
+  describe('when provided with business email change data', () => {
+    test('it correctly presents the data', () => {
+      const result = businessEmailChangePresenter(data)
 
-    expect(result).toEqual(presenterData)
+      expect(result).toEqual({
+        backLink: { href: '/business-details' },
+        pageTitle: 'What is your business email address?',
+        metaDescription: 'Update the email address for your business.',
+        businessName: 'Agile Farm Ltd',
+        sbi: '123456789',
+        userName: 'Alfred Waldron',
+        businessEmail: 'test@test.com'
+      })
+    })
   })
 
-  test('it correctly presents null notification value when provided with no yar', () => {
-    const result = businessEmailChangePresenter(data, null)
+  describe('the "businessName" property', () => {
+    describe('when the businessName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.businessName
+      })
 
-    expect(result).toEqual(presenterData)
+      test('it should return businessName as null', () => {
+        const result = businessEmailChangePresenter(data)
+
+        expect(result.businessName).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "sbi" property', () => {
+    describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
+      beforeEach(() => {
+        delete data.info.sbi
+      })
+
+      test('it should return sbi as null', () => {
+        const result = businessEmailChangePresenter(data)
+
+        expect(result.sbi).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.customer.fullName
+      })
+
+      test('it should return userName as null', () => {
+        const result = businessEmailChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "businessEmail" property', () => {
+    describe('when provided with a changed businessEmail', () => {
+      beforeEach(() => {
+        data.changeBusinessEmail = 'new-email@new-email.com'
+      })
+
+      test('it should return the changed businessEmail as the businessEmail', () => {
+        const result = businessEmailChangePresenter(data)
+
+        expect(result.businessEmail).toEqual('new-email@new-email.com')
+      })
+    })
+
+    describe('when provided with a payload', () => {
+      beforeEach(() => {
+        payload = 'even-newer-email@email.com'
+      })
+
+      test('it should return the payload as the businessEmail', () => {
+        const result = businessEmailChangePresenter(data, payload)
+
+        expect(result.businessEmail).toEqual('even-newer-email@email.com')
+      })
+    })
   })
 })

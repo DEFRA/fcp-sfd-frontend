@@ -1,98 +1,117 @@
-import { describe, test, expect, vi } from 'vitest'
-import {
-  testAddress,
-  defaultAddress,
-  emptyAddress,
-  newAddress
-} from '../../constants/test-addresses.js'
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
+
+// Things we need to mock
+import { fetchBusinessAddressChangeService } from '../../../../src/services/business/fetch-business-address-change-service.js'
+import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
+
+// Thing under test
 import { businessAddressCheckRoutes } from '../../../../src/routes/business/business-address-check-routes.js'
+const [getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
 
-const [
-  getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
+// Mocks
+vi.mock('../../../../src/services/business/fetch-business-address-change-service.js', () => ({
+  fetchBusinessAddressChangeService: vi.fn()
+}))
 
-const createViewHandler = () => ({
-  view: vi.fn().mockReturnThis()
-})
+vi.mock('../../../../src/services/business/update-business-address-change-service.js', () => ({
+  updateBusinessAddressChangeService: vi.fn()
+}))
 
-describe('check business address', () => {
-  describe('GET /business-address-check', () => {
-    test('should have the correct method and path', () => {
-      expect(getBusinessAddressCheck.method).toBe('GET')
-      expect(getBusinessAddressCheck.path).toBe('/business-address-check')
-    })
+describe('business address check', () => {
+  const request = { yar: {} }
+  let h
 
-    test.each([
-      ['full address from state', testAddress, { ...testAddress }],
-      ['empty address from state', {}, { ...emptyAddress }],
-      [
-        'partial address from state',
-        {
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
-        },
-        {
-          ...emptyAddress,
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('GET /business-address-enter', () => {
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
         }
-      ]
-    ])('should render view with %s', (_, stateMock, expectedAddress) => {
-      const h = createViewHandler()
-      const request = { state: stateMock }
 
-      getBusinessAddressCheck.handler(request, h)
+        fetchBusinessAddressChangeService.mockReturnValue(getMockData())
+      })
 
-      expect(h.view).toHaveBeenCalledWith('business/business-address-check', expectedAddress)
+      test('should have the correct method and path', () => {
+        expect(getBusinessAddressCheck.method).toBe('GET')
+        expect(getBusinessAddressCheck.path).toBe('/business-address-check')
+      })
+
+      test('it fetches the data from the session', async () => {
+        await getBusinessAddressCheck.handler(request, h)
+
+        expect(fetchBusinessAddressChangeService).toHaveBeenCalledWith(request.yar)
+      })
+
+      test('should render business-address-check view with page data', async () => {
+        await getBusinessAddressCheck.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-address-check', getPageData())
+      })
     })
   })
 
   describe('POST /business-address-check', () => {
-    test('should have the correct method and path', () => {
-      expect(postBusinessAddressCheck.method).toBe('POST')
-      expect(postBusinessAddressCheck.path).toBe('/business-address-check')
+    beforeEach(() => {
+      h = {
+        redirect: vi.fn(() => h)
+      }
     })
 
-    test.each([
-      ['new address from state', newAddress, { ...newAddress }],
-      ['empty address from state', {}, { ...emptyAddress }],
-      [
-        'partial address from state',
-        {
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
-        },
-        {
-          ...emptyAddress,
-          address1: defaultAddress.address1,
-          postcode: defaultAddress.postcode
-        }
-      ]
-    ])('should redirect with %s', (_, stateMock, expectedAddress) => {
-      const request = { state: stateMock }
-      const state = vi.fn().mockReturnThis()
-      const unstate = vi.fn().mockReturnThis()
+    describe('when a request succeeds', () => {
+      test('it redirects to the /business-details page', async () => {
+        await postBusinessAddressCheck.handler(request, h)
 
-      const h = {
-        redirect: vi.fn().mockReturnValue({ state, unstate })
-      }
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+      })
 
-      postBusinessAddressCheck.handler(request, h)
+      test('sets the payload on the yar state', async () => {
+        await postBusinessAddressCheck.handler(request, h)
 
-      expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      expect(state).toHaveBeenCalledWith('showSuccessBanner', 'true')
-
-      for (const [key, value] of Object.entries(expectedAddress)) {
-        expect(state).toHaveBeenCalledWith(key, value)
-      }
-
-      expect(unstate).toHaveBeenCalledWith('originalBusinessName')
+        expect(updateBusinessAddressChangeService).toHaveBeenCalledWith(request.yar)
+      })
     })
-  })
-
-  test('should export all routes', () => {
-    expect(businessAddressCheckRoutes).toEqual([
-      getBusinessAddressCheck,
-      postBusinessAddressCheck
-    ])
   })
 })
+
+const getMockData = () => {
+  return {
+    address: {
+      address1: '10 Skirbeck Way',
+      address2: '',
+      city: 'Maidstone',
+      county: '',
+      postcode: 'SK22 1DL',
+      country: 'United Kingdom'
+    },
+    info: {
+      sbi: '123456789',
+      businessName: 'Agile Farm Ltd'
+    },
+    customer: {
+      fullName: 'Alfred Waldron'
+    }
+  }
+}
+
+const getPageData = () => {
+  return {
+    backLink: { href: '/business-address-enter' },
+    changeLink: '/business-address-enter',
+    pageTitle: 'Check your business address is correct before submitting',
+    metaDescription: 'Check the address for your business is correct.',
+    address: [
+      '10 Skirbeck Way',
+      'Maidstone',
+      'SK22 1DL',
+      'United Kingdom'
+    ],
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}

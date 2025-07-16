@@ -45,7 +45,7 @@ describe('businessDetailsPresenter', () => {
         vatNumber: data.info.vat,
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
-        countyParishHoldingNumber: null, // CPH not available yet
+        countyParishHoldingNumber: data.info.countyParishHoldingNumber,
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
         userName: data.customer.fullName

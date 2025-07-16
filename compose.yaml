@@ -1,6 +1,6 @@
 services:
   fcp-sfd-frontend:
-    build: 
+    build:
       context: .
       target: development
     ports:
@@ -15,6 +15,7 @@ services:
       PORT: 3002
       NODE_ENV: development
       ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS}
+      DAL_CONNECTION: ${DAL_CONNECTION},
       DAL_ENDPOINT: ${DAL_ENDPOINT:-http://fcp-dal-api:3005/graphql}
     networks:
       - fcp-sfd
@@ -36,7 +37,7 @@ services:
 
   fcp-dal-api:
     image: defradigital/fcp-dal-api:0.48.0
-    ports: 
+    ports:
       - 3005:3005
     depends_on:
       - kits-mock

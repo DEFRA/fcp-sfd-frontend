@@ -9,7 +9,8 @@ services:
       - path: .env
         required: false
     environment:
-      ALLOW_ERROR_VIEWS: false
+      ALLOW_ERROR_VIEWS: false,
+      DAL_CONNECTION: true,
       DAL_ENDPOINT: http://fcp-dal-api:3005/graphql
     depends_on:
       fcp-dal-api:

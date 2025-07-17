@@ -15,7 +15,7 @@ services:
       PORT: 3002
       NODE_ENV: development
       ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS}
-      DAL_CONNECTION: ${DAL_CONNECTION},
+      DAL_CONNECTION: ${DAL_CONNECTION}
       DAL_ENDPOINT: ${DAL_ENDPOINT:-http://fcp-dal-api:3005/graphql}
     networks:
       - fcp-sfd

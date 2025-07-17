@@ -9,6 +9,7 @@ vi.mock('../../../../src/dal/connector.js', () => ({
 
 // Test helpers
 const { mappedData, dalData } = await import('../../../mocks/mock-business-details.js')
+const { featureFlagsConfig } = await import('../../../../src/config/feature-flags.js')
 
 // Thing under test
 const { fetchBusinessDetailsService } = await import('../../../../src/services/business/fetch-business-details-service.js')
@@ -26,34 +27,6 @@ describe('fetchBusinessDetailsService', () => {
     mappedDalData = mappedData
   })
 
-  describe('when there is no session data in cache', () => {
-    beforeEach(() => {
-      yar = {
-        get: vi.fn().mockReturnValue(null),
-        set: vi.fn()
-      }
-    })
-
-    test('it correctly returns data from the DAL', async () => {
-      mockDalConnector.mockResolvedValue(data)
-
-      const result = await fetchBusinessDetailsService(yar)
-
-      expect(result).toMatchObject(mappedDalData)
-    })
-
-    describe('When the dal response contains no data property', () => {
-      test('it returns the full response object', async () => {
-        const dalErrorResponse = { error: 'error response from dal' }
-        mockDalConnector.mockResolvedValue(dalErrorResponse)
-
-        const result = await fetchBusinessDetailsService(yar)
-
-        expect(result).toMatchObject(dalErrorResponse)
-      })
-    })
-  })
-
   describe('when there is session data in cache', () => {
     beforeEach(() => {
       yar = {
@@ -64,6 +37,56 @@ describe('fetchBusinessDetailsService', () => {
     test('it correctly returns session data', async () => {
       const result = await fetchBusinessDetailsService(yar)
       expect(result).toMatchObject(getSessionData)
+    })
+  })
+
+  describe('when the dal connector toggle is set to false', () => {
+    beforeEach(() => {
+      featureFlagsConfig.dalConnection = false
+
+      yar = {
+        get: vi.fn().mockReturnValue(null),
+        set: vi.fn()
+      }
+    })
+
+    test('it correctly returns the mock data', async () => {
+      const result = await fetchBusinessDetailsService(yar)
+      expect(result).toMatchObject(mappedData)
+    })
+  })
+
+  describe('when there is no session data in cache', () => {
+    beforeEach(() => {
+      yar = {
+        get: vi.fn().mockReturnValue(null),
+        set: vi.fn()
+      }
+    })
+
+    describe('and the dal connector toggle is set to true', () => {
+      beforeEach(() => {
+        featureFlagsConfig.dalConnection = true
+      })
+
+      test('it correctly returns data from the DAL', async () => {
+        mockDalConnector.mockResolvedValue(data)
+
+        const result = await fetchBusinessDetailsService(yar)
+
+        expect(result).toMatchObject(mappedDalData)
+      })
+
+      describe('When the dal response contains no data property', () => {
+        test('it returns the full response object', async () => {
+          const dalErrorResponse = { error: 'error response from dal' }
+          mockDalConnector.mockResolvedValue(dalErrorResponse)
+
+          const result = await fetchBusinessDetailsService(yar)
+
+          expect(result).toMatchObject(dalErrorResponse)
+        })
+      })
     })
   })
 })

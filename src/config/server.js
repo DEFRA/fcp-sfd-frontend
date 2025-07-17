@@ -31,6 +31,12 @@ export const serverConfig = {
       default: false,
       env: 'ALLOW_ERROR_VIEWS'
     },
+    dalConnection: {
+      doc: 'Turns the dal connector on or off',
+      format: Boolean,
+      default: false,
+      env: 'DAL_CONNECTION'
+    },
     port: {
       doc: 'The port to bind.',
       format: 'port',

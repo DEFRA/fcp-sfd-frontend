@@ -23,7 +23,7 @@ const fetchBusinessDetailsService = async (yar) => {
   }
 
   // If the DAL connection is set to false return mock data otherwise query the DAL
-  const businessDetailsData = !featureFlagsConfig.dalConnection ? mappedData : await getFromDal(yar)
+  const businessDetailsData = !featureFlagsConfig.dalConnection ? mappedData : await getFromDal()
 
   // Set the business details data on the session
   yar.set('businessDetails', businessDetailsData)

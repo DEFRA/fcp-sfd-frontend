@@ -31,7 +31,7 @@ const fetchBusinessDetailsService = async (yar) => {
   return businessDetailsData
 }
 
-const getFromDal = async (yar) => {
+const getFromDal = async () => {
   // Replace variables and email when defraId is setup
   const variables = { sbi: '107183280', crn: '9477368292' }
   const email = 'not-a-real-email@test.co.uk'

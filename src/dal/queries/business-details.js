@@ -41,6 +41,9 @@ export const businessDetailsQuery = `
         landline
       }
     }
+    countyParishHoldings {
+      cphNumber
+    }
   }
   customer(crn: $crn) {
     info {

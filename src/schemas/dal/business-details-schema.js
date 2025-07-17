@@ -40,7 +40,10 @@ export const rawBusinessDetailsSchema = Joi.object({
       phone: Joi.object({
         mobile: Joi.string().allow(null),
         landline: Joi.string().allow(null)
-      })
+      }),
+      countyParishHoldings: Joi.object({
+        cphNumber: Joi.string().allow(null)
+      }).required()
     })
   }).required(),
   customer: Joi.object({

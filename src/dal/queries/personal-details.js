@@ -1,4 +1,4 @@
-export const businessDetailsQuery = `
+export const personalDetailsQuery = `
 query Customer($crn: ID!) {
   customer(crn: $crn) {
     crn

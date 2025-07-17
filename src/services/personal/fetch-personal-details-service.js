@@ -1,17 +1,17 @@
 /**
- * Returns the `businessDetails` from the session cache if defined,
+ * Returns the `personalDetails` from the session cache if defined,
  * otherwise queries the DAL, maps the response, updates the cache
  * and returns the mapped payload
  *
- * @module fetchBusinessDetailsService
+ * @module fetchPersonalDetailsService
  */
 
 import { dalConnector } from '../../dal/connector.js'
-import { businessDetailsQuery } from '../../dal/queries/business-details.js'
-import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
+import { personalDetailsQuery } from '../../dal/queries/personal-details.js'
+import { mapPersonalDetails } from '../../mappers/personal-details-mapper.js'
 
-const fetchBusinessDetailsService = async (yar) => {
-  return yar.get('businessDetails') ?? getFromDal(yar)
+const fetchPersonalDetailsService = async (yar) => {
+  return yar.get('personalDetails') ?? getFromDal(yar)
 }
 
 const getFromDal = async (yar) => {
@@ -19,11 +19,11 @@ const getFromDal = async (yar) => {
   const variables = { sbi: '107183280', crn: '9477368292' }
   const email = 'not-a-real-email@test.co.uk'
 
-  const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
+  const dalResponse = await dalConnector(personalDetailsQuery, variables, email)
 
   if (dalResponse.data) {
-    const mappedResponse = mapBusinessDetails(dalResponse.data)
-    yar.set('businessDetails', mappedResponse)
+    const mappedResponse = mapPersonalDetails(dalResponse.data)
+    yar.set('personalDetails', mappedResponse)
 
     return mappedResponse
   }
@@ -32,5 +32,5 @@ const getFromDal = async (yar) => {
 }
 
 export {
-  fetchBusinessDetailsService
+  fetchPersonalDetailsService
 }

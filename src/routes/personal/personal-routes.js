@@ -1,5 +1,5 @@
-import { exampleDalConnectionRoute } from './example-routes.js'
+import { personalDetailsRoutes } from './personal-details-routes.js'
 
-export const businessRoutes = [
-    exampleDalConnectionRoute
+export const personalRoutes = [
+    ...personalDetailsRoutes,
 ]

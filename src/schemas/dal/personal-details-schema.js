@@ -1,21 +1,15 @@
 import Joi from 'joi'
 
-export const rawBusinessDetailsSchema = Joi.object({
-  business: Joi.object({
-    organisationId: Joi.string().required(),
-    sbi: Joi.string().required(),
+export const rawPersonalDetailsSchema = Joi.object({
+  personal: Joi.object({
+    crn: Joi.string().required(),
     info: Joi.object({
-      name: Joi.string().required(),
-      vat: Joi.string().allow(null),
-      traderNumber: Joi.string().allow(null),
-      vendorNumber: Joi.string().allow(null),
-      legalStatus: Joi.object({
-        code: Joi.number().required(),
-        type: Joi.string().required()
-      }),
-      type: Joi.object({
-        code: Joi.number().required(),
-        type: Joi.string().required()
+      dateOfBirth: Joi.string().required(),
+      name: Joi.object({
+        title: Joi.string().required(),
+        first: Joi.string().required(),
+        last: Joi.string().required(),
+        middle: Joi.string().allow(null)
       }),
       address: Joi.object({
         buildingNumberRange: Joi.string().allow(null),
@@ -34,22 +28,6 @@ export const rawBusinessDetailsSchema = Joi.object({
         line4: Joi.string().allow(null),
         line5: Joi.string().allow(null)
       }),
-      email: Joi.object({
-        address: Joi.string().required()
-      }),
-      phone: Joi.object({
-        mobile: Joi.string().allow(null),
-        landline: Joi.string().allow(null)
-      })
-    })
-  }).required(),
-  customer: Joi.object({
-    info: Joi.object({
-      name: Joi.object({
-        title: Joi.string().required(),
-        first: Joi.string().required(),
-        last: Joi.string().required()
-      })
     })
   }).required()
-})
+}).required()

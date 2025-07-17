@@ -23,7 +23,7 @@ export const mapPersonalDetails = (raw) => {
         crn: value.customer.crn,
         info: {
             dateOfBirth: value.customer.info.dateOfBirth,
-            name: `${value.customer.info.name.title} ${value.customer.info.name.first} ${value.customer.info.name.middle} ${value.customer.info.name.last}`
+            userName: `${value.customer.info.name.title} ${value.customer.info.name.first} ${value.customer.info.name.middle} ${value.customer.info.name.last}`
         },
         address: {
             lookup: {

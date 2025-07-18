@@ -7,7 +7,7 @@ const personalDetailsPresenter = (data, yar) => {
   return {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your personal details',
-    metaDescription: 'View and update your personal details ',
+    metaDescription: 'View and update your personal details.',
     crn: data.crn,
     address: formatAddress(data.address),
     fullName: formatFullName(data.info.fullName),

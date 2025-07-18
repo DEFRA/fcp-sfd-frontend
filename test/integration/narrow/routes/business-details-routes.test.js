@@ -49,7 +49,8 @@ describe('business details', () => {
         ['service problem', '/service-problem'],
         ['business details', '/business-details'],
         ['change business legal status', '/business-legal-status-change'],
-        ['change business type', '/business-type-change']
+        ['change business type', '/business-type-change'],
+        ['personal details', '/personal-details']
       ])('%s GET route responds correctly', async (_, url) => {
         const options = {
           method: 'GET',

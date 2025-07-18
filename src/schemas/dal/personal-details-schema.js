@@ -1,7 +1,7 @@
 import Joi from 'joi'
 
 export const rawPersonalDetailsSchema = Joi.object({
-  personal: Joi.object({
+  customer: Joi.object({
     crn: Joi.string().required(),
     info: Joi.object({
       dateOfBirth: Joi.string().required(),
@@ -10,6 +10,13 @@ export const rawPersonalDetailsSchema = Joi.object({
         first: Joi.string().required(),
         last: Joi.string().required(),
         middle: Joi.string().allow(null)
+      }),
+      phone: Joi.object({
+        landline: Joi.string().allow(null),
+        mobile: Joi.string().allow(null)
+      }),
+      email: Joi.object({
+        address: Joi.string().email().required()
       }),
       address: Joi.object({
         buildingNumberRange: Joi.string().allow(null),

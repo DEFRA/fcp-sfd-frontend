@@ -23,7 +23,12 @@ export const mapPersonalDetails = (raw) => {
         crn: value.customer.crn,
         info: {
             dateOfBirth: value.customer.info.dateOfBirth,
-            userName: `${value.customer.info.name.title} ${value.customer.info.name.first} ${value.customer.info.name.middle} ${value.customer.info.name.last}`
+            fullName: {
+                title: value.customer.info.name.title,
+                first: value.customer.info.name.first,
+                last: value.customer.info.name.last,
+                middle: value.customer.info.name.middle ?? null
+            }
         },
         address: {
             lookup: {
@@ -44,9 +49,9 @@ export const mapPersonalDetails = (raw) => {
             postcode: value.customer.info.address.postalCode,
             country: value.customer.info.address.country
         },
-        phone: {
+        contact: {
             email: value.customer.info.email.address,
-            landline: value.customer.info.phone.landline,
+            telephone: value.customer.info.phone.landline,
             mobile: value.customer.info.phone.mobile
         }
     }

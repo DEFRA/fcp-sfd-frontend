@@ -10,9 +10,9 @@ const personalDetailsPresenter = (data, yar) => {
         metaDescription: 'View and update your personal details ',
         crn: data.crn,
         address: formatAddress(data.address),
-        fullName: data.info.name,
-        personalTelephone: data.phone.landline ?? 'Not added',
-        personalMobile: data.phone.mobile ?? 'Not added',
+        fullName: data.info.fullName,
+        personalTelephone: data.contact.telephone ?? 'Not added',
+        personalMobile: data.contact.mobile ?? 'Not added',
         personalEmail: data.contact.email,
         dateOfBirth: data.info.dateOfBirth
 

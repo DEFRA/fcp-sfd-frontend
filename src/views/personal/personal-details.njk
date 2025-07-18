@@ -2,7 +2,11 @@
 
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "common/navigation/back-link.njk" import appBackLink %}
 
+{% block beforeContent %}
+  {{ appBackLink(backLink) }}
+{% endblock %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -16,7 +20,8 @@
         }) }}
       {% endif %}
 
-    
+    <span  class="govuk-caption-l">{{fullName}}</span>
+
     <h1 class="govuk-heading-l">
       View and update your personal details
     </h1>

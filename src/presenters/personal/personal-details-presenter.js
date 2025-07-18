@@ -10,7 +10,7 @@ const personalDetailsPresenter = (data, yar) => {
         metaDescription: 'View and update your personal details ',
         crn: data.crn,
         address: formatAddress(data.address),
-        fullName: data.info.fullName,
+        fullName: formatFullName(data.info.fullName),
         personalTelephone: data.contact.telephone ?? 'Not added',
         personalMobile: data.contact.mobile ?? 'Not added',
         personalEmail: data.contact.email,
@@ -60,6 +60,11 @@ const formatAddress = (address) => {
         postcode,
         country
     ]
+}
+
+const formatFullName = (fullName) => {
+    const { first, middle, last } = fullName
+    return `${first} ${middle ? middle + ' ' : ''}${last}`
 }
 
 export {

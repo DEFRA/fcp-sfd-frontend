@@ -34,7 +34,7 @@ export const rawPersonalDetailsSchema = Joi.object({
         line3: Joi.string().allow(null),
         line4: Joi.string().allow(null),
         line5: Joi.string().allow(null)
-      }),
+      })
     })
   }).required()
 }).required()

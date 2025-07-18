@@ -4,19 +4,19 @@
  */
 
 const personalDetailsPresenter = (data, yar) => {
-    return {
-        notification: yar ? yar.flash('notification')[0] : null,
-        pageTitle: 'View and update your personal details',
-        metaDescription: 'View and update your personal details ',
-        crn: data.crn,
-        address: formatAddress(data.address),
-        fullName: formatFullName(data.info.fullName),
-        personalTelephone: data.contact.telephone ?? 'Not added',
-        personalMobile: data.contact.mobile ?? 'Not added',
-        personalEmail: data.contact.email,
-        dateOfBirth: data.info.dateOfBirth
+  return {
+    notification: yar ? yar.flash('notification')[0] : null,
+    pageTitle: 'View and update your personal details',
+    metaDescription: 'View and update your personal details ',
+    crn: data.crn,
+    address: formatAddress(data.address),
+    fullName: formatFullName(data.info.fullName),
+    personalTelephone: data.contact.telephone ?? 'Not added',
+    personalMobile: data.contact.mobile ?? 'Not added',
+    personalEmail: data.contact.email,
+    dateOfBirth: data.info.dateOfBirth
 
-    }
+  }
 }
 
 /**
@@ -41,32 +41,32 @@ const personalDetailsPresenter = (data, yar) => {
  */
 
 const formatAddress = (address) => {
-    const { lookup, manual, postcode, country } = address
+  const { lookup, manual, postcode, country } = address
 
-    const validLookupAddress = Object.values(lookup).some(values => values !== null)
-    const userAddress = validLookupAddress ? lookup : manual
+  const validLookupAddress = Object.values(lookup).some(values => values !== null)
+  const userAddress = validLookupAddress ? lookup : manual
 
-    if (userAddress.buildingNumberRange && userAddress.street) {
-        // without this the number and street are separate entities and displayed on separate lines
-        userAddress.street = `${userAddress.buildingNumberRange} ${userAddress.street}`
-        userAddress.buildingNumberRange = null
-    }
+  if (userAddress.buildingNumberRange && userAddress.street) {
+    // without this the number and street are separate entities and displayed on separate lines
+    userAddress.street = `${userAddress.buildingNumberRange} ${userAddress.street}`
+    userAddress.buildingNumberRange = null
+  }
 
-    // Remove any null values from the final address object
-    const filteredUserAddress = Object.values(userAddress).filter(Boolean)
+  // Remove any null values from the final address object
+  const filteredUserAddress = Object.values(userAddress).filter(Boolean)
 
-    return [
-        ...filteredUserAddress,
-        postcode,
-        country
-    ]
+  return [
+    ...filteredUserAddress,
+    postcode,
+    country
+  ]
 }
 
 const formatFullName = (fullName) => {
-    const { first, middle, last } = fullName
-    return `${first} ${middle ? middle + ' ' : ''}${last}`
+  const { first, middle, last } = fullName
+  return `${first} ${middle ? middle + ' ' : ''}${last}`
 }
 
 export {
-    personalDetailsPresenter
+  personalDetailsPresenter
 }

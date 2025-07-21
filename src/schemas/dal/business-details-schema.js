@@ -4,6 +4,11 @@ export const rawBusinessDetailsSchema = Joi.object({
   business: Joi.object({
     organisationId: Joi.string().required(),
     sbi: Joi.string().required(),
+    countyParishHoldings: Joi.array().items(
+      Joi.object({
+        cphNumber: Joi.string().allow(null)
+      })
+    ).required(),
     info: Joi.object({
       name: Joi.string().required(),
       vat: Joi.string().allow(null),
@@ -40,10 +45,7 @@ export const rawBusinessDetailsSchema = Joi.object({
       phone: Joi.object({
         mobile: Joi.string().allow(null),
         landline: Joi.string().allow(null)
-      }),
-      countyParishHoldings: Joi.object({
-        cphNumber: Joi.string().allow(null)
-      }).required()
+      })
     })
   }).required(),
   customer: Joi.object({

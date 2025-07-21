@@ -17,7 +17,7 @@ const businessDetailsPresenter = (data, yar) => {
     vatNumber: data.info.vat ?? null,
     tradeNumber: data.info.traderNumber ?? null,
     vendorRegistrationNumber: data.info.vendorNumber ?? null,
-    countyParishHoldingNumber: data.info.cph ?? null,
+    countyParishHoldingNumbers: formatCph(data.info.countyParishHoldingNumbers),
     businessLegalStatus: data.info.legalStatus,
     businessType: data.info.type,
     userName: data.customer.fullName
@@ -65,6 +65,12 @@ const formatAddress = (address) => {
     postcode,
     country
   ]
+}
+
+const formatCph = (countyParishHoldings) => {
+  return countyParishHoldings.reduce((acc, cph) => {
+    return acc + cph.cphNumber + '<br>'
+  }, '')
 }
 
 export {

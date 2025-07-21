@@ -86,7 +86,7 @@ const savedData = () => {
     },
     info: {
       businessName: 'HENLEY, RE',
-      countyParishHoldingNumbers: ['12/123/1234'],
+      countyParishHoldingNumbers: [{ cphNumber: '12/123/1234' }],
       legalStatus: 'Sole Proprietorship',
       sbi: '107183280',
       traderNumber: '010203040506070880980',

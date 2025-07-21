@@ -1,9 +1,9 @@
 import { describe, test, expect } from 'vitest'
 import * as cheerio from 'cheerio'
 
-import { createServer } from '../../../../src/server.js'
-import { dalConnector } from '../../../../src/dal/connector.js'
-import { personalDetailsQuery } from '../../../../src/dal/queries/personal-details.js'
+import { createServer } from '../../../../../src/server.js'
+import { dalConnector } from '../../../../../src/dal/connector.js'
+import { personalDetailsQuery } from '../../../../../src/dal/queries/personal-details.js'
 
 describe('/business-details', async () => {
   const url = '/business-details'
@@ -36,7 +36,7 @@ describe('/business-details', async () => {
       })
       test('it should display the correct personal phone number', async () => {
         const $phone = $referenceNumbers.find('.govuk-summary-list__value').eq(3).text().trim()
-        expect($phone).toBe(dataFromDal.data.customer.contact.landline)
+        expect($phone).toBe(dataFromDal.data.customer.info.phone.landline
       })
     })
   })

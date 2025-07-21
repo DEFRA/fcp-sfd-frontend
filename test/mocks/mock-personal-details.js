@@ -1,59 +1,36 @@
-const dalData = {
+export const mappedData = {
+  crn: '123456890',
+  contact: {
+    telephone: '01234567890',
+    mobile: null,
+    email: 'test@example.com'
+  },
   customer: {
-    crn: '9477368292',
-    info: {
-      name: {
-        title: 'Mrs.',
-        first: 'Ingrid',
-        middle: 'Jerimire',
-        last: 'Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
-      },
-      address: {
-        buildingNumberRange: '7',
-        buildingName: 'STOCKWELL HALL',
-        flatName: 'THE COACH HOUSE',
-        street: 'HAREWOOD AVENUE',
-        city: 'DARLINGTON',
-        county: 'Dorset',
-        postalCode: 'CO9 3LS',
-        country: 'United Kingdom'
-      },
-      phone: {
-        landline: '01234031859',
-        mobile: null
-      },
-      dateOfBirth: '1980-01-01',
-      email: {
-        address: 'email@test.com'
-      }
-    }
-  }
-}
-
-const mappedData = {
-  crn: '9477368292',
+    fullName: 'John M Doe'
+  },
   info: {
-    fullName: 'Mrs. Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook',
-    dateOfBirth: '1980-01-01'
+    fullName: {
+      first: 'John',
+      middle: 'M',
+      last: 'Doe'
+    },
+    dateOfBirth: '1990-01-01'
   },
   address: {
-    buildingNumberRange: '7',
-    buildingName: 'STOCKWELL HALL',
-    flatName: 'THE COACH HOUSE',
-    street: 'HAREWOOD AVENUE',
-    city: 'DARLINGTON',
-    county: 'Dorset',
-    postalCode: 'CO9 3LS',
+    lookup: {
+      flatName: 'THE COACH HOUSE',
+      buildingName: 'STOCKWELL HALL',
+      buildingNumberRange: '7',
+      street: 'HAREWOOD AVENUE',
+      city: 'DARLINGTON',
+      county: 'Dorset'
+    },
+    manual: {
+      addressLine1: '76 Robinswood Road',
+      addressLine2: 'UPPER CHUTE',
+      addressLine3: 'Child Okeford'
+    },
+    postcode: 'CO9 3LS',
     country: 'United Kingdom'
-  },
-  contact: {
-    email: 'henleyrej@eryelnehk.com.test',
-    landline: '01234031859',
-    mobile: null
   }
-}
-
-export {
-  dalData,
-  mappedData
 }

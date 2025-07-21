@@ -4,15 +4,18 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Thing under test
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
 
+// Mock data
+import { mappedData as originalData } from '../../../mocks/mock-personal-details.js'
+
 describe('personalDetailsPresenter', () => {
   let yar
   let data
 
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks()
-    vi.resetModules() // vi is weird about clearing modules after each test, you must import AFTER calling reset
-    const { mappedData } = await import('../../../mocks/mock-personal-details.js')
-    data = mappedData
+
+    // Deep clone the data to avoid mutation across tests
+    data = JSON.parse(JSON.stringify(originalData))
 
     // Mock yar session manager
     yar = {
@@ -38,9 +41,9 @@ describe('personalDetailsPresenter', () => {
           'United Kingdom'
         ],
         crn: data.crn,
-        fullName: data.customer.fullName,
+        fullName: 'John M Doe', // Assumes your mock fullName is { first: 'John', middle: 'M', last: 'Doe' }
         dateOfBirth: data.info.dateOfBirth,
-        personalTelephone: data.contact.landline ?? 'Not added',
+        personalTelephone: data.contact.telephone ?? 'Not added',
         personalMobile: data.contact.mobile ?? 'Not added',
         personalEmail: data.contact.email
       })
@@ -48,106 +51,78 @@ describe('personalDetailsPresenter', () => {
   })
 
   describe('the "address" property', () => {
-    describe('when the address has line properties and named properties', () => {
-      test('it should use the named properties ', () => {
-        const result = personalDetailsPresenter(data, yar)
+    test('uses the lookup address with building number + street combined', () => {
+      const result = personalDetailsPresenter(data, yar)
 
-        expect(result.address).toStrictEqual([
-          'THE COACH HOUSE',
-          'STOCKWELL HALL',
-          '7 HAREWOOD AVENUE',
-          'DARLINGTON',
-          'Dorset',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
-      })
+      expect(result.address).toStrictEqual([
+        'THE COACH HOUSE',
+        'STOCKWELL HALL',
+        '7 HAREWOOD AVENUE',
+        'DARLINGTON',
+        'Dorset',
+        'CO9 3LS',
+        'United Kingdom'
+      ])
     })
 
-    describe('when the named properties include a building number', () => {
-      test('it should prefix the street with the number', () => {
-        const result = personalDetailsPresenter(data, yar)
+    test('leaves street unchanged if buildingNumberRange is missing', () => {
+      data.address.lookup.buildingNumberRange = null
 
-        expect(result.address).toStrictEqual([
-          'THE COACH HOUSE',
-          'STOCKWELL HALL',
-          '7 HAREWOOD AVENUE',
-          'DARLINGTON',
-          'Dorset',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
-      })
+      const result = personalDetailsPresenter(data, yar)
+
+      expect(result.address).toStrictEqual([
+        'THE COACH HOUSE',
+        'STOCKWELL HALL',
+        'HAREWOOD AVENUE',
+        'DARLINGTON',
+        'Dorset',
+        'CO9 3LS',
+        'United Kingdom'
+      ])
     })
 
-    describe('when the named properties does not have a building number', () => {
-      test('it should leave the street property unchanged', () => {
-        data.address.lookup.buildingNumberRange = null
-        const result = personalDetailsPresenter(data, yar)
-
-        expect(result.address).toStrictEqual([
-          'THE COACH HOUSE',
-          'STOCKWELL HALL',
-          'HAREWOOD AVENUE',
-          'DARLINGTON',
-          'Dorset',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
+    test('falls back to manual address if lookup fields are all null', () => {
+      Object.keys(data.address.lookup).forEach(key => {
+        data.address.lookup[key] = null
       })
-    })
 
-    describe('when the address has no named properties', () => {
-      test('it should use the lined properties ', () => {
-        data.address.lookup.flatName = null
-        data.address.lookup.buildingNumberRange = null
-        data.address.lookup.buildingName = null
-        data.address.lookup.street = null
-        data.address.lookup.city = null
-        data.address.lookup.county = null
+      const result = personalDetailsPresenter(data, yar)
 
-        const result = personalDetailsPresenter(data, yar)
-
-        expect(result.address).toEqual([
-          '76 Robinswood Road',
-          'UPPER CHUTE',
-          'Child Okeford',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
-      })
+      expect(result.address).toStrictEqual([
+        '76 Robinswood Road',
+        'UPPER CHUTE',
+        'Child Okeford',
+        'CO9 3LS',
+        'United Kingdom'
+      ])
     })
   })
 
   describe('the "personalTelephone" property', () => {
-    describe('when the landline property is missing', () => {
-      test('it should return the text "Not added', () => {
-        data.contact.landline = null
-        const result = personalDetailsPresenter(data, yar)
+    test('returns "Not added" if telephone is missing', () => {
+      data.contact.telephone = null
 
-        expect(result.personalTelephone).toEqual('Not added')
-      })
+      const result = personalDetailsPresenter(data, yar)
+
+      expect(result.personalTelephone).toBe('Not added')
     })
   })
 
   describe('the "personalMobile" property', () => {
-    describe('when the personalMobile property is missing', () => {
-      test('it should return the text "Not added', () => {
-        const result = personalDetailsPresenter(data, yar)
+    test('returns "Not added" if mobile is missing', () => {
+      data.contact.mobile = null
 
-        expect(result.personalMobile).toEqual('Not added')
-      })
+      const result = personalDetailsPresenter(data, yar)
+
+      expect(result.personalMobile).toBe('Not added')
     })
   })
 
   describe('the "notification" property', () => {
-    describe('when yar is falsey', () => {
-      test('it should return null', () => {
-        yar = null
-        const result = personalDetailsPresenter(data, yar)
+    test('returns null if yar is falsy', () => {
+      const result = personalDetailsPresenter(data, null)
 
-        expect(result.notification).toEqual(null)
-      })
+      expect(result.notification).toBe(null)
     })
   })
 })

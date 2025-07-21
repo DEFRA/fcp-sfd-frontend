@@ -53,7 +53,7 @@ const mappedData = {
     vendorNumber: '694523',
     legalStatus: 'Sole Proprietorship',
     type: 'Not Specified',
-    countyParishHoldingNumbers: ['12/123/1234'],
+    countyParishHoldingNumbers: ['12/123/1234']
   },
   address: {
     lookup: {

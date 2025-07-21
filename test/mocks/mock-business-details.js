@@ -2,6 +2,9 @@ const dalData = {
   business: {
     organisationId: '5565448',
     sbi: '107183280',
+    countyParishHoldings: [
+      { cphNumber: '12/123/1234' }
+    ],
     info: {
       name: 'HENLEY, RE',
       vat: 'GB123456789',
@@ -50,7 +53,7 @@ const mappedData = {
     vendorNumber: '694523',
     legalStatus: 'Sole Proprietorship',
     type: 'Not Specified',
-    cph: '12/123/1234'
+    countyParishHoldingNumbers: ['12/123/1234'],
   },
   address: {
     lookup: {

@@ -35,8 +35,8 @@
     {% endset %}
 
     {% set formattedCph %}
-      {% for cph.cphNumber in countyParishHoldingNumbers %}
-        <div>{{cph.cphNumber}}</div>
+      {% for cphNumber in countyParishHoldings %}
+        {{cphNumber}} <br>
       {% endfor %}
     {% endset %}
 

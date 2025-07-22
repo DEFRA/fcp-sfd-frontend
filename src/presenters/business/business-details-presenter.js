@@ -69,7 +69,7 @@ const formatAddress = (address) => {
 
 const formatCph = (countyParishHoldings) => {
   return countyParishHoldings.reduce((acc, cph) => {
-    return acc + cph.cphNumber + '<br>'
+    return acc + cph.cphNumber
   }, '')
 }
 

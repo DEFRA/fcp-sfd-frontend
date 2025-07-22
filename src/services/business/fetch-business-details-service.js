@@ -10,7 +10,7 @@ import { dalConnector } from '../../dal/connector.js'
 import { businessDetailsQuery } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
-import { mappedData } from '../../../test/mocks/mock-business-details.js'
+import { mappedData } from '../../mock-data/mock-business-details.js'
 
 const fetchBusinessDetailsService = async (yar) => {
   const businessDetails = yar.get('businessDetails')

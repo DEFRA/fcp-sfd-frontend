@@ -1,9 +1,17 @@
+// Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
-import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
+
+// Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+
+// Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
 
+// Thing under test
+import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
+
+// Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
   fetchBusinessDetailsService: vi.fn()
 }))

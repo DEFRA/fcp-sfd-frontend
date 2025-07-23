@@ -30,6 +30,7 @@ describe('fetchBusinessDetailsService', () => {
   let data
   let mappedDalData
   let yar
+  let request
 
   beforeEach(async () => {
     vi.clearAllMocks()
@@ -45,6 +46,7 @@ describe('fetchBusinessDetailsService', () => {
         get: vi.fn().mockReturnValue(null),
         set: vi.fn()
       }
+      request.yar = yar
     })
     describe('when DAL_CONNECTION is true', () => {
       beforeEach(() => {
@@ -54,19 +56,19 @@ describe('fetchBusinessDetailsService', () => {
       })
 
       test('dalConnector is called', async () => {
-        await fetchBusinessDetailsService(yar)
+        await fetchBusinessDetailsService(request)
         expect(dalConnector).toHaveBeenCalled()
       })
 
       test('it correctly returns mappedData if dalConnector response has object data', async () => {
-        const result = await fetchBusinessDetailsService(yar)
+        const result = await fetchBusinessDetailsService(request)
         expect(result).toMatchObject(mappedDalData)
       })
 
       test('it returns the full response object if dalConnector response has no object data', async () => {
         const dalErrorResponse = { error: 'error response from dal' }
         dalConnector.mockResolvedValue(dalErrorResponse)
-        const result = await fetchBusinessDetailsService(yar)
+        const result = await fetchBusinessDetailsService(request)
         expect(result).toMatchObject(dalErrorResponse)
       })
     })
@@ -78,12 +80,12 @@ describe('fetchBusinessDetailsService', () => {
         mockMappedValue.mockResolvedValue({})
       })
       test('dalConnector is not called', async () => {
-        await fetchBusinessDetailsService(yar)
+        await fetchBusinessDetailsService(request)
         expect(dalConnector).not.toHaveBeenCalled()
       })
 
       test('it correctly returns data static data source', async () => {
-        const result = await fetchBusinessDetailsService(yar)
+        const result = await fetchBusinessDetailsService(request)
         expect(result).toMatchObject(mappedData)
       })
     })
@@ -97,7 +99,7 @@ describe('fetchBusinessDetailsService', () => {
     })
 
     test('it correctly returns session data', async () => {
-      const result = await fetchBusinessDetailsService(yar)
+      const result = await fetchBusinessDetailsService(request)
       expect(result).toMatchObject(getSessionData)
     })
   })

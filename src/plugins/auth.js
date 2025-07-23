@@ -3,6 +3,7 @@ import { getOidcConfig } from '../auth/get-oidc-config.js'
 import { refreshTokens } from '../auth/refresh-tokens.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 import { config } from '../config/index.js'
+import { getSbiFromRelationships } from '../auth/get-sbi-from-relationships.js'
 
 export const auth = {
   plugin: {
@@ -41,8 +42,10 @@ function getBellOptions (oidcConfig) {
 
         // Map all JWT properties to the credentials object so it can be stored in the session
         // Add some additional properties to the profile object for convenience
+        const sbi =  getSbiFromRelationships(payload.currentRelationshipId, payload.relationships)
         credentials.profile = {
           ...payload,
+          sbi,
           crn: payload.contactId,
           name: `${payload.firstName} ${payload.lastName}`,
           organisationId: payload.currentRelationshipId

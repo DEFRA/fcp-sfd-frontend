@@ -5,10 +5,10 @@ const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   options: {
-    auth: { mode: 'try' }
+     auth: { scope: ['BUSINESS_DETAILS:FULL_PERMISSION'] }
   },
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar)
+    const businessDetails = await fetchBusinessDetailsService(request)
     const pageData = businessDetailsPresenter(businessDetails, request.yar)
 
     return h.view('business/business-details.njk', pageData)

@@ -6,7 +6,7 @@ import { staticAssetRoutes } from './static-assets-routes.js'
 import { cookies } from './cookies-routes.js'
 import { footerRoutes } from './footer/index-routes.js'
 import { businessRoutes } from './business/business-routes.js'
-import { auth } from './auth.routes.js'
+import { auth } from './auth-routes.js'
 
 export const routes = [
   health,

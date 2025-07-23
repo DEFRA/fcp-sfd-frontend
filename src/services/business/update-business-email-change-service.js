@@ -1,15 +1,15 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
-const updateBusinessEmailChangeService = async (yar) => {
-  const businessDetails = await fetchBusinessDetailsService(yar)
+const updateBusinessEmailChangeService = async (request) => {
+  const businessDetails = await fetchBusinessDetailsService(request)
 
   businessDetails.contact.email = businessDetails.changeBusinessEmail
   delete businessDetails.changeBusinessEmail
 
-  yar.set('businessDetails', businessDetails)
+  request.yar.set('businessDetails', businessDetails)
 
-  flashNotification(yar, 'Success', 'You have updated your business email')
+  flashNotification(request.yar, 'Success', 'You have updated your business email')
 }
 
 export {

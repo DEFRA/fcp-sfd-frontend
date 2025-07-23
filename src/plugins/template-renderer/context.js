@@ -22,7 +22,7 @@ export const context = async (request) => {
       logger.error(`Webpack ${path.basename(manifestPath)} not found`)
     }
   }
-  const auth = !request.auth.isAuthenticated? null : await request.server.app.cache.get(request.auth.credentials.sessionId)
+  const auth = !request.auth.isAuthenticated ? null : await request.server.app.cache.get(request.auth.credentials.sessionId)
   return {
     assetPath: `${assetPath}/assets`,
     serviceName: config.get('server.serviceName'),

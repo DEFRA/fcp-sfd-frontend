@@ -1,7 +1,7 @@
 export const getNavigationItems = (request) => {
   return [
     {
-      text: 'Home',
+      text: '{{businessName}}',
       url: '/',
       isActive: request?.path === '/'
     }

@@ -9,6 +9,7 @@ const dalData = {
       vendorNumber: '694523',
       legalStatus: { code: 102111, type: 'Sole Proprietorship' },
       type: { code: 101443, type: 'Not Specified' },
+      cph: '12/123/1234',
       address: {
         buildingNumberRange: '7',
         buildingName: 'STOCKWELL HALL',
@@ -50,7 +51,7 @@ const mappedData = {
     vendorNumber: '694523',
     legalStatus: 'Sole Proprietorship',
     type: 'Not Specified',
-    cph: null
+    cph: '12/123/1234'
   },
   address: {
     lookup: {

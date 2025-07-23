@@ -3,8 +3,8 @@ export const home = {
   path: '/',
   handler: (_request, h) => {
     return h.view('home', {
-      pageTitle: 'Home',
-      heading: 'Home'
+      pageTitle: 'Your business',
+      heading: 'businessName'
     })
   }
 }

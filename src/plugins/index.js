@@ -4,7 +4,7 @@ import Cookie from '@hapi/cookie'
 import Scooter from '@hapi/scooter'
 import { csp } from './content-security-policy.js'
 import { errors } from './errors.js'
-import { headers } from './headers.js'
+import { headersPlugin } from './headers.js'
 import { auth } from './auth.js'
 import { vision } from './template-renderer/vision.js'
 import { requestLogger } from './request-logger.js'
@@ -22,7 +22,7 @@ export const plugins = [
   Scooter,
   csp,
   auth,
-  headers,
+  headersPlugin,
   errors,
   requestLogger,
   requestTracing,

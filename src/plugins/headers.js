@@ -1,4 +1,4 @@
-export const headers = {
+export const headersPlugin = {
   plugin: {
     name: 'headers',
     register: (server, _options) => {

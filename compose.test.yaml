@@ -12,7 +12,7 @@ services:
       ALLOW_ERROR_VIEWS: false
       DAL_ENDPOINT: http://fcp-dal-api:3005/graphql
       DAL_CONNECTION: true
-      DEFRA_ID_WELL_KNOWN_URL: https://oidc.example.com/.well-known/openid-configuration
+      DEFRA_ID_WELL_KNOWN_URL: https://accounts.google.com/.well-known/openid-configuration
       DEFRA_ID_CLIENT_ID: test-client-id
       DEFRA_ID_CLIENT_SECRET: test-client-secret
       DEFRA_ID_SERVICE_ID: test-service-id

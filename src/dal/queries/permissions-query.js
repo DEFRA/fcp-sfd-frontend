@@ -7,6 +7,9 @@ query Customer($crn: ID!, $sbi: ID!) {
         level
       }
     }
+    info {
+      name
+    }
   }
 }
 `

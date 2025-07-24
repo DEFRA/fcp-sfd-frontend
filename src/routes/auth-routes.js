@@ -1,4 +1,4 @@
-//import { getOldPermissions } from '../auth/get-permissions-old.js'
+// import { getOldPermissions } from '../auth/get-permissions-old.js'
 import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
@@ -37,11 +37,12 @@ export const auth = [{
     // Therefore, we need to make additional API calls to get the permissions from Siti Agri
     // These calls are authenticated using the token returned from Defra Identity
     // below is hard-coded-value actual data connection is :  const scope = await getPermissions(sbi, profile.crn, profile.email)
-     const { privileges } = await getPermissions('107183280', '9477368292', 'not-a-real-email@test.co.uk')
+    const { privileges, businessName } = await getPermissions('107183280', '9477368292', 'not-a-real-email@test.co.uk')
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(profile.sessionId, {
       isAuthenticated: true,
       ...profile,
+      businessName,
       scope: privileges,
       token,
       refreshToken
@@ -83,7 +84,6 @@ export const auth = [{
       if (request.auth.credentials?.sessionId) {
         // Clear the session cache
         await request.server.app.cache.drop(request.auth.credentials.sessionId)
-
       }
       request.cookieAuth.clear()
     }

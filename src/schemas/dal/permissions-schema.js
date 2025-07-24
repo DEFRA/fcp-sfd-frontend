@@ -7,6 +7,9 @@ export const rawPermissionsSchema = Joi.object({
         id: Joi.string().required(),
         level: Joi.string().required()
       })
+    }),
+    info: Joi.object({
+      name: Joi.string().required()
     })
   }).required()
 })

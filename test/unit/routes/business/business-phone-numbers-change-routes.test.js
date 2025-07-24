@@ -45,7 +45,7 @@ describe('business phone numbers change', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessPhoneNumbersChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request)
       })
 
       test('should render business-phone-numbers-change.njk view with page data', async () => {

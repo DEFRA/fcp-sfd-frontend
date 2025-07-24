@@ -20,6 +20,7 @@ export const mapPermissions = (raw) => {
   }
 
   return {
-    privileges: value.business.customer.permissionGroups.map(permissionGroups => permissionGroups.id.concat(':', permissionGroups.level))
+    privileges: value.business.customer.permissionGroups.map(permissionGroups => permissionGroups.id.concat(':', permissionGroups.level)),
+    businessName: value.business.info.name
   }
 }

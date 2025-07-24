@@ -30,9 +30,7 @@ const fetchBusinessDetailsService = async (request) => {
 }
 
 const getFromDal = async (sbi, crn, email) => {
-
   const variables = { sbi, crn }
- 
 
   const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
 

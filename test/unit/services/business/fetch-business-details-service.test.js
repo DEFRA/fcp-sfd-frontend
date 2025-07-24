@@ -46,7 +46,7 @@ describe('fetchBusinessDetailsService', () => {
         get: vi.fn().mockReturnValue(null),
         set: vi.fn()
       }
-      request.yar = yar
+      request = { yar }
     })
     describe('when DAL_CONNECTION is true', () => {
       beforeEach(() => {
@@ -96,6 +96,7 @@ describe('fetchBusinessDetailsService', () => {
       yar = {
         get: vi.fn().mockReturnValue(getSessionData)
       }
+      request = { yar }
     })
 
     test('it correctly returns session data', async () => {

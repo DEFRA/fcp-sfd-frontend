@@ -1,7 +1,6 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 
 const fetchBusinessAddressChangeService = async (request) => {
-
   const businessDetails = await fetchBusinessDetailsService(request)
 
   let changeBusinessAddress = businessDetails?.changeBusinessAddress

@@ -22,6 +22,7 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar
+  let request
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -29,6 +30,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
     yar = {
       set: vi.fn().mockReturnValue()
     }
+    request = { yar }
   })
 
   describe('when called', () => {
@@ -41,14 +43,14 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it correctly saves the data to the session', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar)
+        await updateBusinessPhoneNumbersChangeService(request)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
       })
 
       test('adds a flash notification confirming the change in data', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar)
+        await updateBusinessPhoneNumbersChangeService(request)
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })
@@ -63,14 +65,14 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it correctly saves the data to the session', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar)
+        await updateBusinessPhoneNumbersChangeService(request)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
       })
 
       test('adds a flash notification confirming the change in data', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar)
+        await updateBusinessPhoneNumbersChangeService(request)
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })

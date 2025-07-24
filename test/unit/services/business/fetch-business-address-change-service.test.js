@@ -18,6 +18,7 @@ vi.mock('../../../../src/services/business/fetch-business-details-service', () =
 describe('fetchBusinessAddressChangeService', () => {
   const data = mappedData
   let yar
+  let request
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -25,6 +26,8 @@ describe('fetchBusinessAddressChangeService', () => {
     yar = {
       set: vi.fn()
     }
+
+    request = { yar }
   })
 
   describe('when called', () => {
@@ -34,9 +37,9 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(yar)
+        const result = await fetchBusinessAddressChangeService(request)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual({
           ...data,
@@ -70,9 +73,9 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(yar)
+        const result = await fetchBusinessAddressChangeService(request)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual(data)
       })

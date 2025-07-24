@@ -3,7 +3,6 @@ import { permissionsQuery } from '../dal/queries/permissions-query.js'
 import { mapPermissions } from '../mappers/permissions-mapper.js'
 
 async function getPermissions (sbi, crn, email) {
-
   const variables = { sbi, crn }
 
   const dalResponse = await dalConnector(permissionsQuery, variables, email)
@@ -12,8 +11,7 @@ async function getPermissions (sbi, crn, email) {
     const mappedPermission = mapPermissions(dalResponse.data)
     return mappedPermission
   }
-  
-  return dalResponse
 
+  return dalResponse
 }
 export { getPermissions }

@@ -22,15 +22,14 @@ export const context = async (request) => {
       logger.error(`Webpack ${path.basename(manifestPath)} not found`)
     }
   }
-  const auth = !request.auth.isAuthenticated ? null : await request.server.app.cache.get(request.auth.credentials.sessionId)
+  const serverAuth = request.auth?.isAuthenticated ? await request.server.app.cache.get(request.auth.credentials.sessionId) : null
   return {
     assetPath: `${assetPath}/assets`,
     serviceName: config.get('server.serviceName'),
     serviceUrl: '/',
     breadcrumbs: [],
     navigation: getNavigationItems(request),
-    auth,
-
+    auth: serverAuth,
     getAssetPath (asset) {
       const webpackAssetPath = webpackManifest?.[asset]
       const result = `${assetPath}/${webpackAssetPath ?? asset}`

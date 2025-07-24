@@ -5,7 +5,7 @@ const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   options: {
-     auth: { scope: ['BUSINESS_DETAILS:FULL_PERMISSION'] }
+    auth: { scope: ['BUSINESS_DETAILS:FULL_PERMISSION'] }
   },
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request)

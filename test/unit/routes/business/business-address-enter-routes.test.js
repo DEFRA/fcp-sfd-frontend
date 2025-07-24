@@ -45,7 +45,7 @@ describe('business address enter', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request)
       })
 
       test('should render business-address-enter view with page data', async () => {

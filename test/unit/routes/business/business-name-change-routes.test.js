@@ -45,7 +45,7 @@ describe('business name change', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessNameChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request)
       })
 
       test('should render business-name-change view with page data', async () => {

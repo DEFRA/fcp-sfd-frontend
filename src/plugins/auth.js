@@ -42,7 +42,7 @@ function getBellOptions (oidcConfig) {
 
         // Map all JWT properties to the credentials object so it can be stored in the session
         // Add some additional properties to the profile object for convenience
-        const sbi =  getSbiFromRelationships(payload.currentRelationshipId, payload.relationships)
+        const sbi = getSbiFromRelationships(payload.currentRelationshipId, payload.relationships)
         credentials.profile = {
           ...payload,
           sbi,

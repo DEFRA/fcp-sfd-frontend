@@ -44,18 +44,19 @@ describe('#context', () => {
   let contextResult
 
   describe('When webpack manifest file read succeeds', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       vi.clearAllMocks()
       mockReadFileSync.mockReturnValue(`{
         "application.js": "javascripts/application.js",
         "stylesheets/application.scss": "stylesheets/application.css"
       }`)
-      contextResult = context(mockRequest)
+      contextResult = await context(mockRequest)
     })
 
     test('Should provide expected context', () => {
       expect(contextResult).toEqual({
         assetPath: '/public/assets',
+        auth: null,
         breadcrumbs: [],
         getAssetPath: expect.any(Function),
         navigation: [
@@ -94,15 +95,15 @@ describe('#context cache', () => {
   let secondContextResult
 
   describe('Webpack manifest file cache', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       vi.clearAllMocks()
       mockReadFileSync.mockReturnValue(`{
         "application.js": "javascripts/application.js",
         "stylesheets/application.scss": "stylesheets/application.css"
       }`)
-      firstContextResult = context(mockRequest)
+      firstContextResult = await context(mockRequest)
       mockReadFileSync.mockClear()
-      secondContextResult = context(mockRequest)
+      secondContextResult = await context(mockRequest)
     })
 
     test('Should read file on first call', () => {
@@ -118,6 +119,7 @@ describe('#context cache', () => {
     test('Should provide expected context', () => {
       expect(secondContextResult).toEqual({
         assetPath: '/public/assets',
+        auth: null,
         breadcrumbs: [],
         getAssetPath: expect.any(Function),
         navigation: [

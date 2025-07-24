@@ -14,17 +14,13 @@ describe('Home endpoint', () => {
 
   test('should have the correct method and path', () => {
     expect(home.method).toBe('GET')
-    expect(home.path).toBe('/')
+    expect(home.path).toBe('/home')
   })
 
   test('should render the home view with correct data', () => {
     const result = home.handler(null, mockH)
 
-    expect(mockH.view).toHaveBeenCalledWith('home', {
-      pageTitle: 'Home',
-      heading: 'Home'
-    })
-
+    expect(mockH.view).toHaveBeenCalledWith('home')
     expect(result).toBe(mockView)
   })
 })

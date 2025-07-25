@@ -1,28 +1,64 @@
-import { describe, test, expect } from 'vitest'
+import { vi, beforeEach, describe, test, expect } from 'vitest'
+import { dalData, mappedData } from '../../mocks/mock-permissions.js'
+import { dalConnector } from '../../../src/dal/connector.js'
+import { mapPermissions } from '../../../src/mappers/permissions-mapper.js'
+import { permissionsQuery } from '../../../src/dal/queries/permissions-query.js'
+
 import { getPermissions } from '../../../src/auth/get-permissions.js'
 
-const crn = '1234567890'
-const organisationId = '1234567'
-const token = 'DEFRA-ID-JWT'
+vi.mock('../../../src/dal/connector.js', () => ({
+  dalConnector: vi.fn()
+}))
+
+vi.mock('../../../src/mappers/permissions-mapper.js', () => ({
+  mapPermissions: vi.fn()
+}))
+
+vi.mock('../../../src/dal/queries/permissions-query.js', () => ({
+  permissionsQuery: vi.fn()
+}))
+
+let sbi
+let crn
+let email
 
 describe('getPermissions', () => {
-  test('should return role as farmer', async () => {
-    const { role } = await getPermissions(crn, organisationId, token)
-    expect(role).toBe('Farmer')
+  beforeEach(() => {
+    vi.clearAllMocks()
+
+    sbi = '234654278765'
+    crn = '987645433252'
+    email = 'farmer@test.com'
+
+    mapPermissions.mockReturnValue(mappedData)
+    dalConnector.mockResolvedValue({ data: dalData })
   })
 
-  test('should return scope as array', async () => {
-    const { scope } = await getPermissions(crn, organisationId, token)
-    expect(scope).toBeInstanceOf(Array)
+  test('should call dalConnector ', async () => {
+    await getPermissions(sbi, crn, email)
+    expect(dalConnector).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, email)
   })
 
-  test('should return scope with default scope', async () => {
-    const { scope } = await getPermissions(crn, organisationId, token)
-    expect(scope).toContain('user')
+  test('should call mapPermissions when dalConnector response has data', async () => {
+    await getPermissions(sbi, crn, email)
+    expect(mapPermissions).toHaveBeenCalledWith(dalData)
   })
 
-  test('should return scope with full business scope', async () => {
-    const { scope } = await getPermissions(crn, organisationId, token)
-    expect(scope).toContain('Full permission - business')
+  test('should return mapped data  when dalConnector response has data', async () => {
+    const result = await getPermissions(sbi, crn, email)
+    expect(result).toBe(mappedData)
+  })
+
+  test('should not call mapPermissions when dalConnector response has no data', async () => {
+    dalConnector.mockResolvedValue({ })
+    await getPermissions(sbi, crn, email)
+    expect(mapPermissions).not.toHaveBeenCalled()
+  })
+
+  test('should return dalConnector response when dalConnector response has no data', async () => {
+    const dalResponse = { response: 'no-dal-data' }
+    dalConnector.mockResolvedValue(dalResponse)
+    const result = await getPermissions(sbi, crn, email)
+    expect(result).toBe(dalResponse)
   })
 })

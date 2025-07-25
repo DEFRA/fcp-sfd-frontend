@@ -22,6 +22,7 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 
 describe('updateBusinessAddressChangeService', () => {
   let yar
+  let request
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -37,18 +38,19 @@ describe('updateBusinessAddressChangeService', () => {
     yar = {
       set: vi.fn().mockReturnValue()
     }
+    request = { yar }
   })
 
   describe('when called', () => {
     test('it correctly saves the data to the session', async () => {
-      await updateBusinessAddressChangeService(yar)
+      await updateBusinessAddressChangeService(request)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+      expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
       expect(yar.set).toHaveBeenCalledWith('businessDetails', savedData())
     })
 
     test('adds a flash notification confirming the change in data', async () => {
-      await updateBusinessAddressChangeService(yar)
+      await updateBusinessAddressChangeService(request)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business address')
     })

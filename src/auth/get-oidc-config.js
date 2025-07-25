@@ -1,5 +1,5 @@
 import Wreck from '@hapi/wreck'
-import config from '../config/index.js'
+import { config } from '../config/index.js'
 
 async function getOidcConfig () {
   const { payload } = await Wreck.get(config.get('defraId.wellKnownUrl'), {

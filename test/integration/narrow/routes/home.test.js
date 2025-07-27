@@ -1,5 +1,6 @@
 import { constants } from 'http2'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
+import { SCOPE } from '../../../../src/constants/scope/business-details.js'
 import '../../../mocks/setup-server-mocks.js'
 
 const { HTTP_STATUS_OK, HTTP_STATUS_FOUND } = constants
@@ -31,7 +32,7 @@ describe('home route', () => {
         strategy: 'session',
         credentials: {
           sessionId: 'session-id',
-          scope: ['BUSINESS_DETAILS:FULL_PERMISSION']
+          scope: SCOPE
         }
       }
     })

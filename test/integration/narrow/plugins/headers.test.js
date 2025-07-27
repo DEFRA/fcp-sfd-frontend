@@ -1,4 +1,5 @@
 import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest'
+import { SCOPE } from '../../../../src/constants/scope/business-details.js'
 import '../../../mocks/setup-server-mocks.js'
 
 const { createServer } = await import('../../../../src/server.js')
@@ -116,7 +117,7 @@ describe('headers', () => {
         strategy: 'session',
         credentials: {
           sessionId: 'session-id',
-          scope: ['BUSINESS_DETAILS:FULL_PERMISSION']
+          scope: SCOPE
         }
       }
     })

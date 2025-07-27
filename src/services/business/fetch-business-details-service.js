@@ -13,17 +13,13 @@ import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-business-details.js'
 
 const fetchBusinessDetailsService = async (request) => {
-  /* const sbi = '107183280'
-  const crn = '9477368292'
-  const email = 'not-a-real-email@test.co.uk' */
-
   const yar = request.yar
   const businessDetails = yar.get('businessDetails')
   if (businessDetails) {
     return businessDetails
   }
 
-  const { sbi, crn, email } = request.auth.credentials.profile
+  const { sbi, crn, email } = request.auth.credentials
   const businessDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(sbi, crn, email) : mappedData
 
   yar.set('businessDetails', businessDetailsData)

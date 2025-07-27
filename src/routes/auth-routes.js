@@ -36,10 +36,10 @@ export const auth = [{
     // However, when signing in with RPA credentials, the roles only include the role name and not the permissions
     // Therefore, we need to make additional API calls to get the permissions from Siti Agri
     // These calls are authenticated using the token returned from Defra Identity
-    // below is hard-coded-value actual data connection is :  const scope = await getPermissions(sbi, profile.crn, profile.email)
-    const { privileges, businessName } = await getPermissions('107183280', '9477368292', 'not-a-real-email@test.co.uk')
+    const { sbi, crn, email, sessionId } = profile
+    const { privileges, businessName } = await getPermissions(sbi, crn, email)
     // Store token and all useful data in the session cache
-    await request.server.app.cache.set(profile.sessionId, {
+    await request.server.app.cache.set(sessionId, {
       isAuthenticated: true,
       ...profile,
       businessName,
@@ -49,7 +49,7 @@ export const auth = [{
     })
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
-    request.cookieAuth.set({ sessionId: profile.sessionId })
+    request.cookieAuth.set({ sessionId })
 
     // Redirect user to the page they were trying to access before signing in or to the home page if no redirect was set
     const redirect = request.yar.get('redirect') ?? '/home'

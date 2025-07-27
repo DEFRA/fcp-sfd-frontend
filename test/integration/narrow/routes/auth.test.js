@@ -35,7 +35,9 @@ const credentials = {
   profile: {
     sessionId: 'session-id',
     crn: '1234567890',
-    organisationId: '1234567'
+    organisationId: '1234567',
+    sbi: '653754363',
+    email: 'test.farmer@test.com'
   },
   token: 'DEFRA-ID-JWT',
   refreshToken: 'DEFRA-ID-REFRESH-TOKEN'
@@ -160,7 +162,8 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(mockGetPermissions).toHaveBeenCalledWith('107183280', '9477368292', 'not-a-real-email@test.co.uk')
+      const { sbi, crn, email } = credentials.profile
+      expect(mockGetPermissions).toHaveBeenCalledWith(sbi, crn, email)
     })
 
     test('should set authentication status in session cache', async () => {

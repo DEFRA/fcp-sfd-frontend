@@ -10,11 +10,13 @@ describe('Data access layer (DAL) connector integration', () => {
 
   beforeAll(async () => {
     server = await createServer()
-    await server.initialize()
+    // await server.initialize()
   })
 
   afterAll(async () => {
-    await server.stop()
+    if (server) {
+      await server.stop()
+    }
   })
 
   test('should successfully call DAL and return data when email header is present', async () => {

@@ -1,10 +1,12 @@
+import { SCOPE } from '../constants/scope/business-details.js'
+
 export const home = {
   method: 'GET',
-  path: '/',
+  path: '/home',
+  options: {
+    auth: { scope: SCOPE }
+  },
   handler: (_request, h) => {
-    return h.view('home', {
-      pageTitle: 'Home',
-      heading: 'Home'
-    })
+    return h.view('home')
   }
 }

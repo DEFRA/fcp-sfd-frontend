@@ -45,7 +45,7 @@ describe('business email change', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessEmailChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request)
       })
 
       test('should render business-email-change.njk view with page data', async () => {

@@ -18,6 +18,7 @@ vi.mock('../../../../src/services/business/fetch-business-details-service', () =
 describe('fetchBusinessEmailChangeService', () => {
   const data = mappedData
   let yar
+  let request
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -25,6 +26,7 @@ describe('fetchBusinessEmailChangeService', () => {
     yar = {
       set: vi.fn()
     }
+    request = { yar }
   })
 
   describe('when called', () => {
@@ -34,9 +36,9 @@ describe('fetchBusinessEmailChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessEmailChangeService(yar)
+        const result = await fetchBusinessEmailChangeService(request)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual({ ...data, changeBusinessEmail: 'henleyrej@eryelnehk.com.test' })
       })
@@ -53,9 +55,9 @@ describe('fetchBusinessEmailChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessEmailChangeService(yar)
+        const result = await fetchBusinessEmailChangeService(request)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
         expect(yar.set).toHaveBeenCalled(data)
         expect(result).toEqual(data)
       })

@@ -17,6 +17,7 @@ Frontend service for the Single Front Door (SFD) service. This service provides 
 | Name | Default Value | Required | Description |
 | --- | --- | --- | --- |
 | ALLOW_ERROR_VIEWS | `false` | No | Enable error route views in local development to inspect error pages |
+| DAL_CONNECTION | `false` | No | Get user data from C_DAL if set to true, else, get user data from local mock-data |
 | DEFRA_ID_WELL_KNOWN_URL | null | No | The Defra Identity well known URL - Readable endpoint for DefraId |
 | DEFRA_ID_POLICY | null | No | The Defra Identity policy - Enables multiple microservices to share same DefraId active token (Must be the same for all FCP microservices) |
 | DEFRA_ID_CLIENT_ID | null | No | The Defra Identity client ID - Unique code for identifying fcp-sfd-frontend |

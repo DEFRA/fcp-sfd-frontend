@@ -17,7 +17,7 @@ describe('Application Startup Integration Test', () => {
 
     await server.initialize()
     expect(server.info.created).toBeGreaterThan(0)
-    expect(server.info.port).toBe(parseInt(3002))
+    expect(server.info.port).toBe(parseInt(3000))
   })
 
   test('server has essential functionality', async () => {

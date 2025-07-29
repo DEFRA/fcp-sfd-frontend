@@ -68,9 +68,7 @@ const formatAddress = (address) => {
 }
 
 const formatCph = (countyParishHoldings) => {
-  return countyParishHoldings.reduce((acc, cph) => {
-    return countyParishHoldings.map(cph => cph.cphNumber)
-  }, '')
+  return countyParishHoldings.map(cph => cph.cphNumber)
 }
 
 export {

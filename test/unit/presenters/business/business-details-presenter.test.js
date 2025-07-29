@@ -159,11 +159,11 @@ describe('businessDetailsPresenter', () => {
 
   describe('the "cph" property', () => {
     describe('when the property is empty', () => {
-      test('it should return undefined', () => {
+      test('it should return empty array', () => {
         data.info.countyParishHoldingNumbers = []
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.countyParishHoldingNumbers).toEqual('')
+        expect(result.countyParishHoldingNumbers).toEqual([])
       })
     })
   })

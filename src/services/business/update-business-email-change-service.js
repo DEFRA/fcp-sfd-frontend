@@ -9,7 +9,7 @@ const updateBusinessEmailChangeService = async (yar) => {
 
   yar.set('businessDetails', businessDetails)
 
-  flashNotification(yar, 'Success', 'You have updated your business email')
+  flashNotification(yar, 'Success', 'You have updated your business email address')
 }
 
 export {

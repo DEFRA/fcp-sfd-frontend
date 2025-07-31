@@ -34,6 +34,12 @@
       {% endfor %}
     {% endset %}
 
+    {% set formattedCph %}
+      {% for cphNumber in countyParishHoldingNumbers %}
+       <div> {{cphNumber}} </div>
+      {% endfor %}
+    {% endset %}
+
     {% set displayBusinessPhone %}
       <div>Telephone: <div class="govuk-hint" style="display: inline;">{{businessTelephone}}</div></div>
       <div>Mobile: <div class="govuk-hint" style="display: inline;">{{businessMobile}}</div></div>
@@ -152,10 +158,10 @@
         },
         {
           key: {
-            text: "County Parish Holding (CPH) number"
+            text: "County Parish Holding (CPH) numbers"
           },
           value: {
-            text: countyParishHoldingNumber
+            html: formattedCph
           }
         }
       ]

@@ -45,7 +45,7 @@ describe('businessDetailsPresenter', () => {
         vatNumber: data.info.vat,
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
-        countyParishHoldingNumber: null, // CPH not available yet
+        countyParishHoldingNumbers: ['12/123/1234'],
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
         userName: data.customer.fullName
@@ -153,6 +153,17 @@ describe('businessDetailsPresenter', () => {
         const result = businessDetailsPresenter(data, yar)
 
         expect(result.vatNumber).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "cph" property', () => {
+    describe('when the property is empty', () => {
+      test('it should return empty array', () => {
+        data.info.countyParishHoldingNumbers = []
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.countyParishHoldingNumbers).toEqual([])
       })
     })
   })

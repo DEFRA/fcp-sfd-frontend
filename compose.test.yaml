@@ -11,7 +11,7 @@ services:
     environment:
       ALLOW_ERROR_VIEWS: false
       DAL_ENDPOINT: http://fcp-dal-api:3005/graphql
-      DAL_CONNECTION: true
+      DAL_CONNECTION: false
     depends_on:
       fcp-dal-api:
         condition: service_started

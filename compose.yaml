@@ -16,7 +16,7 @@ services:
       NODE_ENV: development
       ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS}
       DAL_ENDPOINT: ${DAL_ENDPOINT:-http://fcp-dal-api:3005/graphql}
-      DAL_CONNECTION: true
+      DAL_CONNECTION: false
     networks:
       - fcp-sfd
     volumes:

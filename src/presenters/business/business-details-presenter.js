@@ -19,11 +19,15 @@ const businessDetailsPresenter = (data, yar) => {
     vatNumber: data.info.vat ?? null,
     tradeNumber: data.info.traderNumber ?? null,
     vendorRegistrationNumber: data.info.vendorNumber ?? null,
-    countyParishHoldingNumber: null,
+    countyParishHoldingNumbers: formatCph(data.info.countyParishHoldingNumbers),
     businessLegalStatus: data.info.legalStatus,
     businessType: data.info.type,
     userName: data.customer.fullName
   }
+}
+
+const formatCph = (countyParishHoldings) => {
+  return countyParishHoldings.map(cph => cph.cphNumber)
 }
 
 export {

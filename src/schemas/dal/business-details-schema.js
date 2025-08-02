@@ -7,6 +7,11 @@ export const rawBusinessDetailsSchema = Joi.object({
   business: Joi.object({
     organisationId: Joi.string().required(),
     sbi: Joi.string().required(),
+    countyParishHoldings: Joi.array().items(
+      Joi.object({
+        cphNumber: Joi.string().allow(null)
+      })
+    ).required(),
     info: Joi.object({
       name: Joi.string().required(),
       vat: Joi.string().allow(null),

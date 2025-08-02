@@ -77,4 +77,22 @@ describe('personalDetailsPresenter', () => {
       expect(result.notification).toBe(null)
     })
   })
+
+  describe('the "fullName" property', () => {
+    test('returns a formatted full name', () => {
+      const result = personalDetailsPresenter(data, yar)
+
+      expect(result.fullName).toBe('John M Doe')
+    })
+
+    describe('when there is no middle name', () => {
+      test('returns a formatted full name without the middle name', () => {
+        data.info.fullName.middle = null
+
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.fullName).toBe('John Doe')
+      })
+    })
+  })
 })

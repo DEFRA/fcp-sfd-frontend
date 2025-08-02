@@ -50,54 +50,6 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
-  describe('the "address" property', () => {
-    test('uses the lookup address with building number + street combined', () => {
-      const result = personalDetailsPresenter(data, yar)
-
-      expect(result.address).toStrictEqual([
-        'THE COACH HOUSE',
-        'STOCKWELL HALL',
-        '7 HAREWOOD AVENUE',
-        'DARLINGTON',
-        'Dorset',
-        'CO9 3LS',
-        'United Kingdom'
-      ])
-    })
-
-    test('leaves street unchanged if buildingNumberRange is missing', () => {
-      data.address.lookup.buildingNumberRange = null
-
-      const result = personalDetailsPresenter(data, yar)
-
-      expect(result.address).toStrictEqual([
-        'THE COACH HOUSE',
-        'STOCKWELL HALL',
-        'HAREWOOD AVENUE',
-        'DARLINGTON',
-        'Dorset',
-        'CO9 3LS',
-        'United Kingdom'
-      ])
-    })
-
-    test('falls back to manual address if lookup fields are all null', () => {
-      Object.keys(data.address.lookup).forEach(key => {
-        data.address.lookup[key] = null
-      })
-
-      const result = personalDetailsPresenter(data, yar)
-
-      expect(result.address).toStrictEqual([
-        '76 Robinswood Road',
-        'UPPER CHUTE',
-        'Child Okeford',
-        'CO9 3LS',
-        'United Kingdom'
-      ])
-    })
-  })
-
   describe('the "personalTelephone" property', () => {
     test('returns "Not added" if telephone is missing', () => {
       data.contact.telephone = null

@@ -22,6 +22,7 @@ const personalDetailsPresenter = (data, yar) => {
 
 const formatFullName = (fullName) => {
   const { first, middle, last } = fullName
+
   return `${first} ${middle ? middle + ' ' : ''}${last}`
 }
 

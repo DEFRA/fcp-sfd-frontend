@@ -12,7 +12,7 @@
  *
  * Postcode and country and always appended to the final address array.
  *
- * @param {Object} address - The complete address object for the business
+ * @param {Object} address - The complete address object
  *
  * @returns {string[]} An array of address fields (either from lookup or manual)
  *

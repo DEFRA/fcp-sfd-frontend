@@ -1,54 +1,50 @@
-const dalPersonalData = {
-  personal: {
-    organisationId: '5565448',
-    sbi: '107183280',
-    fullName: {
-      first: 'Ingrid',
-      middle: 'frederick',
-      last: 'Cook'
-    },
-    dateOfBirth: '1980-01-01',
+const dalData = {
+  customer: {
+    crn: '123456890',
     info: {
+      dateOfBirth: '1990-01-01',
+      name: {
+        title: 'Mr',
+        first: 'John',
+        middle: 'M',
+        last: 'Doe'
+      },
+      phone: {
+        landline: '01234567890',
+        mobile: null
+      },
+      email: {
+        address: 'test@example.com'
+      },
       address: {
-        buildingNumberRange: '7',
-        buildingName: 'STOCKWELL HALL',
         flatName: 'THE COACH HOUSE',
+        buildingName: 'STOCKWELL HALL',
+        buildingNumberRange: '7',
         street: 'HAREWOOD AVENUE',
         city: 'DARLINGTON',
         county: 'Dorset',
-        postalCode: 'CO9 3LS',
-        country: 'United Kingdom',
-        dependentLocality: 'ELLICOMBE',
-        doubleDependentLocality: 'WOODTHORPE',
         line1: '76 Robinswood Road',
         line2: 'UPPER CHUTE',
         line3: 'Child Okeford',
         line4: null,
-        line5: null
-      },
-      email: { address: 'henleyrej@eryelnehk.com.test' },
-      phone: { mobile: null, landline: '01234031859' }
+        line5: null,
+        postalCode: 'CO9 3LS',
+        country: 'United Kingdom'
+      }
     }
   }
 }
 
 const mappedData = {
   crn: '123456890',
-  contact: {
-    telephone: '01234567890',
-    mobile: null,
-    email: 'test@example.com'
-  },
-  customer: {
-    fullName: 'John M Doe'
-  },
   info: {
+    dateOfBirth: '1990-01-01',
     fullName: {
+      title: 'Mr',
       first: 'John',
-      middle: 'M',
-      last: 'Doe'
-    },
-    dateOfBirth: '1990-01-01'
+      last: 'Doe',
+      middle: 'M'
+    }
   },
   address: {
     lookup: {
@@ -60,16 +56,23 @@ const mappedData = {
       county: 'Dorset'
     },
     manual: {
-      addressLine1: '76 Robinswood Road',
-      addressLine2: 'UPPER CHUTE',
-      addressLine3: 'Child Okeford'
+      line1: '76 Robinswood Road',
+      line2: 'UPPER CHUTE',
+      line3: 'Child Okeford',
+      line4: null,
+      line5: null
     },
     postcode: 'CO9 3LS',
     country: 'United Kingdom'
+  },
+  contact: {
+    email: 'test@example.com',
+    telephone: '01234567890',
+    mobile: null
   }
 }
 
 export {
-  dalPersonalData,
+  dalData,
   mappedData
 }

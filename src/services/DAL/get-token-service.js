@@ -41,6 +41,7 @@ const getTokenService = async () => {
     throw new Error(`Failed to get token: ${response.status} ${error}`)
   }
 
+  // TO DO: Store token on the server
   return {
     token: body.access_token,
     expiresAt: Date.now() + body.expires_in * 1000 // 2 hours from now

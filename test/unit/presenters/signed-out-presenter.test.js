@@ -1,5 +1,7 @@
+// Test framework dependencies
 import { describe, test, expect } from 'vitest'
 
+// Thing under test
 import { signedOutPresenter } from '../../../src/presenters/signed-out-presenter'
 
 describe('signedOutPresenter', () => {

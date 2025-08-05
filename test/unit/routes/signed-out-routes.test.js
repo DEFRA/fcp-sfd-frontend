@@ -1,17 +1,20 @@
+// Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
+
+// Thing under test
 import { signedOut } from '../../../src/routes/signed-out-routes'
 
+// Mocks
 import { signedOutPresenter } from '../../../src/presenters/signed-out-presenter'
+vi.mock('../../../src/presenters/signed-out-presenter', () => ({
+  signedOutPresenter: vi.fn()
+}))
 
 const mockView = vi.fn()
 
 const mockH = {
   view: vi.fn().mockReturnValue(mockView)
 }
-
-vi.mock('../../../src/presenters/signed-out-presenter', () => ({
-  signedOutPresenter: vi.fn()
-}))
 
 const mockSignedOutPresenter = {
   title: 'Test Title',

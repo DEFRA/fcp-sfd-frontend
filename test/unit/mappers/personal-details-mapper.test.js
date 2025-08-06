@@ -29,7 +29,7 @@ describe('personalDetailsMapper', () => {
       const wrapper = () => mapPersonalDetails(dalData)
 
       expect(wrapper).toThrow()
-      expect(mockLogger.error).toHaveBeenCalledWith('Validation fail for DAL response: "customer.crn" is required')
+      expect(mockLogger.error).toHaveBeenCalledWith('Validation fail for personal-details DAL response: "customer.crn" is required')
     })
   })
 })

@@ -15,8 +15,8 @@ export const mapBusinessDetails = (raw) => {
   const { error, value } = rawBusinessDetailsSchema.validate(raw)
 
   if (error) {
-    logger.error(`Validation fail for personal-details DAL response: ${error.message}`)
-    throw new Error(`Validation fail for personal-details DAL response: ${error.message}`)
+    logger.error(`Validation fail for DAL response: ${error.message}`)
+    throw new Error(`Validation fail for DAL response: ${error.message}`)
   }
 
   return {

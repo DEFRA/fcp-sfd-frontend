@@ -1,5 +1,8 @@
 import Joi from 'joi'
 
+import { addressSchema } from './address-schema.js'
+import { phoneSchema } from './phones-schema.js'
+
 export const rawBusinessDetailsSchema = Joi.object({
   business: Joi.object({
     organisationId: Joi.string().required(),
@@ -22,30 +25,11 @@ export const rawBusinessDetailsSchema = Joi.object({
         code: Joi.number().required(),
         type: Joi.string().required()
       }),
-      address: Joi.object({
-        buildingNumberRange: Joi.string().allow(null),
-        buildingName: Joi.string().allow(null),
-        flatName: Joi.string().allow(null),
-        street: Joi.string().allow(null),
-        city: Joi.string().allow(null),
-        county: Joi.string().allow(null),
-        postalCode: Joi.string().required(),
-        country: Joi.string().required(),
-        dependentLocality: Joi.string().allow(null),
-        doubleDependentLocality: Joi.string().allow(null),
-        line1: Joi.string().allow(null),
-        line2: Joi.string().allow(null),
-        line3: Joi.string().allow(null),
-        line4: Joi.string().allow(null),
-        line5: Joi.string().allow(null)
-      }),
+      address: addressSchema,
       email: Joi.object({
         address: Joi.string().required()
       }),
-      phone: Joi.object({
-        mobile: Joi.string().allow(null),
-        landline: Joi.string().allow(null)
-      })
+      phone: phoneSchema
     })
   }).required(),
   customer: Joi.object({

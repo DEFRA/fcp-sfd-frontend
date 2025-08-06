@@ -41,6 +41,6 @@ const formatAddress = (address) => {
   ]
 }
 
-export const basePresenter = {
+export const addressPresenter = {
   formatAddress
 }

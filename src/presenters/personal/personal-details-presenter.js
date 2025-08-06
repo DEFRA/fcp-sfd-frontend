@@ -3,7 +3,7 @@
  * @module personalDetailsPresenter
  */
 
-import { basePresenter } from '../base-presenter.js'
+import { addressPresenter } from '../address-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
   return {
@@ -11,7 +11,7 @@ const personalDetailsPresenter = (data, yar) => {
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',
     crn: data.crn,
-    address: basePresenter.formatAddress(data.address),
+    address: addressPresenter.formatAddress(data.address),
     fullName: formatFullName(data.info.fullName),
     personalTelephone: data.contact.telephone ?? 'Not added',
     personalMobile: data.contact.mobile ?? 'Not added',

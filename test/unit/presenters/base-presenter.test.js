@@ -2,9 +2,8 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { basePresenter } from '../../../src/presenters/base-presenter.js'
-
-describe('base presenter', () => {
+import { addressPresenter } from '../../../src/presenters/address-presenter.js'
+describe('address presenter', () => {
   describe('#formatAddress', () => {
     let address
 
@@ -32,7 +31,7 @@ describe('base presenter', () => {
 
     describe('when the address has line properties and named properties', () => {
       test('it should use the named properties ', () => {
-        const result = basePresenter.formatAddress(address)
+        const result = addressPresenter.formatAddress(address)
 
         expect(result).toStrictEqual([
           'THE COACH HOUSE',
@@ -48,7 +47,7 @@ describe('base presenter', () => {
 
     describe('when the named properties include a building number', () => {
       test('it should prefix the street with the number', () => {
-        const result = basePresenter.formatAddress(address)
+        const result = addressPresenter.formatAddress(address)
 
         expect(result).toStrictEqual([
           'THE COACH HOUSE',
@@ -65,7 +64,7 @@ describe('base presenter', () => {
     describe('when the named properties does not have a building number', () => {
       test('it should leave the street property unchanged', () => {
         address.lookup.buildingNumberRange = null
-        const result = basePresenter.formatAddress(address)
+        const result = addressPresenter.formatAddress(address)
 
         expect(result).toStrictEqual([
           'THE COACH HOUSE',
@@ -88,7 +87,7 @@ describe('base presenter', () => {
         address.lookup.city = null
         address.lookup.county = null
 
-        const result = basePresenter.formatAddress(address)
+        const result = addressPresenter.formatAddress(address)
 
         expect(result).toEqual([
           '76 Robinswood Road',

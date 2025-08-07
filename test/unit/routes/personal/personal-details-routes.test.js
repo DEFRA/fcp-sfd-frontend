@@ -1,15 +1,14 @@
-// Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
-// Things we need to mock
+// Mocks
 import { fetchPersonalDetailsService } from '../../../../src/services/personal/fetch-personal-details-service.js'
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
 
-// Thing under test
+// Route under test
 import { personalDetailsRoutes } from '../../../../src/routes/personal/personal-details-routes.js'
 const [getPersonalDetails] = personalDetailsRoutes
 
-// Mocks
+// Mock the modules
 vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', () => ({
   fetchPersonalDetailsService: vi.fn()
 }))
@@ -37,59 +36,61 @@ describe('personal details', () => {
 
         mockData = getMockData()
         pageData = getPageData()
-        request = {}
+        request = {
+          yar: { userId: 'abc123' }, // Mock whatever your service expects here
+          headers: {
+            referer: '/previous-page'
+          }
+        }
 
         fetchPersonalDetailsService.mockResolvedValue(mockData)
         personalDetailsPresenter.mockReturnValue(pageData)
       })
 
-      test('it calls the fetch personal details service', async () => {
+      test('it calls the fetch personal details service and renders view', async () => {
         await getPersonalDetails.handler(request, h)
 
-        expect(fetchPersonalDetailsService).toHaveBeenCalled(request)
-        expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
+        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(personalDetailsPresenter).toHaveBeenCalledWith(mockData, request.yar)
+        expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData, '/previous-page')
       })
     })
   })
 })
 
-const getMockData = () => {
-  return {
-    fullName: 'Alfred Waldron',
-    crn: '123456789',
-    address: {
-      buildingNumberRange: '76',
-      street: 'Robinswood Road',
-      city: 'Maidstone',
-      county: 'Kent',
-      postcode: 'ME16 0XH',
-      country: 'United Kingdom'
-    },
-    dateOfBirth: '1980-01-01',
-    contact: {
-      landline: '01234567890',
-      mobile: null,
-      email: 'test@email.com'
-    }
+const getMockData = () => ({
+  fullName: 'Alfred Waldron',
+  crn: '123456789',
+  address: {
+    buildingNumberRange: '76',
+    street: 'Robinswood Road',
+    city: 'Maidstone',
+    county: 'Kent',
+    postcode: 'ME16 0XH',
+    country: 'United Kingdom'
+  },
+  dateOfBirth: '1980-01-01',
+  contact: {
+    landline: '01234567890',
+    mobile: null,
+    email: 'test@email.com'
   }
-}
+})
 
-const getPageData = () => {
-  return {
-    pageTitle: 'View and update your personal details',
-    metaDescription: 'View and update your personal details.',
-    address: [
-      '76 Robinswood Road',
-      'Maidstone',
-      'Kent',
-      'ME16 0XH',
-      'United Kingdom'
-    ],
-    crn: '123456789',
-    userName: 'Alfred Waldron',
-    dateOfBirth: '1980-01-01',
-    personalTelephone: '01234567890',
-    personalMobile: 'Not added',
-    personalEmail: 'test@email.com'
-  }
-}
+const getPageData = () => ({
+  pageTitle: 'View and update your personal details',
+  metaDescription: 'View and update your personal details.',
+  address: [
+    '76 Robinswood Road',
+    'Maidstone',
+    'Kent',
+    'ME16 0XH',
+    'United Kingdom'
+  ],
+  crn: '123456789',
+  userName: 'Alfred Waldron',
+  dateOfBirth: '1980-01-01',
+  personalTelephone: '01234567890',
+  personalMobile: 'Not added',
+  personalEmail: 'test@email.com'
+})

@@ -2,7 +2,6 @@ import { constants } from 'node:http2'
 import { vi, beforeEach, describe, beforeAll, afterAll, test, expect } from 'vitest'
 import { mockOidcConfig } from '../../../mocks/setup-server-mocks.js'
 
-
 const { HTTP_STATUS_FOUND } = constants
 
 const mockVerifyToken = vi.fn()

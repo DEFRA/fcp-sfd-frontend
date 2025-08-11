@@ -25,4 +25,4 @@ const home = {
 export const homeRoutes = [
   index,
   home
-] 
+]

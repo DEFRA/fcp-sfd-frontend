@@ -19,7 +19,16 @@ vi.mock('../../../../src/services/business/update-business-phone-numbers-change-
 }))
 
 describe('business phone numbers check', () => {
-  const request = { yar: {} }
+  const request = {
+    yar: {},
+    auth: {
+      credentials: {
+        sbi: '123456789',
+        crn: '987654321',
+        email: 'test@example.com'
+      }
+    }
+  }
   let h
 
   beforeEach(() => {
@@ -44,7 +53,7 @@ describe('business phone numbers check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessPhoneNumbersCheck.handler(request, h)
 
-        expect(fetchBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-phone-numbers-check view with page data', async () => {
@@ -72,7 +81,7 @@ describe('business phone numbers check', () => {
       test('sets the payload on the yar state', async () => {
         await postBusinessPhoneNumbersCheck.handler(request, h)
 
-        expect(updateBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar)
+        expect(updateBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
     })
   })

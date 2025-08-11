@@ -19,7 +19,16 @@ vi.mock('../../../../src/services/business/update-business-email-change-service.
 }))
 
 describe('business email check', () => {
-  const request = { yar: {} }
+  const request = {
+    yar: {},
+    auth: {
+      credentials: {
+        sbi: '123456789',
+        crn: '987654321',
+        email: 'test@example.com'
+      }
+    }
+  }
   let h
 
   beforeEach(() => {
@@ -44,7 +53,7 @@ describe('business email check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessEmailCheck.handler(request, h)
 
-        expect(fetchBusinessEmailChangeService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-email-check view with page data', async () => {
@@ -72,7 +81,7 @@ describe('business email check', () => {
       test('sets the payload on the yar state', async () => {
         await postBusinessEmailCheck.handler(request, h)
 
-        expect(updateBusinessEmailChangeService).toHaveBeenCalledWith(request.yar)
+        expect(updateBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
     })
   })

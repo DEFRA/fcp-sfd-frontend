@@ -37,7 +37,16 @@ describe('business details', () => {
 
         mockData = getMockData()
         pageData = getPageData()
-        request = {}
+        request = {
+          yar: { get: vi.fn(), set: vi.fn() },
+          auth: {
+            credentials: {
+              sbi: '123456789',
+              crn: '987654321',
+              email: 'test@example.com'
+            }
+          }
+        }
 
         fetchBusinessDetailsService.mockResolvedValue(mockData)
         businessDetailsPresenter.mockReturnValue(pageData)
@@ -46,7 +55,7 @@ describe('business details', () => {
       test('it calls the fetch business details service', async () => {
         await getBusinessDetails.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
     })

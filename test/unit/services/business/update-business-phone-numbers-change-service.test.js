@@ -22,7 +22,7 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar
-  let request
+  let credentials
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -30,7 +30,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
     yar = {
       set: vi.fn().mockReturnValue()
     }
-    request = { yar }
+    credentials = { sbi: '123456789', crn: '987654321', email: 'test@example.com' }
   })
 
   describe('when called', () => {
@@ -43,14 +43,14 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it correctly saves the data to the session', async () => {
-        await updateBusinessPhoneNumbersChangeService(request)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
       })
 
       test('adds a flash notification confirming the change in data', async () => {
-        await updateBusinessPhoneNumbersChangeService(request)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })
@@ -65,14 +65,14 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it correctly saves the data to the session', async () => {
-        await updateBusinessPhoneNumbersChangeService(request)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
       })
 
       test('adds a flash notification confirming the change in data', async () => {
-        await updateBusinessPhoneNumbersChangeService(request)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })

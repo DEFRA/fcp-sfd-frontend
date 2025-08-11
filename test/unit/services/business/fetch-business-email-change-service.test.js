@@ -18,7 +18,7 @@ vi.mock('../../../../src/services/business/fetch-business-details-service', () =
 describe('fetchBusinessEmailChangeService', () => {
   const data = mappedData
   let yar
-  let request
+  let credentials
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -26,7 +26,11 @@ describe('fetchBusinessEmailChangeService', () => {
     yar = {
       set: vi.fn()
     }
-    request = { yar }
+    credentials = {
+      sbi: '123456789',
+      crn: '987654321',
+      email: 'test@example.com'
+    }
   })
 
   describe('when called', () => {
@@ -36,10 +40,10 @@ describe('fetchBusinessEmailChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessEmailChangeService(request)
+        const result = await fetchBusinessEmailChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessEmail: 'henleyrej@eryelnehk.com.test' })
         expect(result).toEqual({ ...data, changeBusinessEmail: 'henleyrej@eryelnehk.com.test' })
       })
     })
@@ -55,10 +59,10 @@ describe('fetchBusinessEmailChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessEmailChangeService(request)
+        const result = await fetchBusinessEmailChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual(data)
       })
     })

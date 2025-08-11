@@ -30,7 +30,7 @@ describe('fetchBusinessDetailsService', () => {
   let data
   let mappedDalData
   let yar
-  let request
+  let credentials
 
   beforeEach(async () => {
     vi.clearAllMocks()
@@ -46,18 +46,10 @@ describe('fetchBusinessDetailsService', () => {
         get: vi.fn().mockReturnValue(null),
         set: vi.fn()
       }
-      request = {
-        yar,
-        auth: {
-          credentials: {
-            profile: {
-              sbi: '132432422',
-              crn: '64363553663',
-              email: 'test.farmer@test.farm.com'
-            }
-          }
-        }
-
+      credentials = {
+        sbi: '132432422',
+        crn: '64363553663',
+        email: 'test.farmer@test.farm.com'
       }
     })
     describe('when DAL_CONNECTION is true', () => {
@@ -68,19 +60,19 @@ describe('fetchBusinessDetailsService', () => {
       })
 
       test('dalConnector is called', async () => {
-        await fetchBusinessDetailsService(request)
+        await fetchBusinessDetailsService(yar, credentials)
         expect(dalConnector).toHaveBeenCalled()
       })
 
       test('it correctly returns mappedData if dalConnector response has object data', async () => {
-        const result = await fetchBusinessDetailsService(request)
+        const result = await fetchBusinessDetailsService(yar, credentials)
         expect(result).toMatchObject(mappedDalData)
       })
 
       test('it returns the full response object if dalConnector response has no object data', async () => {
         const dalErrorResponse = { error: 'error response from dal' }
         dalConnector.mockResolvedValue(dalErrorResponse)
-        const result = await fetchBusinessDetailsService(request)
+        const result = await fetchBusinessDetailsService(yar, credentials)
         expect(result).toMatchObject(dalErrorResponse)
       })
     })
@@ -92,12 +84,12 @@ describe('fetchBusinessDetailsService', () => {
         mockMappedValue.mockResolvedValue({})
       })
       test('dalConnector is not called', async () => {
-        await fetchBusinessDetailsService(request)
+        await fetchBusinessDetailsService(yar, credentials)
         expect(dalConnector).not.toHaveBeenCalled()
       })
 
       test('it correctly returns data static data source', async () => {
-        const result = await fetchBusinessDetailsService(request)
+        const result = await fetchBusinessDetailsService(yar, credentials)
         expect(result).toMatchObject(mappedData)
       })
     })
@@ -108,11 +100,10 @@ describe('fetchBusinessDetailsService', () => {
       yar = {
         get: vi.fn().mockReturnValue(getSessionData)
       }
-      request = { yar }
     })
 
     test('it correctly returns session data', async () => {
-      const result = await fetchBusinessDetailsService(request)
+      const result = await fetchBusinessDetailsService(yar, credentials)
       expect(result).toMatchObject(getSessionData)
     })
   })

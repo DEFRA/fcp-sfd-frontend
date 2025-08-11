@@ -8,7 +8,7 @@ const getBusinessDetails = {
     auth: { scope: ['BUSINESS_DETAILS:FULL_PERMISSION'] }
   },
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request)
+    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessDetailsPresenter(businessDetails, request.yar)
 
     return h.view('business/business-details.njk', pageData)

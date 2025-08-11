@@ -7,8 +7,8 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
  * This function preserves `null` values, which may occur if a user has intentionally removed
  * a phone number.
  */
-const fetchBusinessPhoneNumbersChangeService = async (request) => {
-  const businessDetails = await fetchBusinessDetailsService(request)
+const fetchBusinessPhoneNumbersChangeService = async (yar, credentials) => {
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
   const { contact: { landline, mobile }, changeBusinessTelephone, changeBusinessMobile } = businessDetails
 
@@ -18,7 +18,7 @@ const fetchBusinessPhoneNumbersChangeService = async (request) => {
     changeBusinessMobile: changeBusinessMobile !== undefined ? changeBusinessMobile : mobile
   }
 
-  request.yar.set('businessDetails', updatedBusinessDetails)
+  yar.set('businessDetails', updatedBusinessDetails)
 
   return updatedBusinessDetails
 }

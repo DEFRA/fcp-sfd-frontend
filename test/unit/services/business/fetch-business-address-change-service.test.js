@@ -18,7 +18,7 @@ vi.mock('../../../../src/services/business/fetch-business-details-service', () =
 describe('fetchBusinessAddressChangeService', () => {
   const data = mappedData
   let yar
-  let request
+  let credentials
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -26,8 +26,11 @@ describe('fetchBusinessAddressChangeService', () => {
     yar = {
       set: vi.fn()
     }
-
-    request = { yar }
+    credentials = {
+      sbi: '123456789',
+      crn: '987654321',
+      email: 'test@example.com'
+    }
   })
 
   describe('when called', () => {
@@ -37,10 +40,20 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(request)
+        const result = await fetchBusinessAddressChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', {
+          ...data,
+          changeBusinessAddress: {
+            address1: '76 Robinswood Road',
+            address2: 'UPPER CHUTE',
+            city: null,
+            country: 'United Kingdom',
+            county: null,
+            postcode: 'CO9 3LS'
+          }
+        })
         expect(result).toEqual({
           ...data,
           changeBusinessAddress: {
@@ -73,10 +86,10 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(request)
+        const result = await fetchBusinessAddressChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(request)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual(data)
       })
     })

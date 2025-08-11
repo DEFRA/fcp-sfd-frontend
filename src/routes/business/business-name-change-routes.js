@@ -9,7 +9,7 @@ const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request)
+    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessNameChangePresenter(businessDetails)
 
     return h.view('business/business-name-change', pageData)

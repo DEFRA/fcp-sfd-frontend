@@ -1,7 +1,7 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 
-const fetchBusinessAddressChangeService = async (request) => {
-  const businessDetails = await fetchBusinessDetailsService(request)
+const fetchBusinessAddressChangeService = async (yar, credentials) => {
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
   let changeBusinessAddress = businessDetails?.changeBusinessAddress
 
@@ -17,7 +17,7 @@ const fetchBusinessAddressChangeService = async (request) => {
   }
 
   const updatedBusinessDetails = { ...businessDetails, changeBusinessAddress }
-  request.yar.set('businessDetails', updatedBusinessDetails)
+  yar.set('businessDetails', updatedBusinessDetails)
 
   return updatedBusinessDetails
 }

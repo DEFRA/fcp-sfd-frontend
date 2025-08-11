@@ -19,7 +19,16 @@ vi.mock('../../../../src/services/business/fetch-business-details-service.js', (
 }))
 
 describe('business email change', () => {
-  const request = { yar: {} }
+  const request = {
+    yar: {},
+    auth: {
+      credentials: {
+        sbi: '123456789',
+        crn: '987654321',
+        email: 'test@example.com'
+      }
+    }
+  }
   let h
   let err
 
@@ -45,7 +54,7 @@ describe('business email change', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessEmailChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-email-change.njk view with page data', async () => {

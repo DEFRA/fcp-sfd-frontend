@@ -12,14 +12,13 @@ import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-business-details.js'
 
-const fetchBusinessDetailsService = async (request) => {
-  const yar = request.yar
+const fetchBusinessDetailsService = async (yar, credentials) => {
   const businessDetails = yar.get('businessDetails')
   if (businessDetails) {
     return businessDetails
   }
 
-  const { sbi, crn, email } = request.auth.credentials
+  const { sbi, crn, email } = credentials
   const businessDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(sbi, crn, email) : mappedData
 
   yar.set('businessDetails', businessDetailsData)

@@ -12,7 +12,7 @@ vi.mock('@hapi/wreck', () => ({
 
 const mockConfigGet = vi.fn()
 vi.mock('../../../src/config/index.js', () => ({
-  default: {
+  config: {
     get: mockConfigGet
   }
 }))

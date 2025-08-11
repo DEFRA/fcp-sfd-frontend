@@ -1,8 +1,0 @@
-{% macro appBackLink(params) %}
-  {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-
-  {{ govukBackLink({
-    text: params.text | default("Back"),
-    href: params.href | default("#")
-  }) }}
-{% endmacro %}

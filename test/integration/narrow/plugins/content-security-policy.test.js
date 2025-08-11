@@ -18,6 +18,7 @@ describe('content security policy', () => {
       await server.stop()
     }
   })
+
   test('should include content security policy header', async () => {
     const response = await server.inject({
       url: '/'

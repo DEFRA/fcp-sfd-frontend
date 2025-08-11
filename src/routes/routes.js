@@ -1,6 +1,7 @@
 import { errors } from './errors/error-routes.js'
 import { health } from './health-routes.js'
-import { home } from './home-routes.js'
+import { auth } from './auth-routes.js'
+import { homeRoutes } from './home-routes.js'
 import { staticAssetRoutes } from './static-assets-routes.js'
 import { cookies } from './cookies-routes.js'
 import { signedOut } from './signed-out-routes.js'
@@ -10,7 +11,8 @@ import { personalRoutes } from './personal/personal-routes.js'
 
 export const routes = [
   health,
-  home,
+  ...homeRoutes,
+  ...auth,
   cookies,
   signedOut,
   ...errors,

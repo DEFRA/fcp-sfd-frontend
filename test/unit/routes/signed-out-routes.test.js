@@ -35,7 +35,7 @@ describe('Signed out endpoint', () => {
   test('should render the signed-out view with signedOutPresenter', () => {
     const result = signedOut.handler(null, mockH)
 
-    expect(mockH.view).toHaveBeenCalledWith('signed-out.njk', mockSignedOutPresenter)
+    expect(mockH.view).toHaveBeenCalledWith('signed-out', mockSignedOutPresenter)
 
     expect(result).toBe(mockView)
   })

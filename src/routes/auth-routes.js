@@ -5,7 +5,7 @@ import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 
-export const auth = [{
+const signIn = {
   method: 'GET',
   path: '/auth/sign-in',
   options: {
@@ -14,7 +14,9 @@ export const auth = [{
   handler: function (_request, h) {
     return h.redirect('/home')
   }
-}, {
+}
+
+const signInOidc = {
   method: 'GET',
   path: '/auth/sign-in-oidc',
   options: {
@@ -58,7 +60,9 @@ export const auth = [{
     const safeRedirect = getSafeRedirect(redirect)
     return h.redirect(safeRedirect)
   }
-}, {
+}
+
+const signOut = {
   method: 'GET',
   path: '/auth/sign-out',
   options: {
@@ -72,7 +76,9 @@ export const auth = [{
     const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
     return h.redirect(signOutUrl)
   }
-}, {
+}
+
+const signOutOidc = {
   method: 'GET',
   path: '/auth/sign-out-oidc',
   options: {
@@ -87,9 +93,11 @@ export const auth = [{
       }
       request.cookieAuth.clear()
     }
-    return h.redirect('/')
+    return h.redirect('/signed-out')
   }
-}, {
+}
+
+const organisation = {
   method: 'GET',
   path: '/auth/organisation',
   options: {
@@ -105,4 +113,12 @@ export const auth = [{
     const safeRedirect = getSafeRedirect(redirect)
     return h.redirect(safeRedirect)
   }
-}]
+}
+
+export const auth = [
+  signIn,
+  signInOidc,
+  signOut,
+  signOutOidc,
+  organisation
+]

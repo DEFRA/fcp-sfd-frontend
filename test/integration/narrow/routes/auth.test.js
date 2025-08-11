@@ -1,7 +1,7 @@
-import { constants } from 'http2'
+import { constants } from 'node:http2'
 import { vi, beforeEach, describe, beforeAll, afterAll, test, expect } from 'vitest'
 import { mockOidcConfig } from '../../../mocks/setup-server-mocks.js'
-// import { verifyToken } from '../../../../src'
+
 
 const { HTTP_STATUS_FOUND } = constants
 
@@ -337,7 +337,7 @@ describe('auth routes', () => {
       expect(sessionCookie).toMatch(/Max-Age=0/)
     })
 
-    test('should redirect to index page if authenticated', async () => {
+    test('should redirect to signed out page if authenticated', async () => {
       const response = await server.inject({
         url: path,
         auth: {
@@ -346,15 +346,15 @@ describe('auth routes', () => {
         }
       })
       expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
-      expect(response.headers.location).toBe('/')
+      expect(response.headers.location).toBe('/signed-out')
     })
 
-    test('should redirect to index page if not authenticated', async () => {
+    test('should redirect to signed out page if not authenticated', async () => {
       const response = await server.inject({
         url: path
       })
       expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
-      expect(response.headers.location).toBe('/')
+      expect(response.headers.location).toBe('/signed-out')
     })
   })
 

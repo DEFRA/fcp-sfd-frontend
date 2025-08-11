@@ -1,11 +1,37 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { home } from '../../../src/routes/home-routes.js'
+import { homeRoutes } from '../../../src/routes/home-routes.js'
+
+const [index, home] = homeRoutes
 
 const mockView = vi.fn()
 
 const mockH = {
   view: vi.fn().mockReturnValue(mockView)
 }
+
+describe('Root endpoint', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  test('should return an object', () => {
+    expect(index).toBeInstanceOf(Object)
+  })
+
+  test('should return GET / route', () => {
+    expect(index.method).toBe('GET')
+    expect(index.path).toBe('/')
+  })
+
+  test('should try and authenticate using default strategy', () => {
+    expect(index.options.auth.strategy).toBeUndefined()
+    expect(index.options.auth.mode).toBe('try')
+  })
+
+  test('should have a handler', () => {
+    expect(index.handler).toBeInstanceOf(Function)
+  })
+})
 
 describe('Home endpoint', () => {
   beforeEach(() => {

@@ -2,12 +2,12 @@
 
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "common/navigation/back-link.njk" import appBackLink %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
-  {{ appBackLink(backLink) }}
+  {{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
 {% block content %}

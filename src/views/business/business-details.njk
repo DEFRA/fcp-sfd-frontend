@@ -6,6 +6,7 @@
 {% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
 
 {% block beforeContent %}
+  {{ appBackSignOutLink(backLink) }}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
   {{ appBackSignOutLink()}}
 {% endblock %}
@@ -33,6 +34,12 @@
     {% set formattedAddress %}
       {% for addressLine in address %}
         <div>{{addressLine}}</div>
+      {% endfor %}
+    {% endset %}
+
+    {% set formattedCph %}
+      {% for cphNumber in countyParishHoldingNumbers %}
+       <div> {{cphNumber}} </div>
       {% endfor %}
     {% endset %}
 
@@ -154,10 +161,10 @@
         },
         {
           key: {
-            text: "County Parish Holding (CPH) number"
+            text: "County Parish Holding (CPH) numbers"
           },
           value: {
-            text: countyParishHoldingNumber
+            html: formattedCph
           }
         }
       ]

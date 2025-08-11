@@ -1,6 +1,6 @@
 {% extends 'common/layout.njk' %}
 
-{% from "common/navigation/back-link.njk" import appBackLink %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
 {% set pageTitle = "Change your business type" %}
@@ -14,7 +14,7 @@
     userName="Alfred Waldron"
 ) }}
 
-{{ appBackLink({ href: '/business-details'}) }}
+{{ appBackSignOutLink({ href: '/business-details'}) }}
 {% endblock %}
 
 {% block content %}

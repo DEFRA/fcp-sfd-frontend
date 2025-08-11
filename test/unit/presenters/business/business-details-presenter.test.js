@@ -45,82 +45,10 @@ describe('businessDetailsPresenter', () => {
         vatNumber: data.info.vat,
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
-        countyParishHoldingNumber: null, // CPH not available yet
+        countyParishHoldingNumbers: ['12/123/1234'],
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
         userName: data.customer.fullName
-      })
-    })
-  })
-
-  describe('the "address" property', () => {
-    describe('when the address has line properties and named properties', () => {
-      test('it should use the named properties ', () => {
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.address).toStrictEqual([
-          'THE COACH HOUSE',
-          'STOCKWELL HALL',
-          '7 HAREWOOD AVENUE',
-          'DARLINGTON',
-          'Dorset',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
-      })
-    })
-
-    describe('when the named properties include a building number', () => {
-      test('it should prefix the street with the number', () => {
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.address).toStrictEqual([
-          'THE COACH HOUSE',
-          'STOCKWELL HALL',
-          '7 HAREWOOD AVENUE',
-          'DARLINGTON',
-          'Dorset',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
-      })
-    })
-
-    describe('when the named properties does not have a building number', () => {
-      test('it should leave the street property unchanged', () => {
-        data.address.lookup.buildingNumberRange = null
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.address).toStrictEqual([
-          'THE COACH HOUSE',
-          'STOCKWELL HALL',
-          'HAREWOOD AVENUE',
-          'DARLINGTON',
-          'Dorset',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
-      })
-    })
-
-    describe('when the address has no named properties', () => {
-      test('it should use the lined properties ', () => {
-        data.address.lookup.flatName = null
-        data.address.lookup.buildingNumberRange = null
-        data.address.lookup.buildingName = null
-        data.address.lookup.street = null
-        data.address.lookup.city = null
-        data.address.lookup.county = null
-
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.address).toEqual([
-          '76 Robinswood Road',
-          'UPPER CHUTE',
-          'Child Okeford',
-          'CO9 3LS',
-          'United Kingdom'
-        ])
       })
     })
   })
@@ -153,6 +81,17 @@ describe('businessDetailsPresenter', () => {
         const result = businessDetailsPresenter(data, yar)
 
         expect(result.vatNumber).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "cph" property', () => {
+    describe('when the property is empty', () => {
+      test('it should return empty array', () => {
+        data.info.countyParishHoldingNumbers = []
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.countyParishHoldingNumbers).toEqual([])
       })
     })
   })

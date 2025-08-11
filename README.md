@@ -18,6 +18,7 @@ Frontend service for the Single Front Door (SFD) service. This service provides 
 | --- | --- | --- | --- |
 | ALLOW_ERROR_VIEWS | `false` | No | Enable error route views in local development to inspect error pages |
 | DAL_CONNECTION | `false` | No | Get user data from C_DAL if set to true, else, get user data from local mock-data |
+| DAL_ENDPOINT | `http://fcp-dal-api:3005/graphql`| No | Data access layer (DAL) endpoint |
 | DEFRA_ID_WELL_KNOWN_URL | null | No | The Defra Identity well known URL - Readable endpoint for DefraId |
 | DEFRA_ID_POLICY | null | No | The Defra Identity policy - Enables multiple microservices to share same DefraId active token (Must be the same for all FCP microservices) |
 | DEFRA_ID_CLIENT_ID | null | No | The Defra Identity client ID - Unique code for identifying fcp-sfd-frontend |
@@ -26,7 +27,6 @@ Frontend service for the Single Front Door (SFD) service. This service provides 
 | DEFRA_ID_REDIRECT_URL | null | No | The Defra Identity redirect URl - URL of the page to be redirected immediately after the user has successfully signed in |
 | DEFRA_ID_SIGN_OUT_REDIRECT_URL | null | No | The Defra Identity sign out redirect URL - URL of the page to be redirected after the user has successfully signed out |
 | DEFRA_ID_REFRESH_TOKENS | `true` | No | Defra Identity refresh tokens - Set to true to enable auto refresh of Defra Identity tokens |
-| DAL_ENDPOINT | `http://fcp-dal-api:3005/graphql`| No | Data access layer (DAL) endpoint |
 
 ## Setup
 

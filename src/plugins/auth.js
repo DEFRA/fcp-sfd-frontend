@@ -37,20 +37,7 @@ function getBellOptions (oidcConfig) {
       auth: oidcConfig.authorization_endpoint,
       token: oidcConfig.token_endpoint,
       scope: ['openid', 'offline_access', config.get('defraId.clientId')],
-      profile: function (credentials, _params, _get) {
-        const payload = Jwt.token.decode(credentials.token).decoded.payload
-
-        // Map all JWT properties to the credentials object so it can be stored in the session
-        // Add some additional properties to the profile object for convenience
-        const sbi = getSbiFromRelationships(payload.currentRelationshipId, payload.relationships)
-        credentials.profile = {
-          ...payload,
-          sbi,
-          crn: payload.contactId,
-          name: `${payload.firstName} ${payload.lastName}`,
-          organisationId: payload.currentRelationshipId
-        }
-      }
+      profile: (credentials, _params, _get) => getProfile(credentials, _params, _get)
     },
     clientId: config.get('defraId.clientId'),
     clientSecret: config.get('defraId.clientSecret'),
@@ -98,34 +85,51 @@ function getCookieOptions () {
     redirectTo: function (request) {
       return `/auth/sign-in?redirect=${request.url.pathname}${request.url.search}`
     },
-    validate: async function (request, session) {
-      const userSession = await request.server.app.cache.get(session.sessionId)
-
-      // If session does not exist, return an invalid session
-      if (!userSession) {
-        return { isValid: false }
-      }
-
-      // Verify Defra Identity token has not expired
-      try {
-        const decoded = Jwt.token.decode(userSession.token)
-        Jwt.token.verifyTime(decoded)
-      } catch (err) {
-        if (!config.get('defraId.refreshTokens')) {
-          request.server?.logger?.info(err.message)
-          return { isValid: false }
-        }
-        const { access_token: token, refresh_token: refreshToken } = await refreshTokens(userSession.refreshToken)
-        userSession.token = token
-        userSession.refreshToken = refreshToken
-        await request.server.app.cache.set(session.sessionId, userSession)
-      }
-
-      // Set the user's details on the request object and allow the request to continue
-      // Depending on the service, additional checks can be performed here before returning `isValid: true`
-      return { isValid: true, credentials: userSession }
-    }
+    validate: async (request, session) => validateToken(request, session)
   }
+}
+
+function getProfile (credentials, _params, _get) {
+  const payload = Jwt.token.decode(credentials.token).decoded.payload
+
+  // Map all JWT properties to the credentials object so it can be stored in the session
+  // Add some additional properties to the profile object for convenience
+  const sbi = getSbiFromRelationships(payload.currentRelationshipId, payload.relationships)
+  credentials.profile = {
+    ...payload,
+    sbi,
+    crn: payload.contactId,
+    name: `${payload.firstName} ${payload.lastName}`,
+    organisationId: payload.currentRelationshipId
+  }
+}
+
+async function validateToken (request, session) {
+  const userSession = await request.server.app.cache.get(session.sessionId)
+
+  // If session does not exist, return an invalid session
+  if (!userSession) {
+    return { isValid: false }
+  }
+
+  // Verify Defra Identity token has not expired
+  try {
+    const decoded = Jwt.token.decode(userSession.token)
+    Jwt.token.verifyTime(decoded)
+  } catch (err) {
+    if (!config.get('defraId.refreshTokens')) {
+      request.server?.logger?.info(err.message)
+      return { isValid: false }
+    }
+    const { access_token: token, refresh_token: refreshToken } = await refreshTokens(userSession.refreshToken)
+    userSession.token = token
+    userSession.refreshToken = refreshToken
+    await request.server.app.cache.set(session.sessionId, userSession)
+  }
+
+  // Set the user's details on the request object and allow the request to continue
+  // Depending on the service, additional checks can be performed here before returning `isValid: true`
+  return { isValid: true, credentials: userSession }
 }
 
 export { getBellOptions, getCookieOptions }

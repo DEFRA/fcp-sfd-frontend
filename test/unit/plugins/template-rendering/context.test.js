@@ -40,7 +40,16 @@ vi.mock('../../../../src/plugins/template-renderer/context.js', async (importOri
 })
 
 describe('#context', () => {
-  const mockRequest = { path: '/' }
+  const mockRequest = {
+    path: '/',
+    response: {
+      source: {
+        context: {
+          existingKey: 'value'
+        }
+      }
+    }
+  }
   let contextResult
 
   describe('When webpack manifest file read succeeds', () => {
@@ -55,6 +64,7 @@ describe('#context', () => {
 
     test('Should provide expected context', () => {
       expect(contextResult).toEqual({
+        existingKey: 'value',
         assetPath: '/public/assets',
         auth: null,
         breadcrumbs: [],
@@ -90,7 +100,16 @@ describe('#context', () => {
 })
 
 describe('#context cache', () => {
-  const mockRequest = { path: '/' }
+  const mockRequest = {
+    path: '/',
+    response: {
+      source: {
+        context: {
+          existingKey: 'value'
+        }
+      }
+    }
+  }
   let firstContextResult
   let secondContextResult
 
@@ -118,6 +137,7 @@ describe('#context cache', () => {
 
     test('Should provide expected context', () => {
       expect(secondContextResult).toEqual({
+        existingKey: 'value',
         assetPath: '/public/assets',
         auth: null,
         breadcrumbs: [],

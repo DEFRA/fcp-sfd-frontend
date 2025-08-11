@@ -8,27 +8,28 @@ export const errors = {
       server.ext('onPreResponse', (request, h) => {
         const response = request.response
 
-        if (response.isBoom) {
-          const statusCode = response.output.statusCode
-
-          // Catch any user in incorrect scope errors
-          if (statusCode === HTTP_STATUS_FORBIDDEN) {
-            return h.view('403').code(statusCode)
-          }
-
-          if (statusCode === HTTP_STATUS_NOT_FOUND) {
-            return h.view('404').code(statusCode)
-          }
-
-          request.log('error', {
-            statusCode,
-            message: response.message,
-            stack: response.data?.stack
-          })
-
-          return h.view('500').code(statusCode)
+        if (!response.isBoom) {
+          return h.continue
         }
-        return h.continue
+
+        const statusCode = response.output.statusCode
+
+        // Catch any user in incorrect scope errors
+        if (statusCode === HTTP_STATUS_FORBIDDEN) {
+          return h.view('unauthorised').code(statusCode)
+        }
+
+        if (statusCode === HTTP_STATUS_NOT_FOUND) {
+          return h.view('errors/not-found').code(statusCode)
+        }
+
+        request.log('error', {
+          statusCode,
+          message: response.message,
+          stack: response.data?.stack
+        })
+
+        return h.view('errors/service-problem').code(statusCode)
       })
     }
   }

@@ -22,6 +22,7 @@ export const plugins = [
   Scooter,
   csp,
   auth,
+  session,
   headersPlugin,
   errors,
   requestLogger,
@@ -30,6 +31,5 @@ export const plugins = [
   pulse,
   vision,
   router,
-  session,
   sso
 ]

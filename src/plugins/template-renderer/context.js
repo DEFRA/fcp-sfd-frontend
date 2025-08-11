@@ -22,8 +22,10 @@ export const context = async (request) => {
       logger.error(`Webpack ${path.basename(manifestPath)} not found`)
     }
   }
+  const context = request.response.source.context || {}
   const serverAuth = request.auth?.isAuthenticated ? await request.server.app.cache.get(request.auth.credentials.sessionId) : null
   return {
+    ...context,
     assetPath: `${assetPath}/assets`,
     serviceName: config.get('server.serviceName'),
     serviceUrl: '/',

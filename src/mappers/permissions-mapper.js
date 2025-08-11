@@ -19,8 +19,10 @@ export const mapPermissions = (raw) => {
     throw new Error(`Permission Validation fail for DAL response: ${error.message}`)
   }
 
+  const privileges = value.business.customer.permissionGroups.map(permissionGroups => `${permissionGroups.id.toUpperCase()}:${permissionGroups.level.toUpperCase()}`)
+
   return {
-    privileges: value.business.customer.permissionGroups.map(permissionGroups => permissionGroups.id.concat(':', permissionGroups.level)),
+    privileges,
     businessName: value.business.info.name
   }
 }

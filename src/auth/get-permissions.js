@@ -6,6 +6,7 @@ import { mappedData } from '../mock-data/mock-permissions.js'
 
 async function getPermissions (sbi, crn, email) {
   const permission = config.get('featureToggle.dalConnection') ? await getFromDal(sbi, crn, email) : mappedData
+
   return permission
 }
 
@@ -22,4 +23,5 @@ const getFromDal = async (sbi, crn, email) => {
 
   return dalResponse
 }
+
 export { getPermissions }

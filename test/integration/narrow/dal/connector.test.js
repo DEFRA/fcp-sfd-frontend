@@ -1,8 +1,21 @@
-import { describe, test, expect, beforeAll, afterAll } from 'vitest'
-import { createServer } from '../../../../src/server.js'
+import { vi, describe, test, expect, beforeAll, afterAll } from 'vitest'
 import { dalConnector } from '../../../../src/dal/connector.js'
 import { exampleQuery } from '../../../../src/dal/queries/example-query.js'
 
+const mockOidcConfig = {
+  authorization_endpoint: 'https://oidc.example.com/authorize',
+  token_endpoint: 'https://oidc.example.com/token',
+  end_session_endpoint: 'https://oidc.example.com/logout',
+  jwks_uri: 'https://oidc.example.com/jwks'
+}
+
+vi.mock('../../../../src/auth/get-oidc-config.js', async () => {
+  return {
+    getOidcConfig: async () => (mockOidcConfig)
+  }
+})
+
+const { createServer } = await import('../../../../src/server.js')
 const { config } = await import('../../../../src/config/index.js')
 
 describe('Data access layer (DAL) connector integration', () => {
@@ -10,7 +23,7 @@ describe('Data access layer (DAL) connector integration', () => {
 
   beforeAll(async () => {
     server = await createServer()
-    // await server.initialize()
+    await server.initialize()
   })
 
   afterAll(async () => {

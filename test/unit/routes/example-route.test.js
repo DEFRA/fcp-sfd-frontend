@@ -1,5 +1,5 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
-import { constants as httpConstants } from 'http2'
+import { constants as httpConstants } from 'node:http2'
 import { exampleDalConnectionRoute } from '../../../src/routes/business/example-routes.js'
 import { dalConnector } from '../../../src/dal/connector'
 

@@ -1,4 +1,4 @@
-import { constants } from 'http2'
+import { constants } from 'node:http2'
 const { HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND } = constants
 
 export const errors = {

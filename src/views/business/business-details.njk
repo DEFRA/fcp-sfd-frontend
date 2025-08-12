@@ -6,9 +6,8 @@
 {% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
 
 {% block beforeContent %}
-  {{ appBackSignOutLink(backLink) }}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
-  {{ appBackSignOutLink()}}
+  {{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
 {% block content %}

@@ -1,4 +1,4 @@
-import { constants as httpConstants } from 'node:http2'
+import { constants as httpConstants } from 'http2'
 import { dalConnector } from '../../dal/connector.js'
 import { exampleQuery } from '../../dal/queries/example-query.js'
 

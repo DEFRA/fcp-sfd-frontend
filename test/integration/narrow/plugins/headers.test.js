@@ -82,7 +82,7 @@ describe('headers', () => {
     const response = await server.inject({
       url: '/'
     })
-    expect(response.headers['strict-transport-security']).toBe('max-age=31536000; includeSubDomains; preload')
+    expect(response.headers['strict-transport-security']).toBe('max-age=31536000; includeSubDomains')
   })
 
   test('should restrict permissions for sensitive features', async () => {

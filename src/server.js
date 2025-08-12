@@ -23,7 +23,7 @@ export const createServer = async () => {
         hsts: {
           maxAge: 31536000,
           includeSubDomains: true,
-          preload: true
+          preload: false
         },
         xss: 'enabled',
         noSniff: true,

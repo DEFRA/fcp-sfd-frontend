@@ -14,7 +14,7 @@ vi.mock('../../../src/auth/state.js', () => ({
 const mockSignOutRedirectUrl = 'https://example.com/sign-out-redirect'
 const mockConfigGet = vi.fn()
 vi.mock('../../../src/config/index.js', () => ({
-  default: {
+  config: {
     get: mockConfigGet
   }
 }))

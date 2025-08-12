@@ -47,7 +47,7 @@ describe('updateBusinessEmailChangeService', () => {
     test('adds a flash notification confirming the change in data', async () => {
       await updateBusinessEmailChangeService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business email')
+      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business email address')
     })
   })
 })

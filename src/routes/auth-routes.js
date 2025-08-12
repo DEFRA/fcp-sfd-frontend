@@ -1,4 +1,3 @@
-// import { getOldPermissions } from '../auth/get-permissions-old.js'
 import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'

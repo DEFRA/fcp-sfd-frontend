@@ -9,7 +9,7 @@ async function getOidcConfig () {
 
     return payload
   } catch (err) {
-    throw new Error('Unable to connect to DefraId ' + config.get('defraId.wellKnownUrl'))
+    throw new Error('Unable to connect to DefraId ' + config.get('defraId.wellKnownUrl') + ' ' + err.message)
   }
 }
 

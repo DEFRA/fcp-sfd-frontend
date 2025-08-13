@@ -66,6 +66,7 @@ describe('buildRedisClient', () => {
       port: 6379,
       host: 'localhost',
       db: 0,
+      enableReadyCheck: false,
       keyPrefix: 'test:'
     })
     expect(Cluster).not.toHaveBeenCalled()
@@ -91,6 +92,7 @@ describe('buildRedisClient', () => {
         keyPrefix: 'test:',
         slotsRefreshTimeout: 10000,
         dnsLookup: expect.any(Function),
+        enableReadyCheck: false,
         redisOptions: { db: 0 }
       }
     )
@@ -115,6 +117,7 @@ describe('buildRedisClient', () => {
       port: 6379,
       host: 'localhost',
       db: 0,
+      enableReadyCheck: false,
       keyPrefix: 'test:',
       username: 'user',
       password: 'pass'
@@ -137,6 +140,7 @@ describe('buildRedisClient', () => {
       port: 6379,
       host: 'localhost',
       db: 0,
+      enableReadyCheck: false,
       keyPrefix: 'test:',
       tls: {}
     })

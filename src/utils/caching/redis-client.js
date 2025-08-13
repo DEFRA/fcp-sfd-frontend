@@ -25,6 +25,7 @@ export const buildRedisClient = (redisConfig) => {
       host,
       db,
       keyPrefix,
+      enableReadyCheck: false,
       ...credentials,
       ...tls
     })
@@ -40,6 +41,7 @@ export const buildRedisClient = (redisConfig) => {
         keyPrefix,
         slotsRefreshTimeout: 10000,
         dnsLookup: (address, callback) => callback(null, address),
+        enableReadyCheck: false,
         redisOptions: {
           db,
           ...credentials,

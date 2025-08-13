@@ -5,16 +5,15 @@
 
 {% set pageTitle = "Change your business type" %}
 {% set metaDescription = "Update the type of your business." %}
-{% set businessType = "Central or local government" %}
 
 {% block beforeContent %}
   {{ subHeader(
     businessName=businessName,
-    sbi="123456789",
-    userName="Alfred Waldron"
+    sbi=sbi,
+    userName=userName
 ) }}
 
-{{ appBackSignOutLink({ href: '/business-details'}) }}
+{{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
 {% block content %}

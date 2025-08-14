@@ -6,17 +6,21 @@ import { config } from '../config/index.js'
 import { getSbiFromRelationships } from '../auth/get-sbi-from-relationships.js'
 import { createLogger } from '../utils/logger.js'
 
+const logger = createLogger()
 export const auth = {
 
   plugin: {
     name: 'auth',
     register: async (server) => {
+      logger.info('Auth registration started')
       const oidcConfig = await getOidcConfig()
 
       // Bell is a third-party plugin that provides a common interface for OAuth 2.0 authentication
       // Used to authenticate users with Defra Identity and a pre-requisite for the Cookie authentication strategy
       // Also used for changing organisations and signing out
-      server.auth.strategy('defra-id', 'bell', getBellOptions(oidcConfig))
+      const belloption = getBellOptions(oidcConfig)
+      logger.info('bell option is ' + belloption)
+      server.auth.strategy('defra-id', 'bell', belloption)
 
       // Cookie is a built-in authentication strategy for hapi.js that authenticates users based on a session cookie
       // Used for all non-Defra Identity routes
@@ -26,6 +30,7 @@ export const auth = {
       // Set the default authentication strategy to session
       // All routes will require authentication unless explicitly set to 'defra-id' or `auth: false`
       server.auth.default('session')
+      logger.info('Auth registration succesful')
     }
   }
 }
@@ -119,7 +124,6 @@ async function validateToken (request, session) {
     const decoded = Jwt.token.decode(userSession.token)
     Jwt.token.verifyTime(decoded)
   } catch (err) {
-    const logger = createLogger()
     logger.info('Validate token block' + err.message)
     if (!config.get('defraId.refreshTokens')) {
       request.server?.logger?.info(err.message)

@@ -4,8 +4,10 @@ import { refreshTokens } from '../auth/refresh-tokens.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 import { config } from '../config/index.js'
 import { getSbiFromRelationships } from '../auth/get-sbi-from-relationships.js'
+import { createLogger } from '../utils/logger.js'
 
 export const auth = {
+
   plugin: {
     name: 'auth',
     register: async (server) => {
@@ -117,6 +119,8 @@ async function validateToken (request, session) {
     const decoded = Jwt.token.decode(userSession.token)
     Jwt.token.verifyTime(decoded)
   } catch (err) {
+    const logger = createLogger()
+    logger.info('Validate token block' + err.message)
     if (!config.get('defraId.refreshTokens')) {
       request.server?.logger?.info(err.message)
       return { isValid: false }

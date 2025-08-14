@@ -73,6 +73,8 @@ describe('auth', () => {
           return 'mockPassword'
         case 'server.isProduction':
           return true
+        case 'server.log':
+          return { enabled: false }
         default:
           return 'defaultConfigValue'
       }

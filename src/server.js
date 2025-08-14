@@ -7,9 +7,12 @@ import { plugins } from './plugins/index.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 import { setupProxy } from './utils/setup-proxy.js'
+import { createLogger } from './utils/logger.js'
 
 export const createServer = async () => {
   setupProxy()
+  const logger = createLogger()
+
   const server = hapi.server({
     port: config.get('server.port'),
     routes: {
@@ -54,9 +57,16 @@ export const createServer = async () => {
     expiresIn: config.get('server.session.cache.ttl')
   })
   server.validator(Joi)
-  await server.register(plugins)
+  logger.info('Started plugins registration')
+  try {
+    await server.register(plugins)
+  } catch (err) {
+    throw new Error('unable to register plugim ' * err.message)
+  }
+
+  logger.info('all plugins registered')
 
   server.ext('onPreResponse', catchAll)
-
+  logger.info('Created server')
   return server
 }

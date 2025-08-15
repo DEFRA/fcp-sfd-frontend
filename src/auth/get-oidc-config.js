@@ -4,7 +4,13 @@ import { createLogger } from '../utils/logger.js'
 
 async function getOidcConfig () {
   const logger = createLogger()
-  try {
+  logger.info('In Oicd')
+  const { payload } = await Wreck.get(config.get('defraId.wellKnownUrl'), {
+    json: true
+  })
+  logger.info('out Oicd')
+  return payload
+  /* try {
     const { payload } = await Wreck.get(config.get('defraId.wellKnownUrl'), {
       json: true
     })
@@ -13,7 +19,7 @@ async function getOidcConfig () {
     return payload
   } catch (err) {
     throw new Error('Unable to connect to DefraId ' + config.get('defraId.wellKnownUrl') + ' ' + err.message)
-  }
+  } */
 }
 
 export { getOidcConfig }

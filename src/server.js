@@ -61,7 +61,7 @@ export const createServer = async () => {
   try {
     await server.register(plugins)
   } catch (err) {
-    throw new Error('unable to register plugim ' * err.message)
+    throw new Error('unable to register plugim')
   }
 
   logger.info('all plugins registered')

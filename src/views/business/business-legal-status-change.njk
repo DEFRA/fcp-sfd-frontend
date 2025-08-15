@@ -3,18 +3,14 @@
 {% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 
-{% set pageTitle = "Change your legal status" %}
-{% set metaDescription = "Update the legal status of your business." %}
-{% set businessLegalStatus = "Sole proprietorship" %}
-
 {% block beforeContent %}
   {{ subHeader(
     businessName=businessName,
-    sbi="123456789",
-    userName="Alfred Waldron"
+    sbi=sbi,
+    userName=userName
 ) }}
 
-{{ appBackSignOutLink({ href: '/business-details'}) }}
+{{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
 {% block content %}

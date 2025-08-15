@@ -14,6 +14,7 @@ export const auth = {
     register: async (server) => {
       logger.info('Auth registration started')
       const oidcConfig = await getOidcConfig()
+      logger.info('oicConfig here: ' + oidcConfig)
 
       // Bell is a third-party plugin that provides a common interface for OAuth 2.0 authentication
       // Used to authenticate users with Defra Identity and a pre-requisite for the Cookie authentication strategy
@@ -36,6 +37,7 @@ export const auth = {
 }
 
 function getBellOptions (oidcConfig) {
+  logger.info('oicConfig endpoint is: ' + oidcConfig.authorization_endpoint)
   return {
     provider: {
       name: 'defra-id',

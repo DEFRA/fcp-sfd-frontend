@@ -1,8 +1,14 @@
+import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
+import { businessLegalStatusChangePresenter } from '../../presenters/business/business-legal-status-change-presenter.js'
+
 const getBusinessLegalStatusChange = {
   method: 'GET',
   path: '/business-legal-status-change',
-  handler: (_, h) => {
-    return h.view('business/business-legal-status-change')
+  handler: async (request, h) => {
+    const businessDetails = await fetchBusinessDetailsService(request.yar)
+    const pageData = businessLegalStatusChangePresenter(businessDetails)
+
+    return h.view('business/business-legal-status-change', pageData)
   }
 }
 

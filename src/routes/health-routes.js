@@ -1,4 +1,4 @@
-import { constants as httpConstants } from 'http2'
+import { constants as httpConstants } from 'node:http2'
 
 export const health = {
   method: 'GET',

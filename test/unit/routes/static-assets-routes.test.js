@@ -1,5 +1,5 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { constants as httpConstants } from 'http2'
+import { constants as httpConstants } from 'node:http2'
 
 let staticAssetRoutes
 let config

@@ -4,10 +4,12 @@ import Joi from 'joi'
 
 import { config } from './config/index.js'
 import { plugins } from './plugins/index.js'
+import { setupProxy } from './utils/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 
 export const createServer = async () => {
+  setupProxy()
   const server = hapi.server({
     port: config.get('server.port'),
     routes: {
@@ -23,7 +25,7 @@ export const createServer = async () => {
         hsts: {
           maxAge: 31536000,
           includeSubDomains: true,
-          preload: false
+          preload: true
         },
         xss: 'enabled',
         noSniff: true,
@@ -44,6 +46,12 @@ export const createServer = async () => {
     state: {
       strictHeader: false
     }
+  })
+
+  server.app.cache = server.cache({
+    cache: config.get('server.session.cache.name'),
+    segment: config.get('server.session.cache.segment'),
+    expiresIn: config.get('server.session.cache.ttl')
   })
   server.validator(Joi)
   await server.register(plugins)

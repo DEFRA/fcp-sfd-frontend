@@ -34,7 +34,7 @@ export const serverConfig = {
     port: {
       doc: 'The port to bind.',
       format: 'port',
-      default: 3002,
+      default: 3000,
       env: 'PORT'
     },
     staticCacheTimeout: {
@@ -106,14 +106,7 @@ export const serverConfig = {
       format: String,
       nullable: true,
       default: null,
-      env: 'CDP_HTTP_PROXY'
-    }),
-    httpsProxy: ({
-      doc: 'HTTPS Proxy',
-      format: String,
-      nullable: true,
-      default: null,
-      env: 'CDP_HTTPS_PROXY'
+      env: 'HTTP_PROXY'
     }),
     isSecureContextEnabled: {
       doc: 'Enable Secure Context',

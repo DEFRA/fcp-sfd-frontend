@@ -3,42 +3,35 @@ services:
     build: 
       context: .
       target: development
-    ports:
-      - '3002:3002'
-      - '9002:9229'
     links:
       - 'redis:redis'
     depends_on:
       redis:
         condition: service_started
     environment:
-      PORT: 3002
+      PORT: 3000
       NODE_ENV: development
-      ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS}
+      ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS:-false}
       DAL_ENDPOINT: ${DAL_ENDPOINT:-http://fcp-dal-api:3005/graphql}
-      DAL_CONNECTION: true
-    networks:
-      - fcp-sfd
-    volumes:
-      - ./src:/home/node/src
-      - ./package.json:/home/node/package.json
+      DAL_CONNECTION: ${DAL_CONNECTION:-false}
+      DEFRA_ID_WELL_KNOWN_URL: ${DEFRA_ID_WELL_KNOWN_URL}
+      DEFRA_ID_CLIENT_ID: ${DEFRA_ID_CLIENT_ID}
+      DEFRA_ID_CLIENT_SECRET: ${DEFRA_ID_CLIENT_SECRET}
+      DEFRA_ID_SERVICE_ID: ${DEFRA_ID_SERVICE_ID}
+      DEFRA_ID_POLICY: ${DEFRA_ID_POLICY}
+      DEFRA_ID_REDIRECT_URL: http://localhost:3000/auth/sign-in-oidc
+      DEFRA_ID_SIGN_OUT_REDIRECT_URL: http://localhost:3000/auth/sign-out-oidc
 
   kits-mock:
     image: defradigital/fcp-dal-upstream-mock
-    ports:
-      - '3100:3100'
     environment:
       MOCK_LOG_LEVEL: info
       MOCK_SERVER_COLLECTION: all
       NODE_ENV: development
       PORT: 3100
-    networks:
-      - fcp-sfd
 
   fcp-dal-api:
-    image: defradigital/fcp-dal-api:0.55.0
-    ports: 
-      - 3005:3005
+    image: defradigital/fcp-dal-api:0.68.0
     depends_on:
       - kits-mock
     environment:
@@ -55,17 +48,7 @@ services:
       KITS_GATEWAY_TIMEOUT_MS: 3000
       KITS_DISABLE_MTLS: true
       DAL_REQUEST_TIMEOUT_MS: 3000
-    networks:
-      - fcp-sfd
 
   redis:
     image: redis:7.2.3-alpine3.18
-    ports:
-      - '6379:6379'
     restart: always
-    networks:
-      - fcp-sfd
-
-networks:
-  fcp-sfd:
-    driver: bridge

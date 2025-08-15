@@ -5,10 +5,9 @@
 {% from "common/sub-header/macro.njk" import subHeader %}
 {% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
 
-
 {% block beforeContent %}
-  {{ appBackSignOutLink(backLink) }}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
 {% block content %}
@@ -44,8 +43,8 @@
     {% endset %}
 
     {% set displayBusinessPhone %}
-      <div>Telephone: <div class="govuk-hint" style="display: inline;">{{businessTelephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint" style="display: inline;">{{businessMobile}}</div></div>
+      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone}}</div></div>
+      <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
     {% endset %}
 
     {{ govukSummaryList({

@@ -5,7 +5,7 @@ export const redisConfig = {
     host: {
       doc: 'Redis cache host',
       format: String,
-      default: '127.0.0.1',
+      default: 'redis:6379',
       env: 'REDIS_HOST'
     },
     username: {
@@ -38,6 +38,12 @@ export const redisConfig = {
       format: Boolean,
       default: isProduction,
       env: 'REDIS_TLS'
+    },
+    ttl: {
+      doc: 'Default cache TTL in milliseconds',
+      format: Number,
+      default: 1000 * 60 * 58, // 58 minutes
+      env: 'REDIS_TTL'
     }
   }
 }

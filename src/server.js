@@ -48,6 +48,10 @@ export const createServer = async () => {
   server.validator(Joi)
   await server.register(plugins)
 
+  // Partition the redis cache to allow tokens to be stored
+  const tokenCache = server.cache({ cache: config.get('server.session.cache.name'), segment: 'tokenCache', expiresIn: config.get('redis.ttl') })
+  server.app.tokenCache = tokenCache
+
   server.ext('onPreResponse', catchAll)
 
   return server

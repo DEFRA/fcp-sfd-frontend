@@ -53,6 +53,14 @@ export const createServer = async () => {
     segment: config.get('server.session.cache.segment'),
     expiresIn: config.get('server.session.cache.ttl')
   })
+
+  // Partition the redis cache to allow tokens to be stored
+  server.app.tokenCache = server.cache({
+    cache: config.get('server.session.cache.name'),
+    segment: 'tokenCache',
+    expiresIn: config.get('redis.ttl')
+  })
+
   server.validator(Joi)
   await server.register(plugins)
 

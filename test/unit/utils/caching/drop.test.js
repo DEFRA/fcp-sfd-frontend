@@ -1,13 +1,13 @@
 // Test framework dependencies
 import { describe, it, expect, vi } from 'vitest'
 
+// Thing under test
+import { drop } from '../../../../src/utils/caching/drop.js'
+
 // Mocks
 const mockCache = {
   drop: vi.fn()
 }
-
-// Thing under test
-import { drop } from '../../../../src/utils/caching/drop.js'
 
 describe('drop', () => {
   it('should call cache.drop with the correct key', async () => {

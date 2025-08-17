@@ -1,4 +1,4 @@
-import { server } from'../../server.js'
+import { server } from '../../server.js'
 
 /**
  * A helper function to retrieve active cache instances from the Hapi server

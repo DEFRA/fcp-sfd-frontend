@@ -1,6 +1,12 @@
 // Test framework dependencies
 import { describe, it, expect, vi } from 'vitest'
 
+// Thing under test
+import { getCache } from '../../../../src/utils/caching/get-cache.js'
+
+// Things we need to mock
+import { server } from '../../../../src/server.js'
+
 // Mocks
 vi.mock('../../../../src/server.js', () => ({
   server: {
@@ -12,12 +18,6 @@ vi.mock('../../../../src/server.js', () => ({
     }
   }
 }))
-
-// Thing under test
-import { getCache } from '../../../../src/utils/caching/get-cache.js'
-
-// Things we need to mock
-import { server } from '../../../../src/server.js'
 
 describe('getCache', () => {
   it('should return the cache instance from server.app', () => {

@@ -1,13 +1,13 @@
 // Test framework dependencies
 import { describe, it, expect, vi } from 'vitest'
 
+// Thing under test
+import { get } from '../../../../src/utils/caching/get.js'
+
 // Mocks
 const mockCache = {
   get: vi.fn()
 }
-
-// Thing under test
-import { get } from '../../../../src/utils/caching/get.js'
 
 describe('get', () => {
   it('should call cache.get with the correct key', async () => {

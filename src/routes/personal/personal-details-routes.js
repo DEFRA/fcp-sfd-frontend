@@ -5,11 +5,10 @@ const getPersonalDetails = {
   method: 'GET',
   path: '/personal-details',
   handler: async (request, h) => {
-    const backLink = request.headers.referer
     const personalDetails = await fetchPersonalDetailsService(request.yar)
     const pageData = personalDetailsPresenter(personalDetails, request.yar)
 
-    return h.view('personal/personal-details.njk', pageData, backLink)
+    return h.view('personal/personal-details.njk', pageData)
   }
 }
 

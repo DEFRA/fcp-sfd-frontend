@@ -7,8 +7,8 @@ import { config } from '../../config/index.js'
  * the active cache client instance `getCache()` and calls the `set` method to set the key-value pair.
  * The value will automatically expire after the configured ttl (time-to-live)
  */
-const set = async (key, value, cache) => {
-  await cache.set(key, value, config.get('redisConfig.ttl'))
+const set = async (key, value, expiresAt, cache) => {
+  await cache.set(key, value, expiresAt)
 }
 
 export { set }

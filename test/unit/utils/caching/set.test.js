@@ -23,15 +23,16 @@ describe('set', () => {
     vi.clearAllMocks()
   })
 
-  it('should call cache.set with key, value, and TTL from config', async () => {
+  it('should call cache.set with key, value, and expiresAt', async () => {
     const key = 'myKey'
     const value = { foo: 'bar' }
+    const expiresAt = Date.now() + 1000 * 60 * 10 // 10 mins in future
 
     mockCache.set.mockResolvedValueOnce(undefined)
 
-    await set(key, value, mockCache)
+    await set(key, value, expiresAt, mockCache)
 
-    expect(mockCache.set).toHaveBeenCalledWith(key, value, config.get('redisConfig.ttl'))
+    expect(mockCache.set).toHaveBeenCalledWith(key, value, expiresAt)
     expect(mockCache.set).toHaveBeenCalledTimes(1)
   })
 })

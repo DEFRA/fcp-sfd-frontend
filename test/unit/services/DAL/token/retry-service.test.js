@@ -17,14 +17,13 @@ vi.mock('../../../../../src/utils/caching/drop.js', () => ({
 
 describe('retry', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
     vi.clearAllMocks()
     vi.useFakeTimers()
   })
 
   afterEach(() => {
-    vi.runAllTimers()
-    vi.useRealTimers()
+    vi.runAllTimers() // Run any remaining scheduled timers to avoid hanging timers
+    vi.useRealTimers() // Restore the real timer functions
     vi.clearAllMocks()
   })
 
@@ -42,7 +41,7 @@ describe('retry', () => {
     expect(drop).not.toHaveBeenCalled()
   })
 
-  it('should drop DAL_TOKEN if functions throws 401 error', async () => {
+  it('should drop DAL_TOKEN and retry function if it throws 401 error', async () => {
     const boomError = { isBoom: true, output: { statusCode: 401 } }
     const fn = vi.fn()
       .mockRejectedValueOnce(boomError)

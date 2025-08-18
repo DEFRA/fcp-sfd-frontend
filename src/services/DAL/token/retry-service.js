@@ -3,12 +3,12 @@ import { DAL_TOKEN } from '../../../constants/cache-keys.js'
 import { UNAUTHORIZED } from '../../../constants/status-codes.js'
 
 /**
- * Retires an asynchronous function multiple times if it fails
+ * Retries an asynchronous function multiple times if it fails
  *
  * If the function throws a 401 error, the cached DAL token is dropped so that
  * a new token can be fetched on the next attempt
  *
- * Each time it retires, it waits a bit longer before trying again, doubling
+ * Each time it retries, it waits a bit longer before trying again, doubling
  * the wait if exponential is true
  */
 const retry = async (fn, retriesLeft = 3, interval = 1000, exponential = true) => {

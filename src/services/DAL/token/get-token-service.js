@@ -15,7 +15,7 @@
  */
 
 import Wreck from '@hapi/wreck'
-import { DAL_TOKEN } from '../../../constants/cache-keys.js'
+import { DAL_TOKEN, TOKEN_EXPIRY_BUFFER_MS } from '../../../constants/cache-keys.js'
 import { retry } from './retry-service.js'
 import { config } from '../../../config/index.js'
 import { get, set } from '../../../utils/caching/index.js'
@@ -40,7 +40,7 @@ const getToken = async (cache) => {
 
   // Cache the token slightly less than the actual expiry to avoid using an expired token
   // Here, 60 seconds is subtracted—adjust if your expires_in is in seconds
-  await set(DAL_TOKEN, token.token, token.expiresAt - 60000, cache)
+  await set(DAL_TOKEN, token.token, token.expiresAt - TOKEN_EXPIRY_BUFFER_MS, cache)
 
   return token.token
 }

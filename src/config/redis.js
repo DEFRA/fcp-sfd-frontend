@@ -1,4 +1,5 @@
 import { isProduction } from '../constants/environments.js'
+import { DEFAULT_CACHE_TTL_MINUTES } from '../constants/cache-keys.js'
 
 export const redisConfig = {
   redis: {
@@ -42,7 +43,7 @@ export const redisConfig = {
     ttl: {
       doc: 'Default cache TTL in milliseconds',
       format: Number,
-      default: 1000 * 60 * 58, // 58 minutes
+      default: 1000 * 60 * DEFAULT_CACHE_TTL_MINUTES, // 58 minutes
       env: 'REDIS_TTL'
     }
   }

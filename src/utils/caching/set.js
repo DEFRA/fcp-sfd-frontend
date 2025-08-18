@@ -1,5 +1,3 @@
-import { config } from '../../config/index.js'
-
 /**
  * A helper function to set cached items
  *

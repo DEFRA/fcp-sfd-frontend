@@ -10,6 +10,9 @@ import { getCacheEngine } from './utils/caching/cache-engine.js'
 
 export const createServer = async () => {
   setupProxy()
+
+  const CACHE_NAME = config.get('server.session.cache.name')
+
   const server = hapi.server({
     port: config.get('server.port'),
     routes: {
@@ -37,7 +40,7 @@ export const createServer = async () => {
     },
     cache: [
       {
-        name: config.get('server.session.cache.name'),
+        name: CACHE_NAME,
         engine: getCacheEngine(
           (config.get('server.session.cache.engine'))
         )
@@ -49,14 +52,14 @@ export const createServer = async () => {
   })
 
   server.app.cache = server.cache({
-    cache: config.get('server.session.cache.name'),
+    cache: CACHE_NAME,
     segment: config.get('server.session.cache.segment'),
     expiresIn: config.get('server.session.cache.ttl')
   })
 
   // Partition the redis cache to allow tokens to be stored
   server.app.tokenCache = server.cache({
-    cache: config.get('server.session.cache.name'),
+    cache: CACHE_NAME,
     segment: 'tokenCache',
     expiresIn: config.get('redis.ttl')
   })

@@ -1,5 +1,6 @@
 import { drop } from '../../../utils/caching/drop.js'
 import { DAL_TOKEN } from '../../../constants/cache-keys.js'
+import { UNAUTHORIZED } from '../../../constants/status-codes.js'
 
 /**
  * Retires an asynchronous function multiple times if it fails
@@ -14,7 +15,7 @@ const retry = async (fn, retriesLeft = 3, interval = 1000, exponential = true) =
   try {
     return (await fn())
   } catch (err) {
-    if (err.isBoom && err.output.statusCode === 401) {
+    if (err.isBoom && err.output.statusCode === UNAUTHORIZED) {
       await drop(DAL_TOKEN)
     }
     if (retriesLeft > 0) {

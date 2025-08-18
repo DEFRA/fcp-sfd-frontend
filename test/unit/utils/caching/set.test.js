@@ -1,18 +1,8 @@
 // Test framework dependencies
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-// Import the mocked config
-import { config } from '../../../../src/config/index.js'
-
 // Thing under test
 import { set } from '../../../../src/utils/caching/set.js'
-
-// Mock the config
-vi.mock('../../../../src/config/index.js', () => ({
-  config: {
-    get: vi.fn(() => 1000 * 60 * 58) // mock TTL
-  }
-}))
 
 describe('set', () => {
   const mockCache = {

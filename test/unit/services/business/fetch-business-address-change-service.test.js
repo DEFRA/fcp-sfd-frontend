@@ -9,6 +9,7 @@ import { mappedData } from '../../../mocks/mock-business-details'
 
 // Thing under test
 import { fetchBusinessAddressChangeService } from '../../../../src/services/business/fetch-business-address-change-service.js'
+import { token } from '@hapi/jwt'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -19,6 +20,7 @@ describe('fetchBusinessAddressChangeService', () => {
   const data = mappedData
   let yar
   let credentials
+  let token
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -31,6 +33,8 @@ describe('fetchBusinessAddressChangeService', () => {
       crn: '987654321',
       email: 'test@example.com'
     }
+
+    token = 'test-token'
   })
 
   describe('when called', () => {
@@ -40,9 +44,9 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(yar, credentials)
+        const result = await fetchBusinessAddressChangeService(yar, credentials, token)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, token)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', {
           ...data,
           changeBusinessAddress: {
@@ -86,9 +90,9 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(yar, credentials)
+        const result = await fetchBusinessAddressChangeService(yar, credentials, token)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, token)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual(data)
       })

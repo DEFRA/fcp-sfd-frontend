@@ -1,8 +1,8 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
-const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+const updateBusinessPhoneNumbersChangeService = async (yar, credentials, token) => {
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, token)
 
   businessDetails.contact.landline = businessDetails.changeBusinessTelephone ?? null
   businessDetails.contact.mobile = businessDetails.changeBusinessMobile ?? null

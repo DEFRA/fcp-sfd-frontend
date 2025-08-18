@@ -37,10 +37,7 @@ describe('personal details', () => {
         mockData = getMockData()
         pageData = getPageData()
         request = {
-          yar: { userId: 'abc123' }, // Mock whatever your service expects here
-          headers: {
-            referer: '/previous-page'
-          }
+          yar: { userId: 'abc123' } // Mock whatever your service expects here
         }
 
         fetchPersonalDetailsService.mockResolvedValue(mockData)
@@ -52,7 +49,7 @@ describe('personal details', () => {
 
         expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar)
         expect(personalDetailsPresenter).toHaveBeenCalledWith(mockData, request.yar)
-        expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData, '/previous-page')
+        expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
       })
     })
   })

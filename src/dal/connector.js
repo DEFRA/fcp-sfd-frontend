@@ -17,7 +17,7 @@ export const dalConnector = async (query, variables, email, tokenCache) => {
   }
 
   try {
-    const bearerToken = getTokenService(tokenCache)
+    const bearerToken = await getTokenService(tokenCache)
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {

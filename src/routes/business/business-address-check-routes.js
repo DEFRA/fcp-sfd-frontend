@@ -6,7 +6,8 @@ const getBusinessAddressCheck = {
   method: 'GET',
   path: '/business-address-check',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessAddressChangeService(request.yar, request.auth.credentials)
+    const { yar, auth, server } = request
+    const businessDetails = await fetchBusinessAddressChangeService(yar, auth.credentials, server.app.tokenCache)
     const pageData = businessAddressCheckPresenter(businessDetails)
 
     return h.view('business/business-address-check', pageData)
@@ -17,7 +18,8 @@ const postBusinessAddressCheck = {
   method: 'POST',
   path: '/business-address-check',
   handler: async (request, h) => {
-    await updateBusinessAddressChangeService(request.yar, request.auth.credentials)
+    const { yar, auth, server } = request
+    await updateBusinessAddressChangeService(yar, auth.credentials, server.app.tokenCache)
 
     return h.redirect('/business-details')
   }

@@ -27,6 +27,11 @@ describe('business phone numbers check', () => {
         crn: '987654321',
         email: 'test@example.com'
       }
+    },
+    server: {
+      app: {
+        tokenCache: 'mock-token-cache'
+      }
     }
   }
   let h
@@ -53,7 +58,7 @@ describe('business phone numbers check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessPhoneNumbersCheck.handler(request, h)
 
-        expect(fetchBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
       })
 
       test('should render business-phone-numbers-check view with page data', async () => {
@@ -81,7 +86,7 @@ describe('business phone numbers check', () => {
       test('sets the payload on the yar state', async () => {
         await postBusinessPhoneNumbersCheck.handler(request, h)
 
-        expect(updateBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(updateBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
       })
     })
   })

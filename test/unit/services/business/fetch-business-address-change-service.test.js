@@ -9,7 +9,6 @@ import { mappedData } from '../../../mocks/mock-business-details'
 
 // Thing under test
 import { fetchBusinessAddressChangeService } from '../../../../src/services/business/fetch-business-address-change-service.js'
-import { token } from '@hapi/jwt'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -33,7 +32,6 @@ describe('fetchBusinessAddressChangeService', () => {
       crn: '987654321',
       email: 'test@example.com'
     }
-
     token = 'test-token'
   })
 

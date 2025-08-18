@@ -45,6 +45,7 @@ describe('personalDetailsPresenter', () => {
       const result = personalDetailsPresenter(data, yar)
 
       expect(result).toEqual({
+        backLink: { href: '/home' },
         notification: { title: 'Update', text: 'Personal details updated successfully' },
         pageTitle: 'View and update your personal details',
         metaDescription: 'View and update your personal details.',

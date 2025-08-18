@@ -1,6 +1,6 @@
 services:
   fcp-sfd-frontend:
-    build: 
+    build:
       context: .
       target: development
     links:
@@ -13,7 +13,11 @@ services:
       NODE_ENV: development
       ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS:-false}
       DAL_ENDPOINT: ${DAL_ENDPOINT:-http://fcp-dal-api:3005/graphql}
+      DAL_TOKEN_ENDPOINT: https://login.microsoftonline.com/${DAL_TENANT_ID}/oauth2/v2.0/token
       DAL_CONNECTION: ${DAL_CONNECTION:-false}
+      DAL_CLIENT_ID: ${DAL_CLIENT_ID}
+      DAL_CLIENT_SECRET: ${DAL_CLIENT_SECRET}
+      DAL_TENANT_ID: ${DAL_TENANT_ID}
       DEFRA_ID_WELL_KNOWN_URL: ${DEFRA_ID_WELL_KNOWN_URL}
       DEFRA_ID_CLIENT_ID: ${DEFRA_ID_CLIENT_ID}
       DEFRA_ID_CLIENT_SECRET: ${DEFRA_ID_CLIENT_SECRET}

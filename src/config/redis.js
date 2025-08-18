@@ -1,11 +1,12 @@
 import { isProduction } from '../constants/environments.js'
+import { DEFAULT_CACHE_TTL_MINUTES } from '../constants/cache-keys.js'
 
 export const redisConfig = {
   redis: {
     host: {
       doc: 'Redis cache host',
       format: String,
-      default: '127.0.0.1',
+      default: 'redis:6379',
       env: 'REDIS_HOST'
     },
     username: {
@@ -38,6 +39,12 @@ export const redisConfig = {
       format: Boolean,
       default: isProduction,
       env: 'REDIS_TLS'
+    },
+    ttl: {
+      doc: 'Default cache TTL in milliseconds',
+      format: Number,
+      default: 1000 * 60 * DEFAULT_CACHE_TTL_MINUTES, // 58 minutes
+      env: 'REDIS_TTL'
     }
   }
 }

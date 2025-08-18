@@ -2,10 +2,11 @@ import { constants as httpConstants } from 'node:http2'
 import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
 import { formatDalResponse, mapDalErrors } from './dal-response.js'
+import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
-export const dalConnector = async (query, variables, email) => {
+export const dalConnector = async (query, variables, email, tokenCache) => {
   if (!email) {
     return formatDalResponse({
       statusCode: httpConstants.HTTP_STATUS_BAD_REQUEST,
@@ -16,10 +17,12 @@ export const dalConnector = async (query, variables, email) => {
   }
 
   try {
+    const bearerToken = getTokenService(tokenCache)
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
+        'Authorization': bearerToken,
         email
       },
       body: JSON.stringify({ query, variables })

@@ -23,7 +23,21 @@ vi.mock('../../../../src/presenters/business/business-legal-status-change-presen
 }))
 
 describe('business legal status change', () => {
-  const request = { yar: {} }
+  const request = {
+    yar: {},
+    auth: {
+      credentials: {
+        sbi: '123456789',
+        crn: '987654321',
+        email: 'test@example.com'
+      }
+    },
+    server: {
+      app: {
+        tokenCache: 'mock-token-cache'
+      }
+    }
+  }
   let h
 
   beforeEach(() => {
@@ -47,7 +61,7 @@ describe('business legal status change', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessLegalStatusChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
       })
 
       test('should render business-legal-status-change view with page data', async () => {

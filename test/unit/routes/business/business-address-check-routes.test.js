@@ -19,7 +19,16 @@ vi.mock('../../../../src/services/business/update-business-address-change-servic
 }))
 
 describe('business address check', () => {
-  const request = { yar: {} }
+  const request = {
+    yar: {},
+    auth: {
+      credentials: {
+        sbi: '123456789',
+        crn: '987654321',
+        email: 'test@example.com'
+      }
+    }
+  }
   let h
 
   beforeEach(() => {
@@ -44,7 +53,7 @@ describe('business address check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessAddressCheck.handler(request, h)
 
-        expect(fetchBusinessAddressChangeService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-address-check view with page data', async () => {
@@ -72,7 +81,7 @@ describe('business address check', () => {
       test('sets the payload on the yar state', async () => {
         await postBusinessAddressCheck.handler(request, h)
 
-        expect(updateBusinessAddressChangeService).toHaveBeenCalledWith(request.yar)
+        expect(updateBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
     })
   })

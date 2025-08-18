@@ -19,7 +19,16 @@ vi.mock('../../../../src/services/business/fetch-business-details-service.js', (
 }))
 
 describe('business address enter', () => {
-  const request = { yar: {} }
+  const request = {
+    yar: {},
+    auth: {
+      credentials: {
+        sbi: '123456789',
+        crn: '987654321',
+        email: 'test@example.com'
+      }
+    }
+  }
   let h
   let err
 
@@ -45,7 +54,7 @@ describe('business address enter', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-address-enter view with page data', async () => {

@@ -1,6 +1,8 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest'
 import * as cheerio from 'cheerio'
-import { createServer } from '../../../../src/server.js'
+import '../../../mocks/setup-server-mocks.js'
+
+const { createServer } = await import('../../../../src/server.js')
 
 describe('signed out route integration', async () => {
   let server

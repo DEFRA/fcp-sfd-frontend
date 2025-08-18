@@ -19,7 +19,16 @@ vi.mock('../../../../src/services/business/update-business-name-change-service.j
 }))
 
 describe('business name check', () => {
-  const request = { yar: {} }
+  const request = {
+    yar: {},
+    auth: {
+      credentials: {
+        sbi: '123456789',
+        crn: '987654321',
+        email: 'test@example.com'
+      }
+    }
+  }
   let h
 
   beforeEach(() => {
@@ -44,7 +53,7 @@ describe('business name check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessNameCheck.handler(request, h)
 
-        expect(fetchBusinessNameChangeService).toHaveBeenCalledWith(request.yar)
+        expect(fetchBusinessNameChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-name-check view with page data', async () => {
@@ -72,7 +81,7 @@ describe('business name check', () => {
       test('sets the payload on the yar state', async () => {
         await postBusinessNameCheck.handler(request, h)
 
-        expect(updateBusinessNameChangeService).toHaveBeenCalledWith(request.yar)
+        expect(updateBusinessNameChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
     })
   })

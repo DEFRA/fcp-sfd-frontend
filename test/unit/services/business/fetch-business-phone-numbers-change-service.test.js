@@ -16,8 +16,9 @@ vi.mock('../../../../src/services/business/fetch-business-details-service', () =
 }))
 
 describe('fetchBusinessPhoneNumbersChangeService', () => {
-  let data
+  const data = mappedData
   let yar
+  let credentials
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -25,8 +26,11 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
     yar = {
       set: vi.fn()
     }
-
-    data = mappedData
+    credentials = {
+      sbi: '123456789',
+      crn: '987654321',
+      email: 'test@example.com'
+    }
   })
 
   describe('when called', () => {
@@ -36,10 +40,10 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessMobile: null, changeBusinessTelephone: '01234031859' })
         expect(result).toEqual({ ...data, changeBusinessMobile: null, changeBusinessTelephone: '01234031859' })
       })
     })
@@ -55,10 +59,10 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessTelephone: '01234031859' })
         expect(result).toEqual({ ...data, changeBusinessTelephone: '01234031859' })
       })
     })
@@ -74,10 +78,10 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessMobile: '01111 111111' })
         expect(result).toEqual({ ...data, changeBusinessMobile: '01111 111111' })
       })
     })
@@ -93,10 +97,10 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual({ ...data, changeBusinessTelephone: '02222 222222' })
       })
     })
@@ -112,10 +116,10 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessTelephone: null })
         expect(result).toEqual({ ...data, changeBusinessMobile: null })
       })
     })

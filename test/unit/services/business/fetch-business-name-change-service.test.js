@@ -18,12 +18,18 @@ vi.mock('../../../../src/services/business/fetch-business-details-service', () =
 describe('fetchBusinessNameChangeService', () => {
   const data = mappedData
   let yar
+  let credentials
 
   beforeEach(() => {
     vi.clearAllMocks()
 
     yar = {
       set: vi.fn()
+    }
+    credentials = {
+      sbi: '123456789',
+      crn: '987654321',
+      email: 'test@example.com'
     }
   })
 
@@ -34,10 +40,10 @@ describe('fetchBusinessNameChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessNameChangeService(yar)
+        const result = await fetchBusinessNameChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessName: 'HENLEY, RE' })
         expect(result).toEqual({ ...data, changeBusinessName: 'HENLEY, RE' })
       })
     })
@@ -53,10 +59,10 @@ describe('fetchBusinessNameChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessNameChangeService(yar)
+        const result = await fetchBusinessNameChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalled(yar)
-        expect(yar.set).toHaveBeenCalled(data)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual(data)
       })
     })

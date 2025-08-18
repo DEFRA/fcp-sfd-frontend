@@ -2,7 +2,6 @@ services:
   fcp-sfd-frontend:
     command: npm run test:watch
     volumes:
-      - ./.git:/home/node/.git
       - ./src/:/home/node/src
       - ./test/:/home/node/test
       - ./package.json:/home/node/package.json

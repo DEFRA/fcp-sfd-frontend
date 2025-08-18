@@ -1,4 +1,4 @@
-import { constants as httpConstants } from 'http2'
+import { constants as httpConstants } from 'node:http2'
 import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
 import { formatDalResponse, mapDalErrors } from './dal-response.js'

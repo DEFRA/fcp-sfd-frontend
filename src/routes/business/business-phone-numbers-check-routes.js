@@ -6,7 +6,7 @@ const getBusinessPhoneNumbersCheck = {
   method: 'GET',
   path: '/business-phone-numbers-check',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessPhoneNumbersChangeService(request.yar)
+    const businessDetails = await fetchBusinessPhoneNumbersChangeService(request.yar, request.auth.credentials)
     const pageData = businessPhoneNumbersCheckPresenter(businessDetails)
 
     return h.view('business/business-phone-numbers-check', pageData)
@@ -17,7 +17,7 @@ const postBusinessPhoneNumbersCheck = {
   method: 'POST',
   path: '/business-phone-numbers-check',
   handler: async (request, h) => {
-    await updateBusinessPhoneNumbersChangeService(request.yar)
+    await updateBusinessPhoneNumbersChangeService(request.yar, request.auth.credentials)
 
     return h.redirect('/business-details')
   }

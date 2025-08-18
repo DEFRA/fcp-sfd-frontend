@@ -11,7 +11,12 @@ services:
     environment:
       ALLOW_ERROR_VIEWS: false
       DAL_ENDPOINT: http://fcp-dal-api:3005/graphql
-      DAL_CONNECTION: true
+      DAL_CONNECTION: false
+      DEFRA_ID_WELL_KNOWN_URL: https://accounts.test.com/.well-known/openid-configuration
+      DEFRA_ID_CLIENT_ID: test-client-id
+      DEFRA_ID_CLIENT_SECRET: test-client-secret
+      DEFRA_ID_SERVICE_ID: test-service-id
+      DEFRA_ID_POLICY: test-policy
     depends_on:
       fcp-dal-api:
         condition: service_started
@@ -22,9 +27,3 @@ services:
       - ./test/:/home/node/test
       - ./package.json:/home/node/package.json
       - ./coverage:/home/node/coverage
-    networks:
-      - fcp-sfd
-
-networks:
-  fcp-sfd:
-    driver: bridge

@@ -7,6 +7,7 @@ import { addressPresenter } from '../address-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
   return {
+    backLink: { href: '/home' },
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',

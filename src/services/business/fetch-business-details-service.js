@@ -12,24 +12,24 @@ import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-business-details.js'
 
-const fetchBusinessDetailsService = async (yar, credentials, token) => {
+const fetchBusinessDetailsService = async (yar, credentials, tokenCache) => {
   const businessDetails = yar.get('businessDetails')
   if (businessDetails) {
     return businessDetails
   }
 
   const { sbi, crn, email } = credentials
-  const businessDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(sbi, crn, email, token) : mappedData
+  const businessDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(sbi, crn, email, tokenCache) : mappedData
 
   yar.set('businessDetails', businessDetailsData)
 
   return businessDetailsData
 }
 
-const getFromDal = async (sbi, crn, email, token) => {
+const getFromDal = async (sbi, crn, email, tokenCache) => {
   const variables = { sbi, crn }
 
-  const dalResponse = await dalConnector(businessDetailsQuery, variables, email, token)
+  const dalResponse = await dalConnector(businessDetailsQuery, variables, email, tokenCache)
 
   if (dalResponse.data) {
     const mappedResponse = mapBusinessDetails(dalResponse.data)

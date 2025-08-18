@@ -23,7 +23,7 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 describe('updateBusinessAddressChangeService', () => {
   let yar
   let credentials
-  let token
+  let tokenCache
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -40,19 +40,19 @@ describe('updateBusinessAddressChangeService', () => {
       set: vi.fn().mockReturnValue()
     }
     credentials = { sbi: '123456789', crn: '987654321', email: 'test@example.com' }
-    token = 'test-token'
+    tokenCache = 'test-token'
   })
 
   describe('when called', () => {
     test('it correctly saves the data to the session', async () => {
-      await updateBusinessAddressChangeService(yar, credentials, token)
+      await updateBusinessAddressChangeService(yar, credentials, tokenCache)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, token)
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
       expect(yar.set).toHaveBeenCalledWith('businessDetails', savedData())
     })
 
     test('adds a flash notification confirming the change in data', async () => {
-      await updateBusinessAddressChangeService(yar, credentials, token)
+      await updateBusinessAddressChangeService(yar, credentials, tokenCache)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business address')
     })

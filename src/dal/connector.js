@@ -25,7 +25,7 @@ export const dalConnector = async (query, variables, email, tokenCache) => {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        'Authorization': bearerToken,
+        Authorization: bearerToken,
         email: emailHeader
       },
       body: JSON.stringify({ query, variables })

@@ -18,12 +18,15 @@ export const dalConnector = async (query, variables, email, tokenCache) => {
 
   try {
     const bearerToken = await getTokenService(tokenCache)
+    const emailHeader = config.get('dalConfig.email')
+
+    // Email needs to be updated to use the real customer email address not the test email
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
         'Authorization': bearerToken,
-        email
+        email: emailHeader
       },
       body: JSON.stringify({ query, variables })
     })

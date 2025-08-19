@@ -2,7 +2,7 @@ import Joi from 'joi'
 import { VAT_NUMBER_MAX } from '../../constants/validation-fields.js'
 
 export const businessVatSchema = Joi.object({
-  businessVat: Joi.string()
+  vatNumber: Joi.string()
     .messages({
       'string.max': `VAT registration number must be ${VAT_NUMBER_MAX} characters or fewer`,
       'string.empty': 'Enter a VAT registration number',

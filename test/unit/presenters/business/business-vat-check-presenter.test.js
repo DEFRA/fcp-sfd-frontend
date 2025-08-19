@@ -38,7 +38,7 @@ describe('businessVatCheckPresenter', () => {
     })
   })
 
-  describe('the "vatNumber" property', () => {
+  describe('the "businessName" property', () => {
     describe('when the businessName property is missing', () => {
       beforeEach(() => {
         delete data.info.businessName
@@ -81,7 +81,7 @@ describe('businessVatCheckPresenter', () => {
   })
 
   describe('the "vatNumber" property', () => {
-    describe('when provided with a changed business vat number', () => {
+    describe('when provided with a changed vat number', () => {
       beforeEach(() => {
         data.vatNumber = 'GB987654321'
       })

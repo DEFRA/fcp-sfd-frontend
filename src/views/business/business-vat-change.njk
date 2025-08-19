@@ -17,7 +17,7 @@
         titleText: "There is a problem",
         errorList: [
           {
-            text: errors.businessVat.text,
+            text: errors.vatNumber.text,
             href: "#business-vat"
           }
         ]
@@ -37,10 +37,10 @@
           },
           classes: "govuk-input--width-20",
           id: "business-vat",
-          name: "businessVat",
-          value: businessVat,
-          errorMessage: errors.businessVat and {
-            text: errors.businessVat.text
+          name: "vatNumber",
+            value: vatNumber,
+          errorMessage: errors.vatNumber and {
+            text: errors.vatNumber.text
           }
         }) }}
       </div>

@@ -47,6 +47,8 @@
       <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
     {% endset %}
 
+    {% set vatDisplayValue = vatNumber or "No number added" %}
+
     {{ govukSummaryList({
       rows: [
         {
@@ -124,59 +126,77 @@
       Reference numbers
     </h2>
 
-    {{ govukSummaryList({
-      rows: [
-        {
-          key: {
-            text: "Single business identifier (SBI)"
+    {# Logic to display the correct link actions for the VAT number #}
+      {% if vatNumber %}
+        {% set vatActions = [
+          {
+            href: "/business-vat-remove",
+            text: "Remove",
+            visuallyHiddenText: "Remove VAT registration number"
           },
-          value: {
-            text: sbi
+          {
+            href: "/business-vat-change",
+            text: "Change",
+            visuallyHiddenText: "Change VAT registration number"
           }
-        },
-            {
-          key: {
-            text: "VAT registration number"
-          },
-          value: {
-            text: businessVat
-          },
-          actions: {
-            items: [
-              {
-                href: "/business-vat-change",
-                text: "Change",
-                visuallyHiddenText: "VAT registration number"
-              }
-            ]
+        ] %}
+      {% else %}
+        {% set vatActions = [
+          {
+            href: "/business-vat-change",
+            text: "Add",
+            visuallyHiddenText: "Add VAT registration number"
           }
-        },
-        {
-          key: {
-            text: "Trader number"
+        ] %}
+      {% endif %}
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: {
+              text: "Single business identifier (SBI)"
+            },
+            value: {
+              text: sbi
+            }
           },
-          value: {
-            text: tradeNumber
-          }
-        },
-        {
-          key: {
-            text: "Vendor registration number"
+          {
+            key: {
+              text: "VAT registration number"
+            },
+            value: {
+              text: vatDisplayValue
+            },
+            actions: {
+              items: vatActions
+            }
           },
-          value: {
-            text: vendorRegistrationNumber
-          }
-        },
-        {
-          key: {
-            text: "County Parish Holding (CPH) numbers"
+          {
+            key: {
+              text: "Trader number"
+            },
+            value: {
+              text: tradeNumber
+            }
           },
-          value: {
-            html: formattedCph
+          {
+            key: {
+              text: "Vendor registration number"
+            },
+            value: {
+              text: vendorRegistrationNumber
+            }
+          },
+          {
+            key: {
+              text: "County Parish Holding (CPH) numbers"
+            },
+            value: {
+              html: formattedCph
+            }
           }
-        }
-      ]
-    }) }}
+        ]
+      }) }}
 
     <h2 class="govuk-heading-m">
       Additional details

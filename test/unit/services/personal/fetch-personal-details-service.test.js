@@ -30,6 +30,8 @@ describe('fetchPersonalDetailsService', () => {
   let data
   let mappedDalData
   let yar
+  let credentials
+  let tokenCache
 
   beforeEach(async () => {
     vi.clearAllMocks()
@@ -45,6 +47,12 @@ describe('fetchPersonalDetailsService', () => {
         get: vi.fn().mockReturnValue(null),
         set: vi.fn()
       }
+      credentials = {
+        sbi: '132432422',
+        crn: '64363553663',
+        email: 'test.farmer@test.farm.com'
+      }
+      tokenCache = 'test-token'
     })
     describe('when DAL_CONNECTION is true', () => {
       beforeEach(() => {
@@ -54,13 +62,13 @@ describe('fetchPersonalDetailsService', () => {
       })
 
       test('dalConnector is called', async () => {
-        await fetchPersonalDetailsService(yar)
+        await fetchPersonalDetailsService(yar, credentials, tokenCache)
 
         expect(dalConnector).toHaveBeenCalled()
       })
 
       test('it correctly returns mappedData if dalConnector response has object data', async () => {
-        const result = await fetchPersonalDetailsService(yar)
+        const result = await fetchPersonalDetailsService(yar, credentials, tokenCache)
 
         expect(result).toMatchObject(mappedDalData)
       })
@@ -68,7 +76,7 @@ describe('fetchPersonalDetailsService', () => {
       test('it returns the full response object if dalConnector response has no object data', async () => {
         const dalErrorResponse = { error: 'error response from dal' }
         dalConnector.mockResolvedValue(dalErrorResponse)
-        const result = await fetchPersonalDetailsService(yar)
+        const result = await fetchPersonalDetailsService(yar, credentials, tokenCache)
 
         expect(result).toMatchObject(dalErrorResponse)
       })
@@ -81,13 +89,13 @@ describe('fetchPersonalDetailsService', () => {
         mockMappedValue.mockResolvedValue({})
       })
       test('dalConnector is not called', async () => {
-        await fetchPersonalDetailsService(yar)
+        await fetchPersonalDetailsService(yar, credentials, tokenCache)
 
         expect(dalConnector).not.toHaveBeenCalled()
       })
 
       test('it correctly returns data static data source', async () => {
-        const result = await fetchPersonalDetailsService(yar)
+        const result = await fetchPersonalDetailsService(yar, credentials, tokenCache)
 
         expect(result).toMatchObject(mappedData)
       })
@@ -102,7 +110,7 @@ describe('fetchPersonalDetailsService', () => {
     })
 
     test('it correctly returns session data', async () => {
-      const result = await fetchPersonalDetailsService(yar)
+      const result = await fetchPersonalDetailsService(yar, credentials, tokenCache)
 
       expect(result).toMatchObject(getSessionData)
     })

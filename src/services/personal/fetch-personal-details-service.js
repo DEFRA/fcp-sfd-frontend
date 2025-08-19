@@ -12,30 +12,27 @@ import { mapPersonalDetails } from '../../mappers/personal-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-personal-details.js'
 
-const fetchPersonalDetailsService = async (yar) => {
+const fetchPersonalDetailsService = async (yar, credentials, tokenCache) => {
   const personalDetails = yar.get('personalDetails')
 
   if (personalDetails) {
     return personalDetails
   }
 
-  const personalDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(yar) : mappedData
+  const personalDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(credentials, tokenCache) : mappedData
 
   yar.set('personalDetails', personalDetailsData)
 
   return personalDetailsData
 }
 
-const getFromDal = async (yar) => {
-  // replace variables and email when defraId is setup
-  const variables = { sbi: '107183280', crn: '9477368292' }
-  const email = 'not-a-real-email@test.co.uk'
+const getFromDal = async (credentials, tokenCache) => {
+  const { sbi, crn, email } = credentials
 
-  const dalResponse = await dalConnector(personalDetailsQuery, variables, email)
+  const dalResponse = await dalConnector(personalDetailsQuery, { sbi, crn }, email, tokenCache)
 
   if (dalResponse.data) {
     const mappedResponse = mapPersonalDetails(dalResponse.data)
-    yar.set('personalDetails', mappedResponse)
 
     return mappedResponse
   }

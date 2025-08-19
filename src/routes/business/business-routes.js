@@ -9,6 +9,8 @@ import { businessNameCheckRoutes } from './business-name-check-routes.js'
 import { businessPhoneNumbersChangeRoutes } from './business-phone-numbers-change-routes.js'
 import { businessPhoneNumbersCheckRoutes } from './business-phone-numbers-check-routes.js'
 import { businessTypeRoutes } from './business-type-change-routes.js'
+import { businessVatChangeRoutes } from './business-vat-change-routes.js'
+import { businessVatCheckRoutes } from './business-vat-check-routes.js'
 import { exampleDalConnectionRoute } from './example-routes.js'
 
 export const businessRoutes = [

@@ -159,10 +159,13 @@ describe('auth routes', () => {
         auth: {
           strategy: 'defra-id',
           credentials
+        },
+        app: {
+          tokenCache: 'tokenCache'
         }
       })
       const { sbi, crn, email } = credentials.profile
-      expect(mockGetPermissions).toHaveBeenCalledWith(sbi, crn, email)
+      expect(mockGetPermissions).toHaveBeenCalledWith(sbi, crn, email, server.app.tokenCache)
     })
 
     test('should set authentication status in session cache', async () => {

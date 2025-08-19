@@ -15,13 +15,21 @@ vi.mock('../../../../src/auth/get-oidc-config.js', async () => {
   }
 })
 
+vi.mock('../../../../src/services/DAL/token/get-token-service.js', async () => {
+  return {
+    getTokenService: vi.fn(async () => 'mock-bearer-token')
+  }
+})
+
 const { createServer } = await import('../../../../src/server.js')
 const { config } = await import('../../../../src/config/index.js')
 
 describe('Data access layer (DAL) connector integration', () => {
   let server
+  let tokenCache
 
   beforeAll(async () => {
+    tokenCache = 'test-token'
     server = await createServer()
     await server.initialize()
   })
@@ -39,7 +47,8 @@ describe('Data access layer (DAL) connector integration', () => {
         sbi: '107591843',
         crn: '9477368292'
       },
-      'test.user11@defra.gov.uk'
+      'test.user11@defra.gov.uk',
+      tokenCache
     )
 
     expect(result.data).toBeDefined()
@@ -62,7 +71,7 @@ describe('Data access layer (DAL) connector integration', () => {
     try {
       config.set('dalConfig.endpoint', 'http://nonexistent-domain-12345.invalid/graphql')
 
-      const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+      const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk', tokenCache)
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -81,7 +90,7 @@ describe('Data access layer (DAL) connector integration', () => {
       }
     `
 
-    const result = await dalConnector(invalidQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
+    const result = await dalConnector(invalidQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk', tokenCache)
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
@@ -90,7 +99,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should handle missing required query params as bad request (400) error', async () => {
-    const result = await dalConnector(exampleQuery, {}, 'test.user11@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, {}, 'test.user11@defra.gov.uk', tokenCache)
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()

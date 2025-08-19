@@ -23,5 +23,7 @@ export const businessRoutes = [
   ...businessPhoneNumbersChangeRoutes,
   ...businessPhoneNumbersCheckRoutes,
   ...businessTypeRoutes,
+  ...businessVatChangeRoutes,
+  ...businessVatCheckRoutes,
   exampleDalConnectionRoute
 ]

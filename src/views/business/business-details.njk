@@ -134,12 +134,21 @@
             text: sbi
           }
         },
-        {
+            {
           key: {
             text: "VAT registration number"
           },
           value: {
-            text: vatNumber
+            text: businessVat
+          },
+          actions: {
+            items: [
+              {
+                href: "/business-vat-change",
+                text: "Change",
+                visuallyHiddenText: "VAT registration number"
+              }
+            ]
           }
         },
         {

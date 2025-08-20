@@ -71,7 +71,7 @@ describe('Data access layer (DAL) connector integration', () => {
     try {
       config.set('dalConfig.endpoint', 'http://nonexistent-domain-12345.invalid/graphql')
 
-      const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk', tokenCache)
+      const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -90,7 +90,7 @@ describe('Data access layer (DAL) connector integration', () => {
       }
     `
 
-    const result = await dalConnector(invalidQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk', tokenCache)
+    const result = await dalConnector(invalidQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
@@ -99,7 +99,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should handle missing required query params as bad request (400) error', async () => {
-    const result = await dalConnector(exampleQuery, {}, 'test.user11@defra.gov.uk', tokenCache)
+    const result = await dalConnector(exampleQuery, {}, 'test.user11@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()

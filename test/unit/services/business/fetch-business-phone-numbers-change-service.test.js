@@ -19,7 +19,6 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
   const data = mappedData
   let yar
   let credentials
-  let tokenCache
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -32,7 +31,6 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       crn: '987654321',
       email: 'test@example.com'
     }
-    tokenCache = 'test-token'
   })
 
   describe('when called', () => {
@@ -42,9 +40,9 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials, tokenCache)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessMobile: null, changeBusinessTelephone: '01234031859' })
         expect(result).toEqual({ ...data, changeBusinessMobile: null, changeBusinessTelephone: '01234031859' })
       })
@@ -61,9 +59,9 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials, tokenCache)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessTelephone: '01234031859' })
         expect(result).toEqual({ ...data, changeBusinessTelephone: '01234031859' })
       })
@@ -80,9 +78,9 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials, tokenCache)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessMobile: '01111 111111' })
         expect(result).toEqual({ ...data, changeBusinessMobile: '01111 111111' })
       })
@@ -99,9 +97,9 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials, tokenCache)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual({ ...data, changeBusinessTelephone: '02222 222222' })
       })
@@ -118,9 +116,9 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials, tokenCache)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessTelephone: null })
         expect(result).toEqual({ ...data, changeBusinessMobile: null })
       })

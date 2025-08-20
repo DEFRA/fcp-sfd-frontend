@@ -5,8 +5,8 @@ const getBusinessTypeChange = {
   method: 'GET',
   path: '/business-type-change',
   handler: async (request, h) => {
-    const { yar, auth, server } = request
-    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials, server.app.tokenCache)
+    const { yar, auth } = request
+    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials)
     const pageData = businessTypeChangePresenter(businessDetails)
 
     return h.view('business/business-type-change', pageData)

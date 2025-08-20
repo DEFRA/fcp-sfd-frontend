@@ -27,11 +27,6 @@ describe('business email check', () => {
         crn: '987654321',
         email: 'test@example.com'
       }
-    },
-    server: {
-      app: {
-        tokenCache: 'mock-token-cache'
-      }
     }
   }
   let h
@@ -58,7 +53,7 @@ describe('business email check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessEmailCheck.handler(request, h)
 
-        expect(fetchBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(fetchBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-email-check view with page data', async () => {
@@ -86,7 +81,7 @@ describe('business email check', () => {
       test('sets the payload on the yar state', async () => {
         await postBusinessEmailCheck.handler(request, h)
 
-        expect(updateBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(updateBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
     })
   })

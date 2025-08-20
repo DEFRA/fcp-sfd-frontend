@@ -49,29 +49,29 @@ describe('getPermissions', () => {
       mockConfigGet.mockReturnValue(true)
     })
     test('should call dalConnector with getPermission parameters', async () => {
-      await getPermissions(sbi, crn, email, tokenCache)
-      expect(dalConnector).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, email, tokenCache)
+      await getPermissions(sbi, crn, email)
+      expect(dalConnector).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, email)
     })
     test('should call mapPermissions when dalConnector response has data', async () => {
-      await getPermissions(sbi, crn, email, tokenCache)
+      await getPermissions(sbi, crn, email)
       expect(mapPermissions).toHaveBeenCalledWith(dalData)
     })
 
     test('should return mapped data  when dalConnector response has data', async () => {
-      const result = await getPermissions(sbi, crn, email, tokenCache)
+      const result = await getPermissions(sbi, crn, email)
       expect(result).toBe(mappedData)
     })
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
       dalConnector.mockResolvedValue({ })
-      await getPermissions(sbi, crn, email, tokenCache)
+      await getPermissions(sbi, crn, email)
       expect(mapPermissions).not.toHaveBeenCalled()
     })
 
     test('should return dalConnector response when dalConnector response has no data', async () => {
       const dalResponse = { response: 'no-dal-data' }
       dalConnector.mockResolvedValue(dalResponse)
-      const result = await getPermissions(sbi, crn, email, tokenCache)
+      const result = await getPermissions(sbi, crn, email)
       expect(result).toBe(dalResponse)
     })
   })
@@ -81,12 +81,12 @@ describe('getPermissions', () => {
       mockConfigGet.mockReturnValue(false)
     })
     test('dalConnector is not called', async () => {
-      await getPermissions(sbi, crn, email, tokenCache)
+      await getPermissions(sbi, crn, email)
       expect(dalConnector).not.toHaveBeenCalled()
     })
 
     test('it correctly returns data static data source', async () => {
-      const result = await getPermissions(sbi, crn, email, tokenCache)
+      const result = await getPermissions(sbi, crn, email)
       expect(result).toMatchObject(mappedData)
     })
   })

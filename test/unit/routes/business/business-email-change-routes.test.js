@@ -27,11 +27,6 @@ describe('business email change', () => {
         crn: '987654321',
         email: 'test@example.com'
       }
-    },
-    server: {
-      app: {
-        tokenCache: 'mock-token-cache'
-      }
     }
   }
   let h
@@ -59,7 +54,7 @@ describe('business email change', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessEmailChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-email-change.njk view with page data', async () => {

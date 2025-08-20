@@ -45,11 +45,6 @@ describe('business details', () => {
               crn: '987654321',
               email: 'test@example.com'
             }
-          },
-          server: {
-            app: {
-              tokenCache: 'mock-token-cache'
-            }
           }
         }
 
@@ -60,7 +55,7 @@ describe('business details', () => {
       test('it calls the fetch business details service', async () => {
         await getBusinessDetails.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
     })

@@ -4,7 +4,10 @@ import { exampleQuery } from '../../../src/dal/queries/example-query.js'
 
 vi.mock('../../../src/config/index.js', () => ({
   config: {
-    get: vi.fn().mockReturnValue('http://test-dal-endpoint/graphql')
+    get: vi.fn((key) => {
+      if (key === 'dalConfig.endpoint') return 'http://test-dal-endpoint/graphql'
+      if (key === 'dalConfig.email') return 'mock-test-user@defra.gov.uk'
+    })
   }
 }))
 
@@ -61,6 +64,7 @@ describe('DAL (data access layer) connector', () => {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
+          Authorization: 'Bearer mock-token',
           email: 'mock-test-user@defra.gov.uk'
         },
         body: JSON.stringify({

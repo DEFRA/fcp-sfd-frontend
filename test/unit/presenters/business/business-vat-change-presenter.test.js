@@ -106,5 +106,19 @@ describe('businessVatChangePresenter', () => {
         expect(result.vatNumber).toEqual('GB876543219')
       })
     })
+
+    describe('when all vat sources are missing', () => {
+      beforeEach(() => {
+        delete data.info.vat
+        delete data.vatNumber
+        payload = undefined
+      })
+
+      test('it should return vatNumber as null', () => {
+        const result = businessVatChangePresenter(data, payload)
+
+        expect(result.vatNumber).toEqual(null)
+      })
+    })
   })
 })

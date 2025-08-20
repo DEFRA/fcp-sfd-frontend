@@ -125,14 +125,7 @@ describe('business VAT change', () => {
       test('it renders the view with errors', async () => {
         await postBusinessVatChange.options.validate.failAction(request, h, err)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-change', {
-          ...getPageData(),
-          errors: {
-            vatNumber: {
-              text: 'Enter a VAT registration number'
-            }
-          }
-        })
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-change', getPageDataError())
       })
 
       test('it returns a bad request status code', async () => {
@@ -140,6 +133,16 @@ describe('business VAT change', () => {
 
         expect(result.code).toHaveBeenCalledWith(400)
         expect(result.takeover).toHaveBeenCalled()
+      })
+
+      test('it should handle undefined errors', async () => {
+        // Calling the fail action handler
+        await postBusinessVatChange.options.validate.failAction(request, h, [])
+
+        const pageData = getPageDataError()
+        pageData.errors = {}
+
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-change', pageData)
       })
     })
   })
@@ -167,5 +170,22 @@ const getPageData = () => {
     sbi: '123456789',
     userName: 'Alfred Waldron',
     vatNumber: 'GB123456789'
+  }
+}
+
+const getPageDataError = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What is your VAT registration number?',
+    metaDescription: 'Update the VAT registration number for your business.',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron',
+    vatNumber: 'GB123456789',
+    errors: {
+      vatNumber: {
+        text: 'Enter a VAT registration number'
+      }
+    }
   }
 }

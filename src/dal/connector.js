@@ -3,10 +3,13 @@ import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
 import { formatDalResponse, mapDalErrors } from './dal-response.js'
 import { getTokenService } from '../services/DAL/token/get-token-service.js'
+import { getTokenCache } from '../server.js'
 
 const logger = createLogger()
 
-export const dalConnector = async (query, variables, email, tokenCache) => {
+export const dalConnector = async (query, variables, email) => {
+  const tokenCache = getTokenCache()
+
   if (!email) {
     return formatDalResponse({
       statusCode: httpConstants.HTTP_STATUS_BAD_REQUEST,

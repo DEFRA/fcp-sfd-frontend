@@ -8,6 +8,8 @@ import { setupProxy } from './utils/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 
+let tokenCache
+
 export const createServer = async () => {
   setupProxy()
 
@@ -64,10 +66,16 @@ export const createServer = async () => {
     expiresIn: config.get('redis.ttl')
   })
 
+  tokenCache = server.app.tokenCache
+
   server.validator(Joi)
   await server.register(plugins)
 
   server.ext('onPreResponse', catchAll)
 
   return server
+}
+
+export const getTokenCache = () => {
+  return tokenCache
 }

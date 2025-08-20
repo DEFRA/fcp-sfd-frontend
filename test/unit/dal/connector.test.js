@@ -14,6 +14,10 @@ vi.mock('../../../src/utils/logger.js', () => ({
   })
 }))
 
+vi.mock('../../../src/services/DAL/token/get-token-service.js', () => ({
+  getTokenService: vi.fn().mockResolvedValue('Bearer mock-token')
+}))
+
 describe('DAL (data access layer) connector', () => {
   const originalFetch = global.fetch
 

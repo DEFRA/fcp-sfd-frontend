@@ -38,7 +38,7 @@
 
     {% set formattedCph %}
       {% for cphNumber in countyParishHoldingNumbers %}
-       <div> {{cphNumber}} </div>
+        <div> {{cphNumber}} </div>
       {% endfor %}
     {% endset %}
 
@@ -126,77 +126,69 @@
       Reference numbers
     </h2>
 
-    {# Logic to display the correct link actions for the VAT number #}
-      {% if vatNumber %}
-        {% set vatActions = [
-          {
-            href: "/business-vat-remove",
-            text: "Remove",
-            visuallyHiddenText: "Remove VAT registration number"
-          },
-          {
-            href: "/business-vat-change",
-            text: "Change",
-            visuallyHiddenText: "Change VAT registration number"
-          }
-        ] %}
-      {% else %}
-        {% set vatActions = [
-          {
-            href: "/business-vat-change",
-            text: "Add",
-            visuallyHiddenText: "Add VAT registration number"
-          }
-        ] %}
-      {% endif %}
-
-      {{ govukSummaryList({
-        rows: [
-          {
-            key: {
-              text: "Single business identifier (SBI)"
-            },
-            value: {
-              text: sbi
-            }
-          },
-          {
-            key: {
-              text: "VAT registration number"
-            },
-            value: {
-              text: vatDisplayValue
-            },
-            actions: {
-              items: vatActions
-            }
-          },
-          {
-            key: {
-              text: "Trader number"
-            },
-            value: {
-              text: tradeNumber
-            }
-          },
-          {
-            key: {
-              text: "Vendor registration number"
-            },
-            value: {
-              text: vendorRegistrationNumber
-            }
-          },
-          {
-            key: {
-              text: "County Parish Holding (CPH) numbers"
-            },
-            value: {
-              html: formattedCph
-            }
-          }
-        ]
-      }) }}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Single business identifier (SBI)
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ sbi }}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            VAT registration number
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ vatDisplayValue }}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            {# Logic to display the correct link actions for the VAT number #}
+            {% if vatNumber %}
+              <ul class="govuk-summary-list__actions-list">
+                <li class="govuk-summary-list__actions-list-item">
+                  <a class="govuk-link" href="/business-vat-remove">
+                    Remove<span class="govuk-visually-hidden"> VAT registration number</span>
+                  </a>
+                </li>
+                <li class="govuk-summary-list__actions-list-item">
+                  <a class="govuk-link" href="/business-vat-change">
+                    Change<span class="govuk-visually-hidden"> VAT registration number</span>
+                  </a>
+                </li>
+              </ul>
+            {% else %}
+              <a class="govuk-link" href="/business-vat-change">
+                Add<span class="govuk-visually-hidden"> VAT registration number</span>
+              </a>
+            {% endif %}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Trader number
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ tradeNumber }}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Vendor registration number
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ vendorRegistrationNumber }}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            County Parish Holding (CPH) numbers
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ formattedCph | safe }}
+          </dd>
+        </div>
+      </dl>
 
     <h2 class="govuk-heading-m">
       Additional details

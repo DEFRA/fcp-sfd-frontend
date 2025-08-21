@@ -31,7 +31,6 @@ describe('fetchPersonalDetailsService', () => {
   let mappedDalData
   let yar
   let credentials
-  let 
 
   beforeEach(async () => {
     vi.clearAllMocks()
@@ -52,7 +51,6 @@ describe('fetchPersonalDetailsService', () => {
         crn: '64363553663',
         email: 'test.farmer@test.farm.com'
       }
-       = 'test-token'
     })
     describe('when DAL_CONNECTION is true', () => {
       beforeEach(() => {
@@ -62,13 +60,13 @@ describe('fetchPersonalDetailsService', () => {
       })
 
       test('dalConnector is called', async () => {
-        await fetchPersonalDetailsService(yar, credentials, )
+        await fetchPersonalDetailsService(yar, credentials)
 
         expect(dalConnector).toHaveBeenCalled()
       })
 
       test('it correctly returns mappedData if dalConnector response has object data', async () => {
-        const result = await fetchPersonalDetailsService(yar, credentials, )
+        const result = await fetchPersonalDetailsService(yar, credentials)
 
         expect(result).toMatchObject(mappedDalData)
       })
@@ -76,7 +74,7 @@ describe('fetchPersonalDetailsService', () => {
       test('it returns the full response object if dalConnector response has no object data', async () => {
         const dalErrorResponse = { error: 'error response from dal' }
         dalConnector.mockResolvedValue(dalErrorResponse)
-        const result = await fetchPersonalDetailsService(yar, credentials, )
+        const result = await fetchPersonalDetailsService(yar, credentials)
 
         expect(result).toMatchObject(dalErrorResponse)
       })
@@ -89,13 +87,13 @@ describe('fetchPersonalDetailsService', () => {
         mockMappedValue.mockResolvedValue({})
       })
       test('dalConnector is not called', async () => {
-        await fetchPersonalDetailsService(yar, credentials, )
+        await fetchPersonalDetailsService(yar, credentials)
 
         expect(dalConnector).not.toHaveBeenCalled()
       })
 
       test('it correctly returns data static data source', async () => {
-        const result = await fetchPersonalDetailsService(yar, credentials, )
+        const result = await fetchPersonalDetailsService(yar, credentials)
 
         expect(result).toMatchObject(mappedData)
       })
@@ -110,7 +108,7 @@ describe('fetchPersonalDetailsService', () => {
     })
 
     test('it correctly returns session data', async () => {
-      const result = await fetchPersonalDetailsService(yar, credentials, )
+      const result = await fetchPersonalDetailsService(yar, credentials)
 
       expect(result).toMatchObject(getSessionData)
     })

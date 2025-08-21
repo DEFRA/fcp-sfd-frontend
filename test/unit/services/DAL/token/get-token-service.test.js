@@ -67,7 +67,7 @@ describe('getTokenService', () => {
       payload: {
         token_type: 'Bearer',
         access_token: 'new-access-token',
-        expires_in: 3600 * 1000 // 1 hour in ms
+        expires_in: 354 * 1000 // 1 hour in ms
       }
     }
     Wreck.post.mockResolvedValueOnce(fakeResponse)

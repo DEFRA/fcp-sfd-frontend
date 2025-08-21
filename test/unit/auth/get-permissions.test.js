@@ -28,7 +28,6 @@ const { getPermissions } = await import('../../../src/auth/get-permissions.js')
 let sbi
 let crn
 let email
-let tokenCache
 
 describe('getPermissions', () => {
   beforeEach(() => {
@@ -37,7 +36,6 @@ describe('getPermissions', () => {
     sbi = '234654278765'
     crn = '987645433252'
     email = 'farmer@test.com'
-    tokenCache = 'test-token'
 
     mockConfigGet.mockReturnValue(true)
     mapPermissions.mockReturnValue(mappedData)
@@ -63,7 +61,7 @@ describe('getPermissions', () => {
     })
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
-      dalConnector.mockResolvedValue({ })
+      dalConnector.mockResolvedValue({})
       await getPermissions(sbi, crn, email)
       expect(mapPermissions).not.toHaveBeenCalled()
     })

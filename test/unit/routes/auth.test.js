@@ -106,6 +106,6 @@ describe('auth', () => {
   })
 })
 
-function getRoute (method, path) {
+function getRoute(method, path) {
   return auth.find(r => r.method === method && r.path === path)
 }

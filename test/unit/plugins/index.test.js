@@ -6,7 +6,6 @@ import { session } from '../../../src/plugins/session.js'
 import { csp } from '../../../src/plugins/content-security-policy.js'
 import { auth } from '../../../src/plugins/auth.js'
 import { plugins } from '../../../src/plugins/index.js'
-
 import { router } from '../../../src/plugins/router.js'
 
 describe('registerPlugins', () => {

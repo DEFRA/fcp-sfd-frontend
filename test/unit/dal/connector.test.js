@@ -57,7 +57,7 @@ describe('DAL (data access layer) connector', () => {
       })
     })
 
-    const result = await dalConnector(exampleQuery, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, { sbi: 123456789 })
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
@@ -81,7 +81,7 @@ describe('DAL (data access layer) connector', () => {
       })
     })
 
-    const result = await dalConnector(exampleQuery, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, { sbi: 123456789 })
 
     expect(result.data).toBeDefined()
     expect(result.data.business.name).toBe('Test Business')
@@ -89,19 +89,33 @@ describe('DAL (data access layer) connector', () => {
     expect(result.statusCode).toBe(200)
   })
 
-  test('should throw error when email header is missing', async () => {
+  test('should not throw error when email param is excluded', async () => {
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        data: {
+          business: {
+            sbi: 123456789,
+            name: 'Test Business'
+          }
+        },
+        errors: null
+      })
+    })
+
     const result = await dalConnector(exampleQuery, { sbi: 123456789 })
 
-    expect(result.data).toBeNull()
-    expect(result.statusCode).toBe(400)
-    expect(result.errors).toBeDefined()
-    expect(result.errors[0].message).toBe('DAL connection cannot be made if email header is missing')
+    expect(result.data).toBeDefined()
+    expect(result.data.business.name).toBe('Test Business')
+    expect(result.errors).toBeNull()
+    expect(result.statusCode).toBe(200)
   })
 
   test('should handle network errors in catch block', async () => {
     global.fetch = vi.fn().mockRejectedValue(new Error('Network error'))
 
-    const result = await dalConnector(exampleQuery, { sbi: 123456789 }, 'mock-test-user@defra.gov.uk')
+    const result = await dalConnector(exampleQuery, { sbi: 123456789 })
 
     expect(result.data).toBeNull()
     expect(result.statusCode).toBe(500)

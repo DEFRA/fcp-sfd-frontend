@@ -7,23 +7,14 @@ import { getTokenCache } from '../server.js'
 
 const logger = createLogger()
 
-export const dalConnector = async (query, variables, email) => {
+export const dalConnector = async (query, variables) => {
   const tokenCache = getTokenCache()
-
-  if (!email) {
-    return formatDalResponse({
-      statusCode: httpConstants.HTTP_STATUS_BAD_REQUEST,
-      errors: [{
-        message: 'DAL connection cannot be made if email header is missing'
-      }]
-    })
-  }
 
   try {
     const bearerToken = await getTokenService(tokenCache)
     const emailHeader = config.get('dalConfig.email')
 
-    // Email needs to be updated to use the real customer email address not the test email
+    // Email will be replaced by defraID token
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {

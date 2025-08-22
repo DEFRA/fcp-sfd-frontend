@@ -36,3 +36,21 @@ describe('When the tokenCache is defined', () => {
     expect(getTokenCache()).toBe(server.app.tokenCache)
   })
 })
+
+describe('When the tokenCache is undefined', () => {
+  test('getTokenCache throws an error', async () => {
+    const mod = await vi.importActual('../../../src/server.js')
+
+    // Overwrite getTokenCache to simulate if the cache is not created
+    const mockedModule = {
+      ...mod,
+      getTokenCache: () => {
+        throw new Error('Token cache is not initialized.')
+      },
+    }
+
+    expect(() => mockedModule.getTokenCache()).toThrowError(
+      'Token cache is not initialized.'
+    )
+  })
+})

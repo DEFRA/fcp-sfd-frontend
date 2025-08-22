@@ -7,6 +7,8 @@ import { csp } from '../../../src/plugins/content-security-policy.js'
 import { auth } from '../../../src/plugins/auth.js'
 import { plugins } from '../../../src/plugins/index.js'
 
+import { router } from '../../../src/plugins/router.js'
+
 describe('registerPlugins', () => {
   test('should contain csp plugin', async () => {
     const cspIndex = plugins.findIndex(plugin => plugin.name === 'csp')
@@ -29,8 +31,6 @@ describe('registerPlugins', () => {
   })
 
   test('should contain router plugin', async () => {
-    // Lazy import router to avoid circular dependency
-    const { router } = await import('../../../src/plugins/router.js')
     const routerIndex = plugins.findIndex(plugin => plugin.plugin.name === 'router')
     expect(router).toEqual(plugins[routerIndex])
   })

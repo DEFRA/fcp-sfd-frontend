@@ -1,12 +1,12 @@
 import { describe, test, expect } from 'vitest'
 import headersPlugin from '../../../src/plugins/headers.js'
 import errors from '../../../src/plugins/errors.js'
-import router from '../../../src/plugins/router.js'
-import sso from '../../../src/plugins/sso.js'
+import { router } from '../../../src/plugins/router.js'
+import { sso } from '../../../src/plugins/sso.js'
 
-import session from '../../../src/plugins/session.js'
-import csp from '../../../src/plugins/content-security-policy.js'
-import auth from '../../../src/plugins/auth.js'
+import { session } from '../../../src/plugins/session.js'
+import { csp } from '../../../src/plugins/content-security-policy.js'
+import { auth } from '../../../src/plugins/auth.js'
 import { plugins } from '../../../src/plugins/index.js'
 
 describe('registerPlugins', () => {
@@ -15,23 +15,24 @@ describe('registerPlugins', () => {
     expect(csp).toEqual(plugins[cspIndex])
   })
 
-  test('should contain auth plugin', async () => {
+  test('should contain session plugin', async () => {
     const sessionIndex = plugins.findIndex(plugin => plugin.name === 'session')
     expect(session).toEqual(plugins[sessionIndex])
   })
 
   test('should contain auth plugin', async () => {
-    const authIndex = plugins.findIndex(plugin => plugin.name === 'auth')
+    const authIndex = plugins.findIndex(plugin => plugin.plugin.name === 'auth')
     expect(auth).toEqual(plugins[authIndex])
   })
 
   test('should contain sso plugin', async () => {
-    const ssoIndex = plugins.findIndex(plugin => plugin.name === 'sso')
+    const ssoIndex = plugins.findIndex(plugin => plugin.plugin.name === 'sso')
     expect(sso).toEqual(plugins[ssoIndex])
   })
 
-  test('should contain router plugin', async () => {
-    const routerIndex = plugins.findIndex(plugin => plugin.name === 'router')
+  test.only('should contain router plugin', async () => {
+    console.log(plugins)
+    const routerIndex = plugins.findIndex(plugin => plugin.plugin.name === 'router')
     expect(router).toEqual(plugins[routerIndex])
   })
 

@@ -18,18 +18,17 @@ const fetchBusinessDetailsService = async (yar, credentials) => {
     return businessDetails
   }
 
-  const { sbi, crn, email } = credentials
-  const businessDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(sbi, crn, email) : mappedData
+  const businessDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(credentials) : mappedData
 
   yar.set('businessDetails', businessDetailsData)
 
   return businessDetailsData
 }
 
-const getFromDal = async (sbi, crn, email) => {
-  const variables = { sbi, crn }
+const getFromDal = async (credentials) => {
+  const { sbi, crn, email } = credentials
 
-  const dalResponse = await dalConnector(businessDetailsQuery, variables, email)
+  const dalResponse = await dalConnector(businessDetailsQuery, { sbi, crn }, email)
 
   if (dalResponse.data) {
     const mappedResponse = mapBusinessDetails(dalResponse.data)

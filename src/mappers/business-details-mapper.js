@@ -55,7 +55,11 @@ export const mapBusinessDetails = (raw) => {
       mobile: value.business.info.phone.mobile
     },
     customer: {
-      fullName: `${value.customer.info.name.title} ${value.customer.info.name.first} ${value.customer.info.name.last}`
+      fullName: [
+        value.customer.info.name.title,
+        value.customer.info.name.first,
+        value.customer.info.name.last
+      ].filter(Boolean).join(' ')
     }
   }
 }

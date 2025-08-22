@@ -67,7 +67,7 @@ describe('getTokenService', () => {
       payload: {
         token_type: 'Bearer',
         access_token: 'new-access-token',
-        expires_in: 3600 * 1000 // 1 hour in ms
+        expires_in: 354 // seconds
       }
     }
     Wreck.post.mockResolvedValueOnce(fakeResponse)
@@ -85,7 +85,7 @@ describe('getTokenService', () => {
     expect(set).toHaveBeenCalledWith(
       'dal-token',
       'Bearer new-access-token',
-      fakeResponse.payload.expires_in - 60000,
+      (fakeResponse.payload.expires_in * 1000) - 60000,
       mockCache
     )
 

@@ -2,6 +2,7 @@ import Yar from '@hapi/yar'
 import { config } from '../config/index.js'
 
 export const session = {
+  name: 'session',
   plugin: Yar,
   options: {
     storeBlank: false,

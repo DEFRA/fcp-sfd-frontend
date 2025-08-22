@@ -9,7 +9,8 @@ const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
+    const { yar, auth } = request
+    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials)
     const pageData = businessPhoneNumbersChangePresenter(businessDetails)
 
     return h.view('business/business-phone-numbers-change', pageData)

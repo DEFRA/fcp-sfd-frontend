@@ -15,6 +15,12 @@ vi.mock('../../../../src/auth/get-oidc-config.js', async () => {
   }
 })
 
+vi.mock('../../../../src/services/DAL/token/get-token-service.js', async () => {
+  return {
+    getTokenService: vi.fn(async () => 'mock-bearer-token')
+  }
+})
+
 const { createServer } = await import('../../../../src/server.js')
 const { config } = await import('../../../../src/config/index.js')
 
@@ -32,28 +38,18 @@ describe('Data access layer (DAL) connector integration', () => {
     }
   })
 
-  test('should successfully call DAL and return data when email header is present', async () => {
+  test('should successfully call DAL and return data without passing email as a param', async () => {
     const result = await dalConnector(
       exampleQuery,
       {
         sbi: '107591843',
         crn: '9477368292'
-      },
-      'test.user11@defra.gov.uk'
+      }
     )
 
     expect(result.data).toBeDefined()
     expect(result.errors).toBeNull()
     expect(result.statusCode).toBe(200)
-  })
-
-  test('should return error when email header is missing', async () => {
-    const result = await dalConnector(exampleQuery, { sbi: 107591843 })
-
-    expect(result.data).toBeNull()
-    expect(result.statusCode).toBe(400)
-    expect(result.errors).toBeDefined()
-    expect(result.errors[0].message).toBe('DAL connection cannot be made if email header is missing')
   })
 
   test('should handle network errors by setting config directly', async () => {

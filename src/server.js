@@ -8,7 +8,7 @@ import { setupProxy } from './utils/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 
-let tokenCache
+let tokenCache = null
 
 export const createServer = async () => {
   setupProxy()
@@ -76,6 +76,10 @@ export const createServer = async () => {
   return server
 }
 
+// this allows the tokenCache to be imported independent of the server object
 export const getTokenCache = () => {
+  if (!tokenCache) {
+    throw new Error('Token cache is not initialized.')
+  }
   return tokenCache
 }

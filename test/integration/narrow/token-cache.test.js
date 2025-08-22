@@ -46,7 +46,7 @@ describe('When the tokenCache is undefined', () => {
       ...mod,
       getTokenCache: () => {
         throw new Error('Token cache is not initialized.')
-      },
+      }
     }
 
     expect(() => mockedModule.getTokenCache()).toThrowError(

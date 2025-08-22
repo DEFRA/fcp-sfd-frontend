@@ -44,11 +44,6 @@ describe('personal details', () => {
               crn: '987654321',
               email: 'test@example.com'
             }
-          },
-          server: {
-            app: {
-              tokenCache: 'mock-token-cache'
-            }
           }
         }
 
@@ -59,7 +54,7 @@ describe('personal details', () => {
       test('it calls the fetch personal details service and renders view', async () => {
         await getPersonalDetails.handler(request, h)
 
-        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
         expect(personalDetailsPresenter).toHaveBeenCalledWith(mockData, request.yar)
         expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
       })

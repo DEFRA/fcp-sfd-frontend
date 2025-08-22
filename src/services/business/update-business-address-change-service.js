@@ -1,8 +1,8 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
-const updateBusinessAddressChangeService = async (yar, credentials, tokenCache) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials, tokenCache)
+const updateBusinessAddressChangeService = async (yar, credentials) => {
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
   mapPayloadToBusinessDetails(businessDetails.address, businessDetails.changeBusinessAddress)
   removeLookupAddress(businessDetails)

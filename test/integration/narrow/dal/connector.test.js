@@ -26,10 +26,8 @@ const { config } = await import('../../../../src/config/index.js')
 
 describe('Data access layer (DAL) connector integration', () => {
   let server
-  let tokenCache
 
   beforeAll(async () => {
-    tokenCache = 'test-token'
     server = await createServer()
     await server.initialize()
   })
@@ -40,29 +38,18 @@ describe('Data access layer (DAL) connector integration', () => {
     }
   })
 
-  test('should successfully call DAL and return data when email header is present', async () => {
+  test('should successfully call DAL and return data without passing email as a param', async () => {
     const result = await dalConnector(
       exampleQuery,
       {
         sbi: '107591843',
         crn: '9477368292'
-      },
-      'test.user11@defra.gov.uk',
-      tokenCache
+      }
     )
 
     expect(result.data).toBeDefined()
     expect(result.errors).toBeNull()
     expect(result.statusCode).toBe(200)
-  })
-
-  test('should return error when email header is missing', async () => {
-    const result = await dalConnector(exampleQuery, { sbi: 107591843 })
-
-    expect(result.data).toBeNull()
-    expect(result.statusCode).toBe(400)
-    expect(result.errors).toBeDefined()
-    expect(result.errors[0].message).toBe('DAL connection cannot be made if email header is missing')
   })
 
   test('should handle network errors by setting config directly', async () => {
@@ -71,7 +58,7 @@ describe('Data access layer (DAL) connector integration', () => {
     try {
       config.set('dalConfig.endpoint', 'http://nonexistent-domain-12345.invalid/graphql')
 
-      const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk', tokenCache)
+      const result = await dalConnector(exampleQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -90,7 +77,7 @@ describe('Data access layer (DAL) connector integration', () => {
       }
     `
 
-    const result = await dalConnector(invalidQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk', tokenCache)
+    const result = await dalConnector(invalidQuery, { sbi: 107591843 }, 'test.user11@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()
@@ -99,7 +86,7 @@ describe('Data access layer (DAL) connector integration', () => {
   })
 
   test('should handle missing required query params as bad request (400) error', async () => {
-    const result = await dalConnector(exampleQuery, {}, 'test.user11@defra.gov.uk', tokenCache)
+    const result = await dalConnector(exampleQuery, {}, 'test.user11@defra.gov.uk')
 
     expect(result.data).toBeNull()
     expect(result.errors).toBeDefined()

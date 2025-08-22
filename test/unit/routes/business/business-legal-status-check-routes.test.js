@@ -31,11 +31,6 @@ describe('business legal status change', () => {
         crn: '987654321',
         email: 'test@example.com'
       }
-    },
-    server: {
-      app: {
-        tokenCache: 'mock-token-cache'
-      }
     }
   }
   let h
@@ -61,7 +56,7 @@ describe('business legal status change', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessLegalStatusChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-legal-status-change view with page data', async () => {

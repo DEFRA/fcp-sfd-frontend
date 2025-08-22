@@ -1,7 +1,7 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 
-const fetchBusinessNameChangeService = async (yar, credentials, tokenCache) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials, tokenCache)
+const fetchBusinessNameChangeService = async (yar, credentials) => {
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
   const changeBusinessName = businessDetails.changeBusinessName || businessDetails.info.businessName
 

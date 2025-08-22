@@ -19,7 +19,6 @@ describe('fetchBusinessAddressChangeService', () => {
   const data = mappedData
   let yar
   let credentials
-  let tokenCache
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -32,7 +31,6 @@ describe('fetchBusinessAddressChangeService', () => {
       crn: '987654321',
       email: 'test@example.com'
     }
-    tokenCache = 'test-token'
   })
 
   describe('when called', () => {
@@ -42,9 +40,9 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(yar, credentials, tokenCache)
+        const result = await fetchBusinessAddressChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', {
           ...data,
           changeBusinessAddress: {
@@ -88,9 +86,9 @@ describe('fetchBusinessAddressChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessAddressChangeService(yar, credentials, tokenCache)
+        const result = await fetchBusinessAddressChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, tokenCache)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual(data)
       })

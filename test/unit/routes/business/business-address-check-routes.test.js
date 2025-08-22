@@ -27,11 +27,6 @@ describe('business address check', () => {
         crn: '987654321',
         email: 'test@example.com'
       }
-    },
-    server: {
-      app: {
-        tokenCache: 'mock-token-cache'
-      }
     }
   }
   let h
@@ -58,7 +53,7 @@ describe('business address check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessAddressCheck.handler(request, h)
 
-        expect(fetchBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(fetchBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-address-check view with page data', async () => {
@@ -86,7 +81,7 @@ describe('business address check', () => {
       test('sets the payload on the yar state', async () => {
         await postBusinessAddressCheck.handler(request, h)
 
-        expect(updateBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'mock-token-cache')
+        expect(updateBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
     })
   })

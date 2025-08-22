@@ -1,9 +1,7 @@
 import { describe, test, expect } from 'vitest'
 import headersPlugin from '../../../src/plugins/headers.js'
 import errors from '../../../src/plugins/errors.js'
-import { router } from '../../../src/plugins/router.js'
 import { sso } from '../../../src/plugins/sso.js'
-
 import { session } from '../../../src/plugins/session.js'
 import { csp } from '../../../src/plugins/content-security-policy.js'
 import { auth } from '../../../src/plugins/auth.js'
@@ -30,8 +28,9 @@ describe('registerPlugins', () => {
     expect(sso).toEqual(plugins[ssoIndex])
   })
 
-  test.only('should contain router plugin', async () => {
-    console.log(plugins)
+  test('should contain router plugin', async () => {
+    // Lazy import router to avoid circular dependency
+    const { router } = await import('../../../src/plugins/router.js')
     const routerIndex = plugins.findIndex(plugin => plugin.plugin.name === 'router')
     expect(router).toEqual(plugins[routerIndex])
   })

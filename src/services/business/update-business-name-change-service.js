@@ -15,8 +15,7 @@ const updateBusinessNameChangeService = async (yar, credentials) => {
 
   const response = await dalConnector(updateBusinessNameMutation, variables)
 
-  if (response.errors) { // review success status with CDP team
-    console.error(response.errors)
+  if (response.errors) {
     throw new Error('DAL error from mutation')
   }
 

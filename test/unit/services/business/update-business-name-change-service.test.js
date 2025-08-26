@@ -20,6 +20,20 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
   flashNotification: vi.fn()
 }))
 
+vi.mock('../../../../src/dal/connector.js', () => ({
+  dalConnector: vi.fn().mockResolvedValue({
+    data: {
+      updateBusinessName: {
+        business: {
+          info: {
+            name: 'My New Business 123'
+          }
+        }
+      }
+    }
+  })
+}))
+
 describe('updateBusinessNameChangeService', () => {
   let yar
   let credentials

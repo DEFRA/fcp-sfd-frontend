@@ -1,7 +1,4 @@
-export const businessDetailsMutation = '
-'
-
-mutation Mutation($input: UpdateBusinessNameInput!) {
+export const businessDetailsMutation = `mutation Mutation($input: UpdateBusinessNameInput!) {
   updateBusinessName(input: $input) {
     business {
       info {
@@ -10,4 +7,4 @@ mutation Mutation($input: UpdateBusinessNameInput!) {
     }
     success
   }
-}
+}`

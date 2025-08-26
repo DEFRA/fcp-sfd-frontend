@@ -2,25 +2,25 @@ import { constants as httpConstants } from 'node:http2'
 import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
 import { formatDalResponse, mapDalErrors } from './dal-response.js'
+import { getTokenService } from '../services/DAL/token/get-token-service.js'
+import { getTokenCache } from '../server.js'
 
 const logger = createLogger()
 
-export const dalConnector = async (query, variables, email) => {
-  if (!email) {
-    return formatDalResponse({
-      statusCode: httpConstants.HTTP_STATUS_BAD_REQUEST,
-      errors: [{
-        message: 'DAL connection cannot be made if email header is missing'
-      }]
-    })
-  }
+export const dalConnector = async (query, variables) => {
+  const tokenCache = getTokenCache()
 
   try {
+    const bearerToken = await getTokenService(tokenCache)
+    const emailHeader = config.get('dalConfig.email')
+
+    // Email will be replaced by defraID token
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        email
+        Authorization: bearerToken,
+        email: emailHeader
       },
       body: JSON.stringify({ query, variables })
     })

@@ -1,5 +1,26 @@
-import { beforeEach, describe, test, expect } from 'vitest'
-import { auth } from '../../../src/routes/auth-routes.js'
+import { vi, describe, beforeEach, test, expect } from 'vitest'
+
+vi.mock('../../../src/auth/get-permissions.js', () => ({
+  getPermissions: vi.fn()
+}))
+
+vi.mock('../../../src/auth/get-sign-out-url.js', () => ({
+  getSignOutUrl: vi.fn()
+}))
+
+vi.mock('../../../src/auth/validate-state.js', () => ({
+  validateState: vi.fn()
+}))
+
+vi.mock('../../../src/auth/verify-token.js', () => ({
+  verifyToken: vi.fn()
+}))
+
+vi.mock('../../../src/utils/get-safe-redirect.js', () => ({
+  getSafeRedirect: vi.fn()
+}))
+
+const { auth } = await import('../../../src/routes/auth-routes.js')
 
 let route
 

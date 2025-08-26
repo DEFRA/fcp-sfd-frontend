@@ -61,7 +61,7 @@ describe('getPermissions', () => {
     })
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
-      dalConnector.mockResolvedValue({ })
+      dalConnector.mockResolvedValue({})
       await getPermissions(sbi, crn, email)
       expect(mapPermissions).not.toHaveBeenCalled()
     })

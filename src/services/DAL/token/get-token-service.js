@@ -40,7 +40,7 @@ const getToken = async (cache) => {
 
   // Cache the token slightly less than the actual expiry to avoid using an expired token
   // Here, 60 seconds is subtracted—adjust if your expires_in is in seconds
-  await set(DAL_TOKEN, token.token, token.expiresAt - TOKEN_EXPIRY_BUFFER_MS, cache)
+  await set(DAL_TOKEN, token.token, (token.expiresAt * 1000) - TOKEN_EXPIRY_BUFFER_MS, cache)
 
   return token.token
 }

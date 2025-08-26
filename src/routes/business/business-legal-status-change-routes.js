@@ -5,7 +5,8 @@ const getBusinessLegalStatusChange = {
   method: 'GET',
   path: '/business-legal-status-change',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar)
+    const { yar, auth } = request
+    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials)
     const pageData = businessLegalStatusChangePresenter(businessDetails)
 
     return h.view('business/business-legal-status-change', pageData)

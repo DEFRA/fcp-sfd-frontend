@@ -9,7 +9,8 @@ const getBusinessAddressEnter = {
   method: 'GET',
   path: '/business-address-enter',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
+    const { yar, auth } = request
+    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials)
     const pageData = businessAddressEnterPresenter(businessDetails)
 
     return h.view('business/business-address-enter', pageData)

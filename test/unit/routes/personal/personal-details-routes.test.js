@@ -37,7 +37,14 @@ describe('personal details', () => {
         mockData = getMockData()
         pageData = getPageData()
         request = {
-          yar: { userId: 'abc123' } // Mock whatever your service expects here
+          yar: { userId: 'abc123' },
+          auth: {
+            credentials: {
+              sbi: '123456789',
+              crn: '987654321',
+              email: 'test@example.com'
+            }
+          }
         }
 
         fetchPersonalDetailsService.mockResolvedValue(mockData)
@@ -47,7 +54,7 @@ describe('personal details', () => {
       test('it calls the fetch personal details service and renders view', async () => {
         await getPersonalDetails.handler(request, h)
 
-        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar)
+        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
         expect(personalDetailsPresenter).toHaveBeenCalledWith(mockData, request.yar)
         expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
       })

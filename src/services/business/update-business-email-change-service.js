@@ -1,8 +1,23 @@
+import { dalConnector } from '../../dal/connector.js'
+import { updateBusinessEmailMutation } from '../../dal/mutations/update-business-email.js'
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
 const updateBusinessEmailChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+
+  const variables = {
+    input: {
+      email: businessDetails.changeBusinessEmail,
+      sbi: businessDetails.info.sbi
+    }
+  }
+
+  const response = await dalConnector(updateBusinessEmailMutation, variables)
+
+  if (response.errors || response.data.updateBusinessEmail.success === false) { // review success status with CDP team
+    throw new Error('DAL error from mutation')
+  }
 
   businessDetails.contact.email = businessDetails.changeBusinessEmail
   delete businessDetails.changeBusinessEmail

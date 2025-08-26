@@ -11,12 +11,12 @@ import { flashNotification } from '../../utils/notifications/flash-notification.
 const updateBusinessNameChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
-  // Set the variables
   const variables = { input: { name: businessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
-  // DAL UPDATE HERE
+
   const response = await dalConnector(updateBusinessNameMutation, variables)
 
-  if (response.errors || response.data.updateBusinessName.success === false) { // review success status with CDP team
+  if (response.errors) { // review success status with CDP team
+    console.error(response.errors)
     throw new Error('DAL error from mutation')
   }
 

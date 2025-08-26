@@ -1,24 +1,12 @@
-import { rawBusinessDetailsSchema } from '../schemas/dal/business-details-schema.js'
-import { createLogger } from '../utils/logger.js'
-
 /**
  * Takes the raw data and maps it to a more usable format
  *
- * @param {Object} raw - The raw response payload from the DAL
+ * @param {Object} value - The data from the DAL
  *
  * @returns {Object} Formatted business details data
  */
 
-export const mapBusinessDetails = (raw) => {
-  const logger = createLogger()
-
-  const { error, value } = rawBusinessDetailsSchema.validate(raw)
-
-  if (error) {
-    logger.error(`Validation fail for DAL response: ${error.message}`)
-    throw new Error(`Validation fail for DAL response: ${error.message}`)
-  }
-
+export const mapBusinessDetails = (value) => {
   return {
     info: {
       sbi: value.business.sbi,

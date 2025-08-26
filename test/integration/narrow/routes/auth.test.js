@@ -161,8 +161,8 @@ describe('auth routes', () => {
           credentials
         }
       })
-      const { sbi, crn, email } = credentials.profile
-      expect(mockGetPermissions).toHaveBeenCalledWith(sbi, crn, email)
+      const { sbi, crn } = credentials.profile
+      expect(mockGetPermissions).toHaveBeenCalledWith(sbi, crn)
     })
 
     test('should set authentication status in session cache', async () => {

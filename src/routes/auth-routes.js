@@ -37,8 +37,8 @@ const signInOidc = {
     // However, when signing in with RPA credentials, the roles only include the role name and not the permissions
     // Therefore, we need to make additional API calls to get the permissions from Siti Agri
     // These calls are authenticated using the token returned from Defra Identity
-    const { sbi, crn, email, sessionId } = profile
-    const { privileges, businessName } = await getPermissions(sbi, crn, email)
+    const { sbi, crn, sessionId } = profile
+    const { privileges, businessName } = await getPermissions(sbi, crn)
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(sessionId, {
       isAuthenticated: true,

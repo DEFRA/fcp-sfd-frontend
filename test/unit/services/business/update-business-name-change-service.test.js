@@ -4,6 +4,8 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { dalConnector } from '../../../../src/dal/connector.js'
+import { updateBusinessNameMutation } from '../../../../src/dal/mutations/update-business-name.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -47,7 +49,7 @@ describe('updateBusinessNameChangeService', () => {
     yar = {
       set: vi.fn().mockReturnValue()
     }
-    credentials = { sbi: '123456789', crn: '987654321', email: 'test@example.com' }
+    credentials = { sbi: '123456789', crn: '987654321' }
   })
 
   describe('when called', () => {
@@ -58,10 +60,36 @@ describe('updateBusinessNameChangeService', () => {
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 
+    test('it calls dalConnector with correct mutation and variable', async () => {
+      await updateBusinessNameChangeService(yar, credentials)
+
+      expect(dalConnector).toHaveBeenCalledWith(updateBusinessNameMutation, {
+        input: {
+          name: 'New business ltd',
+          sbi: '107183280'
+        }
+      })
+    })
+
     test('adds a flash notification confirming the change in data', async () => {
       await updateBusinessNameChangeService(yar, credentials)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business name')
+    })
+  })
+
+  describe('when an update fails', () => {
+    beforeEach(() => {
+      dalConnector.mockResolvedValue({
+        errors: [{
+          message: 'Failed to update'
+        }]
+      })
+    })
+
+    test('rejects with "DAL error from mutation"', async () => {
+      await expect(updateBusinessNameChangeService(yar, credentials))
+        .rejects.toThrow('DAL error from mutation')
     })
   })
 })

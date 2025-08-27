@@ -7,6 +7,7 @@ import { plugins } from './plugins/index.js'
 import { setupProxy } from './utils/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
+import { SCOPE } from './constants/scope/business-details.js'
 
 let tokenCache = null
 
@@ -72,6 +73,17 @@ export const createServer = async () => {
   await server.register(plugins)
 
   server.ext('onPreResponse', catchAll)
+
+  // Currently, only users with full permissions are supported.
+  // Users without them hit a generic error and can’t view the page.
+  // To help during development, we log when a user lacks the required scope.
+  server.ext('onPreAuth', (request, h) => {
+    if(!request.auth.credentials?.scope.includes(SCOPE)) {
+      server.logger.error('🚀 User missing full permissions for selected business')
+    }
+
+    return h.continue
+  })
 
   return server
 }

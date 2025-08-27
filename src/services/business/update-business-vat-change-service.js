@@ -1,7 +1,8 @@
-import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
-import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { dalConnector } from '../../dal/connector.js'
 import { updateBusinessVATMutation } from '../../dal/mutations/update-business-vat.js'
+import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
+import { flashNotification } from '../../utils/notifications/flash-notification.js'
+
 
 const updateBusinessVatChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)

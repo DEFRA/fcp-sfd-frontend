@@ -6,12 +6,11 @@ import { updateBusinessVATMutation } from '../../dal/mutations/update-business-v
 const updateBusinessVatChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
-  // Set the variables
+
   const variables = { input: { vat: businessDetails.changeBusinessVat, sbi: businessDetails.info.sbi } }
-  // DAL UPDATE HERE
   const response = await dalConnector(updateBusinessVATMutation, variables)
 
-  if (response.errors || response.data.updateBusinessVat.success === false) { // review success status with CDP team
+  if (response.errors || response.data.updateBusinessVat.success === false) {
     throw new Error('DAL error from mutation')
   }
 

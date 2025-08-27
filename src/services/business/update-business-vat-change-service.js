@@ -10,7 +10,7 @@ const updateBusinessVatChangeService = async (yar, credentials) => {
   const variables = { input: { vat: businessDetails.changeBusinessVat, sbi: businessDetails.info.sbi } }
   const response = await dalConnector(updateBusinessVATMutation, variables)
 
-  if (response.errors || response.data.updateBusinessVat.success === false) {
+  if (response.errors) {
     throw new Error('DAL error from mutation')
   }
 

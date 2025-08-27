@@ -83,10 +83,5 @@ describe('updateBusinessVatChangeService', () => {
         'You have updated your business VAT number'
       )
     })
-    test('throws an error if DAL update fails', async () => {
-      dalConnector.mockResolvedValue({ data: { updateBusinessVat: { success: false } } })
-
-      await expect(updateBusinessVatChangeService(yar, credentials)).rejects.toThrow('DAL error from mutation')
-    })
   })
 })

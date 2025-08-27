@@ -6,7 +6,6 @@ import { updateBusinessVATMutation } from '../../dal/mutations/update-business-v
 const updateBusinessVatChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
-
   const variables = { input: { vat: businessDetails.changeBusinessVat, sbi: businessDetails.info.sbi } }
   const response = await dalConnector(updateBusinessVATMutation, variables)
 

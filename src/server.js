@@ -78,7 +78,7 @@ export const createServer = async () => {
   // Users without them hit a generic error and can’t view the page.
   // To help during development, we log when a user lacks the required scope.
   server.ext('onPreAuth', (request, h) => {
-    if (!request.auth.credentials?.scope.includes(SCOPE)) {
+    if (!request.auth.credentials?.scope?.includes(SCOPE)) {
       server.logger.error('🚀 User missing full permissions for selected business')
     }
 

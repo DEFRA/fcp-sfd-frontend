@@ -5,6 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
+import { updateBusinessVATMutation } from '../../../../src/dal/mutations/update-business-vat.js'
 
 // Test helpers
 import { mappedData as originalMappedData } from '../../../mocks/mock-business-details.js'
@@ -22,7 +23,17 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 }))
 
 vi.mock('../../../../src/dal/connector.js', () => ({
-  dalConnector: vi.fn()
+  dalConnector: vi.fn().mockResolvedValue({
+    data: {
+      updateBusinessVat: {
+        business: {
+          info: {
+            vatNumber: 'GB123456798'
+          }
+        }
+      }
+    }
+  })
 }))
 
 describe('updateBusinessVatChangeService', () => {
@@ -51,7 +62,8 @@ describe('updateBusinessVatChangeService', () => {
     credentials = {
       sbi: '123456789',
       crn: '987654321',
-      email: 'test@example.com'
+      email: 'test@example.com',
+      vatNumber: 'GB123456789'
     }
   })
 
@@ -74,6 +86,17 @@ describe('updateBusinessVatChangeService', () => {
       expect(savedBusinessDetails.changeBusinessVat).toBeUndefined()
     })
 
+    test('it calls dalConnector with correct mutation and variable', async () => {
+      await updateBusinessVatChangeService(yar, credentials)
+
+      expect(dalConnector).toHaveBeenCalledWith(updateBusinessVATMutation, {
+        input: {
+          vat: 'GB123456789',
+          sbi: '107183280'
+        }
+      })
+    })
+
     test('adds a flash notification confirming the VAT change', async () => {
       await updateBusinessVatChangeService(yar, credentials)
 
@@ -82,6 +105,21 @@ describe('updateBusinessVatChangeService', () => {
         'Success',
         'You have updated your business VAT number'
       )
+    })
+  })
+
+  describe('when an update fails', () => {
+    beforeEach(() => {
+      dalConnector.mockResolvedValue({
+        errors: [{
+          message: 'Failed to update'
+        }]
+      })
+    })
+
+    test('rejects with "DAL error from mutation"', async () => {
+      await expect(updateBusinessVatChangeService(yar, credentials))
+        .rejects.toThrow('DAL error from mutation')
     })
   })
 })

@@ -8,16 +8,13 @@ describe('When the updateBusinessVATMutation is parsed', () => {
   })
 
   test('it contains the Mutation operation and the correct variable', () => {
-    // Parsing the GQL mutation returns a Abstract Syntax Tree (ast)
-    // this converts the string into a structural representation of the mutation.
-    // This allows it be inspected and validated.
-
     const ast = parse(updateBusinessVATMutation)
     const operation = ast.definitions[0]
-    expect(operation.vatNumber.value).toBe('Mutation')
+
+    expect(operation.operation).toBe('mutation')
 
     const variable = operation.variableDefinitions[0]
-    expect(variable.variable.vatNumber.value).toBe('input')
-    expect(variable.type.type.vatNumber.value).toBe('UpdateBusinessVATInput')
+    expect(variable.variable.name.value).toBe('input')
+    expect(variable.type.type.name.value).toBe('UpdateBusinessVATInput')
   })
 })

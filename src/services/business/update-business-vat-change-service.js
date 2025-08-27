@@ -3,7 +3,6 @@ import { updateBusinessVATMutation } from '../../dal/mutations/update-business-v
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
-
 const updateBusinessVatChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 

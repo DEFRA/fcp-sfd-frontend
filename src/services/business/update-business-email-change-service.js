@@ -8,14 +8,14 @@ const updateBusinessEmailChangeService = async (yar, credentials) => {
 
   const variables = {
     input: {
-      email: businessDetails.changeBusinessEmail,
+      email: { address: businessDetails.changeBusinessEmail },
       sbi: businessDetails.info.sbi
     }
   }
 
   const response = await dalConnector(updateBusinessEmailMutation, variables)
 
-  if (response.errors || response.data.updateBusinessEmail.success === false) { // review success status with CDP team
+  if (response.errors) {
     throw new Error('DAL error from mutation')
   }
 

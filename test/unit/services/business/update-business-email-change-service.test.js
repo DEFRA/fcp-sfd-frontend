@@ -66,7 +66,7 @@ describe('updateBusinessEmailChangeService', () => {
       await updateBusinessEmailChangeService(yar, credentials)
 
       expect(dalConnector).toHaveBeenCalledWith(updateBusinessEmailMutation, {
-        input: { email: 'new-email@test.com', sbi: '107183280' }
+        input: { email: { address: 'new-email@test.com' }, sbi: '107183280' }
       })
     })
 

@@ -1,5 +1,5 @@
 import { dalConnector } from '../../dal/connector.js'
-import { updateBusinessPhoneMutation } from '../../dal/mutations/update-business-phone-numbers.js'
+import { updateBusinessPhoneNumbersMutation } from '../../dal/mutations/update-business-phone-numbers.js'
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
@@ -30,7 +30,7 @@ const updateBusinessPhone = async (businessDetails) => {
     }
   }
 
-  const response = await dalConnector(updateBusinessPhoneMutation, variables)
+  const response = await dalConnector(updateBusinessPhoneNumbersMutation, variables)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

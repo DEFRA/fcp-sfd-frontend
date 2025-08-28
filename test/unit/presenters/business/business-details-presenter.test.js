@@ -7,12 +7,14 @@ import { businessDetailsPresenter } from '../../../../src/presenters/business/bu
 describe('businessDetailsPresenter', () => {
   let yar
   let data
+  let referer
 
   beforeEach(async () => {
     vi.clearAllMocks()
     vi.resetModules() // vi is weird about clearing modules after each test, you must import AFTER calling reset
     const { mappedData } = await import('../../../mocks/mock-business-details.js')
     data = mappedData
+    referer = 'https://example.com/home'
 
     // Mock yar session manager
     yar = {
@@ -22,9 +24,10 @@ describe('businessDetailsPresenter', () => {
 
   describe('when provided with business details data', () => {
     test('it correctly presents the data', () => {
-      const result = businessDetailsPresenter(data, yar)
+      const result = businessDetailsPresenter(data, yar, referer)
 
       expect(result).toEqual({
+        backLink: { href: '/home' },
         notification: { title: 'Update', text: 'Business details updated successfully' },
         pageTitle: 'View and update your business details',
         metaDescription: 'View and change the details for your business.',
@@ -57,7 +60,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the landline property is missing', () => {
       test('it should return the text "Not added', () => {
         data.contact.landline = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, referer)
 
         expect(result.businessTelephone).toEqual('Not added')
       })
@@ -67,7 +70,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "businessMobile" property', () => {
     describe('when the businessMobile property is missing', () => {
       test('it should return the text "Not added', () => {
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, referer)
 
         expect(result.businessMobile).toEqual('Not added')
       })
@@ -78,7 +81,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, referer)
 
         expect(result.vatNumber).toEqual(null)
       })
@@ -89,7 +92,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is empty', () => {
       test('it should return empty array', () => {
         data.info.countyParishHoldingNumbers = []
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, referer)
 
         expect(result.countyParishHoldingNumbers).toEqual([])
       })
@@ -100,7 +103,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.traderNumber = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, referer)
 
         expect(result.tradeNumber).toEqual(null)
       })
@@ -111,7 +114,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vendorNumber = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, referer)
 
         expect(result.vendorRegistrationNumber).toEqual(null)
       })
@@ -122,7 +125,7 @@ describe('businessDetailsPresenter', () => {
     describe('when yar is falsey', () => {
       test('it should return null', () => {
         yar = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, referer)
 
         expect(result.notification).toEqual(null)
       })

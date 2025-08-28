@@ -3,6 +3,10 @@
 {% set pageTitle = "Sorry, there is a problem with the service" %}
 {% set metaDescription = "There is a problem with this service, but you can contact us." %}
 
+{% block beforeContent %}
+  {{ appBackSignOutLink(backLink) }}
+{% endblock %}
+
 {% block error_content %}
 <h1 class="govuk-heading-l">
   Sorry, there is a problem with the service

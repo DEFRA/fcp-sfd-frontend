@@ -4,7 +4,7 @@
 {% set metaDescription = "The service is not currently available, but you can contact us." %}
 
 {% block beforeContent %}
-  {{ appBackSignOutLink(backLink) }}
+  {{ appBackSignOutLink({ href: backLink }) }}
 {% endblock %}
 
 {% block error_content %}

@@ -4,7 +4,7 @@
 {% set metaDescription = "We could not find this page. Check the web address is correct and try again." %}
 
 {% block beforeContent %}
-  {{ appBackSignOutLink(backLink) }}
+  {{ appBackSignOutLink({ href: backLink }) }}
 {% endblock %}
 
 {% block content %}

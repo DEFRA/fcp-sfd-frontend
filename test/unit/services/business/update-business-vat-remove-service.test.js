@@ -4,6 +4,8 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { dalConnector } from '../../../../src/dal/connector.js'
+import { updateBusinessVatMutation } from '../../../../src/dal/mutations/update-business-vat.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -20,6 +22,19 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
   flashNotification: vi.fn()
 }))
 
+vi.mock('../../../../src/dal/connector.js', () => ({
+  dalConnector: vi.fn().mockResolvedValue({
+    data: {
+      updateBusinessVAT: {
+        business: {
+          info: {
+            vatNumber: null
+          }
+        }
+      }
+    }
+  })
+}))
 describe('updateBusinessVatRemoveService', () => {
   let yar
   let credentials
@@ -33,7 +48,7 @@ describe('updateBusinessVatRemoveService', () => {
     yar = {
       set: vi.fn().mockReturnValue()
     }
-    credentials = { sbi: '123456789', crn: '987654321', email: 'test@example.com' }
+    credentials = { sbi: '123456789', crn: '987654321' }
   })
 
   describe('when called', () => {
@@ -45,10 +60,36 @@ describe('updateBusinessVatRemoveService', () => {
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 
+    test('it calls dalConnector with correct mutation and variable', async () => {
+      await updateBusinessVatRemoveService(yar, credentials)
+
+      expect(dalConnector).toHaveBeenCalledWith(updateBusinessVatMutation, {
+        input: {
+          vat: 'GB123456789',
+          sbi: '107183280'
+        }
+      })
+    })
+
     test('adds a flash notification confirming the VAT removal', async () => {
       await updateBusinessVatRemoveService(yar, credentials)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have removed your business VAT number')
+    })
+  })
+
+  describe('when an update fails', () => {
+    beforeEach(() => {
+      dalConnector.mockResolvedValue({
+        errors: [{
+          message: 'Failed to update'
+        }]
+      })
+    })
+
+    test('rejects with "DAL error from mutation"', async () => {
+      await expect(updateBusinessVatRemoveService(yar, credentials))
+        .rejects.toThrow('DAL error from mutation')
     })
   })
 })

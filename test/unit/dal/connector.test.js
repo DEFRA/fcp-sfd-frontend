@@ -22,7 +22,7 @@ vi.mock('../../../src/services/DAL/token/get-token-service.js', () => ({
   getTokenService: vi.fn().mockResolvedValue('mocked-token')
 }))
 
-vi.mock('../../../src/server.js', () => ({
+vi.mock('../../../src/utils/caching/token-cache.js', () => ({
   getTokenCache: vi.fn().mockReturnValue('mocked-cache')
 }))
 

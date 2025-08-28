@@ -7,9 +7,8 @@ import { plugins } from './plugins/index.js'
 import { setupProxy } from './utils/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
+import { initTokenCache } from './utils/caching/token-cache.js'
 import { SCOPE } from './constants/scope/business-details.js'
-
-let tokenCache = null
 
 export const createServer = async () => {
   setupProxy()
@@ -60,14 +59,7 @@ export const createServer = async () => {
     expiresIn: config.get('server.session.cache.ttl')
   })
 
-  // Partition the redis cache to allow tokens to be stored
-  server.app.tokenCache = server.cache({
-    cache: CACHE_NAME,
-    segment: 'tokenCache',
-    expiresIn: config.get('redis.ttl')
-  })
-
-  tokenCache = server.app.tokenCache
+  server.app.tokenCache = initTokenCache(server, CACHE_NAME)
 
   server.validator(Joi)
   await server.register(plugins)
@@ -86,12 +78,4 @@ export const createServer = async () => {
   })
 
   return server
-}
-
-// this allows the tokenCache to be imported independent of the server object
-export const getTokenCache = () => {
-  if (!tokenCache) {
-    throw new Error('Token cache is not initialized.')
-  }
-  return tokenCache
 }

@@ -17,24 +17,28 @@ describe('Service Unavailable Route', () => {
   })
 
   test('should return HTTP 200 when accessing the service unavailable page', () => {
-    const result = serviceUnavailable.handler(null, mockH)
+    const mockRequest = { headers: {} }
+    const result = serviceUnavailable.handler(mockRequest, mockH)
     expect(mockH.view).toHaveBeenCalled()
     expect(result).toBe(mockView)
   })
 
   test('should render the correct template with the right context', () => {
-    serviceUnavailable.handler(null, mockH)
+    const mockRequest = { headers: { referer: '/previous-page' } }
+    serviceUnavailable.handler(mockRequest, mockH)
     expect(mockH.view).toHaveBeenCalledWith(
-      'errors/service-unavailable'
+      'errors/service-unavailable',
+      { backLink: '/previous-page' }
     )
   })
 
   test('should handle template rendering errors gracefully', () => {
+    const mockRequest = { headers: {} }
     mockH.view.mockImplementationOnce(() => {
       throw new Error('Template rendering failed')
     })
     expect(() => {
-      serviceUnavailable.handler(null, mockH)
+      serviceUnavailable.handler(mockRequest, mockH)
     }).toThrow('Template rendering failed')
   })
 })

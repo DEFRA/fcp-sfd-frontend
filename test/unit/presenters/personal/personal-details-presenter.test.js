@@ -13,6 +13,7 @@ import { mappedData as originalData } from '../../../mocks/mock-personal-details
 describe('personalDetailsPresenter', () => {
   let yar
   let data
+  let referer
 
   vi.mock('../../../../src/presenters/address-presenter.js', () => ({
     addressPresenter: {
@@ -33,6 +34,7 @@ describe('personalDetailsPresenter', () => {
 
     // Deep clone the data to avoid mutation across tests
     data = JSON.parse(JSON.stringify(originalData))
+    referer = 'https://example.com/home'
 
     // Mock yar session manager
     yar = {
@@ -42,7 +44,7 @@ describe('personalDetailsPresenter', () => {
 
   describe('when provided with personal details data', () => {
     test('it correctly presents the data', () => {
-      const result = personalDetailsPresenter(data, yar)
+      const result = personalDetailsPresenter(data, yar, referer)
 
       expect(result).toEqual({
         backLink: { href: '/home' },
@@ -64,7 +66,7 @@ describe('personalDetailsPresenter', () => {
     test('returns "Not added" if telephone is missing', () => {
       data.contact.telephone = null
 
-      const result = personalDetailsPresenter(data, yar)
+      const result = personalDetailsPresenter(data, yar, referer)
 
       expect(result.personalTelephone).toBe('Not added')
     })
@@ -74,7 +76,7 @@ describe('personalDetailsPresenter', () => {
     test('returns "Not added" if mobile is missing', () => {
       data.contact.mobile = null
 
-      const result = personalDetailsPresenter(data, yar)
+      const result = personalDetailsPresenter(data, yar, referer)
 
       expect(result.personalMobile).toBe('Not added')
     })
@@ -82,7 +84,7 @@ describe('personalDetailsPresenter', () => {
 
   describe('the "notification" property', () => {
     test('returns null if yar is falsy', () => {
-      const result = personalDetailsPresenter(data, null)
+      const result = personalDetailsPresenter(data, null, referer)
 
       expect(result.notification).toBe(null)
     })
@@ -90,7 +92,7 @@ describe('personalDetailsPresenter', () => {
 
   describe('the "fullName" property', () => {
     test('returns a formatted full name', () => {
-      const result = personalDetailsPresenter(data, yar)
+      const result = personalDetailsPresenter(data, yar, referer)
 
       expect(result.fullName).toBe('John M Doe')
     })
@@ -99,7 +101,7 @@ describe('personalDetailsPresenter', () => {
       test('returns a formatted full name without the middle name', () => {
         data.info.fullName.middle = null
 
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, referer)
 
         expect(result.fullName).toBe('John Doe')
       })

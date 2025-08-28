@@ -139,6 +139,11 @@ export const serverConfig = {
           format: String,
           default: 'session'
         },
+        tokenSegment: {
+          doc: 'The segment of the cache used for storing tokens.',
+          format: String,
+          default: 'tokenCache'
+        },
         ttl: {
           doc: 'server side session cache ttl',
           format: Number,

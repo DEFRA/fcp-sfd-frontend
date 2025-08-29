@@ -44,6 +44,9 @@ describe('personal details', () => {
               crn: '987654321',
               email: 'test@example.com'
             }
+          },
+          headers: {
+            referer: 'https://example.com/home'
           }
         }
 
@@ -55,7 +58,7 @@ describe('personal details', () => {
         await getPersonalDetails.handler(request, h)
 
         expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
-        expect(personalDetailsPresenter).toHaveBeenCalledWith(mockData, request.yar)
+        expect(personalDetailsPresenter).toHaveBeenCalledWith(mockData, request.yar, 'https://example.com/home')
         expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
       })
     })
@@ -82,6 +85,7 @@ const getMockData = () => ({
 })
 
 const getPageData = () => ({
+  backlink: { href: 'https://example.com/home' },
   pageTitle: 'View and update your personal details',
   metaDescription: 'View and update your personal details.',
   address: [

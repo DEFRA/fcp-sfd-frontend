@@ -3,11 +3,12 @@
  * @module personalDetailsPresenter
  */
 
+import { dynamicBacklink } from '../../utils/dynamic-backlink.js'
 import { addressPresenter } from '../address-presenter.js'
 
-const personalDetailsPresenter = (data, yar) => {
+const personalDetailsPresenter = (data, yar, referer) => {
   return {
-    backLink: { href: '/home' },
+    backLink: { href: dynamicBacklink(referer) },
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',

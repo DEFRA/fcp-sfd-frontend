@@ -2,7 +2,7 @@ export const serviceUnavailable = {
   method: 'GET',
   path: '/service-unavailable',
   options: {
-    auth: false
+    auth: { mode: 'try' }
   },
   handler: (request, h) => {
     const backLink = request.headers.referer

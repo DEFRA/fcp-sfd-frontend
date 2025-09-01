@@ -2,7 +2,7 @@ export const pageNotFound = {
   method: 'GET',
   path: '/page-not-found',
   options: {
-    auth: { mode: 'try' }
+    auth: { strategy: 'session', mode: 'try' }
   },
   handler: (request, h) => {
     const backLink = request.headers.referer

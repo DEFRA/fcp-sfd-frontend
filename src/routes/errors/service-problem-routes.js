@@ -2,7 +2,7 @@ export const serviceProblem = {
   method: 'GET',
   path: '/service-problem',
   options: {
-    auth: { mode: 'try' }
+    auth: { strategy: 'session', mode: 'try' }
   },
   handler: (request, h) => {
     const backLink = request.headers.referer

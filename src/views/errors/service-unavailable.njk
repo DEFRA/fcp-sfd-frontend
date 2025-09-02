@@ -1,5 +1,5 @@
 {% extends "errors/layout.njk" %}
-{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
 
 {% set pageTitle = "Sorry, the service is unavailable" %}
 {% set metaDescription = "The service is not currently available, but you can contact us." %}

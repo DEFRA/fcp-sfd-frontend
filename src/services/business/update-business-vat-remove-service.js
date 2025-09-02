@@ -5,7 +5,6 @@ import { flashNotification } from '../../utils/notifications/flash-notification.
 
 const updateBusinessVatRemoveService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)
-  console.log('businessDetails:::', businessDetails)
 
   const variables = { input: { vat: businessDetails.info.vat, sbi: businessDetails.info.sbi } }
 

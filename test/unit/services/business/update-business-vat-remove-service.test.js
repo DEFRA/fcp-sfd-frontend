@@ -74,7 +74,7 @@ describe('updateBusinessVatRemoveService', () => {
     test('adds a flash notification confirming the VAT removal', async () => {
       await updateBusinessVatRemoveService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have removed your business VAT number')
+      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have removed your VAT registration number')
     })
   })
 

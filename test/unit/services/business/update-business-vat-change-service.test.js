@@ -103,7 +103,7 @@ describe('updateBusinessVatChangeService', () => {
       expect(flashNotification).toHaveBeenCalledWith(
         yar,
         'Success',
-        'You have updated your business VAT number'
+        'You have updated your VAT registration number'
       )
     })
   })

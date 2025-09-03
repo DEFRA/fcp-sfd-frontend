@@ -17,7 +17,7 @@ const updateBusinessVatChangeService = async (yar, credentials) => {
   delete businessDetails.changeBusinessVat
 
   yar.set('businessDetails', businessDetails)
-  flashNotification(yar, 'Success', 'You have updated your business VAT number')
+  flashNotification(yar, 'Success', 'You have updated your VAT registration number')
 }
 
 export {

@@ -27,6 +27,12 @@ services:
     networks:
       - fcp-sfd
 
+  fcp-defra-id-stub:
+    ports:
+      - "3007:3007"
+    networks:
+      - fcp-sfd
+
 networks:
   fcp-sfd:
     driver: bridge

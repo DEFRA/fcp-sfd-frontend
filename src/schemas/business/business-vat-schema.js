@@ -6,7 +6,7 @@ export const businessVatSchema = Joi.object({
     .messages({
       'string.max': `VAT registration number must be ${VAT_NUMBER_MAX} characters or fewer`,
       'string.empty': 'Enter a VAT registration number',
-      'string.vat': 'Enter a VAT registration number in the format GB123456789 or 123456789'
+      'string.vat': 'Enter a VAT registration number in the format 123456789'
     })
     .required()
 })

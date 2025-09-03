@@ -84,16 +84,56 @@ describe('business VAT remove', () => {
     })
 
     describe('when a request succeeds', () => {
+      beforeEach(() => {
+        request.payload = { confirmRemove: 'yes' }
+      })
+
       test('it redirects to the /business-details page', async () => {
-        await postBusinessVatRemove.handler(request, h)
+        await postBusinessVatRemove.options.handler(request, h)
 
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('calls the update service', async () => {
-        await postBusinessVatRemove.handler(request, h)
+      test('calls the update service with confirmRemove parameter', async () => {
+        await postBusinessVatRemove.options.handler(request, h)
 
         expect(updateBusinessVatRemoveService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+      })
+    })
+
+    describe('when user selects "no"', () => {
+      beforeEach(() => {
+        request.payload = { confirmRemove: 'no' }
+      })
+
+      test('it redirects to the /business-details page', async () => {
+        await postBusinessVatRemove.options.handler(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+      })
+
+      test('does not call the update service', async () => {
+        await postBusinessVatRemove.options.handler(request, h)
+
+        expect(updateBusinessVatRemoveService).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when validation fails', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({
+            code: vi.fn().mockReturnThis(),
+            takeover: vi.fn().mockReturnThis()
+          })
+        }
+        request.payload = { confirmRemove: 'maybe' } // Invalid value
+      })
+
+      test('should have validation options', () => {
+        expect(postBusinessVatRemove.options).toBeDefined()
+        expect(postBusinessVatRemove.options.validate).toBeDefined()
+        expect(postBusinessVatRemove.options.validate.payload).toBeDefined()
       })
     })
   })
@@ -120,7 +160,6 @@ const getPageData = () => {
     vatNumber: 'GB123456789',
     businessName: 'Agile Farm Ltd',
     sbi: '123456789',
-    userName: 'Alfred Waldron',
-    confirmRemove: null
+    userName: 'Alfred Waldron'
   }
 }

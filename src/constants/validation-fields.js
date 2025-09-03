@@ -7,4 +7,3 @@ export const COUNTRY_MAX = 60
 export const PHONE_NUMBER_MIN = 10
 export const PHONE_NUMBER_MAX = 100
 export const EMAIL_MAX = 254
-export const VAT_NUMBER_MAX = 9

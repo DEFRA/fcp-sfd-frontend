@@ -11,6 +11,7 @@ import { businessPhoneNumbersCheckRoutes } from './business-phone-numbers-check-
 import { businessTypeRoutes } from './business-type-change-routes.js'
 import { businessVatChangeRoutes } from './business-vat-change-routes.js'
 import { businessVatCheckRoutes } from './business-vat-check-routes.js'
+import { businessVatRemoveRoutes } from './business-vat-remove-routes.js'
 import { exampleDalConnectionRoute } from './example-routes.js'
 
 export const businessRoutes = [
@@ -27,5 +28,6 @@ export const businessRoutes = [
   ...businessTypeRoutes,
   ...businessVatChangeRoutes,
   ...businessVatCheckRoutes,
+  ...businessVatRemoveRoutes,
   exampleDalConnectionRoute
 ]

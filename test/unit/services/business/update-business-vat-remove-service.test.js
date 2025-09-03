@@ -5,13 +5,13 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
-import { updateBusinessNameMutation } from '../../../../src/dal/mutations/update-business-name.js'
+import { updateBusinessVATMutation } from '../../../../src/dal/mutations/update-business-vat.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
-import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service'
+import { updateBusinessVatRemoveService } from '../../../../src/services/business/update-business-vat-remove-service'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -25,25 +25,24 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 vi.mock('../../../../src/dal/connector.js', () => ({
   dalConnector: vi.fn().mockResolvedValue({
     data: {
-      updateBusinessName: {
+      updateBusinessVAT: {
         business: {
           info: {
-            name: 'My New Business 123'
+            vatNumber: null
           }
         }
       }
     }
   })
 }))
-
-describe('updateBusinessNameChangeService', () => {
+describe('updateBusinessVatRemoveService', () => {
   let yar
   let credentials
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessName = 'New business ltd'
+    mappedData.info.vat = 'GB123456789'
     fetchBusinessDetailsService.mockReturnValue(mappedData)
 
     yar = {
@@ -53,28 +52,29 @@ describe('updateBusinessNameChangeService', () => {
   })
 
   describe('when called', () => {
-    test('it correctly saves the data to the session', async () => {
-      await updateBusinessNameChangeService(yar, credentials)
+    test('it correctly saves the data to the session with VAT set to null', async () => {
+      await updateBusinessVatRemoveService(yar, credentials)
 
       expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+      expect(mappedData.info.vat).toBeNull()
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 
     test('it calls dalConnector with correct mutation and variable', async () => {
-      await updateBusinessNameChangeService(yar, credentials)
+      await updateBusinessVatRemoveService(yar, credentials)
 
-      expect(dalConnector).toHaveBeenCalledWith(updateBusinessNameMutation, {
+      expect(dalConnector).toHaveBeenCalledWith(updateBusinessVATMutation, {
         input: {
-          name: 'New business ltd',
+          vat: 'GB123456789',
           sbi: '107183280'
         }
       })
     })
 
-    test('adds a flash notification confirming the change in data', async () => {
-      await updateBusinessNameChangeService(yar, credentials)
+    test('adds a flash notification confirming the VAT removal', async () => {
+      await updateBusinessVatRemoveService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business name')
+      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have removed your VAT registration number')
     })
   })
 
@@ -88,7 +88,7 @@ describe('updateBusinessNameChangeService', () => {
     })
 
     test('rejects with "DAL error from mutation"', async () => {
-      await expect(updateBusinessNameChangeService(yar, credentials))
+      await expect(updateBusinessVatRemoveService(yar, credentials))
         .rejects.toThrow('DAL error from mutation')
     })
   })

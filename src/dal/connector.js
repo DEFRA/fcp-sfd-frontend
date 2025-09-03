@@ -3,7 +3,7 @@ import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
 import { formatDalResponse, mapDalErrors } from './dal-response.js'
 import { getTokenService } from '../services/DAL/token/get-token-service.js'
-import { getTokenCache } from '../server.js'
+import { getTokenCache } from '../utils/caching/token-cache.js'
 
 const logger = createLogger()
 

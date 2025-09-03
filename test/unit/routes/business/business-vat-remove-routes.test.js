@@ -120,6 +120,8 @@ describe('business VAT remove', () => {
     })
 
     describe('when validation fails', () => {
+      let err
+
       beforeEach(() => {
         h = {
           view: vi.fn().mockReturnValue({
@@ -127,13 +129,40 @@ describe('business VAT remove', () => {
             takeover: vi.fn().mockReturnThis()
           })
         }
-        request.payload = { confirmRemove: 'maybe' } // Invalid value
+
+        err = {
+          details: [
+            {
+              message: 'Select yes if you want to remove your VAT registration number',
+              path: ['confirmRemove'],
+              type: 'any.required'
+            }
+          ]
+        }
       })
 
       test('should have validation options', () => {
         expect(postBusinessVatRemove.options).toBeDefined()
         expect(postBusinessVatRemove.options.validate).toBeDefined()
         expect(postBusinessVatRemove.options.validate.payload).toBeDefined()
+      })
+
+      test('it returns the page successfully with the error summary banner', async () => {
+        await postBusinessVatRemove.options.validate.failAction(request, h, err)
+
+        const pageData = getPageDataError()
+        pageData.errors = { confirmRemove: { text: 'Select yes if you want to remove your VAT registration number' } }
+
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-remove', pageData)
+      })
+
+      test('it should handle undefined errors', async () => {
+        await postBusinessVatRemove.options.validate.failAction(request, h, [])
+
+        const pageData = getPageDataError()
+        pageData.errors = {}
+
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-remove', pageData)
       })
     })
   })
@@ -153,6 +182,18 @@ const getMockData = () => {
 }
 
 const getPageData = () => {
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'Are you sure you want to remove your VAT registration number?',
+    metaDescription: 'Are you sure you want to remove your VAT registration number?',
+    vatNumber: 'GB123456789',
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    userName: 'Alfred Waldron'
+  }
+}
+
+const getPageDataError = () => {
   return {
     backLink: { href: '/business-details' },
     pageTitle: 'Are you sure you want to remove your VAT registration number?',

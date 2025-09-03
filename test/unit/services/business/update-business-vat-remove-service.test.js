@@ -2,16 +2,16 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { dalConnector } from '../../../../src/dal/connector.js'
-import { updateBusinessEmailMutation } from '../../../../src/dal/mutations/update-business-email.js'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { dalConnector } from '../../../../src/dal/connector.js'
+import { updateBusinessVATMutation } from '../../../../src/dal/mutations/update-business-vat.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
-import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service'
+import { updateBusinessVatRemoveService } from '../../../../src/services/business/update-business-vat-remove-service'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -25,27 +25,24 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 vi.mock('../../../../src/dal/connector.js', () => ({
   dalConnector: vi.fn().mockResolvedValue({
     data: {
-      updateBusinessEmail: {
+      updateBusinessVAT: {
         business: {
           info: {
-            email: {
-              address: 'my-new-email@test.com'
-            }
+            vatNumber: null
           }
         }
       }
     }
   })
 }))
-
-describe('updateBusinessEmailChangeService', () => {
+describe('updateBusinessVatRemoveService', () => {
   let yar
   let credentials
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessEmail = 'new-email@test.com'
+    mappedData.info.vat = 'GB123456789'
     fetchBusinessDetailsService.mockReturnValue(mappedData)
 
     yar = {
@@ -55,25 +52,29 @@ describe('updateBusinessEmailChangeService', () => {
   })
 
   describe('when called', () => {
-    test('it correctly saves the data to the session', async () => {
-      await updateBusinessEmailChangeService(yar, credentials)
+    test('it correctly saves the data to the session with VAT set to null', async () => {
+      await updateBusinessVatRemoveService(yar, credentials)
 
       expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+      expect(mappedData.info.vat).toBeNull()
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 
-    test('it calls the dalConnector with  correct mutation and variables', async () => {
-      await updateBusinessEmailChangeService(yar, credentials)
+    test('it calls dalConnector with correct mutation and variable', async () => {
+      await updateBusinessVatRemoveService(yar, credentials)
 
-      expect(dalConnector).toHaveBeenCalledWith(updateBusinessEmailMutation, {
-        input: { email: { address: 'new-email@test.com' }, sbi: '107183280' }
+      expect(dalConnector).toHaveBeenCalledWith(updateBusinessVATMutation, {
+        input: {
+          vat: 'GB123456789',
+          sbi: '107183280'
+        }
       })
     })
 
-    test('adds a flash notification confirming the change in data', async () => {
-      await updateBusinessEmailChangeService(yar, credentials)
+    test('adds a flash notification confirming the VAT removal', async () => {
+      await updateBusinessVatRemoveService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business email address')
+      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have removed your VAT registration number')
     })
   })
 
@@ -87,7 +88,7 @@ describe('updateBusinessEmailChangeService', () => {
     })
 
     test('rejects with "DAL error from mutation"', async () => {
-      await expect(updateBusinessEmailChangeService(yar, credentials))
+      await expect(updateBusinessVatRemoveService(yar, credentials))
         .rejects.toThrow('DAL error from mutation')
     })
   })

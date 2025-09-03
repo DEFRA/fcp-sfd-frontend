@@ -1,0 +1,21 @@
+{
+  "people": [
+    {
+      "crn": 3100010101,
+      "firstName": "Ingrid",
+      "lastName": "Cook",
+      "organisations": [
+        {
+          "organisationId": "5565448",
+          "sbi": 107183280,
+          "name": "HENLEY, RE"
+        },
+        {
+          "organisationId": "5900002",
+          "sbi": 210100102,
+          "name": "I & G Cook"
+        }
+      ]
+    }
+  ]
+}

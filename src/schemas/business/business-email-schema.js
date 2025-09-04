@@ -4,12 +4,14 @@ import { EMAIL_MAX } from '../../constants/validation-fields.js'
 export const businessEmailSchema = Joi.object({
   businessEmail: Joi.string()
     .max(EMAIL_MAX)
-    .email({
-      minDomainSegments: 2,
-      tlds: {
-        allow: true,
-        min: 2
-      }
+    .when(Joi.string().max(EMAIL_MAX), {
+      then: Joi.string().email({
+        minDomainSegments: 2,
+        tlds: {
+          allow: true,
+          min: 2
+        }
+      })
     })
     .messages({
       'string.empty': 'Enter business email address',

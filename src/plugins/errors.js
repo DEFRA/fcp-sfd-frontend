@@ -16,11 +16,11 @@ export const errors = {
 
         // Catch any user in incorrect scope errors
         if (statusCode === HTTP_STATUS_FORBIDDEN) {
-          return h.view('unauthorised').code(statusCode)
+          return h.view('unauthorised', { backLink: request.headers.referer }).code(statusCode)
         }
 
         if (statusCode === HTTP_STATUS_NOT_FOUND) {
-          return h.redirect('/page-not-found')
+          return h.view('errors/page-not-found', { backLink: request.headers.referer })
         }
 
         request.log('error', {
@@ -29,7 +29,7 @@ export const errors = {
           stack: response.data?.stack
         })
 
-        return h.redirect('/service-problem')
+        return h.view('errors/service-problem', { backLink: request.headers.referer }).code(statusCode)
       })
     }
   }

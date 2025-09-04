@@ -43,9 +43,23 @@
     {% endset %}
 
     {% set displayBusinessPhone %}
-      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
+      {% if not businessTelephone %}
+        <div>Telephone: <div class="govuk-hint display-inline">Not added</div></div>
+      {% else %}
+        <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone}}</div></div>
+      {% endif %}
+      {% if not businessMobile %}
+        <div>Mobile: <div class="govuk-hint display-inline">Not added</div></div>
+      {% else %}
+        <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
+      {% endif %}
     {% endset %}
+
+    {% if not businessTelephone and not businessMobile %}
+      {% set businessPhoneAction = "Add" %}
+    {% else %}
+      {% set businessPhoneAction = "Change" %}
+    {% endif %}
 
     {% set vatDisplayValue = vatNumber or "No number added" %}
 
@@ -96,7 +110,7 @@
             items: [
               {
                 href: "/business-phone-numbers-change",
-                text: "Change",
+                text: businessPhoneAction,
                 visuallyHiddenText: "business phone numbers"
               }
             ]

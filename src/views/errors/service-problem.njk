@@ -5,7 +5,7 @@
 {% set metaDescription = "There is a problem with this service, but you can contact us." %}
 
 {% block beforeContent %}
-  {{ appBackSignOutLink() }}
+  {{ appBackSignOutLink{(href: backLink)} }}
 {% endblock %}
 
 {% block error_content %}

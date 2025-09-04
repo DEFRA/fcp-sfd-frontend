@@ -20,7 +20,7 @@ export const errors = {
         }
 
         if (statusCode === HTTP_STATUS_NOT_FOUND) {
-          return h.view('errors/page-not-found').code(statusCode)
+          return h.redirect('/page-not-found').code(statusCode)
         }
 
         request.log('error', {
@@ -29,7 +29,7 @@ export const errors = {
           stack: response.data?.stack
         })
 
-        return h.view('errors/service-problem').code(statusCode)
+        return h.redirect('/service-problem').code(statusCode)
       })
     }
   }

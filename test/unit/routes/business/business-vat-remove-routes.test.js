@@ -46,7 +46,7 @@ describe('business VAT remove', () => {
     }
   })
 
-  describe('GET /business-vat-remove', () => {
+  describe('GET /business-VAT-registration-remove"', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         h = {
@@ -68,15 +68,15 @@ describe('business VAT remove', () => {
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
-      test('should render business-vat-remove view with page data', async () => {
+      test('should render business-VAT-registration-remove view with page data', async () => {
         await getBusinessVatRemove.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-remove', getPageData())
+        expect(h.view).toHaveBeenCalledWith('business/business-VAT-registration-remove', getPageData())
       })
     })
   })
 
-  describe('POST /business-vat-remove', () => {
+  describe('POST /business-VAT-registration-remove', () => {
     beforeEach(() => {
       h = {
         redirect: vi.fn(() => h)

@@ -8,6 +8,8 @@ services:
     depends_on:
       redis:
         condition: service_started
+      fcp-defra-id-stub:
+        condition: service_healthy
     environment:
       PORT: 3000
       NODE_ENV: development
@@ -57,3 +59,16 @@ services:
   redis:
     image: redis:7.2.3-alpine3.18
     restart: always
+
+  fcp-defra-id-stub:
+    image: defradigital/fcp-defra-id-stub
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3007/health"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 3s
+    environment:
+      AUTH_OVERRIDE_FILE: defra-id.data.json
+    volumes:
+      - ./defra-id.data.json:/data/defra-id.data.json

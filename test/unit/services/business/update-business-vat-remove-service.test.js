@@ -35,6 +35,7 @@ vi.mock('../../../../src/dal/connector.js', () => ({
     }
   })
 }))
+
 describe('updateBusinessVatRemoveService', () => {
   let yar
   let credentials
@@ -51,7 +52,7 @@ describe('updateBusinessVatRemoveService', () => {
     credentials = { sbi: '123456789', crn: '987654321' }
   })
 
-  describe('when called', () => {
+  describe('when confirmRemove is "yes"', () => {
     test('it correctly saves the data to the session with VAT set to null', async () => {
       await updateBusinessVatRemoveService(yar, credentials)
 

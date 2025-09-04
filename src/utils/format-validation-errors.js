@@ -11,7 +11,9 @@ export const formatValidationErrors = (errors) => {
       })
     } else {
       // Handle individual input field error
-      formattedErrors[path[0]] = { text }
+      if (!formattedErrors[path[0]]) {
+        formattedErrors[path[0]] = { text }
+      }
     }
   })
 

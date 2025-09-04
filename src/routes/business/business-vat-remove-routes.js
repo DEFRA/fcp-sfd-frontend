@@ -17,7 +17,7 @@ const getBusinessVatRemove = {
 
 const postBusinessVatRemove = {
   method: 'POST',
-  path: '/business-VAT-registration-remove,
+  path: '/business-VAT-registration-remove',
   options: {
     validate: {
       payload: businessVatRemoveSchema,

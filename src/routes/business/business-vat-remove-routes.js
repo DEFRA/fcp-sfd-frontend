@@ -7,17 +7,17 @@ import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getBusinessVatRemove = {
   method: 'GET',
-  path: '/business-vat-remove',
+  path: '/business-VAT-registration-remove',
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
-    return h.view('business/business-vat-remove', pageData)
+    return h.view('business/business-VAT-registration-remove', pageData)
   }
 }
 
 const postBusinessVatRemove = {
   method: 'POST',
-  path: '/business-vat-remove',
+  path: '/business-VAT-registration-remove',
   options: {
     validate: {
       payload: businessVatRemoveSchema,
@@ -29,7 +29,7 @@ const postBusinessVatRemove = {
         const businessDetailsData = request.yar.get('businessDetails')
         const pageData = businessVatRemovePresenter(businessDetailsData)
 
-        return h.view('business/business-vat-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-VAT-registration-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

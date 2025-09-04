@@ -48,7 +48,8 @@ describe('businessDetailsPresenter', () => {
         countyParishHoldingNumbers: ['12/123/1234'],
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
-        userName: data.customer.fullName
+        userName: data.customer.fullName,
+        backLink: { href: '/home' }
       })
     })
   })

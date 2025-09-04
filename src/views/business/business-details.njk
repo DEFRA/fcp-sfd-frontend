@@ -26,9 +26,10 @@
       View and update your business details
     </h1>
 
-    <h2 class="govuk-heading-m">
-      Business contact details
-    </h2>
+    {% set hasPhoneNumbers = businessTelephone or businessMobile %}
+    {% set businessPhoneAction = "Add" if not hasPhoneNumbers else "Change" %}
+    {% set vatDisplayValue = vatNumber or "No number added" %}
+    {% set hasVatNumber = vatNumber %}
 
     {% set formattedAddress %}
       {% for addressLine in address %}
@@ -43,25 +44,13 @@
     {% endset %}
 
     {% set displayBusinessPhone %}
-      {% if not businessTelephone %}
-        <div>Telephone: <div class="govuk-hint display-inline">Not added</div></div>
-      {% else %}
-        <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone}}</div></div>
-      {% endif %}
-      {% if not businessMobile %}
-        <div>Mobile: <div class="govuk-hint display-inline">Not added</div></div>
-      {% else %}
-        <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
-      {% endif %}
+      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone or "Not added"}}</div></div>
+      <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile or "Not added"}}</div></div>
     {% endset %}
 
-    {% if not businessTelephone and not businessMobile %}
-      {% set businessPhoneAction = "Add" %}
-    {% else %}
-      {% set businessPhoneAction = "Change" %}
-    {% endif %}
-
-    {% set vatDisplayValue = vatNumber or "No number added" %}
+    <h2 class="govuk-heading-m">
+      Business contact details
+    </h2>
 
     {{ govukSummaryList({
       rows: [
@@ -158,7 +147,7 @@
           </dd>
           <dd class="govuk-summary-list__actions">
             {# Logic to display the correct link actions for the VAT number #}
-            {% if vatNumber %}
+            {% if hasVatNumber %}
               <ul class="govuk-summary-list__actions-list">
                 <li class="govuk-summary-list__actions-list-item">
                   <a class="govuk-link" href="/business-vat-remove">

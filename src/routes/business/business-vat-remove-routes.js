@@ -4,17 +4,17 @@ import { businessVatRemovePresenter } from '../../presenters/business/business-v
 
 const getBusinessVatRemove = {
   method: 'GET',
-  path: '/business-vat-remove',
+  path: '/business-VAT-registration-remove',
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
-    return h.view('business/business-vat-remove', pageData)
+    return h.view('business/business-VAT-registration-remove', pageData)
   }
 }
 
 const postBusinessVatRemove = {
   method: 'POST',
-  path: '/business-vat-remove',
+  path: '/business-VAT-registration-remove',
   handler: async (request, h) => {
     await updateBusinessVatRemoveService(request.yar, request.auth.credentials)
     return h.redirect('/business-details')

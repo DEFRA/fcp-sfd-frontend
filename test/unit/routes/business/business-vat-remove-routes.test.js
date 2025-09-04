@@ -59,7 +59,7 @@ describe('business VAT remove', () => {
 
       test('should have the correct method and path', () => {
         expect(getBusinessVatRemove.method).toBe('GET')
-        expect(getBusinessVatRemove.path).toBe('/business-vat-remove')
+        expect(getBusinessVatRemove.path).toBe('/business-VAT-registration-remove')
       })
 
       test('it fetches the data from the session', async () => {

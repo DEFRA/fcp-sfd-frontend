@@ -18,10 +18,12 @@ export const formatValidationErrors = (errors) => {
       context.peers.forEach(peer => {
         formattedErrors[peer] = { text }
       })
-      // Single-field validation: show error on the specific field that failed
+    // Single-field validation: show error on the specific field that failed
     } else if (!formattedErrors[path[0]]) {
       // Only add error if this field doesn't already have one (prevents overwriting)
       formattedErrors[path[0]] = { text }
+    } else {
+      // Field already has an error, don't overwrite it
     }
   })
 

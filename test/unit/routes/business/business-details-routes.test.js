@@ -45,6 +45,9 @@ describe('business details', () => {
               crn: '987654321',
               email: 'test@example.com'
             }
+          },
+          headers: {
+            referer: 'https://example.com/home'
           }
         }
 
@@ -89,6 +92,7 @@ const getMockData = () => {
 
 const getPageData = () => {
   return {
+    backlink: { href: 'https://example.com/home' },
     businessName: 'Agile Farm Ltd',
     businessAddress: {
       address1: '10 Skirbeck Way',

@@ -9,11 +9,9 @@ export const formatValidationErrors = (errors) => {
       context.peers.forEach(peer => {
         formattedErrors[peer] = { text }
       })
-    } else {
+    } else if (!formattedErrors[path[0]]) {
       // Handle individual input field error
-      if (!formattedErrors[path[0]]) {
-        formattedErrors[path[0]] = { text }
-      }
+      formattedErrors[path[0]] = { text }
     }
   })
 

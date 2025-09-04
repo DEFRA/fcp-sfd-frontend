@@ -1,5 +1,5 @@
 {% extends 'common/layout.njk' %}
-{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
 
 {% block beforeContent %}
 {{ appBackSignOutLink({ href: backLink }) }}

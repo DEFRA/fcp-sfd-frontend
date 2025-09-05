@@ -46,7 +46,7 @@ describe('business VAT remove', () => {
     }
   })
 
-  describe('GET /business-vat-remove', () => {
+  describe('GET /business-vat-registration-remove', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         h = {
@@ -59,7 +59,7 @@ describe('business VAT remove', () => {
 
       test('should have the correct method and path', () => {
         expect(getBusinessVatRemove.method).toBe('GET')
-        expect(getBusinessVatRemove.path).toBe('/business-vat-remove')
+        expect(getBusinessVatRemove.path).toBe('/business-vat-registration-remove')
       })
 
       test('it fetches the data from the session', async () => {
@@ -68,7 +68,7 @@ describe('business VAT remove', () => {
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
-      test('should render business-vat-remove view with page data', async () => {
+      test('should render business-vat-registration-remove view with page data', async () => {
         await getBusinessVatRemove.handler(request, h)
 
         expect(h.view).toHaveBeenCalledWith('business/business-vat-remove', getPageData())
@@ -76,7 +76,7 @@ describe('business VAT remove', () => {
     })
   })
 
-  describe('POST /business-vat-remove', () => {
+  describe('POST /business-vat-registration-remove', () => {
     beforeEach(() => {
       h = {
         redirect: vi.fn(() => h)

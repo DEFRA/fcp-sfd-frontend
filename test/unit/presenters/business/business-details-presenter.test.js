@@ -46,6 +46,9 @@ describe('businessDetailsPresenter', () => {
         businessEmail: data.contact.email,
         sbi: data.info.sbi,
         vatNumber: data.info.vat,
+        hasVatNumber: data.info.vat,
+        vatRemoveLink: '/business-vat-remove',
+        vatChangeLink: '/business-vat-change',
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
@@ -126,8 +129,22 @@ describe('businessDetailsPresenter', () => {
         data.info.vat = null
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.vatNumber).toEqual(null)
+        expect(result.vatNumber).toEqual('No number added')
       })
+    })
+  })
+
+  describe('the VAT link properties', () => {
+    test('it should return the correct remove link', () => {
+      const result = businessDetailsPresenter(data, yar)
+
+      expect(result.vatRemoveLink).toEqual('/business-vat-remove')
+    })
+
+    test('it should return the correct change link', () => {
+      const result = businessDetailsPresenter(data, yar)
+
+      expect(result.vatChangeLink).toEqual('/business-vat-change')
     })
   })
 

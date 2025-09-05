@@ -26,9 +26,6 @@
       View and update your business details
     </h1>
 
-    {% set vatDisplayValue = vatNumber or "No number added" %}
-    {% set hasVatNumber = vatNumber %}
-
     {% set formattedAddress %}
       {% for addressLine in address %}
         <div>{{addressLine}}</div>
@@ -141,25 +138,25 @@
             VAT registration number
           </dt>
           <dd class="govuk-summary-list__value">
-            {{ vatDisplayValue }}
+            {{ vatNumber }}
           </dd>
           <dd class="govuk-summary-list__actions">
             {# Logic to display the correct link actions for the VAT number #}
             {% if hasVatNumber %}
               <ul class="govuk-summary-list__actions-list">
                 <li class="govuk-summary-list__actions-list-item">
-                  <a class="govuk-link" href="/business-vat-remove">
+                  <a class="govuk-link" href="{{vatRemoveLink}}">
                     Remove<span class="govuk-visually-hidden"> VAT registration number</span>
                   </a>
                 </li>
                 <li class="govuk-summary-list__actions-list-item">
-                  <a class="govuk-link" href="/business-vat-change">
+                  <a class="govuk-link" href="{{vatChangeLink}}">
                     Change<span class="govuk-visually-hidden"> VAT registration number</span>
                   </a>
                 </li>
               </ul>
             {% else %}
-              <a class="govuk-link" href="/business-vat-change">
+              <a class="govuk-link" href="{{vatChangeLink}}">
                 Add<span class="govuk-visually-hidden"> VAT registration number</span>
               </a>
             {% endif %}

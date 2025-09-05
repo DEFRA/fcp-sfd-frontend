@@ -12,8 +12,11 @@ const businessDetailsPresenter = (data, yar) => {
     metaDescription: 'View and change the details for your business.',
     address: addressPresenter.formatAddress(data.address),
     businessName: data.info.businessName,
-    businessTelephone: data.contact.landline ?? 'Not added',
-    businessMobile: data.contact.mobile ?? 'Not added',
+    businessTelephone: {
+      telephone: data.contact.landline || 'Not added',
+      mobile: data.contact.mobile || 'Not added'
+    },
+    businessPhoneAction: data.contact.landline ?? data.contact.mobile ? 'Change' : 'Add',
     businessEmail: data.contact.email,
     sbi: data.info.sbi,
     vatNumber: data.info.vat ?? null,

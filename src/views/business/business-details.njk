@@ -26,8 +26,6 @@
       View and update your business details
     </h1>
 
-    {% set hasPhoneNumbers = businessTelephone or businessMobile %}
-    {% set businessPhoneAction = "Add" if not hasPhoneNumbers else "Change" %}
     {% set vatDisplayValue = vatNumber or "No number added" %}
     {% set hasVatNumber = vatNumber %}
 
@@ -43,9 +41,9 @@
       {% endfor %}
     {% endset %}
 
-    {% set displayBusinessPhone %}
-      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone or "Not added"}}</div></div>
-      <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile or "Not added"}}</div></div>
+    {% set displayBusinessTelephone %}
+      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone.telephone}}</div></div>
+      <div>Mobile: <div class="govuk-hint display-inline">{{businessTelephone.mobile}}</div></div>
     {% endset %}
 
     <h2 class="govuk-heading-m">
@@ -93,7 +91,7 @@
             text: "Business phone numbers"
           },
           value: {
-            html: displayBusinessPhone
+            html: displayBusinessTelephone
           },
           actions: {
             items: [

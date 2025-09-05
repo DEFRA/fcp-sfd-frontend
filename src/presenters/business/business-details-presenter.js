@@ -13,10 +13,10 @@ const businessDetailsPresenter = (data, yar) => {
     address: addressPresenter.formatAddress(data.address),
     businessName: data.info.businessName,
     businessTelephone: {
-      telephone: data.contact.landline || 'Not added',
-      mobile: data.contact.mobile || 'Not added'
+      telephone: data.contact.landline ?? 'Not added',
+      mobile: data.contact.mobile ?? 'Not added'
     },
-    businessPhoneAction: data.contact.landline ?? data.contact.mobile ? 'Change' : 'Add',
+    businessPhoneAction: data.contact.landline || data.contact.mobile ? 'Change' : 'Add',
     businessEmail: data.contact.email,
     sbi: data.info.sbi,
     vatNumber: data.info.vat ?? null,

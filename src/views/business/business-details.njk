@@ -3,7 +3,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "common/sub-header/macro.njk" import subHeader %}
-{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
@@ -26,10 +26,6 @@
       View and update your business details
     </h1>
 
-    <h2 class="govuk-heading-m">
-      Business contact details
-    </h2>
-
     {% set formattedAddress %}
       {% for addressLine in address %}
         <div>{{addressLine}}</div>
@@ -38,14 +34,18 @@
 
     {% set formattedCph %}
       {% for cphNumber in countyParishHoldingNumbers %}
-       <div> {{cphNumber}} </div>
+        <div> {{cphNumber}} </div>
       {% endfor %}
     {% endset %}
 
-    {% set displayBusinessPhone %}
-      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
+    {% set displayBusinessTelephone %}
+      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone.telephone}}</div></div>
+      <div>Mobile: <div class="govuk-hint display-inline">{{businessTelephone.mobile}}</div></div>
     {% endset %}
+
+    <h2 class="govuk-heading-m">
+      Business contact details
+    </h2>
 
     {{ govukSummaryList({
       rows: [
@@ -88,13 +88,13 @@
             text: "Business phone numbers"
           },
           value: {
-            html: displayBusinessPhone
+            html: displayBusinessTelephone
           },
           actions: {
             items: [
               {
                 href: "/business-phone-numbers-change",
-                text: "Change",
+                text: businessPhoneAction,
                 visuallyHiddenText: "business phone numbers"
               }
             ]
@@ -124,50 +124,69 @@
       Reference numbers
     </h2>
 
-    {{ govukSummaryList({
-      rows: [
-        {
-          key: {
-            text: "Single business identifier (SBI)"
-          },
-          value: {
-            text: sbi
-          }
-        },
-        {
-          key: {
-            text: "VAT registration number"
-          },
-          value: {
-            text: vatNumber
-          }
-        },
-        {
-          key: {
-            text: "Trader number"
-          },
-          value: {
-            text: tradeNumber
-          }
-        },
-        {
-          key: {
-            text: "Vendor registration number"
-          },
-          value: {
-            text: vendorRegistrationNumber
-          }
-        },
-        {
-          key: {
-            text: "County Parish Holding (CPH) numbers"
-          },
-          value: {
-            html: formattedCph
-          }
-        }
-      ]
-    }) }}
+      <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Single business identifier (SBI)
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ sbi }}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            VAT registration number
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ vatNumber }}
+          </dd>
+          <dd class="govuk-summary-list__actions">
+            {# Logic to display the correct link actions for the VAT number #}
+            {% if hasVatNumber %}
+              <ul class="govuk-summary-list__actions-list">
+                <li class="govuk-summary-list__actions-list-item">
+                  <a class="govuk-link" href="{{vatRemoveLink}}">
+                    Remove<span class="govuk-visually-hidden"> VAT registration number</span>
+                  </a>
+                </li>
+                <li class="govuk-summary-list__actions-list-item">
+                  <a class="govuk-link" href="{{vatChangeLink}}">
+                    Change<span class="govuk-visually-hidden"> VAT registration number</span>
+                  </a>
+                </li>
+              </ul>
+            {% else %}
+              <a class="govuk-link" href="{{vatChangeLink}}">
+                Add<span class="govuk-visually-hidden"> VAT registration number</span>
+              </a>
+            {% endif %}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Trader number
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ tradeNumber }}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            Vendor registration number
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ vendorRegistrationNumber }}
+          </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            County Parish Holding (CPH) numbers
+          </dt>
+          <dd class="govuk-summary-list__value">
+            {{ formattedCph | safe }}
+          </dd>
+        </div>
+      </dl>
 
     <h2 class="govuk-heading-m">
       Additional details

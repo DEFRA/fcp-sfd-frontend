@@ -38,38 +38,88 @@ describe('businessDetailsPresenter', () => {
           'United Kingdom'
         ],
         businessName: data.info.businessName,
-        businessTelephone: data.contact.landline,
-        businessMobile: data.mobile ?? 'Not added',
+        businessTelephone: {
+          telephone: data.contact.landline,
+          mobile: 'Not added'
+        },
+        businessPhoneAction: 'Change',
         businessEmail: data.contact.email,
         sbi: data.info.sbi,
         vatNumber: data.info.vat,
+        hasVatNumber: data.info.vat,
+        vatRemoveLink: '/business-vat-remove',
+        vatChangeLink: '/business-vat-change',
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
-        userName: data.customer.fullName
+        userName: data.customer.fullName,
+        backLink: { href: '/home' }
       })
+    })
+  })
+
+  describe('when both business telephone and mobile properties have values', () => {
+    test('it should return the actual values', () => {
+      data.contact.landline = '01234567890'
+      data.contact.mobile = '07123456789'
+      const result = businessDetailsPresenter(data, yar)
+
+      expect(result.businessTelephone.telephone).toEqual('01234567890')
+      expect(result.businessTelephone.mobile).toEqual('07123456789')
     })
   })
 
   describe('the "businessTelephone" property', () => {
     describe('when the landline property is missing', () => {
-      test('it should return the text "Not added', () => {
+      test('it should return the text "Not added"', () => {
         data.contact.landline = null
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.businessTelephone).toEqual('Not added')
+        expect(result.businessTelephone.telephone).toEqual('Not added')
       })
     })
   })
 
   describe('the "businessMobile" property', () => {
     describe('when the businessMobile property is missing', () => {
-      test('it should return the text "Not added', () => {
+      test('it should return the text "Not added"', () => {
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.businessMobile).toEqual('Not added')
+        expect(result.businessTelephone.mobile).toEqual('Not added')
+      })
+    })
+  })
+
+  describe('the "businessPhoneAction" property', () => {
+    describe('when both business telephone and mobile properties have values', () => {
+      test('it should return the text "Change"', () => {
+        data.contact.landline = '01234567890'
+        data.contact.mobile = '07123456789'
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.businessPhoneAction).toEqual('Change')
+      })
+    })
+
+    describe('when only one of the properties has a value', () => {
+      test('it should return the text "Change"', () => {
+        data.contact.landline = '01234567890'
+        data.contact.mobile = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.businessPhoneAction).toEqual('Change')
+      })
+    })
+
+    describe('when both properties are null', () => {
+      test('it should return the text "Add"', () => {
+        data.contact.landline = null
+        data.contact.mobile = null
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.businessPhoneAction).toEqual('Add')
       })
     })
   })
@@ -80,8 +130,22 @@ describe('businessDetailsPresenter', () => {
         data.info.vat = null
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.vatNumber).toEqual(null)
+        expect(result.vatNumber).toEqual('No number added')
       })
+    })
+  })
+
+  describe('the VAT link properties', () => {
+    test('it should return the correct remove link', () => {
+      const result = businessDetailsPresenter(data, yar)
+
+      expect(result.vatRemoveLink).toEqual('/business-vat-remove')
+    })
+
+    test('it should return the correct change link', () => {
+      const result = businessDetailsPresenter(data, yar)
+
+      expect(result.vatChangeLink).toEqual('/business-vat-change')
     })
   })
 

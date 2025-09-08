@@ -1,24 +1,12 @@
-import { rawPersonalDetailsSchema } from '../schemas/dal/personal-details-schema.js'
-import { createLogger } from '../utils/logger.js'
-
 /**
  * Takes the raw data and maps it to a more usable format
  *
- * @param {Object} raw - The raw response payload from the DAL
+ * @param {Object} value - The data from the DAL
  *
  * @returns {Object} Formatted personal details data
  */
 
-export const mapPersonalDetails = (raw) => {
-  const logger = createLogger()
-
-  const { error, value } = rawPersonalDetailsSchema.validate(raw)
-
-  if (error) {
-    logger.error(`Validation fail for personal-details DAL response: ${error.message}`)
-    throw new Error(`Validation fail for personal-details DAL response: ${error.message}`)
-  }
-
+export const mapPersonalDetails = (value) => {
   return {
     crn: value.customer.crn,
     info: {

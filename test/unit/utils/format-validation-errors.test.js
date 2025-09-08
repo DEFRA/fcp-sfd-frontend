@@ -64,27 +64,54 @@ describe('formatValidationErrors', () => {
   })
 
   describe('when the error is not "object.missing"', () => {
-    beforeEach(() => {
-      errorDetails = [
-        {
-          path: ['businessName'],
-          message: 'Enter business name',
-          type: 'string.empty'
-        },
-        {
-          path: ['address1'],
-          message: 'Enter address line 1',
-          type: 'string.max'
-        }
-      ]
+    describe('and there are multiple input fields', () => {
+      beforeEach(() => {
+        errorDetails = [
+          {
+            path: ['businessName'],
+            message: 'Enter business name',
+            type: 'string.empty'
+          },
+          {
+            path: ['address1'],
+            message: 'Enter address line 1',
+            type: 'string.max'
+          }
+        ]
+      })
+
+      test('should format validation errors correctly', () => {
+        const result = formatValidationErrors(errorDetails)
+
+        expect(result).toEqual({
+          businessName: { text: 'Enter business name' },
+          address1: { text: 'Enter address line 1' }
+        })
+      })
     })
 
-    test('should format validation errors correctly', () => {
-      const result = formatValidationErrors(errorDetails)
+    describe('and there are multiple errors on one input field', () => {
+      beforeEach(() => {
+        errorDetails = [
+          {
+            path: ['businessName'],
+            message: 'Enter business name',
+            type: 'string.empty'
+          },
+          {
+            path: ['businessName'],
+            message: 'Business name must be at least 1 character long',
+            type: 'string.min'
+          }
+        ]
+      })
 
-      expect(result).toEqual({
-        businessName: { text: 'Enter business name' },
-        address1: { text: 'Enter address line 1' }
+      test('should only return back the first error formatted', () => {
+        const result = formatValidationErrors(errorDetails)
+
+        expect(result).toEqual({
+          businessName: { text: 'Enter business name' }
+        })
       })
     })
   })

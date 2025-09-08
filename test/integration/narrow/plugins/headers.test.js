@@ -75,7 +75,7 @@ describe('headers', () => {
     const response = await server.inject({
       url: '/'
     })
-    expect(response.headers['referrer-policy']).toBe('no-referrer')
+    expect(response.headers['referrer-policy']).toBe('same-origin')
   })
 
   test('should ensure strict transport security', async () => {

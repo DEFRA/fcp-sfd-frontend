@@ -4,13 +4,15 @@
   <div class="govuk-grid-column-two-thirds">
   {{ govukBackLink({
     text: params.text | default("Back"),
-    href: params.href | default("#")
+    href: params.href | default("/")
   }) }}
   </div>
 
+{% if auth.isAuthenticated %}
   <div  class="govuk-grid-column-one-third govuk-text-align-right">
     <a href="/auth/sign-out" class="govuk-link">Sign out</a>
   </div>
+{% endif %}
 
 </div>
 

@@ -7,18 +7,18 @@ import { setSessionData } from '../../utils/session/set-session-data.js'
 
 const getBusinessVatChange = {
   method: 'GET',
-  path: '/business-VAT-registration-number-change',
+  path: '/business-vat-registration-number-change',
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessVatChangePresenter(businessDetails)
 
-    return h.view('business/business-VAT-registration-number-change', pageData)
+    return h.view('business/business-vat-registration-number-change', pageData)
   }
 }
 
 const postBusinessVatChange = {
   method: 'POST',
-  path: '/business-VAT-registration-number-change',
+  path: '/business-vat-registration-number-change',
   options: {
     validate: {
       payload: businessVatSchema,
@@ -30,13 +30,13 @@ const postBusinessVatChange = {
         const businessDetailsData = request.yar.get('businessDetails')
         const pageData = businessVatChangePresenter(businessDetailsData, request.payload.vatNumber)
 
-        return h.view('business/business-VAT-registration-number-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-vat-registration-number-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {
       setSessionData(request.yar, 'businessDetails', 'changeBusinessVat', request.payload.vatNumber)
 
-      return h.redirect('/business-VAT-registration-number-check')
+      return h.redirect('/business-vat-registration-number-check')
     }
   }
 }

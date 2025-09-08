@@ -11,7 +11,7 @@ const getBusinessVatRemove = {
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
-    return h.view('business/business-vat-remove', pageData)
+    return h.view('business/business-VAT-registration-remove', pageData)
   }
 }
 
@@ -29,7 +29,7 @@ const postBusinessVatRemove = {
         const businessDetailsData = request.yar.get('businessDetails')
         const pageData = businessVatRemovePresenter(businessDetailsData)
 
-        return h.view('business/business-vat-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-VAT-registration-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

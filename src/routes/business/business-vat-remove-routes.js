@@ -7,7 +7,7 @@ import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getBusinessVatRemove = {
   method: 'GET',
-  path: '/business-VAT-registration-remove',
+  path: '/business-vat-registration-remove',
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
@@ -17,7 +17,7 @@ const getBusinessVatRemove = {
 
 const postBusinessVatRemove = {
   method: 'POST',
-  path: '/business-VAT-registration-remove',
+  path: '/business-vat-registration-remove',
   options: {
     validate: {
       payload: businessVatRemoveSchema,

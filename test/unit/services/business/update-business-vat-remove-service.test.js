@@ -53,11 +53,11 @@ describe('updateBusinessVatRemoveService', () => {
   })
 
   describe('when confirmRemove is "yes"', () => {
-    test('it correctly saves the data to the session with VAT set to null', async () => {
+    test('it correctly saves the data to the session with VAT set to empty string', async () => {
       await updateBusinessVatRemoveService(yar, credentials)
 
       expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
-      expect(mappedData.info.vat).toBeNull()
+      expect(mappedData.info.vat).toBe('')
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 
@@ -66,7 +66,7 @@ describe('updateBusinessVatRemoveService', () => {
 
       expect(dalConnector).toHaveBeenCalledWith(updateBusinessVATMutation, {
         input: {
-          vat: 'GB123456789',
+          vat: '',
           sbi: '107183280'
         }
       })

@@ -4,6 +4,8 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { dalConnector } from '../../../../src/dal/connector.js'
+import { updateBusinessPhoneNumbersMutation } from '../../../../src/dal/mutations/update-business-phone-numbers.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -20,6 +22,23 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
   flashNotification: vi.fn()
 }))
 
+vi.mock('../../../../src/dal/connector.js', () => ({
+  dalConnector: vi.fn().mockResolvedValue({
+    data: {
+      updateBusinessPhoneNumbers: {
+        business: {
+          info: {
+            phone: {
+              landline: '02222 222222',
+              mobile: '01111 111111'
+            }
+          }
+        }
+      }
+    }
+  })
+}))
+
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar
   let credentials
@@ -30,7 +49,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
     yar = {
       set: vi.fn().mockReturnValue()
     }
-    credentials = { sbi: '123456789', crn: '987654321', email: 'test@example.com' }
+    credentials = { sbi: '123456789', crn: '987654321' }
   })
 
   describe('when called', () => {
@@ -54,6 +73,20 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })
+
+      test('it calls dalConnector with correct mutation and variable', async () => {
+        await updateBusinessPhoneNumbersChangeService(yar, credentials)
+
+        expect(dalConnector).toHaveBeenCalledWith(updateBusinessPhoneNumbersMutation, {
+          input: {
+            phone: {
+              landline: null,
+              mobile: null
+            },
+            sbi: '107183280'
+          }
+        })
+      })
     })
 
     describe('and the changeBusinessNumbers are not null', async () => {
@@ -76,6 +109,21 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })
+    })
+  })
+
+  describe('when an update fails', () => {
+    beforeEach(() => {
+      dalConnector.mockResolvedValue({
+        errors: [{
+          message: 'Failed to update'
+        }]
+      })
+    })
+
+    test('rejects with "DAL error from mutation"', async () => {
+      await expect(updateBusinessPhoneNumbersChangeService(yar, credentials))
+        .rejects.toThrow('DAL error from mutation')
     })
   })
 })

@@ -7,8 +7,8 @@ import { plugins } from './plugins/index.js'
 import { setupProxy } from './utils/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
-
-let tokenCache = null
+import { initTokenCache } from './utils/caching/token-cache.js'
+import { SCOPE } from './constants/scope/business-details.js'
 
 export const createServer = async () => {
   setupProxy()
@@ -59,27 +59,23 @@ export const createServer = async () => {
     expiresIn: config.get('server.session.cache.ttl')
   })
 
-  // Partition the redis cache to allow tokens to be stored
-  server.app.tokenCache = server.cache({
-    cache: CACHE_NAME,
-    segment: 'tokenCache',
-    expiresIn: config.get('redis.ttl')
-  })
-
-  tokenCache = server.app.tokenCache
+  server.app.tokenCache = initTokenCache(server, CACHE_NAME)
 
   server.validator(Joi)
   await server.register(plugins)
 
   server.ext('onPreResponse', catchAll)
 
-  return server
-}
+  // Currently, only users with full permissions are supported.
+  // Users without them hit a generic error and can’t view the page.
+  // To help during development, we log when a user lacks the required scope.
+  server.ext('onPreAuth', (request, h) => {
+    if (!request.auth.credentials?.scope?.includes(SCOPE)) {
+      server.logger.error('🚀 User missing full permissions for selected business')
+    }
 
-// this allows the tokenCache to be imported independent of the server object
-export const getTokenCache = () => {
-  if (!tokenCache) {
-    throw new Error('Token cache is not initialized.')
-  }
-  return tokenCache
+    return h.continue
+  })
+
+  return server
 }

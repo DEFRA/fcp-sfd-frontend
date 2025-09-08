@@ -2,7 +2,7 @@
 
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
-{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
 
 {% block beforeContent %}
   {{ appBackSignOutLink(backLink) }}

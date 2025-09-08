@@ -1,5 +1,4 @@
 {% extends 'common/layout.njk' %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block beforeContent %}
   <div class="govuk-grid-row sub-header-container govuk-!-padding-top-3">
@@ -25,18 +24,6 @@
       <p>
         <a href="/personal-details">View and update your personal details</a>
       </p>
-
-      <span class="govuk-caption-m">{{ auth.organisationId }}</span>
-      <h2 class="govuk-heading-m">Your session details</h2>
-
-      <dl class="govuk-summary-list">
-        {% for key, value in auth %}
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">{{ key }}</dt>
-            <dd class="govuk-summary-list__value">{{ value }}</dd>
-          </div>
-        {% endfor %}
-      </dl>
 
     </div>
   </div>

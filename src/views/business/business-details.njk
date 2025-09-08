@@ -3,7 +3,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "common/sub-header/macro.njk" import subHeader %}
-{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
 
 {% block beforeContent %}
   {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
@@ -26,10 +26,6 @@
       View and update your business details
     </h1>
 
-    <h2 class="govuk-heading-m">
-      Business contact details
-    </h2>
-
     {% set formattedAddress %}
       {% for addressLine in address %}
         <div>{{addressLine}}</div>
@@ -42,12 +38,14 @@
       {% endfor %}
     {% endset %}
 
-    {% set displayBusinessPhone %}
-      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
+    {% set displayBusinessTelephone %}
+      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone.telephone}}</div></div>
+      <div>Mobile: <div class="govuk-hint display-inline">{{businessTelephone.mobile}}</div></div>
     {% endset %}
 
-    {% set vatDisplayValue = vatNumber or "No number added" %}
+    <h2 class="govuk-heading-m">
+      Business contact details
+    </h2>
 
     {{ govukSummaryList({
       rows: [
@@ -90,13 +88,13 @@
             text: "Business phone numbers"
           },
           value: {
-            html: displayBusinessPhone
+            html: displayBusinessTelephone
           },
           actions: {
             items: [
               {
                 href: "/business-phone-numbers-change",
-                text: "Change",
+                text: businessPhoneAction,
                 visuallyHiddenText: "business phone numbers"
               }
             ]
@@ -140,25 +138,25 @@
             VAT registration number
           </dt>
           <dd class="govuk-summary-list__value">
-            {{ vatDisplayValue }}
+            {{ vatNumber }}
           </dd>
           <dd class="govuk-summary-list__actions">
             {# Logic to display the correct link actions for the VAT number #}
-            {% if vatNumber %}
+            {% if hasVatNumber %}
               <ul class="govuk-summary-list__actions-list">
                 <li class="govuk-summary-list__actions-list-item">
-                  <a class="govuk-link" href="/business-vat-remove">
+                  <a class="govuk-link" href="{{vatRemoveLink}}">
                     Remove<span class="govuk-visually-hidden"> VAT registration number</span>
                   </a>
                 </li>
                 <li class="govuk-summary-list__actions-list-item">
-                  <a class="govuk-link" href="/business-vat-change">
+                  <a class="govuk-link" href="{{vatChangeLink}}">
                     Change<span class="govuk-visually-hidden"> VAT registration number</span>
                   </a>
                 </li>
               </ul>
             {% else %}
-              <a class="govuk-link" href="/business-vat-change">
+              <a class="govuk-link" href="{{vatChangeLink}}">
                 Add<span class="govuk-visually-hidden"> VAT registration number</span>
               </a>
             {% endif %}

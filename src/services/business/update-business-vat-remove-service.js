@@ -6,7 +6,7 @@ import { flashNotification } from '../../utils/notifications/flash-notification.
 const updateBusinessVatRemoveService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials)
 
-  const variables = { input: { vat: businessDetails.info.vat, sbi: businessDetails.info.sbi } }
+  const variables = { input: { vat: '', sbi: businessDetails.info.sbi } }
 
   const response = await dalConnector(updateBusinessVATMutation, variables)
 
@@ -14,7 +14,7 @@ const updateBusinessVatRemoveService = async (yar, credentials) => {
     throw new Error('DAL error from mutation')
   }
 
-  businessDetails.info.vat = null
+  businessDetails.info.vat = ''
 
   yar.set('businessDetails', businessDetails)
   flashNotification(yar, 'Success', 'You have removed your VAT registration number')

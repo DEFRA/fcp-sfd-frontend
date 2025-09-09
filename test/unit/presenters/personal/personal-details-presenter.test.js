@@ -4,35 +4,18 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Thing under test
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
 
-// Dependencies
-import { addressPresenter } from '../../../../src/presenters/address-presenter.js'
-
 // Mock data
-import { mappedData as originalData } from '../../../mocks/mock-personal-details.js'
+import { mappedData } from '../../../mocks/mock-personal-details.js'
 
 describe('personalDetailsPresenter', () => {
   let yar
   let data
 
-  vi.mock('../../../../src/presenters/address-presenter.js', () => ({
-    addressPresenter: {
-      formatAddress: vi.fn().mockReturnValue([
-        'THE COACH HOUSE',
-        'STOCKWELL HALL',
-        '7 HAREWOOD AVENUE',
-        'DARLINGTON',
-        'Dorset',
-        'CO9 3LS',
-        'United Kingdom'
-      ])
-    }
-  }))
-
   beforeEach(() => {
     vi.clearAllMocks()
 
     // Deep clone the data to avoid mutation across tests
-    data = JSON.parse(JSON.stringify(originalData))
+    data = JSON.parse(JSON.stringify(mappedData))
 
     // Mock yar session manager
     yar = {
@@ -49,7 +32,15 @@ describe('personalDetailsPresenter', () => {
         notification: { title: 'Update', text: 'Personal details updated successfully' },
         pageTitle: 'View and update your personal details',
         metaDescription: 'View and update your personal details.',
-        address: addressPresenter.formatAddress(data.address),
+        address: [
+          'THE COACH HOUSE',
+          'STOCKWELL HALL',
+          '7 HAREWOOD AVENUE',
+          'Dorset',
+          'DARLINGTON',
+          'CO9 3LS',
+          'United Kingdom'
+        ],
         crn: data.crn,
         fullName: 'John M Doe', // Assumes your mock fullName is { first: 'John', middle: 'M', last: 'Doe' }
         dateOfBirth: data.info.dateOfBirth,

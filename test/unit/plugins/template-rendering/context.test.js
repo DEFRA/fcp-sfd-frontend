@@ -76,7 +76,7 @@ describe('#context', () => {
             url: '/'
           }
         ],
-        serviceName: 'Single Front Door',
+        serviceName: 'Land and farm service',
         serviceUrl: '/'
       })
     })
@@ -149,7 +149,7 @@ describe('#context cache', () => {
             url: '/'
           }
         ],
-        serviceName: 'Single Front Door',
+        serviceName: 'Land and farm service',
         serviceUrl: '/'
       })
     })

@@ -23,6 +23,7 @@ const formatAddress = (address) => {
   return {
     address1: manual.line1 ?? null,
     address2: manual.line2 ?? null,
+    address3: manual.line3 ?? null,
     city: manual.line4 ?? null,
     county: manual.line5 ?? null,
     country: country ?? null,

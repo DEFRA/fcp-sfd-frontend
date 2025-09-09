@@ -26,8 +26,8 @@ describe('businessVatCheckPresenter', () => {
       const result = businessVatCheckPresenter(data)
 
       expect(result).toEqual({
-        backLink: { href: '/business-vat-change' },
-        changeLink: '/business-vat-change',
+        backLink: { href: '/business-vat-registration-number-change' },
+        changeLink: '/business-vat-registration-number-change',
         pageTitle: 'Check your VAT registration number is correct before submitting',
         metaDescription: 'Check the VAT registration number for your business is correct.',
         businessName: 'Agile Farm Ltd',

@@ -48,7 +48,7 @@ describe('business VAT change', () => {
 
       test('should have the correct method and path', () => {
         expect(getBusinessVatChange.method).toBe('GET')
-        expect(getBusinessVatChange.path).toBe('/business-VAT-registration-number-change')
+        expect(getBusinessVatChange.path).toBe('/business-vat-registration-number-change')
       })
 
       test('it fetches the data from the session', async () => {
@@ -57,15 +57,15 @@ describe('business VAT change', () => {
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
-      test('should render business-VAT-registration-number-change view with page data', async () => {
+      test('should render business-vat-registration-number-change view with page data', async () => {
         await getBusinessVatChange.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-VAT-registration-number-change', getPageData())
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-change', getPageData())
       })
     })
   })
 
-  describe('POST /business-VAT-registration-number-change', () => {
+  describe('POST /business-vat-registration-number-change', () => {
     beforeEach(() => {
       const responseStub = {
         code: vi.fn().mockReturnThis(),
@@ -88,10 +88,10 @@ describe('business VAT change', () => {
 
     describe('when a request succeeds', () => {
       describe('and the validation passes', () => {
-        test('it redirects to the business-VAT-registration-number-check page', async () => {
+        test('it redirects to the business-vat-registration-number-check page', async () => {
           await postBusinessVatChange.options.handler(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/business-VAT-registration-number-check')
+          expect(h.redirect).toHaveBeenCalledWith('/business-vat-registration-number-check')
         })
 
         test('sets the payload on the yar state', async () => {
@@ -125,7 +125,7 @@ describe('business VAT change', () => {
       test('it renders the view with errors', async () => {
         await postBusinessVatChange.options.validate.failAction(request, h, err)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-VAT-registration-number-change', getPageDataError())
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-change', getPageDataError())
       })
 
       test('it returns a bad request status code', async () => {
@@ -142,7 +142,7 @@ describe('business VAT change', () => {
         const pageData = getPageDataError()
         pageData.errors = {}
 
-        expect(h.view).toHaveBeenCalledWith('business/business-VAT-registration-number-change', pageData)
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-change', pageData)
       })
     })
   })

@@ -9,7 +9,7 @@
  *
  * If both a building number range and a street are present, they are combined into one line so they display together.
  *
- * Postcode, and country are always appended to the final address array.
+ * Postcode and country are always appended to the final address array.
  *
  * @param {Object} address - The complete address object
  *

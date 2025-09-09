@@ -64,10 +64,11 @@ const savedData = () => {
       lookup: {
         buildingName: null,
         buildingNumberRange: null,
-        city: null,
         county: null,
         flatName: null,
-        street: null
+        street: null,
+        city: null,
+        uprn: null
       },
       manual: {
         line1: 'A different address',

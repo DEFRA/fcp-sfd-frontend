@@ -32,8 +32,8 @@ describe('businessDetailsPresenter', () => {
           'THE COACH HOUSE',
           'STOCKWELL HALL',
           '7 HAREWOOD AVENUE',
-          'DARLINGTON',
           'Dorset',
+          'DARLINGTON',
           'CO9 3LS',
           'United Kingdom'
         ],

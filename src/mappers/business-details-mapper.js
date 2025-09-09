@@ -25,7 +25,8 @@ export const mapBusinessDetails = (value) => {
         buildingName: value.business.info.address.buildingName,
         street: value.business.info.address.street,
         county: value.business.info.address.county,
-        uprn: value.business.info.address.uprn
+        uprn: value.business.info.address.uprn,
+        city: value.business.info.address.city
       },
       manual: {
         line1: value.business.info.address.line1,
@@ -34,7 +35,6 @@ export const mapBusinessDetails = (value) => {
         line4: value.business.info.address.line4,
         line5: value.business.info.address.line5
       },
-      city: value.business.info.address.city,
       postcode: value.business.info.address.postalCode,
       country: value.business.info.address.country
     },

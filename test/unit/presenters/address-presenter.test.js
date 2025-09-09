@@ -16,6 +16,7 @@ describe('address presenter', () => {
           buildingName: 'STOCKWELL HALL',
           street: 'HAREWOOD AVENUE',
           county: 'Dorset',
+          city: 'DARLINGTON',
           uprn: '12345'
         },
         manual: {
@@ -25,7 +26,6 @@ describe('address presenter', () => {
           line4: null,
           line5: null
         },
-        city: 'DARLINGTON',
         postcode: 'CO9 3LS',
         country: 'United Kingdom'
       }
@@ -71,7 +71,6 @@ describe('address presenter', () => {
           '76 Robinswood Road',
           'UPPER CHUTE',
           'Child Okeford',
-          'DARLINGTON',
           'CO9 3LS',
           'United Kingdom'
         ])
@@ -89,7 +88,6 @@ describe('address presenter', () => {
           'UPPER CHUTE',
           'Child Okeford',
           'Optional Line 4',
-          'DARLINGTON',
           'CO9 3LS',
           'United Kingdom'
         ])

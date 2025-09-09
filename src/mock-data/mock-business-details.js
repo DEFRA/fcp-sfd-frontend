@@ -60,7 +60,8 @@ const mappedData = {
       buildingName: 'STOCKWELL HALL',
       street: 'HAREWOOD AVENUE',
       city: 'DARLINGTON',
-      county: 'Dorset'
+      county: 'Dorset',
+      uprn: '12345'
     },
     manual: {
       line1: '76 Robinswood Road',

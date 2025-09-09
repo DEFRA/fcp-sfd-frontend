@@ -7,6 +7,7 @@ describe('businessDetailsMapper', () => {
   describe('when given valid raw DAL data ', () => {
     test('it should map the values to the correct format ', () => {
       const result = mapBusinessDetails(dalData)
+
       expect(result).toEqual(mappedData)
     })
 
@@ -27,6 +28,24 @@ describe('businessDetailsMapper', () => {
       const result = mapBusinessDetails(fullNameCheckData)
 
       expect(result.customer.fullName).toEqual('Mr. Software Developer')
+    })
+
+    test('it should build the fullname correctly when title is missing', () => {
+      const fullNameData = {
+        ...dalData,
+        customer: {
+          info: {
+            name: {
+              first: 'Software',
+              last: 'Developer'
+            }
+          }
+        }
+      }
+
+      const result = mapBusinessDetails(fullNameData)
+
+      expect(result.customer.fullName).toBe('Software Developer')
     })
   })
 })

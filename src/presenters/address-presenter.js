@@ -9,7 +9,7 @@
  *
  * If both a building number range and a street are present, they are combined into one line so they display together.
  *
- * City, postcode, and country are always appended to the final address array.
+ * Postcode, and country are always appended to the final address array.
  *
  * @param {Object} address - The complete address object
  *
@@ -19,7 +19,7 @@
  */
 
 const formatAddress = (address) => {
-  const { lookup, manual, postcode, country, city } = address
+  const { lookup, manual, postcode, country } = address
 
   let addressLines = []
 
@@ -33,7 +33,8 @@ const formatAddress = (address) => {
       lookup.flatName,
       lookup.buildingName,
       buildingAndStreet,
-      lookup.county
+      lookup.county,
+      lookup.city
     ]
   } else {
     // Otherwise the user manually entered the address
@@ -48,7 +49,6 @@ const formatAddress = (address) => {
 
   return [
     ...addressLines.filter(Boolean),
-    city,
     postcode,
     country
   ]

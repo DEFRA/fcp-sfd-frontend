@@ -12,8 +12,9 @@ describe('business address schema', () => {
     schema = businessAddressSchema
 
     payload = {
-      address1: '10 Skirbeck Way',
-      address2: 'Lonely Lane',
+      address1: '10',
+      address2: 'Skirbeck Way',
+      address3: 'Lonely Lane',
       city: 'Maidstone',
       county: 'Somerset',
       postcode: 'SK22 1DL',
@@ -76,6 +77,23 @@ describe('business address schema', () => {
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Address line 2 must be 100 characters or less',
           path: ['address2'],
+          type: 'string.max'
+        }))
+        expect(value).toEqual(payload)
+      })
+    })
+
+    describe('because "address3" is longer than 100 characters', () => {
+      beforeEach(() => {
+        payload.address3 = 'The quick brown fox jumps over the lazy dog while wondering if it forgot to bring its umbrella today.'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Address line 3 must be 100 characters or less',
+          path: ['address3'],
           type: 'string.max'
         }))
         expect(value).toEqual(payload)

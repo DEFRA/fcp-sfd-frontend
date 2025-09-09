@@ -33,8 +33,8 @@ const formatAddress = (address) => {
       lookup.flatName,
       lookup.buildingName,
       buildingAndStreet,
-      lookup.county,
-      lookup.city
+      lookup.city,
+      lookup.county
     ]
   } else {
     // Otherwise the user manually entered the address

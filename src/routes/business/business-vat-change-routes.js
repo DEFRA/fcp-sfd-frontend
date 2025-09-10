@@ -10,7 +10,9 @@ const getBusinessVatChange = {
   path: '/business-vat-registration-number-change',
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
+    console.log('🚀 ~ businessDetails:', businessDetails)
     const pageData = businessVatChangePresenter(businessDetails)
+    console.log('🚀 ~ pageData:', pageData)
 
     return h.view('business/business-vat-registration-number-change', pageData)
   }

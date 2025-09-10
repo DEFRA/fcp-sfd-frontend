@@ -58,7 +58,6 @@ services:
 
   redis:
     image: redis:7.2.3-alpine3.18
-    restart: always
 
   fcp-defra-id-stub:
     image: defradigital/fcp-defra-id-stub

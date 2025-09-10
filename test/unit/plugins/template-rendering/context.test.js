@@ -193,9 +193,32 @@ describe('#context cache', () => {
     test('return value should contain request.response.source.context', async () => {
       request.response.source.context = { existingContext: 'request context value' }
       const result = await context(request)
-      console.log('Abi1 ' + result)
       expect(result).toEqual({
         existingContext: 'request context value',
+        assetPath: '/public/assets',
+        auth: {
+          name: 'A Farmer',
+          isAuthenticated: true,
+          scope: ['user']
+        },
+        breadcrumbs: [],
+        getAssetPath: expect.any(Function),
+        navigation: [
+          {
+            isActive: true,
+            text: 'Home',
+            url: '/'
+          }
+        ],
+        serviceName: 'Land and farm service',
+        serviceUrl: '/'
+      })
+    })
+
+    test('return value should contain no request.response.source.context when request.response.source is null', async () => {
+      request.response.source = null
+      const result = await context(request)
+      expect(result).toEqual({
         assetPath: '/public/assets',
         auth: {
           name: 'A Farmer',

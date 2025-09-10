@@ -1,5 +1,5 @@
 /**
- * Formats data ready for presenting in the `/business-vat-remove` page
+ * Formats data ready for presenting in the `/business-vat-registration-remove` page
  * @module businessVatRemovePresenter
  */
 

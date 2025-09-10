@@ -21,9 +21,11 @@ describe('businessAddressEnterPresenter', () => {
         manual: {
           line1: '10 Skirbeck Way',
           line2: 'Lonely Lane',
+          line3: 'Child Okeford',
           line4: 'Maidstone',
           line5: 'Somerset'
         },
+        city: 'Maidstone',
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       }
@@ -41,6 +43,7 @@ describe('businessAddressEnterPresenter', () => {
         address: {
           address1: '10 Skirbeck Way',
           address2: 'Lonely Lane',
+          address3: 'Child Okeford',
           city: 'Maidstone',
           country: 'United Kingdom',
           county: 'Somerset',
@@ -136,6 +139,7 @@ describe('businessAddressEnterPresenter', () => {
       beforeEach(() => {
         delete data.address.manual.line1
         delete data.address.manual.line2
+        delete data.address.manual.line3
         delete data.address.manual.line4
         delete data.address.manual.line5
         delete data.address.postcode
@@ -148,6 +152,7 @@ describe('businessAddressEnterPresenter', () => {
         expect(result.address).toEqual({
           address1: null,
           address2: null,
+          address3: null,
           city: null,
           county: null,
           country: null,

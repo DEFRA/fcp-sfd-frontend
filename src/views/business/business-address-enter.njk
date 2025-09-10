@@ -62,6 +62,19 @@
 
         {{ govukInput({
           label: {
+            text: "Address line 3 (optional)"
+          },
+          id: "address-3",
+          name: "address3",
+          value: address.address3,
+          autocomplete: "address-3",
+          errorMessage: errors.address3 and {
+            text: errors.address3.text
+          }
+        }) }}
+
+        {{ govukInput({
+          label: {
             text: "Town or city"
           },
           classes: "govuk-!-width-two-thirds",
@@ -89,7 +102,7 @@
 
         {{ govukInput({
           label: {
-            text: "Postal code or zip code (if you have one)"
+            text: "Postal code or zip code"
           },
           classes: "govuk-input--width-10",
           id: "postcode",

@@ -38,7 +38,7 @@ describe('business VAT check', () => {
     vi.clearAllMocks()
   })
 
-  describe('GET /business-vat-check', () => {
+  describe('GET /business-vat-registration-number-check', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         h = {
@@ -50,7 +50,7 @@ describe('business VAT check', () => {
 
       test('should have the correct method and path', () => {
         expect(getBusinessVatCheck.method).toBe('GET')
-        expect(getBusinessVatCheck.path).toBe('/business-vat-check')
+        expect(getBusinessVatCheck.path).toBe('/business-vat-registration-number-check')
       })
 
       test('it fetches the data from the session', async () => {
@@ -59,15 +59,15 @@ describe('business VAT check', () => {
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
-      test('should render business-vat-check view with page data', async () => {
+      test('should render business-vat-registration-number-check view with page data', async () => {
         await getBusinessVatCheck.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-check', getPageData())
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-check', getPageData())
       })
     })
   })
 
-  describe('POST /business-vat-check', () => {
+  describe('POST /business-vat-registration-number-check', () => {
     beforeEach(() => {
       h = {
         redirect: vi.fn(() => h)
@@ -105,8 +105,8 @@ const getMockData = () => {
 
 const getPageData = () => {
   return {
-    backLink: { href: '/business-vat-change' },
-    changeLink: '/business-vat-change',
+    backLink: { href: '/business-vat-registration-number-change' },
+    changeLink: '/business-vat-registration-number-change',
     pageTitle: 'Check your VAT registration number is correct before submitting',
     metaDescription: 'Check the VAT registration number for your business is correct.',
     businessName: 'Agile Farm Ltd',

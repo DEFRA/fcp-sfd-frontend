@@ -19,6 +19,7 @@ query Customer($crn: ID!) {
         line3
         line4
         line5
+        uprn
       }
       dateOfBirth
       email {

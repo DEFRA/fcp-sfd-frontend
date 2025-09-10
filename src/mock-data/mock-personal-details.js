@@ -29,7 +29,8 @@ const dalData = {
         line4: null,
         line5: null,
         postalCode: 'CO9 3LS',
-        country: 'United Kingdom'
+        country: 'United Kingdom',
+        uprn: '12345'
       }
     }
   }
@@ -53,7 +54,8 @@ const mappedData = {
       buildingNumberRange: '7',
       street: 'HAREWOOD AVENUE',
       city: 'DARLINGTON',
-      county: 'Dorset'
+      county: 'Dorset',
+      uprn: '12345'
     },
     manual: {
       line1: '76 Robinswood Road',

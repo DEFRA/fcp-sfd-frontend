@@ -71,7 +71,7 @@ describe('business VAT remove', () => {
       test('should render business-vat-registration-remove view with page data', async () => {
         await getBusinessVatRemove.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-remove', getPageData())
+        expect(h.view).toHaveBeenCalledWith('business/business-VAT-registration-remove', getPageData())
       })
     })
   })
@@ -153,7 +153,7 @@ describe('business VAT remove', () => {
         const pageData = getPageDataError()
         pageData.errors = { confirmRemove: { text: 'Select yes if you want to remove your VAT registration number' } }
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-remove', pageData)
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-remove', pageData)
       })
 
       test('it should handle undefined errors', async () => {
@@ -162,7 +162,7 @@ describe('business VAT remove', () => {
         const pageData = getPageDataError()
         pageData.errors = {}
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-remove', pageData)
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-remove', pageData)
       })
     })
   })

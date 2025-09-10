@@ -4,13 +4,12 @@
  * An address lookup is where a user enters a postcode and selects an address
  * returned from an API. Manual input is when a user chooses to type the address in themselves.
  *
- * If any field in the address lookup is present (non-null), we assume the user selected an address from the lookup.
- * Otherwise we use the manually entered address.
+ * If the UPRN is populated, the user has selected an address from the lookup.
+ * UPRN is only returned by the lookup API; manual addresses will always have `uprn = null`.
  *
- * If both a building number range and a street are present, they are combined into one line to ensure they are
- * displayed together.
+ * If both a building number range and a street are present, they are combined into one line so they display together.
  *
- * Postcode and country and always appended to the final address array.
+ * Postcode and country are always appended to the final address array.
  *
  * @param {Object} address - The complete address object
  *
@@ -22,20 +21,34 @@
 const formatAddress = (address) => {
   const { lookup, manual, postcode, country } = address
 
-  const validLookupAddress = Object.values(lookup).some(values => values !== null)
-  const userAddress = validLookupAddress ? lookup : manual
+  let addressLines = []
 
-  if (userAddress.buildingNumberRange && userAddress.street) {
-    // without this the number and street are separate entities and displayed on separate lines
-    userAddress.street = `${userAddress.buildingNumberRange} ${userAddress.street}`
-    userAddress.buildingNumberRange = null
+  if (lookup.uprn) {
+    // If the uprn is populated then the user has selected an address from the lookup
+    const buildingAndStreet = lookup.buildingNumberRange && lookup.street
+      ? `${lookup.buildingNumberRange} ${lookup.street}`
+      : lookup.street
+
+    addressLines = [
+      lookup.flatName,
+      lookup.buildingName,
+      buildingAndStreet,
+      lookup.city,
+      lookup.county
+    ]
+  } else {
+    // Otherwise the user manually entered the address
+    addressLines = [
+      manual.line1,
+      manual.line2,
+      manual.line3,
+      manual.line4,
+      manual.line5
+    ]
   }
 
-  // Remove any null values from the final address object
-  const filteredUserAddress = Object.values(userAddress).filter(Boolean)
-
   return [
-    ...filteredUserAddress,
+    ...addressLines.filter(Boolean),
     postcode,
     country
   ]

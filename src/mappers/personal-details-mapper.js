@@ -25,7 +25,8 @@ export const mapPersonalDetails = (value) => {
         buildingName: value.customer.info.address.buildingName,
         street: value.customer.info.address.street,
         city: value.customer.info.address.city,
-        county: value.customer.info.address.county
+        county: value.customer.info.address.county,
+        uprn: value.customer.info.address.uprn
       },
       manual: {
         line1: value.customer.info.address.line1,

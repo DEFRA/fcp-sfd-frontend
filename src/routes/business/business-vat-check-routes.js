@@ -4,18 +4,18 @@ import { businessVatCheckPresenter } from '../../presenters/business/business-va
 
 const getBusinessVatCheck = {
   method: 'GET',
-  path: '/business-vat-check',
+  path: '/business-vat-registration-number-check',
   handler: async (request, h) => {
     const businessVatChange = await fetchBusinessVatChangeService(request.yar, request.auth.credentials)
     const pageData = businessVatCheckPresenter(businessVatChange)
 
-    return h.view('business/business-vat-check', pageData)
+    return h.view('business/business-vat-registration-number-check', pageData)
   }
 }
 
 const postBusinessVatCheck = {
   method: 'POST',
-  path: '/business-vat-check',
+  path: '/business-vat-registration-number-check',
   handler: async (request, h) => {
     await updateBusinessVatChangeService(request.yar, request.auth.credentials)
 

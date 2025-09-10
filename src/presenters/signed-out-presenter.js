@@ -7,7 +7,7 @@ const signedOutPresenter = () => {
   return {
     pageTitle: 'You have signed out',
     metaDescription: 'If this is not what you wanted, you can',
-    signInText: 'sign back into Manage your land and farm businesses',
+    signInText: 'sign back into Land and farm service',
     signInLink: '/auth/sign-in'
   }
 }

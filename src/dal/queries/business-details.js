@@ -32,6 +32,7 @@ export const businessDetailsQuery = `
         line3
         line4
         line5
+        uprn
       }
       email {
         address

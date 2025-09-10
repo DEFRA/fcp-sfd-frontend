@@ -86,6 +86,7 @@ describe('business address enter', () => {
       request.payload = {
         address1: 'New address 1',
         address2: '',
+        address3: '',
         city: 'Sandford',
         county: '',
         postcode: 'SK22 1DL',
@@ -153,9 +154,11 @@ const getMockData = () => {
       manual: {
         line1: '10 Skirbeck Way',
         line2: '',
+        line3: '',
         line4: 'Maidstone',
         line5: ''
       },
+      city: 'Maidstone',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
@@ -177,6 +180,7 @@ const getPageData = () => {
     address: {
       address1: '10 Skirbeck Way',
       address2: '',
+      address3: '',
       city: 'Maidstone',
       county: '',
       postcode: 'SK22 1DL',
@@ -196,6 +200,7 @@ const getPageDataError = () => {
     address: {
       address1: 'New address 1',
       address2: '',
+      address3: '',
       city: 'Sandford',
       county: '',
       postcode: 'SK22 1DL',

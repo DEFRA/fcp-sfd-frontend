@@ -1,5 +1,8 @@
+import { constants } from 'http2'
+
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { errors } from '../../../src/plugins/errors.js'
+const { HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
 
 describe('errors', () => {
   test('should return an object', () => {
@@ -38,7 +41,7 @@ describe('errors', () => {
         log: vi.fn(),
         response: {
           isBoom: true,
-          output: { statusCode: 500 },
+          output: { statusCode: HTTP_STATUS_INTERNAL_SERVER_ERROR },
           headers: {
             'x-test': 'value',
             'content-type': 'application/json'
@@ -66,7 +69,27 @@ describe('errors', () => {
       expect(errorHandler).toBeDefined()
     })
 
-    test('should preserve non-content headers if error', () => {
+    test('should preserve non-content headers if error code is HTTP_STATUS_INTERNAL_SERVER_ERROR', () => {
+      const result = errorHandler(mockRequest, mockH)
+
+      expect(mockViewResponse.header).toHaveBeenCalledWith('x-test', 'value')
+      expect(mockViewResponse.header).not.toHaveBeenCalledWith('content-type', 'application/json')
+      expect(result).toBe(mockViewResponse)
+    })
+
+    test('should preserve non-content headers if error code is HTTP_STATUS_FORBIDDEN', () => {
+      mockRequest.response.output.statusCode = HTTP_STATUS_FORBIDDEN
+
+      const result = errorHandler(mockRequest, mockH)
+
+      expect(mockViewResponse.header).toHaveBeenCalledWith('x-test', 'value')
+      expect(mockViewResponse.header).not.toHaveBeenCalledWith('content-type', 'application/json')
+      expect(result).toBe(mockViewResponse)
+    })
+
+    test('should preserve non-content headers if error code is HTTP_STATUS_NOT_FOUND', () => {
+      mockRequest.response.output.statusCode = HTTP_STATUS_NOT_FOUND
+
       const result = errorHandler(mockRequest, mockH)
 
       expect(mockViewResponse.header).toHaveBeenCalledWith('x-test', 'value')

@@ -69,7 +69,7 @@ describe('business VAT schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Enter a VAT registration number in the format 123456789',
+          message: 'Enter a VAT registration number, like 123456789',
           path: ['vatNumber'],
           type: 'string.pattern.base'
         }))
@@ -86,7 +86,7 @@ describe('business VAT schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Enter a VAT registration number in the format 123456789',
+          message: 'Enter a VAT registration number, like 123456789',
           path: ['vatNumber'],
           type: 'string.pattern.base'
         }))

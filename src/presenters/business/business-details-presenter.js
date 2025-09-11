@@ -20,7 +20,7 @@ const businessDetailsPresenter = (data, yar) => {
     businessPhoneAction: data.contact.landline || data.contact.mobile ? 'Change' : 'Add',
     businessEmail: data.contact.email,
     sbi: data.info.sbi,
-    vatNumber: data.info.vat ?? 'No number added',
+    vatNumber: data.info.vat ?? 'Number not added',
     hasVatNumber: data.info.vat ?? false,
     vatRemoveLink: '/business-vat-registration-remove',
     vatChangeLink: '/business-vat-registration-number-change',

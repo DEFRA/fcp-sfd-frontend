@@ -130,7 +130,7 @@ describe('businessDetailsPresenter', () => {
         data.info.vat = null
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.vatNumber).toEqual('No number added')
+        expect(result.vatNumber).toEqual('Number not added')
       })
     })
   })

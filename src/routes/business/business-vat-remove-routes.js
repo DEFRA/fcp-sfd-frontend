@@ -11,7 +11,7 @@ const getBusinessVatRemove = {
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
-    return h.view('business/business-VAT-registration-remove', pageData)
+    return h.view('business/business-vat-registration-remove', pageData)
   }
 }
 

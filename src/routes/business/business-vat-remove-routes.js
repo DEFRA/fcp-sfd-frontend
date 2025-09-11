@@ -27,7 +27,7 @@ const postBusinessVatRemove = {
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
         const businessDetailsData = request.yar.get('businessDetails')
-        const pageData = businessVatRemovePresenter(businessDetailsData, request.payload)
+        const pageData = businessVatRemovePresenter(businessDetailsData)
 
         return h.view('business/business-vat-registration-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }

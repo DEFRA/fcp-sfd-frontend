@@ -31,7 +31,8 @@ describe('businessVatRemovePresenter', () => {
         vatNumber: 'GB123456789',
         businessName: 'Agile Farm Ltd',
         sbi: '123456789',
-        userName: 'Alfred Waldron'
+        userName: 'Alfred Waldron',
+        confirmRemove: null
       })
     })
   })

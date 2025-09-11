@@ -71,7 +71,7 @@ describe('business VAT remove', () => {
       test('should render business-vat-registration-remove view with page data', async () => {
         await getBusinessVatRemove.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-VAT-registration-remove', getPageData())
+        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-remove', getPageData())
       })
     })
   })

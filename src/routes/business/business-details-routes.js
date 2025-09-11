@@ -9,7 +9,7 @@ const getBusinessDetails = {
   },
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials)
+    const businessDetails = await fetchBusinessDetailsService(auth.credentials)
     const pageData = businessDetailsPresenter(businessDetails, yar)
 
     return h.view('business/business-details.njk', pageData)

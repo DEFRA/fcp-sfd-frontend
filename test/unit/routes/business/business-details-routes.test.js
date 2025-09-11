@@ -21,7 +21,6 @@ vi.mock('../../../../src/presenters/business/business-details-presenter.js', () 
 describe('business details', () => {
   let h
   let request
-  let mockData
   let pageData
 
   beforeEach(() => {
@@ -35,8 +34,6 @@ describe('business details', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        mockData = getMockData()
-        pageData = getPageData()
         request = {
           yar: { get: vi.fn(), set: vi.fn() },
           auth: {
@@ -48,14 +45,15 @@ describe('business details', () => {
           }
         }
 
-        fetchBusinessDetailsService.mockResolvedValue(mockData)
+        pageData = getPageData()
+        fetchBusinessDetailsService.mockResolvedValue(getMockData())
         businessDetailsPresenter.mockReturnValue(pageData)
       })
 
       test('it calls the fetch business details service', async () => {
         await getBusinessDetails.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
     })

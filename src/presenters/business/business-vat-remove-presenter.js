@@ -3,7 +3,7 @@
  * @module businessVatRemovePresenter
  */
 
-const businessVatRemovePresenter = (data) => {
+const businessVatRemovePresenter = (data, formValues = {}) => {
   return {
     backLink: { href: '/business-details' },
     pageTitle: 'Are you sure you want to remove your VAT registration number?',
@@ -11,7 +11,8 @@ const businessVatRemovePresenter = (data) => {
     vatNumber: data.info.vat ?? null,
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null
+    userName: data.customer.fullName ?? null,
+    confirmRemove: formValues.confirmRemove ?? null
   }
 }
 

@@ -1,4 +1,4 @@
-import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessNameChangePresenter } from '../../presenters/business/business-name-change-presenter.js'
 import { businessNameSchema } from '../../schemas/business/business-name-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
@@ -10,7 +10,7 @@ const getBusinessNameChange = {
   path: '/business-name-change',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials)
+    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
     const pageData = businessNameChangePresenter(businessDetails)
 
     return h.view('business/business-name-change', pageData)
@@ -25,9 +25,10 @@ const postBusinessNameChange = {
       payload: businessNameSchema,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
+        const { yar, auth, payload } = request
         const errors = formatValidationErrors(err.details || [])
-        const businessDetailsData = request.yar.get('businessDetails')
-        const pageData = businessNameChangePresenter(businessDetailsData, request.payload.businessName)
+        const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
+        const pageData = businessNameChangePresenter(businessDetails, payload.businessName)
 
         return h.view('business/business-name-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }

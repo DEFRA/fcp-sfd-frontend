@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Thing under test
 import { businessNameChangeRoutes } from '../../../../src/routes/business/business-name-change-routes.js'
@@ -14,36 +14,48 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 describe('business name change', () => {
-  const request = {
-    yar: {},
-    auth: {
-      credentials: {
-        sbi: '123456789',
-        crn: '987654321',
-        email: 'test@example.com'
-      }
-    }
-  }
+  let request
   let h
-  let err
+
+  const credentials = {
+    sbi: '123456789',
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    request = {
+      yar: { set: vi.fn(), get: vi.fn() },
+      auth: { credentials },
+      payload: {}
+    }
+
+    // Fix for h.view to allow .code().takeover() chaining
+    const responseStub = {
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
+    }
+
+    h = {
+      redirect: vi.fn(),
+      view: vi.fn(() => responseStub)
+    }
   })
 
   describe('GET /business-name-change', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        h = {
-          view: vi.fn().mockReturnValue({})
-        }
-
-        fetchBusinessDetailsService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockResolvedValue({
+          info: { businessName: 'Agile Farm Ltd', sbi: '123456789' },
+          customer: { fullName: 'Alfred Waldron' }
+        })
       })
 
       test('should have the correct method and path', () => {
@@ -51,13 +63,13 @@ describe('business name change', () => {
         expect(getBusinessNameChange.path).toBe('/business-name-change')
       })
 
-      test('it fetches the data from the session', async () => {
+      test('it calls fetchBusinessChangeService', async () => {
         await getBusinessNameChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, credentials, 'changeBusinessName')
       })
 
-      test('should render business-name-change view with page data', async () => {
+      test('it renders the business-name-change view with correct page data', async () => {
         await getBusinessNameChange.handler(request, h)
 
         expect(h.view).toHaveBeenCalledWith('business/business-name-change', getPageData())
@@ -66,35 +78,19 @@ describe('business name change', () => {
   })
 
   describe('POST /business-name-change', () => {
-    beforeEach(() => {
-      const responseStub = {
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
-
-      h = {
-        redirect: vi.fn(() => h),
-        view: vi.fn(() => responseStub)
-      }
-
-      // Mock yar.set for session
-      request.yar = {
-        set: vi.fn(),
-        get: vi.fn().mockReturnValue(getMockData())
-      }
-
-      request.payload = { businessName: 'New business Name ltd' }
-    })
-
     describe('when a request succeeds', () => {
-      describe('and the validation passes', () => {
-        test('it redirects to the /business-name-check page', async () => {
-          await postBusinessNameChange.options.handler(request, h)
+      beforeEach(() => {
+        request.payload = { businessName: 'New business Name ltd' }
 
-          expect(h.redirect).toHaveBeenCalledWith('/business-name-check')
+        fetchBusinessChangeService.mockResolvedValue({
+          info: { businessName: 'Agile Farm Ltd', sbi: '123456789' },
+          customer: { fullName: 'Alfred Waldron' },
+          changeBusinessName: request.payload.businessName
         })
+      })
 
-        test('sets the payload on the yar state', async () => {
+      describe('and the validation passes', () => {
+        test('it sets the session data and redirects', async () => {
           await postBusinessNameChange.options.handler(request, h)
 
           expect(setSessionData).toHaveBeenCalledWith(
@@ -103,10 +99,13 @@ describe('business name change', () => {
             'changeBusinessName',
             request.payload.businessName
           )
+          expect(h.redirect).toHaveBeenCalledWith('/business-name-check')
         })
       })
 
       describe('and the validation fails', () => {
+        let err
+
         beforeEach(() => {
           err = {
             details: [
@@ -120,14 +119,12 @@ describe('business name change', () => {
         })
 
         test('it returns the page successfully with the error summary banner', async () => {
-          // Calling the fail action handler
           await postBusinessNameChange.options.validate.failAction(request, h, err)
 
           expect(h.view).toHaveBeenCalledWith('business/business-name-change', getPageDataError())
         })
 
         test('it should handle undefined errors', async () => {
-          // Calling the fail action handler
           await postBusinessNameChange.options.validate.failAction(request, h, [])
 
           const pageData = getPageDataError()
@@ -139,18 +136,6 @@ describe('business name change', () => {
     })
   })
 })
-
-const getMockData = () => {
-  return {
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
-    customer: {
-      fullName: 'Alfred Waldron'
-    }
-  }
-}
 
 const getPageData = () => {
   return {

@@ -35,7 +35,7 @@ describe('business details', () => {
         }
 
         request = {
-          yar: { get: vi.fn(), set: vi.fn() },
+          yar: { clear: vi.fn() },
           auth: {
             credentials: {
               sbi: '123456789',
@@ -48,6 +48,12 @@ describe('business details', () => {
         pageData = getPageData()
         fetchBusinessDetailsService.mockResolvedValue(getMockData())
         businessDetailsPresenter.mockReturnValue(pageData)
+      })
+
+      test('it clears the businessDetails key from session', async () => {
+        await getBusinessDetails.handler(request, h)
+
+        expect(request.yar.clear).toHaveBeenCalledWith('businessDetails')
       })
 
       test('it calls the fetch business details service', async () => {

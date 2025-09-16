@@ -20,7 +20,6 @@ const fetchBusinessDetailsService = async (credentials) => {
   return await getFromDal(credentials)
 }
 
-
 const getFromDal = async (credentials) => {
   const { sbi, crn } = credentials
 

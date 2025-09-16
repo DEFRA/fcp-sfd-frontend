@@ -3,26 +3,19 @@
  * @module updateBusinessNameChangeService
  */
 
-import { dalConnector } from '../../dal/connector.js'
 import { updateBusinessNameMutation } from '../../dal/mutations/update-business-name.js'
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
+import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessNameChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+  const businessDetails = await fetchBusinessDetailsService(credentials)
+  const changedBusinessDetails = yar.get('businessDetails')
 
-  const variables = { input: { name: businessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
+  const variables = { input: { name: changedBusinessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
+  await updateDalService(updateBusinessNameMutation, variables)
 
-  const response = await dalConnector(updateBusinessNameMutation, variables)
-
-  if (response.errors) {
-    throw new Error('DAL error from mutation')
-  }
-
-  businessDetails.info.businessName = businessDetails.changeBusinessName
-  delete businessDetails.changeBusinessName
-
-  yar.set('businessDetails', businessDetails)
+  yar.clear('businessDetails')
 
   flashNotification(yar, 'Success', 'You have updated your business name')
 }

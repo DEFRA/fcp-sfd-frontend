@@ -118,6 +118,16 @@ describe('business name change', () => {
           }
         })
 
+        test('it fetches the business details', async () => {
+          await postBusinessNameChange.options.validate.failAction(request, h, err)
+
+          expect(fetchBusinessChangeService).toHaveBeenCalledWith(
+            request.yar,
+            request.auth.credentials,
+            'changeBusinessName'
+          )
+        })
+
         test('it returns the page successfully with the error summary banner', async () => {
           await postBusinessNameChange.options.validate.failAction(request, h, err)
 

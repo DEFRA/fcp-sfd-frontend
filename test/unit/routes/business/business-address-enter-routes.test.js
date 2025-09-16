@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Thing under test
 import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
@@ -14,8 +14,8 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 describe('business address enter', () => {
@@ -43,7 +43,7 @@ describe('business address enter', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        fetchBusinessDetailsService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -54,7 +54,7 @@ describe('business address enter', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessAddress')
       })
 
       test('should render business-address-enter view with page data', async () => {
@@ -125,6 +125,16 @@ describe('business address enter', () => {
               }
             ]
           }
+        })
+
+        test('it fetches the business details', async () => {
+          await postBusinessAddressEnter.options.validate.failAction(request, h, err)
+
+          expect(fetchBusinessChangeService).toHaveBeenCalledWith(
+            request.yar,
+            request.auth.credentials,
+            'changeBusinessAddress'
+          )
         })
 
         test('it returns the page successfully with the error summary banner', async () => {

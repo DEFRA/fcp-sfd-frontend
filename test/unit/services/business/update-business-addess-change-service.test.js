@@ -2,10 +2,10 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { dalConnector } from '../../../../src/dal/connector.js'
 import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/update-business-address.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -14,26 +14,16 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
   flashNotification: vi.fn()
 }))
 
-vi.mock('../../../../src/dal/connector.js', () => ({
-  dalConnector: vi.fn().mockResolvedValue({
-    data: {
-      updateBusinessAddress: {
-        business: {
-          info: {
-            address: {}
-          }
-        }
-      }
-    }
-  })
+vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
+  updateDalService: vi.fn().mockResolvedValue({})
 }))
 
 describe('updateBusinessAddressChangeService', () => {
@@ -50,26 +40,26 @@ describe('updateBusinessAddressChangeService', () => {
       country: 'United Kingdom'
     }
 
-    fetchBusinessDetailsService.mockReturnValue(mappedData)
+    fetchBusinessChangeService.mockReturnValue(mappedData)
 
     yar = {
-      set: vi.fn().mockReturnValue()
+      clear: vi.fn()
     }
+
     credentials = { sbi: '123456789', crn: '987654321' }
   })
 
   describe('when called with a manually entered address', () => {
-    test('it correctly saves the data to the session', async () => {
+    test('it fetches business details from the service', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
-      expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessAddress')
     })
 
-    test('it calls the dalConnector with correct mutation and variables', async () => {
+    test('it calls the updateDalService with correct mutation and variables', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(dalConnector).toHaveBeenCalledWith(updateBusinessAddressMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(updateBusinessAddressMutation, {
         input: {
           sbi: '107183280',
           address: {
@@ -102,12 +92,10 @@ describe('updateBusinessAddressChangeService', () => {
       )
     })
 
-    test('it removes changeBusinessAddress after mapping', async () => {
-      const details = fetchBusinessDetailsService()
-
+    test('it clears businessDetails from session', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(details.changeBusinessAddress).toBeUndefined()
+      expect(yar.clear).toHaveBeenCalledWith('businessDetails')
     })
   })
 
@@ -122,10 +110,10 @@ describe('updateBusinessAddressChangeService', () => {
       }
     })
 
-    test('it calls the dalConnector with correct lookup variables', async () => {
+    test('it calls the updateDalService with correct lookup variables', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(dalConnector).toHaveBeenCalledWith(updateBusinessAddressMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(updateBusinessAddressMutation, {
         input: {
           sbi: '107183280',
           address: {
@@ -153,11 +141,7 @@ describe('updateBusinessAddressChangeService', () => {
 
   describe('when an update fails', () => {
     beforeEach(() => {
-      dalConnector.mockResolvedValue({
-        errors: [{
-          message: 'Failed to update'
-        }]
-      })
+      updateDalService.mockRejectedValue(new Error('DAL error from mutation'))
     })
 
     test('rejects with "DAL error from mutation"', async () => {

@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { updateBusinessNameMutation } from '../../../../src/dal/mutations/update-business-name.js'
@@ -14,8 +14,8 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
@@ -34,10 +34,9 @@ describe('updateBusinessNameChangeService', () => {
     vi.clearAllMocks()
 
     mappedData.changeBusinessName = 'New business ltd'
-    fetchBusinessDetailsService.mockReturnValue(mappedData)
+    fetchBusinessChangeService.mockReturnValue(mappedData)
 
     yar = {
-      get: vi.fn().mockReturnValue({ changeBusinessName: 'New business ltd' }),
       clear: vi.fn()
     }
 
@@ -48,7 +47,7 @@ describe('updateBusinessNameChangeService', () => {
     test('it fetches the business details with credentials', async () => {
       await updateBusinessNameChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(credentials)
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessName')
     })
 
     test('it calls updateDalService with correct mutation and variables', async () => {

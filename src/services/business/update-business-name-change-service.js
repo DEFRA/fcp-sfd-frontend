@@ -4,15 +4,14 @@
  */
 
 import { updateBusinessNameMutation } from '../../dal/mutations/update-business-name.js'
-import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
+import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessNameChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(credentials)
-  const changedBusinessDetails = yar.get('businessDetails')
+  const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessName')
+  const variables = { input: { name: businessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
 
-  const variables = { input: { name: changedBusinessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
   await updateDalService(updateBusinessNameMutation, variables)
 
   yar.clear('businessDetails')

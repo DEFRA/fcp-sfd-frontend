@@ -26,6 +26,7 @@ const postBusinessNameChange = {
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
+
         const errors = formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
         const pageData = businessNameChangePresenter(businessDetails, payload.businessName)

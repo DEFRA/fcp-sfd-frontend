@@ -1,8 +1,8 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
-import { dalConnector } from '../../../../src/dal/connector.js'
 
 // Things we need to mock
+import { dalConnector } from '../../../../src/dal/connector.js'
 const mockMappedValue = vi.fn()
 const mockConfigGet = vi.fn()
 

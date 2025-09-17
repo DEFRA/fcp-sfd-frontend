@@ -1,28 +1,27 @@
-import { dalConnector } from '../../dal/connector.js'
+/**
+ * Service to update a business's email address
+ *
+ * Fetches the pending business email change from the session
+ * Calls the DAL to persist the updated email using updateDalService
+ * Clears the cached business details data from the session
+ * Displays a success flash notification to the user
+ *
+ * @module updateBusinessEmailChangeService
+ */
+
+import { updateDalService } from '../DAL/update-dal-service.js'
 import { updateBusinessEmailMutation } from '../../dal/mutations/update-business-email.js'
-import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
+import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
 const updateBusinessEmailChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+  const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessEmail')
 
-  const variables = {
-    input: {
-      email: { address: businessDetails.changeBusinessEmail },
-      sbi: businessDetails.info.sbi
-    }
-  }
+  const variables = { input: { email: { address: businessDetails.changeBusinessEmail }, sbi: businessDetails.info.sbi }}
 
-  const response = await dalConnector(updateBusinessEmailMutation, variables)
+  await updateDalService(updateBusinessEmailMutation, variables)
 
-  if (response.errors) {
-    throw new Error('DAL error from mutation')
-  }
-
-  businessDetails.contact.email = businessDetails.changeBusinessEmail
-  delete businessDetails.changeBusinessEmail
-
-  yar.set('businessDetails', businessDetails)
+  yar.clear('businessDetails')
 
   flashNotification(yar, 'Success', 'You have updated your business email address')
 }

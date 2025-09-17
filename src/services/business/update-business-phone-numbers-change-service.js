@@ -9,7 +9,7 @@ const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
     input: {
       phone: {
         landline: businessDetails.changeBusinessPhoneNumbers.businessTelephone ?? null,
-        mobile: businessDetails.changeBusinessPhoneNumbers.businessMobile?? null
+        mobile: businessDetails.changeBusinessPhoneNumbers.businessMobile ?? null
       },
       sbi: businessDetails.info.sbi
     }

@@ -29,6 +29,7 @@ describe('business name check', () => {
       }
     }
   }
+
   let h
 
   beforeEach(() => {

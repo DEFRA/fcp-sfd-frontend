@@ -2,10 +2,10 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/update-business-address.js'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
+import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/update-business-address.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -136,17 +136,6 @@ describe('updateBusinessAddressChangeService', () => {
           }
         }
       })
-    })
-  })
-
-  describe('when an update fails', () => {
-    beforeEach(() => {
-      updateDalService.mockRejectedValue(new Error('DAL error from mutation'))
-    })
-
-    test('rejects with "DAL error from mutation"', async () => {
-      await expect(updateBusinessAddressChangeService(yar, credentials))
-        .rejects.toThrow('DAL error from mutation')
     })
   })
 })

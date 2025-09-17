@@ -1,5 +1,11 @@
 /**
- * Updates the business name change data
+ * Service to update a business's name
+ *
+ * Fetches the pending business name change from the session
+ * Calls the DAL to persist the updated name using updateDalService
+ * Clears the cached business details data from the session
+ * Displays a success flash notification to the user
+ *
  * @module updateBusinessNameChangeService
  */
 

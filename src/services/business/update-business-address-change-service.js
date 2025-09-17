@@ -1,3 +1,15 @@
+/**
+ * Service to update a business's address
+ *
+ * Fetches the pending business address change from the session
+ * Prepares the address variables, handling both postcode-lookup and manually entered addresses
+ * Calls the DAL to persist the updated address using updateDalService
+ * Clears the cached business details data from the session
+ * Displays a success flash notification to the user
+ *
+ * @module updateBusinessAddressChangeService
+ */
+
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateBusinessAddressMutation } from '../../dal/mutations/update-business-address.js'

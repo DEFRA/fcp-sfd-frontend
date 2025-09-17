@@ -28,7 +28,6 @@ describe('business email change', () => {
     email: 'test@example.com'
   }
 
-
   beforeEach(() => {
     vi.clearAllMocks()
 

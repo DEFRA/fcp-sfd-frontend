@@ -79,7 +79,7 @@ describe('business address check', () => {
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('sets the payload on the yar state', async () => {
+      test('calls updateBusinessAddressChangeService with yar and credentials', async () => {
         await postBusinessAddressCheck.handler(request, h)
 
         expect(updateBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)

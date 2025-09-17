@@ -79,7 +79,7 @@ describe('business phone numbers check', () => {
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('sets the payload on the yar state', async () => {
+      test('calls updateBusinessPhoneNumbersChangeService with yar and credentials', async () => {
         await postBusinessPhoneNumbersCheck.handler(request, h)
 
         expect(updateBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)

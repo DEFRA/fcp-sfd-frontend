@@ -17,7 +17,7 @@ import { flashNotification } from '../../utils/notifications/flash-notification.
 const updateBusinessEmailChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessEmail')
 
-  const variables = { input: { email: { address: businessDetails.changeBusinessEmail }, sbi: businessDetails.info.sbi }}
+  const variables = { input: { email: { address: businessDetails.changeBusinessEmail }, sbi: businessDetails.info.sbi } }
 
   await updateDalService(updateBusinessEmailMutation, variables)
 

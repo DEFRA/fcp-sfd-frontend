@@ -45,7 +45,6 @@ describe('fetchPersonalDetailsService', () => {
     }
   })
 
-
   describe('when DAL_CONNECTION is true', () => {
     beforeEach(() => {
       mockConfigGet.mockReturnValue(true)

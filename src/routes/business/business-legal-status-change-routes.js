@@ -7,7 +7,6 @@ const getBusinessLegalStatusChange = {
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
     const pageData = businessLegalStatusChangePresenter(businessDetails)
-    console.log('🚀 ~ pageData:', pageData)
 
     return h.view('business/business-legal-status-change', pageData)
   }

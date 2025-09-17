@@ -60,6 +60,7 @@ describe('business details', () => {
         await getBusinessDetails.handler(request, h)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
+        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
     })

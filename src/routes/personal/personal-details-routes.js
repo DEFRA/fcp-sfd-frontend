@@ -6,8 +6,10 @@ const getPersonalDetails = {
   path: '/personal-details',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const personalDetails = await fetchPersonalDetailsService(yar, auth.credentials)
-    const pageData = personalDetailsPresenter(personalDetails, request.yar)
+    yar.clear('businessDetails')
+
+    const personalDetails = await fetchPersonalDetailsService(auth.credentials)
+    const pageData = personalDetailsPresenter(personalDetails, yar)
 
     return h.view('personal/personal-details.njk', pageData)
   }

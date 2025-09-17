@@ -1,14 +1,15 @@
+// Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Mocks
 import { fetchPersonalDetailsService } from '../../../../src/services/personal/fetch-personal-details-service.js'
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
 
-// Route under test
+// Thing under test
 import { personalDetailsRoutes } from '../../../../src/routes/personal/personal-details-routes.js'
 const [getPersonalDetails] = personalDetailsRoutes
 
-// Mock the modules
+// Mocks
 vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', () => ({
   fetchPersonalDetailsService: vi.fn()
 }))
@@ -20,7 +21,6 @@ vi.mock('../../../../src/presenters/personal/personal-details-presenter.js', () 
 describe('personal details', () => {
   let h
   let request
-  let mockData
   let pageData
 
   beforeEach(() => {
@@ -34,10 +34,8 @@ describe('personal details', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        mockData = getMockData()
-        pageData = getPageData()
         request = {
-          yar: { userId: 'abc123' },
+          yar: { clear: vi.fn() },
           auth: {
             credentials: {
               sbi: '123456789',
@@ -47,15 +45,22 @@ describe('personal details', () => {
           }
         }
 
-        fetchPersonalDetailsService.mockResolvedValue(mockData)
+        pageData = getPageData()
+        fetchPersonalDetailsService.mockResolvedValue(getMockData())
         personalDetailsPresenter.mockReturnValue(pageData)
+      })
+
+      test('it clears the businessDetails key from session', async () => {
+        await getPersonalDetails.handler(request, h)
+
+        expect(request.yar.clear).toHaveBeenCalledWith('businessDetails')
       })
 
       test('it calls the fetch personal details service and renders view', async () => {
         await getPersonalDetails.handler(request, h)
 
-        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
-        expect(personalDetailsPresenter).toHaveBeenCalledWith(mockData, request.yar)
+        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.auth.credentials)
+        expect(personalDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar)
         expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
       })
     })

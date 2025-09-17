@@ -32,12 +32,10 @@ describe('business name change', () => {
     vi.clearAllMocks()
 
     request = {
-      yar: { set: vi.fn(), get: vi.fn() },
       auth: { credentials },
       payload: {}
     }
 
-    // Fix for h.view to allow .code().takeover() chaining
     const responseStub = {
       code: vi.fn().mockReturnThis(),
       takeover: vi.fn().mockReturnThis()

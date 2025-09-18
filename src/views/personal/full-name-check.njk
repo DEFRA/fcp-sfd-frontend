@@ -1,0 +1,61 @@
+{% extends 'common/layout.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
+{% from "common/sub-header/macro.njk" import subHeader %}
+
+{% block beforeContent %}
+  {{ appBackSignOutLink(backLink) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form method="post" novalidate>
+      <input type="hidden" name="crumb" value="{{ crumb }}">
+      <div class="govuk-form-group">
+        <h1 class="govuk-heading-l">
+          {{ pageTitle }}
+        </h1>
+
+        {{ govukSummaryList({
+          rows: [
+            {
+              key: {
+                text: "First name"
+              },
+              value: {
+                text: changeFirstName
+              },
+              key: {
+                text: "Middle names"
+              },
+              value: {
+                text: changeMiddleName
+              },
+              key: {
+                text: "Last name"
+              },
+              value: {
+                text: changeLastName
+              },
+              actions: {
+                items: [
+                  {
+                    href: "/account-name-change",
+                    text: "Change",
+                    visuallyHiddenText: "personal name"
+                  }
+                ]
+              }
+            }
+          ]
+        }) }}
+      </div>
+
+      {{ govukButton({ text: "Submit", preventDoubleClick: true }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

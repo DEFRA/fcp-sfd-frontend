@@ -11,8 +11,8 @@ const businessPhoneNumbersChangePresenter = (data, payload) => {
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null,
     userName: data.customer.fullName ?? null,
-    businessTelephone: formatBusinessNumber(payload?.businessTelephone, data.changeBusinessTelephone, data.contact.landline),
-    businessMobile: formatBusinessNumber(payload?.businessMobile, data.changeBusinessMobile, data.contact.mobile)
+    businessTelephone: formatBusinessNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.contact.landline),
+    businessMobile: formatBusinessNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.contact.mobile)
   }
 }
 

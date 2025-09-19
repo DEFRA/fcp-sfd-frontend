@@ -2,7 +2,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessEmailChangeService } from '../../../../src/services/business/fetch-business-email-change-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service.js'
 
 // Thing under test
@@ -10,8 +10,8 @@ import { businessEmailCheckRoutes } from '../../../../src/routes/business/busine
 const [getBusinessEmailCheck, postBusinessEmailCheck] = businessEmailCheckRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-email-change-service.js', () => ({
-  fetchBusinessEmailChangeService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/business/update-business-email-change-service.js', () => ({
@@ -29,6 +29,7 @@ describe('business email check', () => {
       }
     }
   }
+
   let h
 
   beforeEach(() => {
@@ -42,7 +43,7 @@ describe('business email check', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        fetchBusinessEmailChangeService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -53,7 +54,7 @@ describe('business email check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessEmailCheck.handler(request, h)
 
-        expect(fetchBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessEmail')
       })
 
       test('should render business-email-check view with page data', async () => {
@@ -78,7 +79,7 @@ describe('business email check', () => {
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('sets the payload on the yar state', async () => {
+      test('calls updateBusinessEmailChangeService with yar and credentials', async () => {
         await postBusinessEmailCheck.handler(request, h)
 
         expect(updateBusinessEmailChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)

@@ -2,7 +2,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessPhoneNumbersChangeService } from '../../../../src/services/business/fetch-business-phone-numbers-change-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessPhoneNumbersChangeService } from '../../../../src/services/business/update-business-phone-numbers-change-service.js'
 
 // Thing under test
@@ -10,8 +10,8 @@ import { businessPhoneNumbersCheckRoutes } from '../../../../src/routes/business
 const [getBusinessPhoneNumbersCheck, postBusinessPhoneNumbersCheck] = businessPhoneNumbersCheckRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-phone-numbers-change-service.js', () => ({
-  fetchBusinessPhoneNumbersChangeService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/business/update-business-phone-numbers-change-service.js', () => ({
@@ -29,6 +29,7 @@ describe('business phone numbers check', () => {
       }
     }
   }
+
   let h
 
   beforeEach(() => {
@@ -42,7 +43,7 @@ describe('business phone numbers check', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        fetchBusinessPhoneNumbersChangeService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -53,7 +54,7 @@ describe('business phone numbers check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessPhoneNumbersCheck.handler(request, h)
 
-        expect(fetchBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessPhoneNumbers')
       })
 
       test('should render business-phone-numbers-check view with page data', async () => {
@@ -78,7 +79,7 @@ describe('business phone numbers check', () => {
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('sets the payload on the yar state', async () => {
+      test('calls updateBusinessPhoneNumbersChangeService with yar and credentials', async () => {
         await postBusinessPhoneNumbersCheck.handler(request, h)
 
         expect(updateBusinessPhoneNumbersChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
@@ -100,8 +101,10 @@ const getMockData = () => {
       landline: '02222 222222',
       mobile: '01111 111111'
     },
-    changeBusinessTelephone: '01111 111111',
-    changeBusinessMobile: null
+    changeBusinessPhoneNumbers: {
+      businessTelephone: '01111 111111',
+      businessMobile: null
+    }
   }
 }
 

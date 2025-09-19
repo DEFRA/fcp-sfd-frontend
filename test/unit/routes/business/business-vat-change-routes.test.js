@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Thing under test
 import { businessVatChangeRoutes } from '../../../../src/routes/business/business-vat-change-routes.js'
@@ -14,36 +14,43 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 describe('business VAT change', () => {
-  const request = {
-    yar: {},
-    auth: {
-      credentials: {
-        sbi: '123456789',
-        crn: '987654321',
-        email: 'test@example.com'
-      }
-    }
-  }
+  let request
   let h
-  let err
+
+  const credentials = {
+    sbi: '123456789',
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    request = {
+      auth: { credentials },
+      payload: {}
+    }
+
+    const responseStub = {
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
+    }
+
+    h = {
+      redirect: vi.fn(),
+      view: vi.fn(() => responseStub)
+    }
   })
 
   describe('GET /business-VAT-registration-number-change', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        h = {
-          view: vi.fn().mockReturnValue({})
-        }
-
-        fetchBusinessDetailsService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -51,10 +58,10 @@ describe('business VAT change', () => {
         expect(getBusinessVatChange.path).toBe('/business-vat-registration-number-change')
       })
 
-      test('it fetches the data from the session', async () => {
+      test('it calls fetchBusinessChangeService', async () => {
         await getBusinessVatChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessVat')
       })
 
       test('should render business-vat-registration-number-change view with page data', async () => {
@@ -66,29 +73,15 @@ describe('business VAT change', () => {
   })
 
   describe('POST /business-vat-registration-number-change', () => {
-    beforeEach(() => {
-      const responseStub = {
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
-
-      h = {
-        redirect: vi.fn(() => h),
-        view: vi.fn(() => responseStub)
-      }
-
-      // Mock yar.set for session
-      request.yar = {
-        set: vi.fn(),
-        get: vi.fn().mockReturnValue(getMockData())
-      }
-
-      request.payload = { vatNumber: 'GB123456789' }
-    })
-
     describe('when a request succeeds', () => {
+      beforeEach(() => {
+        request.payload = { vatNumber: 'GB123456789' }
+
+        fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessVat: request.payload })
+      })
+
       describe('and the validation passes', () => {
-        test('it redirects to the business-vat-registration-number-check page', async () => {
+        test('it redirects to the /business-vat-registration-number-check page', async () => {
           await postBusinessVatChange.options.handler(request, h)
 
           expect(h.redirect).toHaveBeenCalledWith('/business-vat-registration-number-check')
@@ -105,44 +98,46 @@ describe('business VAT change', () => {
           )
         })
       })
-    })
 
-    describe('when validation fails', () => {
-      beforeEach(() => {
-        err = {
-          details: [
-            {
-              message: 'Enter a VAT registration number',
-              path: ['vatNumber'],
-              type: 'any.required'
-            }
-          ]
-        }
+      describe('and the validation fails', () => {
+        let err
 
-        fetchBusinessDetailsService.mockReturnValue(getMockData())
-      })
+        beforeEach(() => {
+          err = {
+            details: [
+              {
+                message: 'Enter a VAT registration number',
+                path: ['vatNumber'],
+                type: 'any.required'
+              }
+            ]
+          }
+        })
 
-      test('it renders the view with errors', async () => {
-        await postBusinessVatChange.options.validate.failAction(request, h, err)
+        test('it fetches the business details', async () => {
+          await postBusinessVatChange.options.validate.failAction(request, h, err)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-change', getPageDataError())
-      })
+          expect(fetchBusinessChangeService).toHaveBeenCalledWith(
+            request.yar,
+            request.auth.credentials,
+            'changeBusinessVat'
+          )
+        })
 
-      test('it returns a bad request status code', async () => {
-        const result = await postBusinessVatChange.options.validate.failAction(request, h, err)
+        test('it returns the page successfully with the error summary banner', async () => {
+          await postBusinessVatChange.options.validate.failAction(request, h, err)
 
-        expect(result.code).toHaveBeenCalledWith(400)
-        expect(result.takeover).toHaveBeenCalled()
-      })
+          expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-change', getPageDataError())
+        })
 
-      test('it should handle undefined errors', async () => {
-        // Calling the fail action handler
-        await postBusinessVatChange.options.validate.failAction(request, h, [])
+        test('it should handle undefined errors', async () => {
+          await postBusinessVatChange.options.validate.failAction(request, h, [])
 
-        const pageData = getPageDataError()
-        pageData.errors = {}
+          const pageData = getPageDataError()
+          pageData.errors = {}
 
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-change', pageData)
+          expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-number-change', pageData)
+        })
       })
     })
   })

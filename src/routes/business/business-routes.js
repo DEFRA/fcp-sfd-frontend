@@ -1,4 +1,4 @@
-import { businessAddressRoutes } from './business-address-enter-routes.js'
+import { businessAddressEnterRoutes } from './business-address-enter-routes.js'
 import { businessAddressCheckRoutes } from './business-address-check-routes.js'
 import { businessDetailsRoutes } from './business-details-routes.js'
 import { businessEmailChangeRoutes } from './business-email-change-routes.js'
@@ -15,7 +15,7 @@ import { businessVatRemoveRoutes } from './business-vat-remove-routes.js'
 import { exampleDalConnectionRoute } from './example-routes.js'
 
 export const businessRoutes = [
-  ...businessAddressRoutes,
+  ...businessAddressEnterRoutes,
   ...businessAddressCheckRoutes,
   ...businessDetailsRoutes,
   ...businessEmailChangeRoutes,

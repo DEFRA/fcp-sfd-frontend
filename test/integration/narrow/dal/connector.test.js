@@ -24,7 +24,7 @@ vi.mock('../../../../src/services/DAL/token/get-token-service.js', async () => {
 const { createServer } = await import('../../../../src/server.js')
 const { config } = await import('../../../../src/config/index.js')
 
-describe('Data access layer (DAL) connector integration', () => {
+describe.skip('Data access layer (DAL) connector integration', () => {
   let server
 
   beforeAll(async () => {

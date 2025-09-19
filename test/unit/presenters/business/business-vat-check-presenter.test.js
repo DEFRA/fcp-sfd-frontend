@@ -82,7 +82,7 @@ describe('businessVatCheckPresenter', () => {
   describe('the "vatNumber" property', () => {
     describe('when provided with a changed vat number', () => {
       beforeEach(() => {
-        data.changeBusinessVAT = 'GB987654321'
+        data.changeBusinessVat = 'GB987654321'
       })
 
       test('it should return the changed vat number as the vatNumber', () => {

@@ -7,7 +7,7 @@ const getBusinessVatCheck = {
   path: '/business-vat-registration-number-check',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVAT')
+    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
     const pageData = businessVatCheckPresenter(businessDetails)
 
     return h.view('business/business-vat-registration-number-check', pageData)

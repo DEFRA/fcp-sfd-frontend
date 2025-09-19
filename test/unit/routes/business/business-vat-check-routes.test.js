@@ -54,7 +54,7 @@ describe('business VAT check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessVatCheck.handler(request, h)
 
-        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessVAT')
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessVat')
       })
 
       test('should render business-vat-registration-number-check view with page data', async () => {

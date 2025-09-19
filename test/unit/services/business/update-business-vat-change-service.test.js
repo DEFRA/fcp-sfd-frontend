@@ -33,7 +33,7 @@ describe('updateBusinessVatChangeService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessVAT = 'GB123456789'
+    mappedData.changeBusinessVat = 'GB123456789'
     fetchBusinessChangeService.mockReturnValue(mappedData)
 
     yar = {
@@ -47,7 +47,7 @@ describe('updateBusinessVatChangeService', () => {
     test('it fetches the business details with credentials', async () => {
       await updateBusinessVatChangeService(yar, credentials)
 
-      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessVAT')
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessVat')
     })
 
     test('it calls updateDalService with correct mutation and variables', async () => {

@@ -10,7 +10,7 @@ const getBusinessVatChange = {
   path: '/business-vat-registration-number-change',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVAT')
+    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
     const pageData = businessVatChangePresenter(businessDetails)
 
     return h.view('business/business-vat-registration-number-change', pageData)
@@ -28,14 +28,14 @@ const postBusinessVatChange = {
         const { yar, auth, payload } = request
 
         const errors = formatValidationErrors(err.details || [])
-        const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVAT')
+        const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
         const pageData = businessVatChangePresenter(businessDetails, payload.vatNumber)
 
         return h.view('business/business-vat-registration-number-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {
-      setSessionData(request.yar, 'businessDetails', 'changeBusinessVAT', request.payload.vatNumber)
+      setSessionData(request.yar, 'businessDetails', 'changeBusinessVat', request.payload.vatNumber)
 
       return h.redirect('/business-vat-registration-number-check')
     }

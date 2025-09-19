@@ -15,8 +15,8 @@ import { flashNotification } from '../../utils/notifications/flash-notification.
 import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessVatChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessVAT')
-  const variables = { input: { vat: businessDetails.changeBusinessVAT, sbi: businessDetails.info.sbi } }
+  const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessVat')
+  const variables = { input: { vat: businessDetails.changeBusinessVat, sbi: businessDetails.info.sbi } }
 
   await updateDalService(updateBusinessVATMutation, variables)
 

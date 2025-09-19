@@ -61,7 +61,7 @@ describe('business VAT change', () => {
       test('it calls fetchBusinessChangeService', async () => {
         await getBusinessVatChange.handler(request, h)
 
-        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessVAT')
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessVat')
       })
 
       test('should render business-vat-registration-number-change view with page data', async () => {
@@ -77,7 +77,7 @@ describe('business VAT change', () => {
       beforeEach(() => {
         request.payload = { vatNumber: 'GB123456789' }
 
-        fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessVAT: request.payload })
+        fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessVat: request.payload })
       })
 
       describe('and the validation passes', () => {
@@ -93,7 +93,7 @@ describe('business VAT change', () => {
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
             'businessDetails',
-            'changeBusinessVAT',
+            'changeBusinessVat',
             request.payload.vatNumber
           )
         })
@@ -120,7 +120,7 @@ describe('business VAT change', () => {
           expect(fetchBusinessChangeService).toHaveBeenCalledWith(
             request.yar,
             request.auth.credentials,
-            'changeBusinessVAT'
+            'changeBusinessVat'
           )
         })
 

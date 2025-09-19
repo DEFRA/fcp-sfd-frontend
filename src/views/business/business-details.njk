@@ -137,12 +137,12 @@
           <dt class="govuk-summary-list__key">
             VAT registration number
           </dt>
+         {# Logic to display the correct link actions for the VAT number #} 
+         {% if hasVatNumber %}
           <dd class="govuk-summary-list__value">
             {{ vatNumber }}
           </dd>
           <dd class="govuk-summary-list__actions">
-            {# Logic to display the correct link actions for the VAT number #}
-            {% if hasVatNumber %}
               <ul class="govuk-summary-list__actions-list">
                 <li class="govuk-summary-list__actions-list-item">
                   <a class="govuk-link" href="/business-vat-registration-remove">
@@ -155,11 +155,15 @@
                   </a>
                 </li>
               </ul>
-            {% else %}
-              <a class="govuk-link" href="/business-vat-registration-number-change">
+           {% else %}
+           <dd class="govuk-summary-list__value">
+            Number not added
+          </dd> 
+          <dd class="govuk-summary-list__actions">
+          <a class="govuk-link" href="/business-vat-registration-number-change">
                 Add<span class="govuk-visually-hidden"> VAT registration number</span>
               </a>
-            {% endif %}
+          {% endif %}
           </dd>
         </div>
         <div class="govuk-summary-list__row">

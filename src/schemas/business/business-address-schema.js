@@ -1,11 +1,6 @@
 import Joi from 'joi'
-import {
-  ADDRESS_LINE_MAX,
-  TOWN_CITY_MAX,
-  COUNTY_MAX,
-  POSTCODE_MAX,
-  COUNTRY_MAX
-} from '../../constants/validation-fields.js'
+import { ADDRESS_LINE_MAX, TOWN_CITY_MAX, COUNTY_MAX, COUNTRY_MAX } from '../../constants/validation-fields.js'
+import { postcodeSchema } from './business-postcode-schema.js'
 
 export const businessAddressSchema = Joi.object({
   address1: Joi.string()
@@ -42,14 +37,7 @@ export const businessAddressSchema = Joi.object({
     .messages({
       'string.max': `County must be ${COUNTY_MAX} characters or less`
     }),
-  postcode: Joi.string()
-    .required()
-    .max(POSTCODE_MAX)
-    .messages({
-      'any.required': 'Enter a postal code or zip code',
-      'string.empty': 'Enter a postal code or zip code',
-      'string.max': `Postal code or zip code must be ${POSTCODE_MAX} characters or less`
-    }),
+  postcode: postcodeSchema,
   country: Joi.string()
     .required()
     .max(COUNTRY_MAX)

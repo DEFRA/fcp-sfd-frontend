@@ -17,7 +17,7 @@ const fetchBusinessDetailsService = async (credentials) => {
     return mappedData
   }
 
-  return await getFromDal(credentials)
+  return getFromDal(credentials)
 }
 
 const getFromDal = async (credentials) => {

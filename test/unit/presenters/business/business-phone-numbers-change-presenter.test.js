@@ -20,7 +20,8 @@ describe('businessPhoneNumbersChangePresenter', () => {
       contact: {
         landline: '01234 567891',
         mobile: null
-      }
+      },
+      changeBusinessPhoneNumbers: {}
     }
   })
 
@@ -86,7 +87,7 @@ describe('businessPhoneNumbersChangePresenter', () => {
   describe('the "businessMobile" property', () => {
     describe('when provided with a changed businessMobile', () => {
       beforeEach(() => {
-        data.changeBusinessMobile = '01111 111111'
+        data.changeBusinessPhoneNumbers.businessMobile = '01111 111111'
       })
 
       test('it should return businessMobile as the changed businessMobile', () => {
@@ -112,7 +113,7 @@ describe('businessPhoneNumbersChangePresenter', () => {
   describe('the "businessTelephone" property', () => {
     describe('when provided with a changed businessTelephone', () => {
       beforeEach(() => {
-        data.changeBusinessTelephone = '01214 151151'
+        data.changeBusinessPhoneNumbers.businessTelephone = '01214 151151'
       })
 
       test('it should return businessTelephone as the changed businessTelephone', () => {

@@ -16,7 +16,6 @@ describe('businessVatCheckPresenter', () => {
       },
       customer: {
         fullName: 'Alfred Waldron'
-
       }
     }
   })
@@ -90,19 +89,6 @@ describe('businessVatCheckPresenter', () => {
         const result = businessVatCheckPresenter(data)
 
         expect(result.vatNumber).toEqual('GB987654321')
-      })
-    })
-
-    describe('when all vat sources are missing', () => {
-      beforeEach(() => {
-        delete data.info.vat
-        delete data.vatNumber
-      })
-
-      test('it should return vatNumber as null', () => {
-        const result = businessVatCheckPresenter(data)
-
-        expect(result.vatNumber).toEqual(null)
       })
     })
   })

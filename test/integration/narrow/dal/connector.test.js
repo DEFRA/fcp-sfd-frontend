@@ -38,11 +38,11 @@ describe('Data access layer (DAL) connector integration', () => {
     }
   })
 
-  test('should successfully call DAL and return data without passing email as a param', async () => {
+  test('should successfully call DAL and return data', async () => {
     const result = await dalConnector(
       exampleQuery,
       {
-        sbi: '107591843',
+        sbi: '107183280',
         crn: '9477368292'
       }
     )

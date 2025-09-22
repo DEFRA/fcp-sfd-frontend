@@ -20,8 +20,10 @@ describe('businessPhoneNumbersCheckPresenter', () => {
         landline: '01234 567891',
         mobile: '01111 111111'
       },
-      changeBusinessMobile: null,
-      changeBusinessTelephone: null
+      changeBusinessPhoneNumbers: {
+        businessMobile: null,
+        businessTelephone: null
+      }
     }
   })
 

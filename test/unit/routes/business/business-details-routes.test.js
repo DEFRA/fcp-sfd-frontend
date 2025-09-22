@@ -21,7 +21,6 @@ vi.mock('../../../../src/presenters/business/business-details-presenter.js', () 
 describe('business details', () => {
   let h
   let request
-  let mockData
   let pageData
 
   beforeEach(() => {
@@ -35,10 +34,8 @@ describe('business details', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        mockData = getMockData()
-        pageData = getPageData()
         request = {
-          yar: { get: vi.fn(), set: vi.fn() },
+          yar: { clear: vi.fn() },
           auth: {
             credentials: {
               sbi: '123456789',
@@ -48,14 +45,22 @@ describe('business details', () => {
           }
         }
 
-        fetchBusinessDetailsService.mockResolvedValue(mockData)
+        pageData = getPageData()
+        fetchBusinessDetailsService.mockResolvedValue(getMockData())
         businessDetailsPresenter.mockReturnValue(pageData)
+      })
+
+      test('it clears the businessDetails key from session', async () => {
+        await getBusinessDetails.handler(request, h)
+
+        expect(request.yar.clear).toHaveBeenCalledWith('businessDetails')
       })
 
       test('it calls the fetch business details service', async () => {
         await getBusinessDetails.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
+        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
     })

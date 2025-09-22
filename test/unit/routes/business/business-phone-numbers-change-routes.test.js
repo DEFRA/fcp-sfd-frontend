@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Thing under test
 import { businessPhoneNumbersChangeRoutes } from '../../../../src/routes/business/business-phone-numbers-change-routes.js'
@@ -14,36 +14,44 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 describe('business phone numbers change', () => {
-  const request = {
-    yar: {},
-    auth: {
-      credentials: {
-        sbi: '123456789',
-        crn: '987654321',
-        email: 'test@example.com'
-      }
-    }
-  }
   let h
-  let err
+  let request
+
+  const credentials = {
+    sbi: '123456789',
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    request = {
+      yar: {},
+      auth: { credentials },
+      payload: {}
+    }
+
+    const responseStub = {
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
+    }
+
+    h = {
+      redirect: vi.fn(),
+      view: vi.fn(() => responseStub)
+    }
   })
 
   describe('GET /business-phone-numbers-change', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        h = {
-          view: vi.fn().mockReturnValue({})
-        }
-
-        fetchBusinessDetailsService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -51,13 +59,13 @@ describe('business phone numbers change', () => {
         expect(getBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
       })
 
-      test('it fetches the data from the session', async () => {
+      test('it calls fetchBusinessChangeService', async () => {
         await getBusinessPhoneNumbersChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessPhoneNumbers')
       })
 
-      test('should render business-phone-numbers-change.njk view with page data', async () => {
+      test('should render business-phone-numbers-change view with page data', async () => {
         await getBusinessPhoneNumbersChange.handler(request, h)
 
         expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', getPageData())
@@ -67,59 +75,29 @@ describe('business phone numbers change', () => {
 
   describe('POST /business-phone-numbers-change', () => {
     beforeEach(() => {
-      const responseStub = {
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
-
-      h = {
-        redirect: vi.fn(() => h),
-        view: vi.fn(() => responseStub)
-      }
-
-      // Mock yar.set for session
-      request.yar = {
-        set: vi.fn(),
-        get: vi.fn().mockReturnValue(getMockData())
-      }
-
       request.payload = { businessMobile: null, businessTelephone: null }
+
+      fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessName: request.payload })
     })
 
     describe('when a request succeeds', () => {
       describe('and the validation passes', () => {
-        test('it redirects to the /business-phone-numbers-check page', async () => {
+        test('it sets the session data and redirects', async () => {
           await postBusinessPhoneNumbersChange.options.handler(request, h)
 
+          expect(setSessionData).toHaveBeenCalledWith(
+            request.yar,
+            'businessDetails',
+            'changeBusinessPhoneNumbers',
+            request.payload
+          )
           expect(h.redirect).toHaveBeenCalledWith('/business-phone-numbers-check')
-        })
-
-        test('sets the payload on the yar state', async () => {
-          await postBusinessPhoneNumbersChange.options.handler(request, h)
-
-          // Ensure it was called twice
-          expect(setSessionData).toHaveBeenCalledTimes(2)
-
-          // Check the specific calls
-          expect(setSessionData).toHaveBeenNthCalledWith(
-            1,
-            request.yar,
-            'businessDetails',
-            'changeBusinessTelephone',
-            request.payload.businessTelephone
-          )
-
-          expect(setSessionData).toHaveBeenNthCalledWith(
-            2,
-            request.yar,
-            'businessDetails',
-            'changeBusinessMobile',
-            request.payload.businessMobile
-          )
         })
       })
 
       describe('and the validation fails', () => {
+        let err
+
         beforeEach(() => {
           err = {
             details: [
@@ -132,15 +110,23 @@ describe('business phone numbers change', () => {
           }
         })
 
+        test('it fetches the business details', async () => {
+          await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
+
+          expect(fetchBusinessChangeService).toHaveBeenCalledWith(
+            request.yar,
+            request.auth.credentials,
+            'changeBusinessPhoneNumbers'
+          )
+        })
+
         test('it returns the page successfully with the error summary banner', async () => {
-          // Calling the fail action handler
           await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, err)
 
           expect(h.view).toHaveBeenCalledWith('business/business-phone-numbers-change', getPageDataError())
         })
 
         test('it should handle undefined errors', async () => {
-          // Calling the fail action handler
           await postBusinessPhoneNumbersChange.options.validate.failAction(request, h, [])
 
           const pageData = getPageDataError()

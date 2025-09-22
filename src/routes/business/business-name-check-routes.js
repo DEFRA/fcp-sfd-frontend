@@ -1,4 +1,4 @@
-import { fetchBusinessNameChangeService } from '../../services/business/fetch-business-name-change-service.js'
+import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { updateBusinessNameChangeService } from '../../services/business/update-business-name-change-service.js'
 import { businessNameCheckPresenter } from '../../presenters/business/business-name-check-presenter.js'
 
@@ -7,7 +7,7 @@ const getBusinessNameCheck = {
   path: '/business-name-check',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessNameChangeService(yar, auth.credentials)
+    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
     const pageData = businessNameCheckPresenter(businessDetails)
 
     return h.view('business/business-name-check', pageData)

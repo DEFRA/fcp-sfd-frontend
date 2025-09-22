@@ -2,7 +2,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessAddressChangeService } from '../../../../src/services/business/fetch-business-address-change-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
 
 // Thing under test
@@ -10,8 +10,8 @@ import { businessAddressCheckRoutes } from '../../../../src/routes/business/busi
 const [getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-address-change-service.js', () => ({
-  fetchBusinessAddressChangeService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/business/update-business-address-change-service.js', () => ({
@@ -29,6 +29,7 @@ describe('business address check', () => {
       }
     }
   }
+
   let h
 
   beforeEach(() => {
@@ -42,7 +43,7 @@ describe('business address check', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        fetchBusinessAddressChangeService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -53,7 +54,7 @@ describe('business address check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessAddressCheck.handler(request, h)
 
-        expect(fetchBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessAddress')
       })
 
       test('should render business-address-check view with page data', async () => {
@@ -78,7 +79,7 @@ describe('business address check', () => {
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('sets the payload on the yar state', async () => {
+      test('calls updateBusinessAddressChangeService with yar and credentials', async () => {
         await postBusinessAddressCheck.handler(request, h)
 
         expect(updateBusinessAddressChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)

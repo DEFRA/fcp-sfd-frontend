@@ -12,8 +12,8 @@ const businessPhoneNumbersCheckPresenter = (businessDetails) => {
     businessName: businessDetails.info.businessName ?? null,
     sbi: businessDetails.info.sbi ?? null,
     userName: businessDetails.customer.fullName ?? null,
-    businessMobile: businessDetails.changeBusinessMobile,
-    businessTelephone: businessDetails.changeBusinessTelephone
+    businessMobile: businessDetails.changeBusinessPhoneNumbers.businessMobile ?? null,
+    businessTelephone: businessDetails.changeBusinessPhoneNumbers.businessTelephone ?? null
   }
 }
 

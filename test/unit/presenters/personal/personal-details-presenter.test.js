@@ -46,10 +46,10 @@ describe('personalDetailsPresenter', () => {
         dateOfBirth: data.info.dateOfBirth,
         personalTelephone: {
           telephone: data.contact.telephone ?? 'Not added',
-          mobile: 'Not added'
+          mobile: 'Not added',
+          action: 'Change',
+          link: '/account-phone-numbers-change'
         },
-        personalPhoneAction: 'Change',
-        personalPhoneNumbersLink: '/account-phone-numbers-change',
         personalEmail: data.contact.email
       })
     })
@@ -96,7 +96,7 @@ describe('personalDetailsPresenter', () => {
         data.contact.mobile = '07123456789'
         const result = personalDetailsPresenter(data, yar)
 
-        expect(result.personalPhoneAction).toEqual('Change')
+        expect(result.personalTelephone.action).toEqual('Change')
       })
     })
 
@@ -106,7 +106,7 @@ describe('personalDetailsPresenter', () => {
         data.contact.mobile = null
         const result = personalDetailsPresenter(data, yar)
 
-        expect(result.personalPhoneAction).toEqual('Change')
+        expect(result.personalTelephone.action).toEqual('Change')
       })
     })
 
@@ -116,7 +116,7 @@ describe('personalDetailsPresenter', () => {
         data.contact.mobile = null
         const result = personalDetailsPresenter(data, yar)
 
-        expect(result.personalPhoneAction).toEqual('Add')
+        expect(result.personalTelephone.action).toEqual('Add')
       })
     })
   })

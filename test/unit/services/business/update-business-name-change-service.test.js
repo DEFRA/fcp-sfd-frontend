@@ -2,9 +2,9 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
-import { dalConnector } from '../../../../src/dal/connector.js'
+import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { updateBusinessNameMutation } from '../../../../src/dal/mutations/update-business-name.js'
 
 // Test helpers
@@ -14,26 +14,16 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
   flashNotification: vi.fn()
 }))
 
-vi.mock('../../../../src/dal/connector.js', () => ({
-  dalConnector: vi.fn().mockResolvedValue({
-    data: {
-      updateBusinessName: {
-        business: {
-          info: {
-            name: 'My New Business 123'
-          }
-        }
-      }
-    }
-  })
+vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
+  updateDalService: vi.fn().mockResolvedValue({})
 }))
 
 describe('updateBusinessNameChangeService', () => {
@@ -44,52 +34,43 @@ describe('updateBusinessNameChangeService', () => {
     vi.clearAllMocks()
 
     mappedData.changeBusinessName = 'New business ltd'
-    fetchBusinessDetailsService.mockReturnValue(mappedData)
+    fetchBusinessChangeService.mockReturnValue(mappedData)
 
     yar = {
-      set: vi.fn().mockReturnValue()
+      clear: vi.fn()
     }
+
     credentials = { sbi: '123456789', crn: '987654321' }
   })
 
   describe('when called', () => {
-    test('it correctly saves the data to the session', async () => {
+    test('it fetches the business details with credentials', async () => {
       await updateBusinessNameChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
-      expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessName')
     })
 
-    test('it calls dalConnector with correct mutation and variable', async () => {
+    test('it calls updateDalService with correct mutation and variables', async () => {
       await updateBusinessNameChangeService(yar, credentials)
 
-      expect(dalConnector).toHaveBeenCalledWith(updateBusinessNameMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(updateBusinessNameMutation, {
         input: {
           name: 'New business ltd',
-          sbi: '107183280'
+          sbi: mappedData.info.sbi
         }
       })
+    })
+
+    test('it clears the businessDetails from session', async () => {
+      await updateBusinessNameChangeService(yar, credentials)
+
+      expect(yar.clear).toHaveBeenCalledWith('businessDetails')
     })
 
     test('adds a flash notification confirming the change in data', async () => {
       await updateBusinessNameChangeService(yar, credentials)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business name')
-    })
-  })
-
-  describe('when an update fails', () => {
-    beforeEach(() => {
-      dalConnector.mockResolvedValue({
-        errors: [{
-          message: 'Failed to update'
-        }]
-      })
-    })
-
-    test('rejects with "DAL error from mutation"', async () => {
-      await expect(updateBusinessNameChangeService(yar, credentials))
-        .rejects.toThrow('DAL error from mutation')
     })
   })
 })

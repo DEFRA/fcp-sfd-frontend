@@ -4,7 +4,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { updateBusinessVatRemoveService } from '../../../../src/services/business/update-business-vat-remove-service.js'
-import { businessVatRemovePresenter } from '../../../../src/presenters/business/business-vat-remove-presenter.js'
 
 // Thing under test
 import { businessVatRemoveRoutes } from '../../../../src/routes/business/business-vat-remove-routes.js'
@@ -19,42 +18,39 @@ vi.mock('../../../../src/services/business/update-business-vat-remove-service.js
   updateBusinessVatRemoveService: vi.fn()
 }))
 
-vi.mock('../../../../src/presenters/business/business-vat-remove-presenter.js', () => ({
-  businessVatRemovePresenter: vi.fn()
-}))
-
 describe('business VAT remove', () => {
-  const request = {
-    yar: {},
-    auth: {
-      credentials: {
-        sbi: '123456789',
-        crn: '987654321',
-        email: 'test@example.com'
-      }
-    }
-  }
+  let request
   let h
+
+  const credentials = {
+    sbi: '123456789',
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    // Mock yar.set for session
-    request.yar = {
-      set: vi.fn(),
-      get: vi.fn().mockReturnValue(getMockData())
+    request = {
+      auth: { credentials },
+      payload: {}
+    }
+
+    const responseStub = {
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
+    }
+
+    h = {
+      redirect: vi.fn(),
+      view: vi.fn(() => responseStub)
     }
   })
 
   describe('GET /business-vat-registration-remove', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        h = {
-          view: vi.fn().mockReturnValue({})
-        }
-
         fetchBusinessDetailsService.mockReturnValue(getMockData())
-        businessVatRemovePresenter.mockReturnValue(getPageData())
       })
 
       test('should have the correct method and path', () => {
@@ -62,10 +58,10 @@ describe('business VAT remove', () => {
         expect(getBusinessVatRemove.path).toBe('/business-vat-registration-remove')
       })
 
-      test('it fetches the data from the session', async () => {
+      test('it calls fetchBusinessDetailService', async () => {
         await getBusinessVatRemove.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
       })
 
       test('should render business-vat-registration-remove view with page data', async () => {
@@ -77,92 +73,78 @@ describe('business VAT remove', () => {
   })
 
   describe('POST /business-vat-registration-remove', () => {
-    beforeEach(() => {
-      h = {
-        redirect: vi.fn(() => h)
-      }
-    })
-
     describe('when a request succeeds', () => {
-      beforeEach(() => {
-        request.payload = { confirmRemove: 'yes' }
+      describe('and the payload confirmRemove property is "yes"', () => {
+        beforeEach(() => {
+          request.payload = { confirmRemove: 'yes' }
+        })
+
+        test('calls updateBusinessVatRemoveService with yar and credentials', async () => {
+          await postBusinessVatRemove.options.handler(request, h)
+
+          expect(updateBusinessVatRemoveService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        })
+
+        test('it redirects to the /business-details page', async () => {
+          await postBusinessVatRemove.options.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        })
       })
 
-      test('it redirects to the /business-details page', async () => {
-        await postBusinessVatRemove.options.handler(request, h)
+      describe('and the payload confirmRemove property is "no"', () => {
+        beforeEach(() => {
+          request.payload = { confirmRemove: 'no' }
+        })
 
-        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        test('does not call the updateBusinessVatRemoveService', async () => {
+          await postBusinessVatRemove.options.handler(request, h)
+
+          expect(updateBusinessVatRemoveService).not.toHaveBeenCalled()
+        })
+
+        test('it redirects to the /business-details page', async () => {
+          await postBusinessVatRemove.options.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        })
       })
 
-      test('calls the update service with confirmRemove parameter', async () => {
-        await postBusinessVatRemove.options.handler(request, h)
+      describe('when validation fails', () => {
+        let err
 
-        expect(updateBusinessVatRemoveService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
-      })
-    })
+        beforeEach(() => {
+          err = {
+            details: [
+              {
+                message: 'Select yes if you want to remove your VAT registration number',
+                path: ['confirmRemove'],
+                type: 'any.required'
+              }
+            ]
+          }
+        })
 
-    describe('when user selects "no"', () => {
-      beforeEach(() => {
-        request.payload = { confirmRemove: 'no' }
-      })
+        test('it fetches the business details', async () => {
+          await postBusinessVatRemove.options.validate.failAction(request, h, err)
 
-      test('it redirects to the /business-details page', async () => {
-        await postBusinessVatRemove.options.handler(request, h)
+          expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
+        })
 
-        expect(h.redirect).toHaveBeenCalledWith('/business-details')
-      })
+        test('it returns the page successfully with the error summary banner', async () => {
+          await postBusinessVatRemove.options.validate.failAction(request, h, err)
 
-      test('does not call the update service', async () => {
-        await postBusinessVatRemove.options.handler(request, h)
+          expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-remove', getPageDataError())
+        })
 
-        expect(updateBusinessVatRemoveService).not.toHaveBeenCalled()
-      })
-    })
+        test('it should handle undefined errors', async () => {
+          await postBusinessVatRemove.options.validate.failAction(request, h, [])
 
-    describe('when validation fails', () => {
-      let err
+          const pageData = getPageDataError()
+          pageData.errors = {}
 
-      beforeEach(() => {
-        h = {
-          view: vi.fn().mockReturnValue({
-            code: vi.fn().mockReturnThis(),
-            takeover: vi.fn().mockReturnThis()
-          })
-        }
-
-        err = {
-          details: [
-            {
-              message: 'Select yes if you want to remove your VAT registration number',
-              path: ['confirmRemove'],
-              type: 'any.required'
-            }
-          ]
-        }
-      })
-
-      test('should have validation options', () => {
-        expect(postBusinessVatRemove.options).toBeDefined()
-        expect(postBusinessVatRemove.options.validate).toBeDefined()
-        expect(postBusinessVatRemove.options.validate.payload).toBeDefined()
-      })
-
-      test('it returns the page successfully with the error summary banner', async () => {
-        await postBusinessVatRemove.options.validate.failAction(request, h, err)
-
-        const pageData = getPageDataError()
-        pageData.errors = { confirmRemove: { text: 'Select yes if you want to remove your VAT registration number' } }
-
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-remove', pageData)
-      })
-
-      test('it should handle undefined errors', async () => {
-        await postBusinessVatRemove.options.validate.failAction(request, h, [])
-
-        const pageData = getPageDataError()
-        pageData.errors = {}
-
-        expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-remove', pageData)
+          expect(h.view).toHaveBeenCalledWith('business/business-vat-registration-remove', pageData)
+        })
       })
     })
   })
@@ -201,6 +183,11 @@ const getPageDataError = () => {
     vatNumber: 'GB123456789',
     businessName: 'Agile Farm Ltd',
     sbi: '123456789',
-    userName: 'Alfred Waldron'
+    userName: 'Alfred Waldron',
+    errors: {
+      confirmRemove: {
+        text: 'Select yes if you want to remove your VAT registration number'
+      }
+    }
   }
 }

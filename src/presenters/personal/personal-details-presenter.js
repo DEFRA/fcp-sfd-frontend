@@ -16,10 +16,10 @@ const personalDetailsPresenter = (data, yar) => {
     fullName: formatFullName(data.info.fullName),
     personalTelephone: {
       telephone: data.contact.telephone ?? 'Not added',
-      mobile: data.contact.mobile ?? 'Not added'
+      mobile: data.contact.mobile ?? 'Not added',
+      action: data.contact.telephone || data.contact.mobile ? 'Change' : 'Add',
+      link: '/account-phone-numbers-change'
     },
-    personalPhoneAction: data.contact.telephone || data.contact.mobile ? 'Change' : 'Add',
-    personalPhoneNumbersLink: '/account-phone-numbers-change',
     personalEmail: data.contact.email,
     dateOfBirth: data.info.dateOfBirth
   }

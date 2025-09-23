@@ -28,6 +28,10 @@ services:
       DEFRA_ID_REDIRECT_URL: http://localhost:3000/auth/sign-in-oidc
       DEFRA_ID_SIGN_OUT_REDIRECT_URL: http://localhost:3000/auth/sign-out-oidc
       DAL_EMAIL_HEADER: ${DAL_EMAIL_HEADER}
+      OS_PLACES_CLIENT_SECRET: ${OS_PLACES_CLIENT_SECRET}
+      OS_PLACES_CLIENT_ID: ${OS_PLACES_CLIENT_ID}
+      OS_PLACES_TOKEN_ENDPOINT: ${OS_PLACES_TOKEN_ENDPOINT}
+      OS_PLACES_ENDPOINT: ${OS_PLACES_ENDPOINT}
 
   kits-mock:
     image: defradigital/fcp-dal-upstream-mock:0.38.0

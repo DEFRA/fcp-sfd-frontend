@@ -6,7 +6,7 @@ import { getTokenService } from '../../../../../src/services/DAL/token/get-token
 
 // Mock dependencies
 import { get, set } from '../../../../../src/utils/caching/index.js'
-import { retry } from '../../../../../src/services/DAL/token/retry-service.js'
+import { retry } from '../../../../../src/utils/caching/retry-token.js'
 import Wreck from '@hapi/wreck'
 import { config } from '../../../../../src/config/index.js'
 
@@ -16,7 +16,7 @@ vi.mock('../../../../../src/utils/caching/index.js', () => ({
   set: vi.fn()
 }))
 
-vi.mock('../../../../../src/services/DAL/token/retry-service.js', () => ({
+vi.mock('../../../../../src/utils/caching/retry-token.js', () => ({
   retry: vi.fn()
 }))
 

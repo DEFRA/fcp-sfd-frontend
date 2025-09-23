@@ -16,12 +16,12 @@
 
 import Wreck from '@hapi/wreck'
 import { DAL_TOKEN, TOKEN_EXPIRY_BUFFER_MS } from '../../../constants/cache-keys.js'
-import { retry } from './retry-service.js'
+import { retry } from '../../../utils/caching/retry-token.js'
 import { config } from '../../../config/index.js'
 import { get, set } from '../../../utils/caching/index.js'
 
 const getTokenService = async (cache) => {
-  return retry(() => getToken(cache))
+  return retry(() => getToken(cache), DAL_TOKEN)
 }
 
 /**

@@ -2,20 +2,19 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 // Thing under test
-import { retry } from '../../../../../src/services/DAL/token/retry-service.js'
-
-// Test helpers
-import { DAL_TOKEN } from '../../../../../src/constants/cache-keys.js'
+import { retry } from '../../../../src/utils/caching/retry-token.js'
 
 // Things we need to mock
-import { drop } from '../../../../../src/utils/caching/drop.js'
+import { drop } from '../../../../src/utils/caching/drop.js'
 
 // Mocks
-vi.mock('../../../../../src/utils/caching/drop.js', () => ({
+vi.mock('../../../../src/utils/caching/drop.js', () => ({
   drop: vi.fn()
 }))
 
 describe('retry', () => {
+  const DAL_TOKEN = 'dal-token'
+
   beforeEach(() => {
     vi.clearAllMocks()
     vi.useFakeTimers()
@@ -30,7 +29,7 @@ describe('retry', () => {
   it('should return the result if the function succeeds', async () => {
     const fn = vi.fn().mockResolvedValue('success')
 
-    const resultPromise = retry(fn)
+    const resultPromise = retry(fn, DAL_TOKEN)
 
     // Run all scheduled timers immediately, allowing test to continue without real delays
     await vi.runAllTimersAsync()
@@ -47,7 +46,7 @@ describe('retry', () => {
       .mockRejectedValueOnce(boomError)
       .mockResolvedValueOnce('success')
 
-    const resultPromise = retry(fn)
+    const resultPromise = retry(fn, DAL_TOKEN)
 
     // Run all scheduled timers immediately, allowing test to continue without real delays
     await vi.runAllTimersAsync()

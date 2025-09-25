@@ -4,9 +4,10 @@
  */
 
 const businessAddressCheckPresenter = (businessDetails) => {
+  console.log('🚀 ~ businessDetails:', businessDetails)
   return {
-    backLink: { href: '/business-address-enter' },
-    changeLink: '/business-address-enter',
+    backLink: backLink(businessDetails.changeBusinessAddress?.postcodeLookup),
+    changeLink: changeLink(businessDetails.changeBusinessAddress?.postcodeLookup),
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
     address: formatAddress(businessDetails.changeBusinessAddress ?? businessDetails.address),
@@ -21,7 +22,29 @@ const businessAddressCheckPresenter = (businessDetails) => {
  * @private
  */
 const formatAddress = (businessAddress) => {
+  if (businessAddress.postcodeLookup) {
+    const { uprn, displayAddress, postcodeLookup, ...rest } = businessAddress
+
+    return Object.values(rest).filter(Boolean)
+  }
+
   return Object.values(businessAddress).filter(Boolean)
+}
+
+const backLink = (postcodeLookup) => {
+  if (postcodeLookup) {
+    return { href: '/business-address-select-change' }
+  } else {
+    return { href: '/business-address-enter' }
+  }
+}
+
+const changeLink = (postcodeLookup) => {
+  if (postcodeLookup) {
+    return '/business-address-select-change'
+  } else {
+    return '/business-address-enter'
+  }
 }
 
 export {

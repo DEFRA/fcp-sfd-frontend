@@ -11,12 +11,22 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
  * @param {object} credentials - The user's credentials
  * @param {string} field - The input field the user has updated that we want to fetch (if exists)
  */
-const fetchBusinessChangeService = async (yar, credentials, field) => {
+const fetchBusinessChangeService = async (yar, credentials, fields) => {
   const businessDetails = await fetchBusinessDetailsService(credentials)
+  console.log('🚀 ~ businessDetails:', businessDetails)
   const sessionData = yar.get('businessDetails') || {}
+  console.log('🚀 ~ sessionData:', sessionData)
 
-  if (sessionData[field] !== undefined) {
-    businessDetails[field] = sessionData[field]
+  if (Array.isArray(fields)) {
+    fields.forEach((field) => {
+      if (sessionData[field] !== undefined) {
+        businessDetails[field] = sessionData[field]
+      }
+    })
+  } else {
+    if (sessionData[fields] !== undefined) {
+      businessDetails[fields] = sessionData[fields]
+    }
   }
 
   return businessDetails

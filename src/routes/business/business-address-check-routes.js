@@ -8,6 +8,7 @@ const getBusinessAddressCheck = {
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessAddress')
+    console.log('🚀 ~ businessDetails:', businessDetails)
     const pageData = businessAddressCheckPresenter(businessDetails)
 
     return h.view('business/business-address-check', pageData)

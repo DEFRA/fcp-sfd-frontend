@@ -11,6 +11,7 @@ const getBusinessAddressEnter = {
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessAddress')
+    console.log('🚀 ~ businessDetails:', businessDetails)
     const pageData = businessAddressEnterPresenter(businessDetails)
 
     return h.view('business/business-address-enter', pageData)

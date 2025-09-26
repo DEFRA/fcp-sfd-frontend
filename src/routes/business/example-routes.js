@@ -11,7 +11,7 @@ const exampleDalConnectionRoute = {
   method: 'GET',
   path: '/example',
   handler: async (_request, h) => {
-    const response = await dalConnector(exampleQuery, variables)
+    const response = await dalConnector(exampleQuery, variables, request)
 
     if (response.errors) {
       return h.response({

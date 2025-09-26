@@ -13,7 +13,7 @@ const updateBusinessNameChangeService = async (yar, credentials) => {
 
   const variables = { input: { name: businessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
 
-  const response = await dalConnector(updateBusinessNameMutation, variables)
+  const response = await dalConnector(updateBusinessNameMutation, variables, request)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

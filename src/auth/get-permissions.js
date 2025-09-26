@@ -4,7 +4,7 @@ import { mapPermissions } from '../mappers/permissions-mapper.js'
 import { config } from '../../src/config/index.js'
 import { mappedData } from '../mock-data/mock-permissions.js'
 
-async function getPermissions (sbi, crn) {
+async function getPermissions(sbi, crn) {
   const permission = config.get('featureToggle.dalConnection') ? await getFromDal(sbi, crn) : mappedData
 
   return permission
@@ -13,7 +13,7 @@ async function getPermissions (sbi, crn) {
 const getFromDal = async (sbi, crn) => {
   const variables = { sbi, crn }
 
-  const dalResponse = await dalConnector(permissionsQuery, variables)
+  const dalResponse = await dalConnector(permissionsQuery, variables, request)
 
   if (dalResponse.data) {
     const mappedResponse = mapPermissions(dalResponse.data)

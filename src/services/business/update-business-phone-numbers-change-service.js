@@ -30,7 +30,7 @@ const updateBusinessPhone = async (businessDetails) => {
     }
   }
 
-  const response = await dalConnector(updateBusinessPhoneNumbersMutation, variables)
+  const response = await dalConnector(updateBusinessPhoneNumbersMutation, variables, request)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

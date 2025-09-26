@@ -8,7 +8,7 @@ import { getUserSessionToken } from '../utils/get-user-session-token.js'
 
 const logger = createLogger()
 
-export const dalConnector = async (query, variables) => {
+export const dalConnector = async (query, variables, request) => {
   const tokenCache = getTokenCache()
 
   try {
@@ -52,3 +52,5 @@ export const dalConnector = async (query, variables) => {
     })
   }
 }
+
+

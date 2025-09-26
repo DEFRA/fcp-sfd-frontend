@@ -23,7 +23,7 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
  */
 const updateBusinessAddress = async (businessDetails) => {
   const variables = businessAddressVariables(businessDetails)
-  const response = await dalConnector(updateBusinessAddressMutation, variables)
+  const response = await dalConnector(updateBusinessAddressMutation, variables, request)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

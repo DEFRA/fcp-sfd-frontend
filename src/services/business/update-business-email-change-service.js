@@ -13,7 +13,7 @@ const updateBusinessEmailChangeService = async (yar, credentials) => {
     }
   }
 
-  const response = await dalConnector(updateBusinessEmailMutation, variables)
+  const response = await dalConnector(updateBusinessEmailMutation, variables, request)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

@@ -6,8 +6,8 @@ import { setSessionData } from '../../../../src/utils/session/set-session-data.j
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Thing under test
-import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
-const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
+import { businessAddressEnterRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
+const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressEnterRoutes
 
 // Mocks
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({

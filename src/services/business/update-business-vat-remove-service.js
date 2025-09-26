@@ -4,7 +4,7 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
 const updateBusinessVatRemoveService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
 
   const variables = { input: { vat: '', sbi: businessDetails.info.sbi } }
 

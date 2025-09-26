@@ -9,7 +9,7 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
 const updateBusinessNameChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
 
   const variables = { input: { name: businessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
 

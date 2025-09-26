@@ -8,7 +8,7 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
  * a phone number.
  */
 const fetchBusinessPhoneNumbersChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
 
   const { contact: { landline, mobile }, changeBusinessTelephone, changeBusinessMobile } = businessDetails
 

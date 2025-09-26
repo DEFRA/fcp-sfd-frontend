@@ -9,7 +9,7 @@ const getBusinessVatChange = {
   method: 'GET',
   path: '/business-vat-registration-number-change',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
+    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials, request)
     const pageData = businessVatChangePresenter(businessDetails)
 
     return h.view('business/business-vat-registration-number-change', pageData)

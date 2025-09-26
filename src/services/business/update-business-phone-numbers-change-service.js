@@ -4,7 +4,7 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 
 const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
   await updateBusinessPhone(businessDetails)
 
   // Update the cached data to now reflect the real data

@@ -4,7 +4,7 @@ import { updateBusinessAddressMutation } from '../../dal/mutations/update-busine
 import { dalConnector } from '../../dal/connector.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
 
   // Update the address on the DAL
   await updateBusinessAddress(businessDetails)

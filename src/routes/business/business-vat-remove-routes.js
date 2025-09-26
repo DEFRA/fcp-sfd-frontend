@@ -9,7 +9,7 @@ const getBusinessVatRemove = {
   method: 'GET',
   path: '/business-vat-registration-remove',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
+    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials, request)
     const pageData = businessVatRemovePresenter(businessDetails)
     return h.view('business/business-vat-registration-remove', pageData)
   }

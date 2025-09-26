@@ -8,6 +8,7 @@ import { signedOut } from './signed-out-routes.js'
 import { footerRoutes } from './footer/footer-routes.js'
 import { businessRoutes } from './business/business-routes.js'
 import { personalRoutes } from './personal/personal-routes.js'
+import { uploadRoutes } from './upload/upload-routes.js'
 
 export const routes = [
   health,
@@ -19,5 +20,6 @@ export const routes = [
   ...staticAssetRoutes,
   ...footerRoutes,
   ...businessRoutes,
-  ...personalRoutes
+  ...personalRoutes,
+  ...uploadRoutes
 ]

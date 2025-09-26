@@ -11,7 +11,7 @@ export const csp = {
     scriptSrc: ['self', "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='"],
     styleSrc: ['self'],
     frameAncestors: ['self'],
-    formAction: ['self'],
+    formAction: ['self', 'http://localhost:7337'], // this blocks form action requests to other domains but we need to POST direct to cdp-uploader or the localhost equiv for dev
     manifestSrc: ['self'],
     generateNonces: true
   }

@@ -7,6 +7,6 @@ export const businessVatSchema = Joi.object({
     .messages({
       'string.pattern.base': 'Enter a VAT registration number, like 123456789',
       'string.empty': 'Enter a VAT registration number',
-      'any.required': 'Enter a VAT registration number' // 👈 Add this line
+      'any.required': 'Enter a VAT registration number'
     })
 })

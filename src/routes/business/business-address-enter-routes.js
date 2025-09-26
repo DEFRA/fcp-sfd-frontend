@@ -42,7 +42,7 @@ const postBusinessAddressEnter = {
   }
 }
 
-export const businessAddressRoutes = [
+export const businessAddressEnterRoutes = [
   getBusinessAddressEnter,
   postBusinessAddressEnter
 ]

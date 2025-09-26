@@ -21,7 +21,7 @@ export const dalConnector = async (query, variables) => {
       headers: {
         'Content-type': 'application/json',
         'gateway-type': 'external',
-        'x-forwarded-authorization': 'DAL Token',
+        'x-forwarded-authorization': getUserSessionToken(request),
         Authorization: `Bearer ${bearerToken}`,
 
       },

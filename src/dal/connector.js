@@ -4,6 +4,7 @@ import { config } from '../config/index.js'
 import { formatDalResponse, mapDalErrors } from './dal-response.js'
 import { getTokenService } from '../services/DAL/token/get-token-service.js'
 import { getTokenCache } from '../utils/caching/token-cache.js'
+import { getUserSessionToken } from '../utils/get-user-session-token.js'
 
 const logger = createLogger()
 
@@ -12,15 +13,18 @@ export const dalConnector = async (query, variables) => {
 
   try {
     const bearerToken = await getTokenService(tokenCache)
-    const emailHeader = config.get('dalConfig.email')
+    const userToken = await getUserSessionToken(request)
+
 
     // Email will be replaced by defraID token
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
-        Authorization: bearerToken,
-        email: emailHeader
+        'gateway-type': 'external',
+        'x-forwarded-authorization': `User ${userToken}`,
+        Authorization: `Bearer ${bearerToken}`,
+
       },
       body: JSON.stringify({ query, variables })
     })

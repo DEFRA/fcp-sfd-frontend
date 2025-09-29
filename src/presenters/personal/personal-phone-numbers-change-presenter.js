@@ -14,7 +14,6 @@ const personalPhoneNumbersChangePresenter = (data, payload) => {
   }
 }
 
-// TODO: Refactor this to be shared between the two presenters?
 /**
  * The first time a user loads the personal phone numbers change page they won't have entered any data, so a payload
  * or a changedNumber won't be present. If a user has a validation issue then we want to reply the payload data to them.

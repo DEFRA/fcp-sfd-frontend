@@ -31,6 +31,7 @@ describe('fetchBusinessDetailsService', () => {
   let mappedDalData
   let yar
   let credentials
+  let request
 
   beforeEach(async () => {
     vi.clearAllMocks()

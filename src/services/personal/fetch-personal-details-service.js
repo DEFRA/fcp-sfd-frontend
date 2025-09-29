@@ -11,6 +11,7 @@ import { personalDetailsQuery } from '../../dal/queries/personal-details.js'
 import { mapPersonalDetails } from '../../mappers/personal-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-personal-details.js'
+import { getUserSessionToken } from '../../utils/authentication/get-user-session-token.js'
 
 const fetchPersonalDetailsService = async (yar, credentials) => {
   const personalDetails = yar.get('personalDetails')
@@ -29,7 +30,7 @@ const fetchPersonalDetailsService = async (yar, credentials) => {
 const getFromDal = async (credentials) => {
   const { sbi, crn } = credentials
 
-  const dalResponse = await dalConnector(personalDetailsQuery, { sbi, crn }, request)
+  const dalResponse = await dalConnector(personalDetailsQuery, { sbi, crn }, getUserSessionToken)
 
   if (dalResponse.data) {
     const mappedResponse = mapPersonalDetails(dalResponse.data)

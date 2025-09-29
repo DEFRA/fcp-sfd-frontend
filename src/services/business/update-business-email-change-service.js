@@ -2,9 +2,10 @@ import { dalConnector } from '../../dal/connector.js'
 import { updateBusinessEmailMutation } from '../../dal/mutations/update-business-email.js'
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const updateBusinessEmailChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, getUserSessionToken)
 
   const variables = {
     input: {
@@ -13,7 +14,7 @@ const updateBusinessEmailChangeService = async (yar, credentials) => {
     }
   }
 
-  const response = await dalConnector(updateBusinessEmailMutation, variables, request)
+  const response = await dalConnector(updateBusinessEmailMutation, variables, getUserSessionToken)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

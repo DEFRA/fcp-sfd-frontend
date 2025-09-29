@@ -1,5 +1,5 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
-
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 /**
  * Fetches business details from session and ensures `changeBusinessTelephone` and `changeBusinessMobile`
  * are set, defaulting to existing landline and mobile numbers if they are undefined.
@@ -8,7 +8,7 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
  * a phone number.
  */
 const fetchBusinessPhoneNumbersChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, getUserSessionToken)
 
   const { contact: { landline, mobile }, changeBusinessTelephone, changeBusinessMobile } = businessDetails
 

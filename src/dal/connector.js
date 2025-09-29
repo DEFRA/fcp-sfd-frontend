@@ -15,7 +15,6 @@ export const dalConnector = async (query, variables, request) => {
     const bearerToken = await getTokenService(tokenCache)
     const userToken = await getUserSessionToken(request)
 
-
     // Email will be replaced by defraID token
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
@@ -23,7 +22,7 @@ export const dalConnector = async (query, variables, request) => {
         'Content-type': 'application/json',
         'gateway-type': 'external',
         'x-forwarded-authorization': `User ${userToken}`,
-        Authorization: `Bearer ${bearerToken}`,
+        Authorization: `Bearer ${bearerToken}`
 
       },
       body: JSON.stringify({ query, variables })
@@ -52,5 +51,3 @@ export const dalConnector = async (query, variables, request) => {
     })
   }
 }
-
-

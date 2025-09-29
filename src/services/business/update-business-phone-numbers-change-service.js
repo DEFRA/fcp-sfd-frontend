@@ -2,9 +2,10 @@ import { dalConnector } from '../../dal/connector.js'
 import { updateBusinessPhoneNumbersMutation } from '../../dal/mutations/update-business-phone-numbers.js'
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, getUserSessionToken)
   await updateBusinessPhone(businessDetails)
 
   // Update the cached data to now reflect the real data
@@ -30,7 +31,7 @@ const updateBusinessPhone = async (businessDetails) => {
     }
   }
 
-  const response = await dalConnector(updateBusinessPhoneNumbersMutation, variables, request)
+  const response = await dalConnector(updateBusinessPhoneNumbersMutation, variables, getUserSessionToken)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

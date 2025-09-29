@@ -1,7 +1,8 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
+import { getUserSessionToken } from '../../utils/authentication/get-user-session-token.js'
 
 const fetchBusinessAddressChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials, request)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, getUserSessionToken)
 
   let changeBusinessAddress = businessDetails?.changeBusinessAddress
 

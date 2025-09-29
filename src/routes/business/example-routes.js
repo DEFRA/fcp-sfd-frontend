@@ -1,6 +1,7 @@
 import { constants as httpConstants } from 'node:http2'
 import { dalConnector } from '../../dal/connector.js'
 import { exampleQuery } from '../../dal/queries/example-query.js'
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const variables = {
   sbi: '107591843',
@@ -11,7 +12,7 @@ const exampleDalConnectionRoute = {
   method: 'GET',
   path: '/example',
   handler: async (_request, h) => {
-    const response = await dalConnector(exampleQuery, variables, request)
+    const response = await dalConnector(exampleQuery, variables, getUserSessionToken)
 
     if (response.errors) {
       return h.response({

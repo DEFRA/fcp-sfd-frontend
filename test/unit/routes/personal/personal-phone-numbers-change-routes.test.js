@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { fetchPersonalDetailsService } from '../../../../src/services/personal/fetch-personal-details-service.js'
+import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 
 // Thing under test
 import { personalPhoneNumbersChangeRoutes } from '../../../../src/routes/personal/personal-phone-numbers-change-routes.js'
@@ -14,36 +14,43 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', () => ({
-  fetchPersonalDetailsService: vi.fn()
+vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', () => ({
+  fetchPersonalChangeService: vi.fn()
 }))
 
 describe('personal phone numbers change', () => {
-  const request = {
-    yar: {},
-    auth: {
-      credentials: {
-        sbi: '123456789',
-        crn: '987654321',
-        email: 'test@example.com'
-      }
-    }
-  }
   let h
-  let err
+  let request
+
+  const credentials = {
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    request = {
+      yar: {},
+      auth: { credentials },
+      payload: {}
+    }
+
+    const responseStub = {
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
+    }
+
+    h = {
+      redirect: vi.fn(),
+      view: vi.fn(() => responseStub)
+    }
   })
 
   describe('GET /personal-phone-numbers-change', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        h = {
-          view: vi.fn().mockReturnValue({})
-        }
-
-        fetchPersonalDetailsService.mockReturnValue(getMockData())
+        fetchPersonalChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -54,7 +61,7 @@ describe('personal phone numbers change', () => {
       test('it fetches the data from the session', async () => {
         await getPersonalPhoneNumbersChange.handler(request, h)
 
-        expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchPersonalChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changePersonalPhoneNumbers')
       })
 
       test('should render personal-phone-numbers-change view with page data', async () => {
@@ -67,57 +74,29 @@ describe('personal phone numbers change', () => {
 
   describe('POST /personal-phone-numbers-change', () => {
     beforeEach(() => {
-      const responseStub = {
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
-
-      h = {
-        redirect: vi.fn(() => h),
-        view: vi.fn(() => responseStub)
-      }
-
-      // Mock yar.set for session
-      request.yar = {
-        set: vi.fn(),
-        get: vi.fn().mockReturnValue(getMockData())
-      }
-
       request.payload = { personalMobile: null, personalTelephone: null }
+
+      fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalPhoneNumbers: request.payload })
     })
 
     describe('when a request succeeds', () => {
       describe('and the validation passes', () => {
-        test('it redirects to the /account-phone-numbers-check page', async () => {
+        test('it sets the session data and redirects', async () => {
           await postPersonalPhoneNumbersChange.options.handler(request, h)
 
+          expect(setSessionData).toHaveBeenCalledWith(
+            request.yar,
+            'personalDetails',
+            'changePersonalPhoneNumbers',
+            request.payload
+          )
           expect(h.redirect).toHaveBeenCalledWith('/account-phone-numbers-check')
-        })
-
-        test('sets the payload on the yar state', async () => {
-          await postPersonalPhoneNumbersChange.options.handler(request, h)
-
-          // Ensure it was called twice
-          expect(setSessionData).toHaveBeenCalledTimes(2)
-
-          // Check the specific calls
-          expect(setSessionData).toHaveBeenCalledWith(
-            request.yar,
-            'personalDetails',
-            'changePersonalTelephone',
-            request.payload.personalTelephone
-          )
-
-          expect(setSessionData).toHaveBeenCalledWith(
-            request.yar,
-            'personalDetails',
-            'changePersonalMobile',
-            request.payload.personalMobile
-          )
         })
       })
 
       describe('and the validation fails', () => {
+        let err
+
         beforeEach(() => {
           err = {
             details: [
@@ -130,15 +109,23 @@ describe('personal phone numbers change', () => {
           }
         })
 
+        test('it fetches the personal details', async () => {
+          await postPersonalPhoneNumbersChange.options.validate.failAction(request, h, err)
+
+          expect(fetchPersonalChangeService).toHaveBeenCalledWith(
+            request.yar,
+            request.auth.credentials,
+            'changePersonalPhoneNumbers'
+          )
+        })
+
         test('it returns the page successfully with the error summary banner', async () => {
-          // Calling the fail action handler
           await postPersonalPhoneNumbersChange.options.validate.failAction(request, h, err)
 
           expect(h.view).toHaveBeenCalledWith('personal/personal-phone-numbers-change', getPageDataError())
         })
 
         test('it should handle undefined errors', async () => {
-          // Calling the fail action handler
           await postPersonalPhoneNumbersChange.options.validate.failAction(request, h, [])
 
           const pageData = getPageDataError()

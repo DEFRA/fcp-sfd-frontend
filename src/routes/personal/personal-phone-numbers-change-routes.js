@@ -2,7 +2,7 @@ import { personalPhoneSchema } from '../../schemas/personal/personal-phone-schem
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalPhoneNumbersChangePresenter } from '../../presenters/personal/personal-phone-numbers-change-presenter.js'
-import { fetchPersonalDetailsService } from '../../services/personal/fetch-personal-details-service.js'
+import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 
 const getPersonalPhoneNumbersChange = {
@@ -10,7 +10,7 @@ const getPersonalPhoneNumbersChange = {
   path: '/account-phone-numbers-change',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const personalDetails = await fetchPersonalDetailsService(yar, auth.credentials)
+    const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalPhoneNumbers')
     const pageData = personalPhoneNumbersChangePresenter(personalDetails)
 
     return h.view('personal/personal-phone-numbers-change', pageData)
@@ -25,16 +25,23 @@ const postPersonalPhoneNumbersChange = {
       payload: personalPhoneSchema,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
+        const { yar, auth, payload } = request
+
         const errors = formatValidationErrors(err.details || [])
-        const personalDetailsData = request.yar.get('personalDetails')
-        const pageData = personalPhoneNumbersChangePresenter(personalDetailsData, request.payload)
+        const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalPhoneNumbers')
+        const pageData = personalPhoneNumbersChangePresenter(personalDetails, payload)
 
         return h.view('personal/personal-phone-numbers-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {
-      setSessionData(request.yar, 'personalDetails', 'changePersonalTelephone', request.payload.personalTelephone ?? null)
-      setSessionData(request.yar, 'personalDetails', 'changePersonalMobile', request.payload.personalMobile ?? null)
+      // If a user didn't enter either of the numbers default its value to null
+      request.payload = {
+        personalTelephone: request.payload.personalTelephone ?? null,
+        personalMobile: request.payload.personalMobile ?? null
+      }
+
+      setSessionData(request.yar, 'personalDetails', 'changePersonalPhoneNumbers', request.payload)
 
       return h.redirect('/account-phone-numbers-check')
     }

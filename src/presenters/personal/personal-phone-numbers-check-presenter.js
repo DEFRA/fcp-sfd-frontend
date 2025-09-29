@@ -10,8 +10,10 @@ const personalPhoneNumbersCheckPresenter = (personalDetails) => {
     pageTitle: 'Check your personal phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your personal account are correct.',
     userName: personalDetails.info.fullName ?? null,
-    personalTelephone: personalDetails.changePersonalPhoneNumbers.personalTelephone ?? null,
-    personalMobile: personalDetails.changePersonalPhoneNumbers.personalMobile ?? null
+    personalTelephone: {
+      telephone: personalDetails.changePersonalPhoneNumbers.personalTelephone ?? 'Not added',
+      mobile: personalDetails.changePersonalPhoneNumbers.personalMobile ?? 'Not added'
+    }
   }
 }
 

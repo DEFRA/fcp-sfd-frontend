@@ -25,8 +25,8 @@ const uploadFilesRoute = {
     }
 
     const uploaderPayload = {
-      redirect: 'http://localhost:3000/home',
-      callback: 'http://fcp-sfd-object-processor-development:3004/api/v1/callback',
+      redirect: 'http://localhost:3000/upload-status',
+      callback: 'http://fcp-sfd-object-processor:3004/api/v1/callback',
       s3Bucket: 'fcp-sfd-object-processor-bucket',
       s3Path: 'scanned',
       metadata
@@ -46,6 +46,7 @@ const uploadFilesRoute = {
     console.log(uploadId)
 
     // pull out the uploadId and pass it to the view so we can use it as part of the form
+    // after the form is submit ti will redirect to the link set in the metadata above
     return h.view('upload/upload.njk', pageData(defraIdToken, uploadId))
   }
 }

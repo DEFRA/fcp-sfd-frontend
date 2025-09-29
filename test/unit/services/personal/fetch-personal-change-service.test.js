@@ -47,6 +47,20 @@ describe('fetchPersonalChangeService', () => {
     })
   })
 
+  describe('when yar.get returns null/undefined', () => {
+    beforeEach(() => {
+      fetchPersonalDetailsService.mockResolvedValue(data)
+      yar.get.mockReturnValue(null)
+    })
+
+    test('it returns the original data when session data is null', async () => {
+      const result = await fetchPersonalChangeService(yar, credentials, 'changePersonalName')
+
+      expect(fetchPersonalDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toEqual(data)
+    })
+  })
+
   describe('when called for a field with a temporary change in session', () => {
     beforeEach(() => {
       fetchPersonalDetailsService.mockResolvedValue(data)

@@ -21,12 +21,23 @@ const logger = createLogger()
 const businessAddressLookupService = async (postcode, yar) => {
   const addresses = await fetchAddressesFromPostcodeLookup(postcode)
 
-  if (!addresses?.length || addresses.errors) {
+  if (addresses.errors) {
     return addresses
   }
 
-  const mappedAddresses = businessAddressLookupMapper(addresses)
+  if (!addresses?.length) {
+    // Create a Joi-like error object to indicate that the postcode lookup returned no addresses
+    return {
+      error: [
+        {
+          message: 'No addresses found for this postcode',
+          path: ['businessPostcode']
+        }
+      ]
+    }
+  }
 
+  const mappedAddresses = businessAddressLookupMapper(addresses)
   setSessionData(yar, 'businessDetails', 'changeBusinessAddresses', mappedAddresses)
 
   return mappedAddresses

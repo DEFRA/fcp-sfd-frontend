@@ -67,15 +67,23 @@ describe('businessAddressLookupService', () => {
     })
   })
 
-  describe('when called with an invalid postcode', () => {
+  describe('when called with a postcode that returns no addresses', () => {
     beforeEach(() => {
       placesAPI.postcode.mockResolvedValue({ features: [] })
     })
 
-    test('returns empty array if API returns no features', async () => {
-      const result = await businessAddressLookupService (postcode, yar)
+    test('returns a Joi-like error object when no addresses are found', async () => {
+      const result = await businessAddressLookupService(postcode, yar)
 
-      expect(result).toEqual([])
+      expect(result).toEqual({
+        error: [
+          {
+            message: 'No addresses found for this postcode',
+            path: ['businessPostcode']
+          }
+        ]
+      })
+
       expect(businessAddressLookupMapper).not.toHaveBeenCalled()
       expect(setSessionData).not.toHaveBeenCalled()
     })

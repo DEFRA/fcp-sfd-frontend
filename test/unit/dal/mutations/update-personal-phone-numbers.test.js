@@ -18,6 +18,6 @@ describe('When the updatePersonalPhoneNumbersMutation is parsed', () => {
 
     const variable = operation.variableDefinitions[0]
     expect(variable.variable.name.value).toBe('input')
-    expect(variable.type.type.name.value).toBe('UpdatePersonalPhoneInput')
+    expect(variable.type.type.name.value).toBe('UpdateCustomerPhoneInput')
   })
 })

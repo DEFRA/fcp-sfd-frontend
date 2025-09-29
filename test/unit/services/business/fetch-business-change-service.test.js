@@ -75,4 +75,44 @@ describe('fetchBusinessChangeService', () => {
       expect(result).toEqual({ ...data, changeBusinessEmail: 'new@email.com' })
     })
   })
+
+
+  describe('when called with multiple fields', () => {
+    beforeEach(() => {
+      fetchBusinessDetailsService.mockResolvedValue(data)
+      yar.get.mockReturnValue({
+        changeBusinessName: 'Updated Ltd',
+        changeBusinessEmail: 'updated@email.com'
+      })
+    })
+
+    test('it merges all matching session fields into the data', async () => {
+      const result = await fetchBusinessChangeService(
+        yar,
+        credentials,
+        ['changeBusinessName', 'changeBusinessEmail']
+      )
+
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toEqual({
+        ...data,
+        changeBusinessName: 'Updated Ltd',
+        changeBusinessEmail: 'updated@email.com'
+      })
+    })
+
+    test('it only merges the fields specified in the array', async () => {
+      const result = await fetchBusinessChangeService(
+        yar,
+        credentials,
+        ['changeBusinessName']
+      )
+
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toEqual({
+        ...data,
+        changeBusinessName: 'Updated Ltd'
+      })
+    })
+  })
 })

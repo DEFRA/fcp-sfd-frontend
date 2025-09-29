@@ -66,7 +66,7 @@ const businessAddressVariables = (businessDetails) => {
 
   if (change.uprn) {
     // Address chosen via postcode lookup
-    variables.input.address = {
+    variables.input.address.withUprn = {
       buildingNumberRange: change.buildingNumberRange ?? null,
       buildingName: change.buildingName ?? null,
       flatName: change.flatName ?? null,
@@ -86,7 +86,7 @@ const businessAddressVariables = (businessDetails) => {
     }
   } else {
     // Address entered manually
-    variables.input.address = {
+    variables.input.address.withoutUprn = {
       buildingNumberRange: null,
       buildingName: null,
       flatName: null,

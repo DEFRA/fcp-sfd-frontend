@@ -51,6 +51,22 @@ describe('personalPhoneNumbersChangePresenter', () => {
         expect(result.userName).toEqual(null)
       })
     })
+
+    describe('when the fullName has a middle name', () => {
+      beforeEach(() => {
+        data.info.fullName = {
+          first: 'Alfred',
+          middle: 'Michael',
+          last: 'Waldron'
+        }
+      })
+
+      test('it should format the userName with middle name', () => {
+        const result = personalPhoneNumbersChangePresenter(data)
+
+        expect(result.userName).toEqual('Alfred Michael Waldron')
+      })
+    })
   })
 
   describe('the "personalMobile" property', () => {

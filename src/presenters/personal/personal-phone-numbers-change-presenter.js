@@ -37,7 +37,6 @@ const formatPersonalNumber = (payloadNumber, changedNumber, originalNumber) => {
   return originalNumber
 }
 
-// TODO: Refactor this to be shared between the two presenters?
 const formatFullName = (fullName) => {
   if (!fullName) {
     return null

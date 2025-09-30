@@ -7,6 +7,9 @@ import { setSessionData } from '../../../../src/utils/session/set-session-data.j
 import { placesAPI } from 'osdatahub'
 import { constants as httpConstants } from 'node:http2'
 
+// Thing under test
+import { businessAddressLookupService } from '../../../../src/services/business/business-address-lookup-service.js'
+
 // Mocks
 vi.mock('../../../../src/mappers/business-address-lookup-mapper.js', () => ({
   businessAddressLookupMapper: vi.fn()
@@ -33,9 +36,6 @@ vi.mock('osdatahub', () => ({
     postcode: vi.fn()
   }
 }))
-
-// Thing under test
-import { businessAddressLookupService } from '../../../../src/services/business/business-address-lookup-service.js'
 
 describe('businessAddressLookupService', () => {
   const yar = {}
@@ -98,7 +98,7 @@ describe('businessAddressLookupService', () => {
     })
 
     test('returns error object', async () => {
-      const result = await businessAddressLookupService (postcode, yar)
+      const result = await businessAddressLookupService(postcode, yar)
 
       expect(result).toEqual({
         statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,

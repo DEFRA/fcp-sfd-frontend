@@ -35,7 +35,7 @@ const businessAddressSelectChangePresenter = (data) => {
  * Using the UPRN alone as the identifying value caused the wrong address to be returned.
  * Concatenating the UPRN with the full display address ensures the dropdown option value is unique for each entry.
  */
-function displayAddresses(addresses) {
+function displayAddresses (addresses) {
   const displayAddresses = addresses.map(address => ({
     value: `${address.uprn}${address.displayAddress}`,
     text: address.displayAddress,

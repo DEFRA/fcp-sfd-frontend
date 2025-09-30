@@ -76,7 +76,6 @@ describe('fetchBusinessChangeService', () => {
     })
   })
 
-
   describe('when called with multiple fields', () => {
     beforeEach(() => {
       fetchBusinessDetailsService.mockResolvedValue(data)

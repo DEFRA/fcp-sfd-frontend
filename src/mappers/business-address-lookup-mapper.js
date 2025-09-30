@@ -11,21 +11,21 @@ import { COUNTRY_NAMES } from '../constants/country-names.js'
 const businessAddressLookupMapper = (addresses) => {
   return addresses.map((address) => {
     const {
-      UPRN,                             // always present
-      ADDRESS,                          // always present
-      ORGANISATION_NAME,                // optional
-      DEPARTMENT_NAME,                  // optional
-      SUB_BUILDING_NAME,                // optional
-      BUILDING_NAME,                    // optional
-      BUILDING_NUMBER,                  // optional
-      DEPENDENT_THOROUGHFARE_NAME,      // optional
-      THOROUGHFARE_NAME,                // optional
-      DOUBLE_DEPENDENT_LOCALITY,        // optional
-      DEPENDENT_LOCALITY,               // optional
-      POST_TOWN,                        // always present
-      POSTCODE,                         // always present
+      UPRN, // always present
+      ADDRESS, // always present
+      ORGANISATION_NAME, // optional
+      DEPARTMENT_NAME, // optional
+      SUB_BUILDING_NAME, // optional
+      BUILDING_NAME, // optional
+      BUILDING_NUMBER, // optional
+      DEPENDENT_THOROUGHFARE_NAME, // optional
+      THOROUGHFARE_NAME, // optional
+      DOUBLE_DEPENDENT_LOCALITY, // optional
+      DEPENDENT_LOCALITY, // optional
+      POST_TOWN, // always present
+      POSTCODE, // always present
       LOCAL_CUSTODIAN_CODE_DESCRIPTION, // always present
-      COUNTRY_CODE                      // always present
+      COUNTRY_CODE // always present
     } = address.properties
 
     const buildingName = filterAndJoin([ORGANISATION_NAME, DEPARTMENT_NAME, BUILDING_NAME])

@@ -17,16 +17,16 @@ describe('businessAddressSelectChangePresenter', () => {
         fullName: 'Alfred Waldron'
       },
       changeBusinessPostcode: {
-        businessPostcode: 'SK22 1DL',
+        businessPostcode: 'SK22 1DL'
       },
       changeBusinessAddresses: [
         {
           uprn: '100000111111',
-          displayAddress: 'Flat 3, Fake Court, 18, Maple Road, Westfield, Bristol, BS1 4AB',
+          displayAddress: 'Flat 3, Fake Court, 18, Maple Road, Westfield, Bristol, BS1 4AB'
         },
         {
           uprn: '100000222222',
-          displayAddress: 'TechWorks Ltd, Customer Services, Innovation House, 42, Harbour Street, Manchester, M1 7YZ',
+          displayAddress: 'TechWorks Ltd, Customer Services, Innovation House, 42, Harbour Street, Manchester, M1 7YZ'
         }
       ]
     }

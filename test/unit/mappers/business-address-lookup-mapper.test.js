@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { businessAddressLookupMapper } from '../../../src/mappers/business-address-lookup-mapper.js'
 
 describe('business address lookup mapper', () => {
-  let addresses = [
+  const addresses = [
     {
       properties: {
         UPRN: '100012345678',
@@ -107,4 +107,3 @@ describe('business address lookup mapper', () => {
     })
   })
 })
-

@@ -11,6 +11,6 @@ export const businessUkPostcodeSchema = Joi.object({
       'any.required': 'Enter a postal code or zip code',
       'string.empty': 'Enter a postal code or zip code',
       'string.max': `Postal code or zip code must be ${POSTCODE_MAX} characters or less`,
-      'string.pattern.base': 'Enter a full UK postcode, like AA3 1AB',
+      'string.pattern.base': 'Enter a full UK postcode, like AA3 1AB'
     })
 })

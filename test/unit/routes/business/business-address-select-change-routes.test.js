@@ -97,7 +97,7 @@ describe('business address select change', () => {
             {
               displayAddress: '123 Test Street, LONDON, E1 6AN',
               postcodeLookup: true,
-              uprn: '1001',
+              uprn: '1001'
             }
           )
           expect(h.redirect).toHaveBeenCalledWith('/business-address-check')

@@ -12,7 +12,7 @@
  */
 
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
-import { updateBusinessVATMutation } from '../../dal/mutations/update-business-vat.js'
+import { updateBusinessVATMutation } from '../../dal/mutations/business/update-business-vat.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 

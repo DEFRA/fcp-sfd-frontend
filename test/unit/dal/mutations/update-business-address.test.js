@@ -1,6 +1,6 @@
 import { parse } from 'graphql'
 import { describe, test, expect } from 'vitest'
-import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/update-business-address.js'
+import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/business/update-business-address.js'
 
 describe('When the updateBusinessAddressMutation is parsed', () => {
   test('it is valid GraphQL syntax', () => {

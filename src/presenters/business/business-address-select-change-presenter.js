@@ -44,9 +44,11 @@ function displayAddresses(addresses) {
 
   // Add a display summary option to the beginning of the list
   // e.g. "18 addresses found"
+  const text = addresses.length === 1 ? '1 address found' : `${addresses.length} addresses found`
+
   displayAddresses.unshift({
     value: 'display',
-    text: `${addresses.length} addresses found`,
+    text,
     selected: true
   })
 

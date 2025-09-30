@@ -122,5 +122,20 @@ describe('businessAddressSelectChangePresenter', () => {
         expect(result.displayAddresses[0].text).toEqual('3 addresses found')
       })
     })
+
+    describe('when provided with only 1 address', () => {
+      beforeEach(() => {
+        data.changeBusinessAddresses = [{
+          uprn: '100000333333',
+          displayAddress: 'Willow Barn, Green Lane, Oakham Road, Little End, Middlethorpe, York, YO23 3ZX'
+        }]
+      })
+
+      test('it should return the correct text for the display summary option', () => {
+        const result = businessAddressSelectChangePresenter(data)
+
+        expect(result.displayAddresses[0].text).toEqual('1 address found')
+      })
+    })
   })
 })

@@ -1,7 +1,6 @@
 const dalData = {
   customer: {
-    // why does dal flag off still call this?
-    crn: '1100077049',
+    crn: '123456890',
     info: {
       dateOfBirth: '1990-01-01',
       name: {
@@ -38,7 +37,7 @@ const dalData = {
 }
 
 const mappedData = {
-  crn: '1100077049',
+  crn: '123456890',
   info: {
     dateOfBirth: '1990-01-01',
     fullName: {

@@ -21,7 +21,6 @@ const fetchPersonalDetailsService = async (credentials) => {
 }
 
 const getFromDal = async (credentials) => {
-  // why do we need to get the sbi?
   const { sbi, crn } = credentials
 
   const dalResponse = await dalConnector(personalDetailsQuery, { sbi, crn })

@@ -33,8 +33,10 @@ describe('personalPhoneNumbersCheckPresenter', () => {
         pageTitle: 'Check your personal phone numbers are correct before submitting',
         metaDescription: 'Check the phone numbers for your personal account are correct.',
         userName: 'John Doe',
-        personalTelephone: '01234567890',
-        personalMobile: null
+        personalTelephone: {
+          telephone: '01234567890',
+          mobile: 'Not added'
+        }
       })
     })
   })
@@ -59,10 +61,10 @@ describe('personalPhoneNumbersCheckPresenter', () => {
         delete data.changePersonalPhoneNumbers.personalTelephone
       })
 
-      test('it should return personalTelephone as null', () => {
+      test('it should return personalTelephone as "Not added"', () => {
         const result = personalPhoneNumbersCheckPresenter(data)
 
-        expect(result.personalTelephone).toEqual(null)
+        expect(result.personalTelephone.telephone).toEqual('Not added')
       })
     })
   })
@@ -73,10 +75,10 @@ describe('personalPhoneNumbersCheckPresenter', () => {
         delete data.changePersonalPhoneNumbers.personalMobile
       })
 
-      test('it should return personalMobile as null', () => {
+      test('it should return personalMobile as "Not added"', () => {
         const result = personalPhoneNumbersCheckPresenter(data)
 
-        expect(result.personalMobile).toEqual(null)
+        expect(result.personalTelephone.mobile).toEqual('Not added')
       })
     })
   })

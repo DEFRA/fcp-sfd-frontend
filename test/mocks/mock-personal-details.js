@@ -45,7 +45,7 @@ const mappedData = {
       first: 'John',
       last: 'Doe',
       middle: 'M',
-      fullNameJoined: "Mr John M Doe"
+      fullNameJoined: 'Mr John M Doe'
     }
   },
   address: {

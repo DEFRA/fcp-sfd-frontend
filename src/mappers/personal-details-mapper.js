@@ -52,6 +52,6 @@ const formatFullName = (name) => {
     name.title,
     name.first,
     name.middle,
-    name.last,
+    name.last
   ].filter(Boolean).join(' ')
 }

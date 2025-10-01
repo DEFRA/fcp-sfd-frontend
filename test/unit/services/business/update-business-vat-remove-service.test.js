@@ -6,6 +6,7 @@ import { fetchBusinessDetailsService } from '../../../../src/services/business/f
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
 import { updateBusinessVATMutation } from '../../../../src/dal/mutations/update-business-vat.js'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -54,15 +55,15 @@ describe('updateBusinessVatRemoveService', () => {
 
   describe('when confirmRemove is "yes"', () => {
     test('it correctly saves the data to the session with VAT set to empty string', async () => {
-      await updateBusinessVatRemoveService(yar, credentials)
+      await updateBusinessVatRemoveService(yar, credentials, getUserSessionToken)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
       expect(mappedData.info.vat).toBe('')
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 
     test('it calls dalConnector with correct mutation and variable', async () => {
-      await updateBusinessVatRemoveService(yar, credentials)
+      await updateBusinessVatRemoveService(yar, credentials, getUserSessionToken)
 
       expect(dalConnector).toHaveBeenCalledWith(updateBusinessVATMutation, {
         input: {

@@ -47,20 +47,6 @@ describe('fetchPersonalChangeService', () => {
     })
   })
 
-  describe('when yar.get returns null/undefined', () => {
-    beforeEach(() => {
-      fetchPersonalDetailsService.mockResolvedValue(data)
-      yar.get.mockReturnValue(null)
-    })
-
-    test('it returns the original data when session data is null', async () => {
-      const result = await fetchPersonalChangeService(yar, credentials, 'changePersonalName')
-
-      expect(fetchPersonalDetailsService).toHaveBeenCalledWith(credentials)
-      expect(result).toEqual(data)
-    })
-  })
-
   describe('when called for a field with a temporary change in session', () => {
     beforeEach(() => {
       fetchPersonalDetailsService.mockResolvedValue(data)
@@ -86,6 +72,59 @@ describe('fetchPersonalChangeService', () => {
 
       expect(fetchPersonalDetailsService).toHaveBeenCalledWith(credentials)
       expect(result).toEqual({ ...data, changePersonalEmail: 'new@email.com' })
+    })
+  })
+
+  describe('when called with multiple fields', () => {
+    beforeEach(() => {
+      fetchPersonalDetailsService.mockResolvedValue(data)
+      yar.get.mockReturnValue({
+        changePersonalName: 'Updated Name',
+        changePersonalEmail: 'updated@email.com'
+      })
+    })
+
+    test('it merges all matching session fields into the data', async () => {
+      const result = await fetchPersonalChangeService(
+        yar,
+        credentials,
+        ['changePersonalName', 'changePersonalEmail']
+      )
+
+      expect(fetchPersonalDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toEqual({
+        ...data,
+        changePersonalName: 'Updated Name',
+        changePersonalEmail: 'updated@email.com'
+      })
+    })
+
+    test('it only merges the fields specified in the array', async () => {
+      const result = await fetchPersonalChangeService(
+        yar,
+        credentials,
+        ['changePersonalName']
+      )
+
+      expect(fetchPersonalDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toEqual({
+        ...data,
+        changePersonalName: 'Updated Name'
+      })
+    })
+  })
+
+  describe('when yar.get returns null/undefined', () => {
+    beforeEach(() => {
+      fetchPersonalDetailsService.mockResolvedValue(data)
+      yar.get.mockReturnValue(null)
+    })
+
+    test('it returns the original data when session data is null', async () => {
+      const result = await fetchPersonalChangeService(yar, credentials, 'changePersonalName')
+
+      expect(fetchPersonalDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toEqual(data)
     })
   })
 })

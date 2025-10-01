@@ -9,7 +9,7 @@
  * @module updatePersonalPhoneNumbersChangeService
  */
 
-import { updatePersonalPhoneNumbersMutation } from '../../dal/mutations/update-personal-phone-numbers.js'
+import { updatePersonalPhoneNumbersMutation } from '../../dal/mutations/personal/update-personal-phone-numbers.js'
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'

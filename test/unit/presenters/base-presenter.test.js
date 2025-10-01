@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { basePresenter } from '../../../src/presenters/base-presenter.js'
+import { formatAddress, formatNumber } from '../../../src/presenters/base-presenter.js'
 
 describe('basePresenter', () => {
   describe('#formatNumber', () => {
@@ -18,7 +18,7 @@ describe('basePresenter', () => {
       })
 
       test('it should return the payload', () => {
-        const result = basePresenter.formatNumber(payload, changedNumber, originalNumber)
+        const result = formatNumber(payload, changedNumber, originalNumber)
 
         expect(result).toBe('01234 111111')
       })
@@ -32,7 +32,7 @@ describe('basePresenter', () => {
       })
 
       test('it should return the changed number', () => {
-        const result = basePresenter.formatNumber(payload, changedNumber, originalNumber)
+        const result = formatNumber(payload, changedNumber, originalNumber)
 
         expect(result).toBe('01111 111111')
       })
@@ -46,7 +46,7 @@ describe('basePresenter', () => {
       })
 
       test('it should return the original number', () => {
-        const result = basePresenter.formatNumber(payload, changedNumber, originalNumber)
+        const result = formatNumber(payload, changedNumber, originalNumber)
 
         expect(result).toBe('02222 222222')
       })
@@ -81,7 +81,7 @@ describe('basePresenter', () => {
 
     describe('when the address is a lookup address', () => {
       test('it should combine building number range and street and include all lookup fields in order', () => {
-        const result = basePresenter.formatAddress(address)
+        const result = formatAddress(address)
 
         expect(result).toStrictEqual([
           'THE COACH HOUSE',
@@ -96,7 +96,7 @@ describe('basePresenter', () => {
 
       test('it should leave street unchanged if building number range is missing', () => {
         address.lookup.buildingNumberRange = null
-        const result = basePresenter.formatAddress(address)
+        const result = formatAddress(address)
 
         expect(result).toStrictEqual([
           'THE COACH HOUSE',
@@ -113,7 +113,7 @@ describe('basePresenter', () => {
     describe('when the address is a manual address', () => {
       test('it should use manual lines in order, filtering out nulls, and append postcode and country', () => {
         address.lookup.uprn = null
-        const result = basePresenter.formatAddress(address)
+        const result = formatAddress(address)
 
         expect(result).toStrictEqual([
           '76 Robinswood Road',
@@ -129,7 +129,7 @@ describe('basePresenter', () => {
         address.manual.line4 = 'Optional Line 4'
         address.manual.line5 = null
 
-        const result = basePresenter.formatAddress(address)
+        const result = formatAddress(address)
 
         expect(result).toStrictEqual([
           '76 Robinswood Road',

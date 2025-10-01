@@ -8,7 +8,7 @@
  *
  * @private
  */
-const formatNumber = (payloadNumber, changedNumber, originalNumber) => {
+export const formatNumber = (payloadNumber, changedNumber, originalNumber) => {
   if (payloadNumber !== undefined) {
     return payloadNumber
   }
@@ -40,7 +40,7 @@ const formatNumber = (payloadNumber, changedNumber, originalNumber) => {
  * @private
  */
 
-const formatAddress = (address) => {
+export const formatAddress = (address) => {
   const { lookup, manual, postcode, country } = address
 
   let addressLines = []
@@ -74,9 +74,4 @@ const formatAddress = (address) => {
     postcode,
     country
   ]
-}
-
-export const basePresenter = {
-  formatAddress,
-  formatNumber
 }

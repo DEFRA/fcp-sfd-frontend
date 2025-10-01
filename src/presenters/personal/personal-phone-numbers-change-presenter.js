@@ -8,7 +8,7 @@ const personalPhoneNumbersChangePresenter = (data, payload) => {
     backLink: { href: '/personal-details' },
     pageTitle: 'What are your personal phone numbers?',
     metaDescription: 'Update the phone numbers for your personal account.',
-    userName: formatFullName(data.info.fullName),
+    userName: data.info.fullName.fullNameJoined ?? null,
     personalTelephone: formatPersonalNumber(payload?.personalTelephone, data.changePersonalTelephone, data.contact.telephone),
     personalMobile: formatPersonalNumber(payload?.personalMobile, data.changePersonalMobile, data.contact.mobile)
   }
@@ -34,16 +34,6 @@ const formatPersonalNumber = (payloadNumber, changedNumber, originalNumber) => {
   }
 
   return originalNumber
-}
-
-const formatFullName = (fullName) => {
-  if (!fullName) {
-    return null
-  }
-
-  const { first, middle, last } = fullName
-
-  return `${first} ${middle ? middle + ' ' : ''}${last}`
 }
 
 export { personalPhoneNumbersChangePresenter }

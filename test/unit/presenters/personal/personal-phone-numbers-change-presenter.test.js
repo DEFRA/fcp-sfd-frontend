@@ -12,9 +12,7 @@ describe('personalPhoneNumbersChangePresenter', () => {
     data = {
       info: {
         fullName: {
-          first: 'Alfred',
-          middle: null,
-          last: 'Waldron'
+          fullNameJoined: 'Alfred Waldron'
         }
       },
       contact: {
@@ -42,29 +40,13 @@ describe('personalPhoneNumbersChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName
+        delete data.info.fullName.fullNameJoined
       })
 
       test('it should return userName as null', () => {
         const result = personalPhoneNumbersChangePresenter(data)
 
         expect(result.userName).toEqual(null)
-      })
-    })
-
-    describe('when the fullName has a middle name', () => {
-      beforeEach(() => {
-        data.info.fullName = {
-          first: 'Alfred',
-          middle: 'Michael',
-          last: 'Waldron'
-        }
-      })
-
-      test('it should format the userName with middle name', () => {
-        const result = personalPhoneNumbersChangePresenter(data)
-
-        expect(result.userName).toEqual('Alfred Michael Waldron')
       })
     })
   })

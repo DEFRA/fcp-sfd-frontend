@@ -91,7 +91,9 @@ const getMockData = () => {
   return {
     crn: '987654321',
     info: {
-      fullName: 'John Doe'
+      fullName: {
+        fullNameJoined: 'John Doe'
+      }
     },
     contact: {
       telephone: '01234567890',

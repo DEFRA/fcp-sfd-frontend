@@ -7,25 +7,32 @@
  */
 
 import { COUNTRY_NAMES } from '../constants/country-names.js'
+import { businessAddressLookupSchema } from '../schemas/business/business-address-lookup-schema.js'
 
 const businessAddressLookupMapper = (addresses) => {
   return addresses.map((address) => {
+    const { error } = businessAddressLookupSchema.validate(address)
+
+    if (error) {
+      return null
+    }
+
     const {
-      UPRN, // always present
-      ADDRESS, // always present
-      ORGANISATION_NAME, // optional
-      DEPARTMENT_NAME, // optional
-      SUB_BUILDING_NAME, // optional
-      BUILDING_NAME, // optional
-      BUILDING_NUMBER, // optional
-      DEPENDENT_THOROUGHFARE_NAME, // optional
-      THOROUGHFARE_NAME, // optional
-      DOUBLE_DEPENDENT_LOCALITY, // optional
-      DEPENDENT_LOCALITY, // optional
-      POST_TOWN, // always present
-      POSTCODE, // always present
-      LOCAL_CUSTODIAN_CODE_DESCRIPTION, // always present
-      COUNTRY_CODE // always present
+      UPRN,
+      ADDRESS,
+      ORGANISATION_NAME,
+      DEPARTMENT_NAME,
+      SUB_BUILDING_NAME,
+      BUILDING_NAME,
+      BUILDING_NUMBER,
+      DEPENDENT_THOROUGHFARE_NAME,
+      THOROUGHFARE_NAME,
+      DOUBLE_DEPENDENT_LOCALITY,
+      DEPENDENT_LOCALITY,
+      POST_TOWN,
+      POSTCODE,
+      LOCAL_CUSTODIAN_CODE_DESCRIPTION,
+      COUNTRY_CODE
     } = address.properties
 
     const buildingName = filterAndJoin([ORGANISATION_NAME, DEPARTMENT_NAME, BUILDING_NAME])
@@ -51,7 +58,7 @@ const businessAddressLookupMapper = (addresses) => {
       country: COUNTRY_NAMES[COUNTRY_CODE] ?? null,
       uprn: UPRN
     }
-  })
+  }).filter(Boolean) // remove null values
 }
 
 const filterAndJoin = (addressesProperties) => {

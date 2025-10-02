@@ -106,4 +106,37 @@ describe('business address lookup mapper', () => {
       expect(results[0].county).toEqual(null)
     })
   })
+
+  describe('when an address fails schema validation', () => {
+    beforeEach(() => {
+      delete addresses[0].properties.UPRN
+    })
+
+    test('it skips invalid addresses', () => {
+      const results = businessAddressLookupMapper(addresses)
+
+      expect(results).toEqual([])
+    })
+  })
+
+  describe('when multiple addresses include invalid ones', () => {
+    beforeEach(() => {
+      addresses.push({
+        properties: {
+          ADDRESS: 'VALID ADDRESS',
+          POST_TOWN: 'NOWHERE',
+          POSTCODE: 'X1 1XX',
+          LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'NOWHERE',
+          COUNTRY_CODE: 'E',
+          UPRN: '100012345678'
+        }
+      })
+    })
+
+    test('it only returns valid addresses', () => {
+      const results = businessAddressLookupMapper(addresses)
+
+      expect(results.length).toBe(1)
+    })
+  })
 })

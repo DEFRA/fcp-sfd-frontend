@@ -27,6 +27,7 @@ Frontend service for the Land and farm service. This service provides the user i
 | DEFRA_ID_REDIRECT_URL | null | No | The Defra Identity redirect URl - URL of the page to be redirected immediately after the user has successfully signed in |
 | DEFRA_ID_SIGN_OUT_REDIRECT_URL | null | No | The Defra Identity sign out redirect URL - URL of the page to be redirected after the user has successfully signed out |
 | DEFRA_ID_REFRESH_TOKENS | `true` | No | Defra Identity refresh tokens - Set to true to enable auto refresh of Defra Identity tokens |
+| OS_PLACES_CLIENT_ID | null | No | The OS Places API client ID - Unique code for identifying fcp-sfd-frontend |
 
 ## Setup
 

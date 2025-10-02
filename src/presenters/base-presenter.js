@@ -1,6 +1,6 @@
 /**
  * The first time a user loads the phone numbers change page they won't have entered any data, so a payload
- * or a changedNumber won't be present. If a user has a validation issue then we want to reply the payload data to them.
+ * or a changedNumber won't be present. If a user has a validation issue then we want to replay the payload data to them.
  * We check if payload is not undefined because it could be a user has removed the 'mobile' number for example but
  * incorrectly entered the telephone number so the payload for this would appear as an empty string.
  *

@@ -15,7 +15,8 @@ export const mapPersonalDetails = (value) => {
         title: value.customer.info.name.title,
         first: value.customer.info.name.first,
         last: value.customer.info.name.last,
-        middle: value.customer.info.name.middle ?? null
+        middle: value.customer.info.name.middle ?? null,
+        fullNameJoined: formatFullName(value.customer.info.name)
       }
     },
     address: {
@@ -44,4 +45,13 @@ export const mapPersonalDetails = (value) => {
       mobile: value.customer.info.phone.mobile
     }
   }
+}
+
+const formatFullName = (name) => {
+  return [
+    name.title,
+    name.first,
+    name.middle,
+    name.last
+  ].filter(Boolean).join(' ')
 }

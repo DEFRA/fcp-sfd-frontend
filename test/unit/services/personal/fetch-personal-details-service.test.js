@@ -39,7 +39,6 @@ describe('fetchPersonalDetailsService', () => {
     mappedDalData = mappedData
 
     credentials = {
-      sbi: '132432422',
       crn: '64363553663',
       email: 'test.farmer@test.farm.com'
     }

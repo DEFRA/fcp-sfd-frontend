@@ -12,7 +12,7 @@
 
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
-import { updateBusinessAddressMutation } from '../../dal/mutations/update-business-address.js'
+import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
@@ -66,7 +66,7 @@ const businessAddressVariables = (businessDetails) => {
 
   if (change.uprn) {
     // Address chosen via postcode lookup
-    variables.input.address = {
+    variables.input.address.withUprn = {
       buildingNumberRange: change.buildingNumberRange ?? null,
       buildingName: change.buildingName ?? null,
       flatName: change.flatName ?? null,
@@ -86,7 +86,7 @@ const businessAddressVariables = (businessDetails) => {
     }
   } else {
     // Address entered manually
-    variables.input.address = {
+    variables.input.address.withoutUprn = {
       buildingNumberRange: null,
       buildingName: null,
       flatName: null,

@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/update-business-address.js'
+import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/business/update-business-address.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -63,20 +63,22 @@ describe('updateBusinessAddressChangeService', () => {
         input: {
           sbi: '107183280',
           address: {
-            buildingNumberRange: null,
-            buildingName: null,
-            flatName: null,
-            street: null,
-            city: 'Maidstone',
-            county: null,
-            postalCode: 'BA123 ABC',
-            country: 'United Kingdom',
-            line1: 'A different address',
-            line2: null,
-            line3: null,
-            line4: 'Maidstone',
-            line5: null,
-            uprn: null
+            withoutUprn: {
+              buildingNumberRange: null,
+              buildingName: null,
+              flatName: null,
+              street: null,
+              city: 'Maidstone',
+              county: null,
+              postalCode: 'BA123 ABC',
+              country: 'United Kingdom',
+              line1: 'A different address',
+              line2: null,
+              line3: null,
+              line4: 'Maidstone',
+              line5: null,
+              uprn: null
+            }
           }
         }
       })
@@ -117,22 +119,24 @@ describe('updateBusinessAddressChangeService', () => {
         input: {
           sbi: '107183280',
           address: {
-            buildingNumberRange: null,
-            buildingName: 'Test House',
-            flatName: null,
-            street: null,
-            city: 'London',
-            county: null,
-            postalCode: 'W1A 1AA',
-            country: 'United Kingdom',
-            dependentLocality: null,
-            doubleDependentLocality: null,
-            line1: null,
-            line2: null,
-            line3: null,
-            line4: null,
-            line5: null,
-            uprn: '1234567890'
+            withUprn: {
+              buildingNumberRange: null,
+              buildingName: 'Test House',
+              flatName: null,
+              street: null,
+              city: 'London',
+              county: null,
+              postalCode: 'W1A 1AA',
+              country: 'United Kingdom',
+              dependentLocality: null,
+              doubleDependentLocality: null,
+              line1: null,
+              line2: null,
+              line3: null,
+              line4: null,
+              line5: null,
+              uprn: '1234567890'
+            }
           }
         }
       })

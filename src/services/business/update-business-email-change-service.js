@@ -10,7 +10,7 @@
  */
 
 import { updateDalService } from '../DAL/update-dal-service.js'
-import { updateBusinessEmailMutation } from '../../dal/mutations/update-business-email.js'
+import { updateBusinessEmailMutation } from '../../dal/mutations/business/update-business-email.js'
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 

@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updateBusinessNameMutation } from '../../../../src/dal/mutations/update-business-name.js'
+import { updateBusinessNameMutation } from '../../../../src/dal/mutations/business/update-business-name.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'

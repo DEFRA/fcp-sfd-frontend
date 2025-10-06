@@ -18,7 +18,8 @@ describe('personalPhoneNumbersChangePresenter', () => {
       contact: {
         telephone: '01234 567891',
         mobile: null
-      }
+      },
+      changePersonalPhoneNumbers: {}
     }
   })
 
@@ -54,7 +55,7 @@ describe('personalPhoneNumbersChangePresenter', () => {
   describe('the "personalMobile" property', () => {
     describe('when provided with a changed personalMobile', () => {
       beforeEach(() => {
-        data.changePersonalMobile = '01111 111111'
+        data.changePersonalPhoneNumbers.personalMobile = '01111 111111'
       })
 
       test('it should return personalMobile as the changed personalMobile', () => {
@@ -80,7 +81,7 @@ describe('personalPhoneNumbersChangePresenter', () => {
   describe('the "personalTelephone" property', () => {
     describe('when provided with a changed personalTelephone', () => {
       beforeEach(() => {
-        data.changePersonalTelephone = '01214 151151'
+        data.changePersonalPhoneNumbers.personalTelephone = '01214 151151'
       })
 
       test('it should return personalTelephone as the changed personalTelephone', () => {

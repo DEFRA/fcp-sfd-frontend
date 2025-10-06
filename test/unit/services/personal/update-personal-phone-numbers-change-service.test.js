@@ -34,8 +34,8 @@ describe('updatePersonalPhoneNumbersChangeService', () => {
     vi.clearAllMocks()
 
     mappedData.changePersonalPhoneNumbers = {
-      businessTelephone: null,
-      businessMobile: null
+      personalTelephone: '09876543210',
+      personalMobile: '01234567890'
     }
 
     fetchPersonalChangeService.mockReturnValue(mappedData)
@@ -60,8 +60,8 @@ describe('updatePersonalPhoneNumbersChangeService', () => {
       expect(updateDalService).toHaveBeenCalledWith(updatePersonalPhoneNumbersMutation, {
         input: {
           phone: {
-            landline: null,
-            mobile: null
+            landline: '09876543210',
+            mobile: '01234567890'
           },
           crn: mappedData.crn
         }
@@ -78,6 +78,26 @@ describe('updatePersonalPhoneNumbersChangeService', () => {
       await updatePersonalPhoneNumbersChangeService(yar, credentials)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your personal phone numbers')
+    })
+  })
+
+  describe('when the personal telephone number is null', () => {
+    beforeEach(() => {
+      mappedData.changePersonalPhoneNumbers.personalTelephone = null
+    })
+
+    test('it calls updateDalService with null values', async () => {
+      await updatePersonalPhoneNumbersChangeService(yar, credentials)
+
+      expect(updateDalService).toHaveBeenCalledWith(updatePersonalPhoneNumbersMutation, {
+        input: {
+          phone: {
+            landline: null,
+            mobile: '01234567890'
+          },
+          crn: mappedData.crn
+        }
+      })
     })
   })
 })

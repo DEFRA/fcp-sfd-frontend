@@ -36,7 +36,7 @@ describe('business UK postcode schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Enter a postal code or zip code',
+          message: 'Enter a postcode',
           path: ['businessPostcode'],
           type: 'any.required'
         }))
@@ -53,7 +53,7 @@ describe('business UK postcode schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Enter a postal code or zip code',
+          message: 'Enter a postcode',
           path: ['businessPostcode'],
           type: 'string.empty'
         }))
@@ -70,7 +70,7 @@ describe('business UK postcode schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: `Postal code or zip code must be ${POSTCODE_MAX} characters or less`,
+          message: `Postal code must be ${POSTCODE_MAX} characters or less`,
           path: ['businessPostcode'],
           type: 'string.max'
         }))

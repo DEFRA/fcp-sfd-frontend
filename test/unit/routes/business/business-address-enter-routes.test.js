@@ -172,7 +172,7 @@ const getMockData = () => {
 
 const getPageData = () => {
   return {
-    backLink: { href: '/business-details' },
+    backLink: { href: '/business-address-change' },
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
     address: {
@@ -192,7 +192,7 @@ const getPageData = () => {
 
 const getPageDataError = () => {
   return {
-    backLink: { href: '/business-details' },
+    backLink: { href: '/business-address-change' },
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
     address: {

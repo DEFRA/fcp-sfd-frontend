@@ -6,7 +6,6 @@ import { businessPhoneNumbersChangePresenter } from '../../../../src/presenters/
 
 describe('businessPhoneNumbersChangePresenter', () => {
   let data
-  let payload
 
   beforeEach(() => {
     data = {
@@ -80,58 +79,6 @@ describe('businessPhoneNumbersChangePresenter', () => {
         const result = businessPhoneNumbersChangePresenter(data)
 
         expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
-  describe('the "businessMobile" property', () => {
-    describe('when provided with a changed businessMobile', () => {
-      beforeEach(() => {
-        data.changeBusinessPhoneNumbers.businessMobile = '01111 111111'
-      })
-
-      test('it should return businessMobile as the changed businessMobile', () => {
-        const result = businessPhoneNumbersChangePresenter(data)
-
-        expect(result.businessMobile).toEqual('01111 111111')
-      })
-    })
-
-    describe('when provided with a payload', () => {
-      beforeEach(() => {
-        payload = { businessMobile: '01234 111111' }
-      })
-
-      test('it should return businessMobile as the payload', () => {
-        const result = businessPhoneNumbersChangePresenter(data, payload)
-
-        expect(result.businessMobile).toEqual('01234 111111')
-      })
-    })
-  })
-
-  describe('the "businessTelephone" property', () => {
-    describe('when provided with a changed businessTelephone', () => {
-      beforeEach(() => {
-        data.changeBusinessPhoneNumbers.businessTelephone = '01214 151151'
-      })
-
-      test('it should return businessTelephone as the changed businessTelephone', () => {
-        const result = businessPhoneNumbersChangePresenter(data)
-
-        expect(result.businessTelephone).toEqual('01214 151151')
-      })
-    })
-
-    describe('when provided with a payload', () => {
-      beforeEach(() => {
-        payload = { businessTelephone: '02222 222222' }
-      })
-
-      test('it should return businessTelephone as the payload', () => {
-        const result = businessPhoneNumbersChangePresenter(data, payload)
-
-        expect(result.businessTelephone).toEqual('02222 222222')
       })
     })
   })

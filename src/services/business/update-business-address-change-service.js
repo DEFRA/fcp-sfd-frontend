@@ -12,7 +12,7 @@
 
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
-import { updateBusinessAddressMutation } from '../../dal/mutations/update-business-address.js'
+import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {

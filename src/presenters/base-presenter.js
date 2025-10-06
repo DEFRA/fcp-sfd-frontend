@@ -1,4 +1,26 @@
 /**
+ * The first time a user loads the phone numbers change page they won't have entered any data, so a payload
+ * or a changedNumber won't be present. If a user has a validation issue then we want to replay the payload data to them.
+ * We check if payload is not undefined because it could be a user has removed the 'mobile' number for example but
+ * incorrectly entered the telephone number so the payload for this would appear as an empty string.
+ *
+ * Payload is the priority to check and then after that if changedNumber is present then we display that value.
+ *
+ * @private
+ */
+export const formatNumber = (payloadNumber, changedNumber, originalNumber) => {
+  if (payloadNumber !== undefined) {
+    return payloadNumber
+  }
+
+  if (changedNumber !== undefined) {
+    return changedNumber
+  }
+
+  return originalNumber
+}
+
+/**
  * Identify the correct address to use from the DAL response.
  *
  * An address lookup is where a user enters a postcode and selects an address
@@ -18,7 +40,7 @@
  * @private
  */
 
-const formatAddress = (address) => {
+export const formatAddress = (address) => {
   const { lookup, manual, postcode, country } = address
 
   let addressLines = []
@@ -52,8 +74,4 @@ const formatAddress = (address) => {
     postcode,
     country
   ]
-}
-
-export const addressPresenter = {
-  formatAddress
 }

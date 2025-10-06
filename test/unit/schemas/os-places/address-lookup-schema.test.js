@@ -176,5 +176,20 @@ describe('addressLookupSchema', () => {
         expect(value).toEqual(payload)
       })
     })
+
+    describe('when unknown properties are provided', () => {
+      beforeEach(() => {
+        payload.properties.EXTRA_FIELD = 'unexpected'
+        payload.ANOTHER_TOP_LEVEL_FIELD = 42
+      })
+
+      test('it still validates successfully and keeps the unknown fields', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+        expect(value.properties.EXTRA_FIELD).toBe('unexpected')
+        expect(value.ANOTHER_TOP_LEVEL_FIELD).toBe(42)
+      })
+    })
   })
 })

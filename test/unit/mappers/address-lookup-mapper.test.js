@@ -2,9 +2,9 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { businessAddressLookupMapper } from '../../../src/mappers/business-address-lookup-mapper.js'
+import { addressLookupMapper } from '../../../src/mappers/address-lookup-mapper.js'
 
-describe('business address lookup mapper', () => {
+describe('address lookup mapper', () => {
   const addresses = [
     {
       properties: {
@@ -28,7 +28,7 @@ describe('business address lookup mapper', () => {
   ]
 
   test('it maps a full OS Places address correctly', () => {
-    const results = businessAddressLookupMapper(addresses)
+    const results = addressLookupMapper(addresses)
 
     expect(results).toEqual([
       {
@@ -62,7 +62,7 @@ describe('business address lookup mapper', () => {
     })
 
     test('it handles optional fields correctly', () => {
-      const results = businessAddressLookupMapper(addresses)
+      const results = addressLookupMapper(addresses)
 
       expect(results).toEqual([
         {
@@ -89,7 +89,7 @@ describe('business address lookup mapper', () => {
     })
 
     test('it sets the county to null', () => {
-      const results = businessAddressLookupMapper(addresses)
+      const results = addressLookupMapper(addresses)
 
       expect(results[0].county).toEqual(null)
     })
@@ -101,7 +101,7 @@ describe('business address lookup mapper', () => {
     })
 
     test('it sets the county to null', () => {
-      const results = businessAddressLookupMapper(addresses)
+      const results = addressLookupMapper(addresses)
 
       expect(results[0].county).toEqual(null)
     })
@@ -113,7 +113,7 @@ describe('business address lookup mapper', () => {
     })
 
     test('it skips invalid addresses', () => {
-      const results = businessAddressLookupMapper(addresses)
+      const results = addressLookupMapper(addresses)
 
       expect(results).toEqual([])
     })
@@ -134,7 +134,7 @@ describe('business address lookup mapper', () => {
     })
 
     test('it only returns valid addresses', () => {
-      const results = businessAddressLookupMapper(addresses)
+      const results = addressLookupMapper(addresses)
 
       expect(results.length).toBe(1)
     })

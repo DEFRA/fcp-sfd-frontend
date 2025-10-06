@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-export const businessAddressLookupSchema = Joi.object({
+export const addressLookupSchema = Joi.object({
   properties: Joi.object({
     UPRN: Joi.string().required(),
     ADDRESS: Joi.string().required(),

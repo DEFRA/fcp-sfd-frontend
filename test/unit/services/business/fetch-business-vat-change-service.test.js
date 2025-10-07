@@ -9,6 +9,7 @@ import { mappedData } from '../../../mocks/mock-business-details'
 
 // Thing under test
 import { fetchBusinessVatChangeService } from '../../../../src/services/business/fetch-business-vat-change-service.js'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -61,7 +62,7 @@ describe('fetchBusinessVatChangeService', () => {
       test('it returns the correct data', async () => {
         const result = await fetchBusinessVatChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual(data)
       })

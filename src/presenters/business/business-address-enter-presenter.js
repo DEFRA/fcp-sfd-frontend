@@ -91,10 +91,6 @@ const formatAddress = (payload, changeBusinessAddress, originalAddress) => {
   return null
 }
 
-const filterAndJoin = (items) => {
-
-}
-
 export {
   businessAddressEnterPresenter
 }

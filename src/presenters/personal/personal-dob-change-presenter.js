@@ -3,7 +3,7 @@
  * @module personalDobChangePresenter
  */
 
-const personalDobChangePresenter = (data, payload) => {
+const personalDobChangePresenter = (data) => {
   const personalDob = new Date([data.info.dateOfBirth])
   return {
     backLink: { href: '/personal-details' },

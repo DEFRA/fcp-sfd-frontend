@@ -3,7 +3,9 @@
 
   <div class="govuk-grid-column-two-thirds">
       <h3 class="govuk-heading-s govuk-!-margin-bottom-1">{{ businessName }}</h3>
+      {% if sbi %}
       <p class="govuk-body-s govuk-!-margin-bottom-2">Single business identifier (SBI): {{ sbi }}</p>
+      {% endif %}
   </div>
 
   <div class="govuk-grid-column-one-third">

@@ -9,6 +9,7 @@ import { mappedData } from '../../../mocks/mock-business-details'
 
 // Thing under test
 import { fetchBusinessPhoneNumbersChangeService } from '../../../../src/services/business/fetch-business-phone-numbers-change-service.js'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -118,7 +119,7 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       test('it returns the correct data', async () => {
         const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessTelephone: null })
         expect(result).toEqual({ ...data, changeBusinessMobile: null })
       })

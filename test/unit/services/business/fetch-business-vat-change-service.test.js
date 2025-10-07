@@ -43,7 +43,7 @@ describe('fetchBusinessVatChangeService', () => {
       test('it returns the correct data', async () => {
         const result = await fetchBusinessVatChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessVat: 'GB123456789' })
         expect(result).toEqual({ ...data, changeBusinessVat: 'GB123456789' })
       })

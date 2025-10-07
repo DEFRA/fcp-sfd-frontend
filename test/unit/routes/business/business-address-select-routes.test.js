@@ -6,8 +6,8 @@ import { setSessionData } from '../../../../src/utils/session/set-session-data.j
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Thing under test
-import { businessAddressSelectChangeRoutes } from '../../../../src/routes/business/business-address-select-change.routes.js'
-const [getBusinessAddressSelectChange, postBusinessAddressSelectChange] = businessAddressSelectChangeRoutes
+import { businessAddressSelectRoutes } from '../../../../src/routes/business/business-address-select.routes.js'
+const [getBusinessAddressSelect, postBusinessAddressSelect] = businessAddressSelectRoutes
 
 // Mocks
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
@@ -47,19 +47,19 @@ describe('business address select change', () => {
     }
   })
 
-  describe('GET /business-address-select-change', () => {
+  describe('GET /business-address-select', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         fetchBusinessChangeService.mockResolvedValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
-        expect(getBusinessAddressSelectChange.method).toBe('GET')
-        expect(getBusinessAddressSelectChange.path).toBe('/business-address-select-change')
+        expect(getBusinessAddressSelect.method).toBe('GET')
+        expect(getBusinessAddressSelect.path).toBe('/business-address-select')
       })
 
       test('it calls fetchBusinessChangeService', async () => {
-        await getBusinessAddressSelectChange.handler(request, h)
+        await getBusinessAddressSelect.handler(request, h)
 
         expect(fetchBusinessChangeService).toHaveBeenCalledWith(
           request.yar,
@@ -68,15 +68,15 @@ describe('business address select change', () => {
         )
       })
 
-      test('should render business-address-select-change view with page data', async () => {
-        await getBusinessAddressSelectChange.handler(request, h)
+      test('should render business-address-select view with page data', async () => {
+        await getBusinessAddressSelect.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-address-select-change', getPageData())
+        expect(h.view).toHaveBeenCalledWith('business/business-address-select', getPageData())
       })
     })
   })
 
-  describe('POST /business-address-select-change', () => {
+  describe('POST /business-address-select', () => {
     beforeEach(() => {
       request.payload = {
         addresses: '1001123 Test Street, LONDON, E1 6AN'
@@ -88,7 +88,7 @@ describe('business address select change', () => {
     describe('when a request succeeds', () => {
       describe('and the validation passes', () => {
         test('it sets the selected address in session and redirects', async () => {
-          await postBusinessAddressSelectChange.options.handler(request, h)
+          await postBusinessAddressSelect.options.handler(request, h)
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
@@ -121,7 +121,7 @@ describe('business address select change', () => {
       })
 
       test('it fetches business details', async () => {
-        await postBusinessAddressSelectChange.options.validate.failAction(request, h, err)
+        await postBusinessAddressSelect.options.validate.failAction(request, h, err)
 
         expect(fetchBusinessChangeService).toHaveBeenCalledWith(
           request.yar,
@@ -131,18 +131,18 @@ describe('business address select change', () => {
       })
 
       test('it returns the page successfully with the error summary banner', async () => {
-        await postBusinessAddressSelectChange.options.validate.failAction(request, h, err)
+        await postBusinessAddressSelect.options.validate.failAction(request, h, err)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-address-select-change', getPageDataError())
+        expect(h.view).toHaveBeenCalledWith('business/business-address-select', getPageDataError())
       })
 
       test('it should handle undefined errors', async () => {
-        await postBusinessAddressSelectChange.options.validate.failAction(request, h, [])
+        await postBusinessAddressSelect.options.validate.failAction(request, h, [])
 
         const pageData = getPageDataError()
         pageData.errors = {}
 
-        expect(h.view).toHaveBeenCalledWith('business/business-address-select-change', pageData)
+        expect(h.view).toHaveBeenCalledWith('business/business-address-select', pageData)
       })
     })
   })

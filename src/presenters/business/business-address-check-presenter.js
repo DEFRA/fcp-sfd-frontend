@@ -35,7 +35,7 @@ const formatAddress = (businessAddress) => {
 
 const backLink = (postcodeLookup) => {
   if (postcodeLookup) {
-    return { href: '/business-address-select-change' }
+    return { href: '/business-address-select' }
   } else {
     return { href: '/business-address-enter' }
   }
@@ -43,7 +43,7 @@ const backLink = (postcodeLookup) => {
 
 const changeLink = (postcodeLookup) => {
   if (postcodeLookup) {
-    return '/business-address-select-change'
+    return '/business-address-select'
   } else {
     return '/business-address-enter'
   }

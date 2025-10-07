@@ -1,9 +1,9 @@
 /**
- * Formats data ready for presenting in the `/business-address-select-change` page
- * @module businessAddressSelectChangePresenter
+ * Formats data ready for presenting in the `/business-address-select` page
+ * @module businessAddressSelectPresenter
  */
 
-const businessAddressSelectChangePresenter = (data) => {
+const businessAddressSelectPresenter = (data) => {
   return {
     backLink: { href: '/business-address-change' },
     pageTitle: 'Choose your business address',
@@ -56,5 +56,5 @@ function formatDisplayAddresses (addresses) {
 }
 
 export {
-  businessAddressSelectChangePresenter
+  businessAddressSelectPresenter
 }

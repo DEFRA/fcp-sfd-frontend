@@ -155,10 +155,10 @@ describe('businessAddressCheckPresenter', () => {
         }
       })
 
-      test('it should return backLink as "/business-address-select-change"', () => {
+      test('it should return backLink as "/business-address-select"', () => {
         const result = businessAddressCheckPresenter(data)
 
-        expect(result.backLink).toEqual({ href: '/business-address-select-change' })
+        expect(result.backLink).toEqual({ href: '/business-address-select' })
       })
     })
 
@@ -185,10 +185,10 @@ describe('businessAddressCheckPresenter', () => {
         }
       })
 
-      test('it should return changeLink as "/business-address-select-change"', () => {
+      test('it should return changeLink as "/business-address-select"', () => {
         const result = businessAddressCheckPresenter(data)
 
-        expect(result.changeLink).toEqual('/business-address-select-change')
+        expect(result.changeLink).toEqual('/business-address-select')
       })
     })
 

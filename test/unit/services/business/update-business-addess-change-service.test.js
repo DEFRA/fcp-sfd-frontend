@@ -6,6 +6,7 @@ import { dalConnector } from '../../../../src/dal/connector.js'
 import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/update-business-address.js'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -89,7 +90,7 @@ describe('updateBusinessAddressChangeService', () => {
             uprn: null
           }
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('adds a flash notification confirming the change in data', async () => {
@@ -147,7 +148,7 @@ describe('updateBusinessAddressChangeService', () => {
             uprn: '1234567890'
           }
         }
-      })
+      }, getUserSessionToken)
     })
   })
 

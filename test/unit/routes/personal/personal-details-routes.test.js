@@ -50,10 +50,10 @@ describe('personal details', () => {
         personalDetailsPresenter.mockReturnValue(pageData)
       })
 
-      test('it clears the businessDetails key from session', async () => {
+      test('it clears the personalDetails key from session', async () => {
         await getPersonalDetails.handler(request, h)
 
-        expect(request.yar.clear).toHaveBeenCalledWith('businessDetails')
+        expect(request.yar.clear).toHaveBeenCalledWith('personalDetails')
       })
 
       test('it calls the fetch personal details service and renders view', async () => {

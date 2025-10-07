@@ -1,0 +1,18 @@
+/**
+ * Formats data ready for presenting in the `/personal-dob-change` page
+ * @module personalDobChangePresenter
+ */
+
+const personalDobChangePresenter = (data, payload) => {
+  const personalDob = new Date([data.info.dateOfBirth])
+  return {
+    backLink: { href: '/personal-details' },
+    pageTitle: 'What is your date of birth?',
+    metaDescription: 'For example, 31 3 1980',
+    dobDay: data.changePersonalDob?.day || personalDob.getDate(),
+    dobMonth: data.changePersonalDob?.month || personalDob.getMonth() + 1,
+    dobYear: data.changePersonalDob?.year || personalDob.getFullYear()
+  }
+}
+
+export { personalDobChangePresenter }

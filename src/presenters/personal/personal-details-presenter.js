@@ -21,7 +21,8 @@ const personalDetailsPresenter = (data, yar) => {
       link: '/account-phone-numbers-change'
     },
     personalEmail: data.contact.email,
-    dateOfBirth: data.info.dateOfBirth
+    dateOfBirth: data.info.dateOfBirth,
+    dobChangeLink: '/personal-dob-change'
   }
 }
 

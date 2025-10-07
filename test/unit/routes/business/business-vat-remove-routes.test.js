@@ -66,7 +66,7 @@ describe('business VAT remove', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessVatRemove.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, getUserSessionToken)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, getUserSessionToken, request.auth.credentials)
       })
 
       test('should render business-vat-registration-remove view with page data', async () => {

@@ -12,6 +12,7 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -56,7 +57,7 @@ describe('updateBusinessNameChangeService', () => {
     test('it correctly saves the data to the session', async () => {
       await updateBusinessNameChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 
@@ -68,7 +69,7 @@ describe('updateBusinessNameChangeService', () => {
           name: 'New business ltd',
           sbi: '107183280'
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('adds a flash notification confirming the change in data', async () => {

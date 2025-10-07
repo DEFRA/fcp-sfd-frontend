@@ -4,11 +4,13 @@ const currentDate = new Date()
 const maxYear = currentDate.getFullYear()
 const maxCurrentMonth = currentDate.getMonth()
 const MAX_MONTH = 12
+const MAX_MONTH_29 = 29
 const MAX_MONTH_30 = 30
 const MAX_MONTH_31 = 31
+const MIN_YEAR = 1900
 
 export const personalDobSchema = Joi.object({
-  year: Joi.number().required().integer().min(1900).max(maxYear).messages({
+  year: Joi.number().required().integer().min(MIN_YEAR).max(maxYear).messages({
     'number.integer': 'year must be valid',
     'any.required': 'year is required'
   }),
@@ -18,7 +20,7 @@ export const personalDobSchema = Joi.object({
   }),
   day: Joi.alternatives()
     .conditional('month', [
-      { is: 1, then: Joi.number().required().integer().max(29) },
+      { is: 1, then: Joi.number().required().integer().max(MAX_MONTH_29) },
       { is: 3, then: Joi.number().required().integer().max(MAX_MONTH_30) },
       { is: 5, then: Joi.number().required().integer().max(MAX_MONTH_30) },
       { is: 8, then: Joi.number().required().integer().max(MAX_MONTH_30) },

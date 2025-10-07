@@ -1,4 +1,4 @@
-import { personalDobSchema } from '../../schemas/personal/personal-dob-schema.js' 
+import { personalDobSchema } from '../../schemas/personal/personal-dob-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalDobChangePresenter } from '../../presenters/personal/personal-dob-change-presenter.js'
@@ -25,11 +25,11 @@ const postPersonalDobChange = {
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
-  
+
         const errors = formatValidationErrors(err.details || [])
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
         const pageData = personalDobChangePresenter(personalDetails, payload)
-  
+
         return h.view('personal/personal-dob-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },

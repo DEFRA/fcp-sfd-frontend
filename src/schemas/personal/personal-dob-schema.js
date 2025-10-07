@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-const currentDate =  new Date()
+const currentDate = new Date()
 const maxYear = currentDate.getFullYear()
 const maxCurrentMonth = currentDate.getMonth()
 const MAX_MONTH = 12
@@ -17,14 +17,14 @@ export const personalDobSchema = Joi.object({
     'any.required': 'month is required'
   }),
   day: Joi.alternatives()
-             .conditional('month', [
-              { is: 1, then: Joi.number().required().integer().max(29) },
-              { is: 3, then: Joi.number().required().integer().max(MAX_MONTH_30) },
-              { is: 5, then: Joi.number().required().integer().max(MAX_MONTH_30) },
-              { is: 8, then: Joi.number().required().integer().max(MAX_MONTH_30) },
-              { is: 10, then: Joi.number().required().integer().max(MAX_MONTH_30), otherwise: Joi.number().required().integer().max(MAX_MONTH_31) }
+    .conditional('month', [
+      { is: 1, then: Joi.number().required().integer().max(29) },
+      { is: 3, then: Joi.number().required().integer().max(MAX_MONTH_30) },
+      { is: 5, then: Joi.number().required().integer().max(MAX_MONTH_30) },
+      { is: 8, then: Joi.number().required().integer().max(MAX_MONTH_30) },
+      { is: 10, then: Joi.number().required().integer().max(MAX_MONTH_30), otherwise: Joi.number().required().integer().max(MAX_MONTH_31) }
     ]).messages({
-    'number.integer': 'month must be valid',
-    'any.required': 'month is required'
-  })
+      'number.integer': 'month must be valid',
+      'any.required': 'month is required'
+    })
 })

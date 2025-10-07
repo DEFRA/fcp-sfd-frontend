@@ -6,6 +6,7 @@ import { fetchBusinessDetailsService } from '../../../../src/services/business/f
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
 import { updateBusinessVATMutation } from '../../../../src/dal/mutations/update-business-vat.js'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Test helpers
 import { mappedData as originalMappedData } from '../../../mocks/mock-business-details.js'
@@ -71,7 +72,7 @@ describe('updateBusinessVatChangeService', () => {
     test('it correctly saves the data to the session', async () => {
       await updateBusinessVatChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
 
       expect(yar.set).toHaveBeenCalledWith(
         'businessDetails',
@@ -94,7 +95,7 @@ describe('updateBusinessVatChangeService', () => {
           vat: 'GB123456789',
           sbi: '107183280'
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('adds a flash notification confirming the VAT change', async () => {

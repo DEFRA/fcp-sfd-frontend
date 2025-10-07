@@ -70,7 +70,7 @@ describe('updateBusinessVatRemoveService', () => {
           vat: '',
           sbi: '107183280'
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('adds a flash notification confirming the VAT removal', async () => {

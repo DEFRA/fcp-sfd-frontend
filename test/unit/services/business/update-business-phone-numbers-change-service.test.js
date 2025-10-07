@@ -63,20 +63,20 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it correctly saves the data to the session', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar, credentials)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials, getUserSessionToken)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
       })
 
       test('adds a flash notification confirming the change in data', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar, credentials)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials, getUserSessionToken)
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })
 
       test('it calls dalConnector with correct mutation and variable', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar, credentials)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials, getUserSessionToken)
 
         expect(dalConnector).toHaveBeenCalledWith(updateBusinessPhoneNumbersMutation, {
           input: {

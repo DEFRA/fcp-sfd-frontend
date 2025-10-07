@@ -67,7 +67,7 @@ const formatAddress = (payload, changeBusinessAddress, originalAddress) => {
       const addressLine1 = [lookup.flatName, lookup.buildingName, lookup.buildingNumberRange].filter(Boolean).join(', ')
 
       return {
-        address1: addressLine1?? null,
+        address1: addressLine1 ?? null,
         address2: lookup.street ?? null,
         address3: null,
         city: lookup.city ?? null,

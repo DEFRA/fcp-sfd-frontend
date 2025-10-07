@@ -42,7 +42,7 @@ describe('business address lookup mapper', () => {
         city: 'LONDON',
         county: 'CITY OF LONDON',
         postcode: 'E1 6AN',
-        country: 'England',
+        country: 'ENGLAND',
         uprn: '100012345678'
       }
     ])
@@ -76,7 +76,7 @@ describe('business address lookup mapper', () => {
           city: 'LONDON',
           county: 'CITY OF LONDON',
           postcode: 'E1 6AN',
-          country: 'England',
+          country: 'ENGLAND',
           uprn: '100012345678'
         }
       ])

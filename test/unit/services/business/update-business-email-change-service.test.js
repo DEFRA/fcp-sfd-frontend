@@ -12,6 +12,7 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
@@ -67,7 +68,7 @@ describe('updateBusinessEmailChangeService', () => {
 
       expect(dalConnector).toHaveBeenCalledWith(updateBusinessEmailMutation, {
         input: { email: { address: 'new-email@test.com' }, sbi: '107183280' }
-      })
+      }, getUserSessionToken)
     })
 
     test('adds a flash notification confirming the change in data', async () => {

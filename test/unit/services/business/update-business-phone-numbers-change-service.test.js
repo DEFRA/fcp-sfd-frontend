@@ -6,6 +6,7 @@ import { fetchBusinessDetailsService } from '../../../../src/services/business/f
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { dalConnector } from '../../../../src/dal/connector.js'
 import { updateBusinessPhoneNumbersMutation } from '../../../../src/dal/mutations/update-business-phone-numbers.js'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -85,7 +86,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
             },
             sbi: '107183280'
           }
-        })
+        }, getUserSessionToken)
       })
     })
 
@@ -100,12 +101,12 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
       test('it correctly saves the data to the session', async () => {
         await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
       })
 
       test('adds a flash notification confirming the change in data', async () => {
-        await updateBusinessPhoneNumbersChangeService(yar, credentials)
+        await updateBusinessPhoneNumbersChangeService(yar, credentials, getUserSessionToken)
 
         expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
       })

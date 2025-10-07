@@ -166,6 +166,57 @@ describe('businessAddressEnterPresenter', () => {
       })
     })
 
+    describe('when provided with an original business address with UPRN', () => {
+      beforeEach(() => {
+        delete data.changeBusinessAddress
+      })
+
+      test('it should format the original address correctly', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual({
+          address1: '10 Skirbeck Way',
+          address2: 'Lonely Lane',
+          address3: 'Child Okeford',
+          city: 'Maidstone',
+          country: 'United Kingdom',
+          county: 'Somerset',
+          postcode: 'SK22 1DL'
+        })
+      })
+    })
+
+    describe('when provided with an original business address without UPRN', () => {
+      beforeEach(() => {
+        data.address = {
+          lookup: {
+            uprn: '123456',
+            flatName: 'Flat 1A',
+            buildingName: 'Rosewood Court',
+            buildingNumberRange: '120-124',
+            street: 'High Street',
+            city: 'Bristol'
+          },
+          postcode: 'BS1 2AB',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should format the original address correctly', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual({
+          address1: 'Flat 1A, Rosewood Court, 120-124',
+          address2: 'High Street',
+          address3: null,
+          city: 'Bristol',
+          county: null,
+          country: 'United Kingdom',
+          postcode: 'BS1 2AB'
+        })
+      })
+    })
+
     describe('when no existing address is provided', () => {
       beforeEach(() => {
         delete data.address.manual.line1

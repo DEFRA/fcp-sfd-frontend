@@ -59,7 +59,7 @@ describe('updateBusinessEmailChangeService', () => {
     test('it correctly saves the data to the session', async () => {
       await updateBusinessEmailChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
       expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
     })
 

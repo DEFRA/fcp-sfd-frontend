@@ -18,6 +18,7 @@ describe('businessAddressEnterPresenter', () => {
         fullName: 'Alfred Waldron'
       },
       address: {
+        lookup: {},
         manual: {
           line1: '10 Skirbeck Way',
           line2: 'Lonely Lane',
@@ -99,24 +100,6 @@ describe('businessAddressEnterPresenter', () => {
   })
 
   describe('the "address" property', () => {
-    describe('when provided with a changed business address', () => {
-      beforeEach(() => {
-        data.changeBusinessAddress = {
-          address1: 'A different address',
-          city: 'Maidstone',
-          county: 'A new county',
-          postcode: 'BA123 ABC',
-          country: 'United Kingdom'
-        }
-      })
-
-      test('it should return the changed address as the address', () => {
-        const result = businessAddressEnterPresenter(data)
-
-        expect(result.address).toEqual(data.changeBusinessAddress)
-      })
-    })
-
     describe('when provided with a payload', () => {
       beforeEach(() => {
         payload = {
@@ -132,6 +115,54 @@ describe('businessAddressEnterPresenter', () => {
         const result = businessAddressEnterPresenter(data, payload)
 
         expect(result.address).toEqual(payload)
+      })
+    })
+
+    describe('when provided with a changed business address without UPRN', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          address1: 'A different address',
+          city: 'Maidstone',
+          county: 'A new county',
+          postcode: 'BA123 ABC',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should return the changed address as-is', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual(data.changeBusinessAddress)
+      })
+    })
+
+    describe('when provided with a changed business address with UPRN', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          uprn: '123456',
+          flatName: 'Flat 1A',
+          buildingName: 'Rosewood Court',
+          buildingNumberRange: '120-124',
+          street: 'High Street',
+          city: 'Bristol',
+          county: 'Somerset',
+          postcode: 'BS1 2AB',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should format the changed address correctly', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual({
+          address1: 'Flat 1A, Rosewood Court, 120-124',
+          address2: 'High Street',
+          address3: null,
+          city: 'Bristol',
+          county: 'Somerset',
+          country: 'United Kingdom',
+          postcode: 'BS1 2AB'
+        })
       })
     })
 

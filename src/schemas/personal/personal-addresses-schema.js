@@ -2,7 +2,7 @@ import Joi from 'joi'
 
 const CHOOSE_ADDRESS_ERROR = 'Choose an address'
 
-export const businessAddressesSchema = Joi.object({
+export const personalAddressesSchema = Joi.object({
   addresses: Joi.string()
     .invalid('display')
     .required()

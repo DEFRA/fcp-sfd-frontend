@@ -2,18 +2,18 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { businessUkPostcodeSchema } from '../../../../src/schemas/business/business-uk-postcode-schema.js'
+import { ukPostcodeSchema } from '../../../../src/schemas/address/uk-postcode-schema.js'
 import { POSTCODE_MAX } from '../../../../src/constants/validation-fields.js'
 
-describe('business UK postcode schema', () => {
+describe('UK postcode schema', () => {
   let payload
   let schema
 
   beforeEach(() => {
-    schema = businessUkPostcodeSchema
+    schema = ukPostcodeSchema
 
     payload = {
-      businessPostcode: 'BA1 3TF'
+      postcode: 'BA1 3TF'
     }
   })
 
@@ -27,9 +27,9 @@ describe('business UK postcode schema', () => {
   })
 
   describe('when invalid data is provided', () => {
-    describe('because "businessPostcode" is missing', () => {
+    describe('because "postcode" is missing', () => {
       beforeEach(() => {
-        delete payload.businessPostcode
+        delete payload.postcode
       })
 
       test('it fails validation', () => {
@@ -37,16 +37,16 @@ describe('business UK postcode schema', () => {
 
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Enter a postal code or zip code',
-          path: ['businessPostcode'],
+          path: ['postcode'],
           type: 'any.required'
         }))
         expect(value).toEqual(payload)
       })
     })
 
-    describe('because "businessPostcode" is an empty string', () => {
+    describe('because "postcode" is an empty string', () => {
       beforeEach(() => {
-        payload.businessPostcode = ''
+        payload.postcode = ''
       })
 
       test('it fails validation', () => {
@@ -54,16 +54,16 @@ describe('business UK postcode schema', () => {
 
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Enter a postal code or zip code',
-          path: ['businessPostcode'],
+          path: ['postcode'],
           type: 'string.empty'
         }))
         expect(value).toEqual(payload)
       })
     })
 
-    describe('because "businessPostcode" is longer than POSTCODE_MAX characters', () => {
+    describe('because "postcode" is longer than POSTCODE_MAX characters', () => {
       beforeEach(() => {
-        payload.businessPostcode = 'A'.repeat(POSTCODE_MAX + 1)
+        payload.postcode = 'A'.repeat(POSTCODE_MAX + 1)
       })
 
       test('it fails validation', () => {

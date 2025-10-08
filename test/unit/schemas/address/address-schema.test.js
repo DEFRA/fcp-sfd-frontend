@@ -2,14 +2,14 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { businessAddressSchema } from '../../../../src/schemas/business/business-address-schema.js'
+import { addressSchema } from '../../../../src/schemas/address/address-schema.js'
 
-describe('business address schema', () => {
+describe('address schema', () => {
   let payload
   let schema
 
   beforeEach(() => {
-    schema = businessAddressSchema
+    schema = addressSchema
 
     payload = {
       address1: '10',

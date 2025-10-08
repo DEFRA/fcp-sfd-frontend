@@ -1,7 +1,7 @@
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessAddressSelectChangePresenter } from '../../presenters/business/business-address-select-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
-import { businessAddressesSchema } from '../../schemas/business/business-addresses-schema.js'
+import { addressesSchema } from '../../schemas/address/addresses-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
@@ -22,7 +22,7 @@ const postBusinessAddressSelectChange = {
   path: '/business-address-select-change',
   options: {
     validate: {
-      payload: businessAddressesSchema,
+      payload: addressesSchema,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth } = request

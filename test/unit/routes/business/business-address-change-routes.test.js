@@ -4,7 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { businessAddressLookupService } from '../../../../src/services/business/business-address-lookup-service.js'
+import { addressLookupService } from '../../../../src/services/os-places/address-lookup-service.js'
 import { businessAddressChangeErrorService } from '../../../../src/services/business/business-address-change-error-service.js'
 
 // Thing under test
@@ -20,8 +20,8 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/business-address-lookup-service.js', () => ({
-  businessAddressLookupService: vi.fn()
+vi.mock('../../../../src/services/os-places/address-lookup-service.js', () => ({
+  addressLookupService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/business/business-address-change-error-service.js', () => ({
@@ -98,7 +98,7 @@ describe('business address change routes', () => {
       describe('and the validation passes', () => {
         describe('and addresses are found for the postcode', () => {
           beforeEach(() => {
-            businessAddressLookupService.mockResolvedValue([{ address1: '10 High Street London SK22 1DL' }])
+            addressLookupService.mockResolvedValue([{ address1: '10 High Street London SK22 1DL' }])
           })
 
           test('it sets session data', async () => {
@@ -121,7 +121,7 @@ describe('business address change routes', () => {
 
         describe('and no addresses are found for the postcode', () => {
           beforeEach(() => {
-            businessAddressLookupService.mockResolvedValue({ error: 'No addresses found for this postcode' })
+            addressLookupService.mockResolvedValue({ error: 'No addresses found for this postcode' })
             businessAddressChangeErrorService.mockResolvedValue(getPageDataError())
           })
 

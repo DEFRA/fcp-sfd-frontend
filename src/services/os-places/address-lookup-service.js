@@ -6,7 +6,7 @@
  * - Maps the returned address properties into a format suitable for front-end display and for updating via the DAL.
  * - Stores the mapped addresses in the user's session for later retrieval
  *
- * @module businessAddressLookupService
+ * @module addressLookupService
  */
 
 import { config } from '../../config/index.js'
@@ -18,7 +18,7 @@ import { addressLookupMapper } from '../../mappers/address-lookup-mapper.js'
 
 const logger = createLogger()
 
-const businessAddressLookupService = async (postcode, yar) => {
+const addressLookupService = async (postcode, yar, context) => {
   const addresses = await fetchAddressesFromPostcodeLookup(postcode)
 
   if (addresses.errors) {
@@ -27,20 +27,37 @@ const businessAddressLookupService = async (postcode, yar) => {
 
   if (!addresses?.length) {
     // Create a Joi-like error object to indicate that the postcode lookup returned no addresses
-    return {
-      error: [
-        {
-          message: 'No addresses found for this postcode',
-          path: ['businessPostcode']
-        }
-      ]
-    }
+    return context === 'business' ? businessAddressChangeError() : personalAddressChangeError()
   }
 
   const mappedAddresses = addressLookupMapper(addresses)
-  setSessionData(yar, 'businessDetails', 'changeBusinessAddresses', mappedAddresses)
+  const changeAddress = context === 'business' ? 'changeBusinessAddresses' : 'changePersonalAddresses'
+
+  setSessionData(yar, `${context}Details`, `${changeAddress}`, mappedAddresses)
 
   return mappedAddresses
+}
+
+const businessAddressChangeError = () => {
+  return {
+    error: [
+      {
+        message: 'No addresses found for this postcode',
+        path: ['businessPostcode']
+      }
+    ]
+  }
+}
+
+const personalAddressChangeError = () => {
+  return {
+    error: [
+      {
+        message: 'No addresses found for this postcode',
+        path: ['personalPostcode']
+      }
+    ]
+  }
 }
 
 const fetchAddressesFromPostcodeLookup = async (postcode) => {
@@ -61,5 +78,5 @@ const fetchAddressesFromPostcodeLookup = async (postcode) => {
 }
 
 export {
-  businessAddressLookupService
+  addressLookupService
 }

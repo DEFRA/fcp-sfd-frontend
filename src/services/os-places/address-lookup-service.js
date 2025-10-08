@@ -6,7 +6,7 @@
  * - Maps the returned address properties into a format suitable for front-end display and for updating via the DAL.
  * - Stores the mapped addresses in the user's session for later retrieval
  *
- * @module businessAddressLookupService
+ * @module addressLookupService
  */
 
 import { config } from '../../config/index.js'
@@ -14,11 +14,11 @@ import { createLogger } from '../../utils/logger.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { placesAPI } from 'osdatahub'
 import { constants as httpConstants } from 'node:http2'
-import { businessAddressLookupMapper } from '../../mappers/business-address-lookup-mapper.js'
+import { addressLookupMapper } from '../../mappers/address-lookup-mapper.js'
 
 const logger = createLogger()
 
-const businessAddressLookupService = async (postcode, yar) => {
+const addressLookupService = async (postcode, yar, context) => {
   const addresses = await fetchAddressesFromPostcodeLookup(postcode)
 
   if (addresses.errors) {
@@ -31,14 +31,16 @@ const businessAddressLookupService = async (postcode, yar) => {
       error: [
         {
           message: 'No addresses found for this postcode',
-          path: ['businessPostcode']
+          path: ['postcode']
         }
       ]
     }
   }
 
-  const mappedAddresses = businessAddressLookupMapper(addresses)
-  setSessionData(yar, 'businessDetails', 'changeBusinessAddresses', mappedAddresses)
+  const mappedAddresses = addressLookupMapper(addresses)
+  const changeAddress = context === 'business' ? 'changeBusinessAddresses' : 'changePersonalAddresses'
+
+  setSessionData(yar, `${context}Details`, `${changeAddress}`, mappedAddresses)
 
   return mappedAddresses
 }
@@ -61,5 +63,5 @@ const fetchAddressesFromPostcodeLookup = async (postcode) => {
 }
 
 export {
-  businessAddressLookupService
+  addressLookupService
 }

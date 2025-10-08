@@ -30,7 +30,7 @@ describe('businessAddressChangePresenter', () => {
         backLink: { href: '/business-details' },
         pageTitle: 'What is your business address?',
         metaDescription: 'Update the address for your business.',
-        businessPostcode: 'SK22 1DL',
+        postcode: 'SK22 1DL',
         businessName: 'Agile Farm Ltd',
         sbi: '123456789',
         userName: 'Alfred Waldron'
@@ -80,16 +80,16 @@ describe('businessAddressChangePresenter', () => {
     })
   })
 
-  describe('the "businessPostcode" property', () => {
+  describe('the "postcode" property', () => {
     describe('when provided with a changed business postcode', () => {
       beforeEach(() => {
-        data.changeBusinessPostcode.businessPostcode = 'NEW 123'
+        data.changeBusinessPostcode.postcode = 'NEW 123'
       })
 
-      test('it should return the changed postcode as the businessPostcode', () => {
+      test('it should return the changed postcode as the postcode', () => {
         const result = businessAddressChangePresenter(data)
 
-        expect(result.businessPostcode).toEqual(data.changeBusinessPostcode.businessPostcode)
+        expect(result.postcode).toEqual(data.changeBusinessPostcode.postcode)
       })
     })
 
@@ -101,7 +101,7 @@ describe('businessAddressChangePresenter', () => {
       test('it should return the payload as the business postcode', () => {
         const result = businessAddressChangePresenter(data, payload)
 
-        expect(result.businessPostcode).toEqual(payload)
+        expect(result.postcode).toEqual(payload)
       })
     })
   })

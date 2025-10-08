@@ -17,7 +17,7 @@ describe('businessAddressSelectPresenter', () => {
         fullName: 'Alfred Waldron'
       },
       changeBusinessPostcode: {
-        businessPostcode: 'SK22 1DL'
+        postcode: 'SK22 1DL'
       },
       changeBusinessAddresses: [
         {

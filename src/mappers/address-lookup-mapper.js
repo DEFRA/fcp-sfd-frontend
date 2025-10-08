@@ -7,11 +7,11 @@
  */
 
 import { COUNTRY_NAMES } from '../constants/country-names.js'
-import { businessAddressLookupSchema } from '../schemas/business/business-address-lookup-schema.js'
+import { addressLookupSchema } from '../schemas/os-places/address-lookup-schema.js'
 
 const addressLookupMapper = (addresses) => {
   return addresses.map((address) => {
-    const { error } = businessAddressLookupSchema.validate(address)
+    const { error } = addressLookupSchema.validate(address)
 
     if (error) {
       return null

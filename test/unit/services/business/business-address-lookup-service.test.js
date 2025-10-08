@@ -50,14 +50,14 @@ describe('businessAddressLookupService', () => {
   describe('when called with a valid postcode', () => {
     beforeEach(() => {
       placesAPI.postcode.mockResolvedValue(mockAddresses)
-      businessAddressLookupMapper.mockReturnValue(mappedMockAddresses)
+      addressLookupMapper.mockReturnValue(mappedMockAddresses)
     })
 
     test('returns mapped addresses and sets them in session when API returns results', async () => {
       const result = await businessAddressLookupService(postcode, yar)
 
       expect(result).toEqual(mappedMockAddresses)
-      expect(businessAddressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
+      expect(addressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
       expect(setSessionData).toHaveBeenCalledWith(
         yar,
         'businessDetails',
@@ -84,7 +84,7 @@ describe('businessAddressLookupService', () => {
         ]
       })
 
-      expect(businessAddressLookupMapper).not.toHaveBeenCalled()
+      expect(addressLookupMapper).not.toHaveBeenCalled()
       expect(setSessionData).not.toHaveBeenCalled()
     })
   })
@@ -104,7 +104,7 @@ describe('businessAddressLookupService', () => {
         statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
         errors: [error]
       })
-      expect(businessAddressLookupMapper).not.toHaveBeenCalled()
+      expect(addressLookupMapper).not.toHaveBeenCalled()
       expect(setSessionData).not.toHaveBeenCalled()
     })
   })

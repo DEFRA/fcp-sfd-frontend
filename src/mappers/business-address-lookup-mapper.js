@@ -46,8 +46,8 @@ const businessAddressLookupMapper = (addresses) => {
 
     return {
       displayAddress: ADDRESS,
-      buildingName,
       flatName: SUB_BUILDING_NAME ?? null,
+      buildingName,
       buildingNumberRange: BUILDING_NUMBER ?? null,
       street,
       dependentLocality: DEPENDENT_LOCALITY ?? null,

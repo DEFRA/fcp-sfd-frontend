@@ -45,7 +45,7 @@ const postBusinessAddressChange = {
       return h.view('business/business-address-change', pageData).code(BAD_REQUEST).takeover()
     }
 
-    return h.redirect('/business-address-select-change')
+    return h.redirect('/business-address-select')
   }
 }
 

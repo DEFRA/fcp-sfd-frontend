@@ -112,10 +112,10 @@ describe('business address change routes', () => {
             )
           })
 
-          test('it redirects to /business-address-select-change if addresses found', async () => {
+          test('it redirects to /business-address-select if addresses found', async () => {
             await postBusinessAddressChange.handler(request, h)
 
-            expect(h.redirect).toHaveBeenCalledWith('/business-address-select-change')
+            expect(h.redirect).toHaveBeenCalledWith('/business-address-select')
           })
         })
 

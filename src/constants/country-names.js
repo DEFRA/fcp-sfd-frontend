@@ -1,8 +1,8 @@
 export const COUNTRY_NAMES = {
-  E: 'England',
-  W: 'Wales',
-  S: 'Scotland',
-  N: 'Northern Ireland',
-  L: 'Channel Islands',
-  M: 'Isle of Man'
+  E: 'ENGLAND',
+  W: 'WALES',
+  S: 'SCOTLAND',
+  N: 'NORTHERN IRELAND',
+  L: 'CHANNEL ISLANDS',
+  M: 'ISLE OF MAN'
 }

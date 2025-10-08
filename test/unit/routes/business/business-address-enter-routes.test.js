@@ -149,6 +149,7 @@ describe('business address enter', () => {
 const getMockData = () => {
   return {
     address: {
+      lookup: {},
       manual: {
         line1: '10 Skirbeck Way',
         line2: '',

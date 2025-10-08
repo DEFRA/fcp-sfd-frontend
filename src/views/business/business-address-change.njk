@@ -39,7 +39,10 @@
             id: "business-postcode",
             name: "businessPostcode",
             value: businessPostcode,
-            classes: "govuk-!-width-one-third"
+            classes: "govuk-!-width-one-third",
+            errorMessage: errors.businessPostcode and {
+            text: errors.businessPostcode.text
+            }
           }) }}
 
           <p class="govuk-body"><a href="/business-address-enter" class="govuk-link">Enter address manually</a></p>

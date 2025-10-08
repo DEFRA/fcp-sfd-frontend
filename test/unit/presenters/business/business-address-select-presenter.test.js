@@ -2,9 +2,9 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { businessAddressSelectChangePresenter } from '../../../../src/presenters/business/business-address-select-change-presenter.js'
+import { businessAddressSelectPresenter } from '../../../../src/presenters/business/business-address-select-presenter.js'
 
-describe('businessAddressSelectChangePresenter', () => {
+describe('businessAddressSelectPresenter', () => {
   let data
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('businessAddressSelectChangePresenter', () => {
 
   describe('when provided with business address select change data', () => {
     test('it correctly presents the data', () => {
-      const result = businessAddressSelectChangePresenter(data)
+      const result = businessAddressSelectPresenter(data)
 
       expect(result).toEqual({
         backLink: { href: '/business-address-change' },
@@ -72,7 +72,7 @@ describe('businessAddressSelectChangePresenter', () => {
       })
 
       test('it should return businessName as null', () => {
-        const result = businessAddressSelectChangePresenter(data)
+        const result = businessAddressSelectPresenter(data)
 
         expect(result.businessName).toEqual(null)
       })
@@ -86,7 +86,7 @@ describe('businessAddressSelectChangePresenter', () => {
       })
 
       test('it should return sbi as null', () => {
-        const result = businessAddressSelectChangePresenter(data)
+        const result = businessAddressSelectPresenter(data)
 
         expect(result.sbi).toEqual(null)
       })
@@ -100,7 +100,7 @@ describe('businessAddressSelectChangePresenter', () => {
       })
 
       test('it should return userName as null', () => {
-        const result = businessAddressSelectChangePresenter(data)
+        const result = businessAddressSelectPresenter(data)
 
         expect(result.userName).toEqual(null)
       })
@@ -117,7 +117,7 @@ describe('businessAddressSelectChangePresenter', () => {
       })
 
       test('it should return the correct number of addresses for the display summary option', () => {
-        const result = businessAddressSelectChangePresenter(data)
+        const result = businessAddressSelectPresenter(data)
 
         expect(result.displayAddresses[0].text).toEqual('3 addresses found')
       })
@@ -132,7 +132,7 @@ describe('businessAddressSelectChangePresenter', () => {
       })
 
       test('it should return the correct text for the display summary option', () => {
-        const result = businessAddressSelectChangePresenter(data)
+        const result = businessAddressSelectPresenter(data)
 
         expect(result.displayAddresses[0].text).toEqual('1 address found')
       })

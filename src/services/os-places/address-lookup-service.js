@@ -27,7 +27,14 @@ const addressLookupService = async (postcode, yar, context) => {
 
   if (!addresses?.length) {
     // Create a Joi-like error object to indicate that the postcode lookup returned no addresses
-    return context === 'business' ? businessAddressChangeError() : personalAddressChangeError()
+    return {
+      error: [
+        {
+          message: 'No addresses found for this postcode',
+          path: ['postcode']
+        }
+      ]
+    }
   }
 
   const mappedAddresses = addressLookupMapper(addresses)
@@ -36,28 +43,6 @@ const addressLookupService = async (postcode, yar, context) => {
   setSessionData(yar, `${context}Details`, `${changeAddress}`, mappedAddresses)
 
   return mappedAddresses
-}
-
-const businessAddressChangeError = () => {
-  return {
-    error: [
-      {
-        message: 'No addresses found for this postcode',
-        path: ['businessPostcode']
-      }
-    ]
-  }
-}
-
-const personalAddressChangeError = () => {
-  return {
-    error: [
-      {
-        message: 'No addresses found for this postcode',
-        path: ['personalPostcode']
-      }
-    ]
-  }
 }
 
 const fetchAddressesFromPostcodeLookup = async (postcode) => {

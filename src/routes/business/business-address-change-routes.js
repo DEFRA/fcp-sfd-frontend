@@ -1,5 +1,5 @@
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
-import { businessUkPostcodeSchema } from '../../schemas/business/business-uk-postcode-schema.js'
+import { ukPostcodeSchema } from '../../schemas/os-places/uk-postcode-schema.js'
 import { businessAddressChangePresenter } from '../../presenters/business/business-address-change-presenter.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
@@ -23,11 +23,11 @@ const postBusinessAddressChange = {
   path: '/business-address-change',
   options: {
     validate: {
-      payload: businessUkPostcodeSchema,
+      payload: ukPostcodeSchema,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
-        const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.businessPostcode, err.details)
+        const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.postcode, err.details)
 
         return h.view('business/business-address-change', pageData).code(BAD_REQUEST).takeover()
       }
@@ -37,10 +37,10 @@ const postBusinessAddressChange = {
     const { yar, auth, payload } = request
 
     setSessionData(yar, 'businessDetails', 'changeBusinessPostcode', payload)
-    const addresses = await addressLookupService(payload.businessPostcode, yar, 'business')
+    const addresses = await addressLookupService(payload.postcode, yar, 'business')
 
     if (addresses.error) {
-      const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.businessPostcode, addresses.error)
+      const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.postcode, addresses.error)
 
       return h.view('business/business-address-change', pageData).code(BAD_REQUEST).takeover()
     }

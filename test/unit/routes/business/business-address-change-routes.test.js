@@ -90,7 +90,7 @@ describe('business address change routes', () => {
   describe('POST /business-address-change', () => {
     beforeEach(() => {
       request.payload = {
-        businessPostcode: 'SK22 1DL'
+        postcode: 'SK22 1DL'
       }
     })
 
@@ -141,7 +141,7 @@ describe('business address change routes', () => {
             details: [
               {
                 message: 'Invalid postcode',
-                path: ['businessPostcode'],
+                path: ['postcode'],
                 type: 'string.pattern.base'
               }
             ]
@@ -156,7 +156,7 @@ describe('business address change routes', () => {
           expect(businessAddressChangeErrorService).toHaveBeenCalledWith(
             request.yar,
             request.auth.credentials,
-            request.payload.businessPostcode,
+            request.payload.postcode,
             err.details
           )
         })
@@ -176,7 +176,7 @@ const getPageData = () => {
     backLink: { href: '/business-details' },
     pageTitle: 'What is your business address?',
     metaDescription: 'Update the address for your business.',
-    businessPostcode: 'SK22 1DL',
+    postcode: 'SK22 1DL',
     businessName: 'Agile Farm Ltd',
     sbi: '123456789',
     userName: 'Alfred Waldron'
@@ -188,7 +188,7 @@ const getPageDataError = () => {
     backLink: { href: '/business-details' },
     pageTitle: 'What is your business address?',
     metaDescription: 'Update the address for your business.',
-    businessPostcode: 'SK22 1DL',
+    postcode: 'SK22 1DL',
     businessName: 'Agile Farm Ltd',
     sbi: '123456789',
     userName: 'Alfred Waldron',

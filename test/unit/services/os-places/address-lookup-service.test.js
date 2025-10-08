@@ -89,38 +89,19 @@ describe('addressLookupService', () => {
       placesAPI.postcode.mockResolvedValue({ features: [] })
     })
 
-    describe('and the context is for the business details data', () => {
-      test('returns a Joi-like error object', async () => {
-        const result = await addressLookupService(postcode, yar, 'business')
+    test('returns a Joi-like error object', async () => {
+      const result = await addressLookupService(postcode, yar, 'business')
 
-        expect(result).toEqual({
-          error: [
-            {
-              message: 'No addresses found for this postcode',
-              path: ['businessPostcode']
-            }
-          ]
-        })
-        expect(addressLookupMapper).not.toHaveBeenCalled()
-        expect(setSessionData).not.toHaveBeenCalled()
+      expect(result).toEqual({
+        error: [
+          {
+            message: 'No addresses found for this postcode',
+            path: ['postcode']
+          }
+        ]
       })
-    })
-
-    describe('and the context is for the personal details data', () => {
-      test('returns a Joi-like error object', async () => {
-        const result = await addressLookupService(postcode, yar, 'personal')
-
-        expect(result).toEqual({
-          error: [
-            {
-              message: 'No addresses found for this postcode',
-              path: ['personalPostcode']
-            }
-          ]
-        })
-        expect(addressLookupMapper).not.toHaveBeenCalled()
-        expect(setSessionData).not.toHaveBeenCalled()
-      })
+      expect(addressLookupMapper).not.toHaveBeenCalled()
+      expect(setSessionData).not.toHaveBeenCalled()
     })
   })
 

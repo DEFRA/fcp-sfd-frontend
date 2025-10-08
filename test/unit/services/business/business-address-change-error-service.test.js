@@ -61,7 +61,7 @@ describe('businessAddressChangeErrorService', () => {
         backLink: { href: '/business-details' },
         pageTitle: 'What is your business address?',
         metaDescription: 'Update the address for your business.',
-        businessPostcode: 'AB12 3CD',
+        postcode: 'AB12 3CD',
         businessName: 'Test Business',
         sbi: '123456789',
         userName: 'Alfred Waldron',
@@ -94,7 +94,7 @@ const mockBusinessDetails = () => {
       fullName: 'Alfred Waldron'
     },
     changeBusinessPostcode: {
-      businessPostcode: 'AB12 3CD'
+      postcode: 'AB12 3CD'
     }
   }
 }

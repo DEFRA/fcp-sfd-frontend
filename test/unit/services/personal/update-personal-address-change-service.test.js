@@ -62,27 +62,21 @@ describe('updatePersonalAddressChangeService', () => {
       expect(updateDalService).toHaveBeenCalledWith(updatePersonalAddressMutation, {
         input: {
           crn: '123456890',
-          customer: {
-            info: {
-              address: {
-                withoutUprn: {
-                  buildingNumberRange: null,
-                  buildingName: null,
-                  flatName: null,
-                  street: null,
-                  city: 'Maidstone',
-                  county: null,
-                  postalCode: 'BA123 ABC',
-                  country: 'United Kingdom',
-                  line1: 'A different address',
-                  line2: null,
-                  line3: null,
-                  line4: 'Maidstone',
-                  line5: null,
-                  uprn: null
-                }
-              }
-            }
+          address: {
+            buildingNumberRange: null,
+            buildingName: null,
+            flatName: null,
+            street: null,
+            city: 'Maidstone',
+            county: null,
+            postalCode: 'BA123 ABC',
+            country: 'United Kingdom',
+            line1: 'A different address',
+            line2: null,
+            line3: null,
+            line4: 'Maidstone',
+            line5: null,
+            uprn: null
           }
         }
       })
@@ -122,29 +116,23 @@ describe('updatePersonalAddressChangeService', () => {
       expect(updateDalService).toHaveBeenCalledWith(updatePersonalAddressMutation, {
         input: {
           crn: '123456890',
-          customer: {
-            info: {
-              address: {
-                withUprn: {
-                  buildingNumberRange: null,
-                  buildingName: 'Test House',
-                  flatName: null,
-                  street: null,
-                  city: 'London',
-                  county: null,
-                  postalCode: 'W1A 1AA',
-                  country: 'United Kingdom',
-                  dependentLocality: null,
-                  doubleDependentLocality: null,
-                  line1: null,
-                  line2: null,
-                  line3: null,
-                  line4: null,
-                  line5: null,
-                  uprn: '1234567890'
-                }
-              }
-            }
+          address: {
+            buildingNumberRange: null,
+            buildingName: 'Test House',
+            flatName: null,
+            street: null,
+            city: 'London',
+            county: null,
+            postalCode: 'W1A 1AA',
+            country: 'United Kingdom',
+            dependentLocality: null,
+            doubleDependentLocality: null,
+            line1: null,
+            line2: null,
+            line3: null,
+            line4: null,
+            line5: null,
+            uprn: '1234567890'
           }
         }
       })

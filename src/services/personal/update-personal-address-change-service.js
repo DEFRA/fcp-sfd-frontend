@@ -59,17 +59,13 @@ const personalAddressVariables = (personalDetails) => {
   const variables = {
     input: {
       crn: personalDetails.crn,
-      customer: {
-        info: {
-          address: {}
-        }
-      }
+      address: {}
     }
   }
 
   if (change.uprn) {
     // Address chosen via postcode lookup
-    variables.input.customer.info.address.withUprn = {
+    variables.input.address = {
       buildingNumberRange: change.buildingNumberRange ?? null,
       buildingName: change.buildingName ?? null,
       flatName: change.flatName ?? null,
@@ -89,7 +85,7 @@ const personalAddressVariables = (personalDetails) => {
     }
   } else {
     // Address entered manually
-    variables.input.customer.info.address.withoutUprn = {
+    variables.input.address = {
       buildingNumberRange: null,
       buildingName: null,
       flatName: null,

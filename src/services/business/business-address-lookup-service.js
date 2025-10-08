@@ -14,7 +14,7 @@ import { createLogger } from '../../utils/logger.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { placesAPI } from 'osdatahub'
 import { constants as httpConstants } from 'node:http2'
-import { businessAddressLookupMapper } from '../../mappers/business-address-lookup-mapper.js'
+import { addressLookupMapper } from '../../mappers/address-lookup-mapper.js'
 
 const logger = createLogger()
 
@@ -37,7 +37,7 @@ const businessAddressLookupService = async (postcode, yar) => {
     }
   }
 
-  const mappedAddresses = businessAddressLookupMapper(addresses)
+  const mappedAddresses = addressLookupMapper(addresses)
   setSessionData(yar, 'businessDetails', 'changeBusinessAddresses', mappedAddresses)
 
   return mappedAddresses

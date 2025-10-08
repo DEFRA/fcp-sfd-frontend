@@ -2,7 +2,7 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { businessAddressLookupMapper } from '../../../../src/mappers/business-address-lookup-mapper.js'
+import { addressLookupMapper } from '../../../../src/mappers/address-lookup-mapper.js'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { placesAPI } from 'osdatahub'
 import { constants as httpConstants } from 'node:http2'
@@ -11,8 +11,8 @@ import { constants as httpConstants } from 'node:http2'
 import { businessAddressLookupService } from '../../../../src/services/business/business-address-lookup-service.js'
 
 // Mocks
-vi.mock('../../../../src/mappers/business-address-lookup-mapper.js', () => ({
-  businessAddressLookupMapper: vi.fn()
+vi.mock('../../../../src/mappers/address-lookup-mapper.js', () => ({
+  addressLookupMapper: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({

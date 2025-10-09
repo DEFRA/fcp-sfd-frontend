@@ -2,18 +2,18 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { personalPhoneSchema } from '../../../../src/schemas/personal/personal-phone-schema.js'
+import { businessPhoneSchema } from '../../../../src/schemas/business/business-phone-schema.js'
 
-describe('personal phone schema', () => {
+describe('business phone schema', () => {
   let payload
   let schema
 
   beforeEach(() => {
-    schema = personalPhoneSchema
+    schema = businessPhoneSchema
 
     payload = {
-      personalTelephone: '01234567890',
-      personalMobile: '01234567890'
+      businessTelephone: '01234567890',
+      businessMobile: '01234567890'
     }
   })
 
@@ -27,10 +27,10 @@ describe('personal phone schema', () => {
   })
 
   describe('when invalid data is provided', () => {
-    describe('because both "personalMobile" and "personalTelephone" are missing', () => {
+    describe('because both "businessMobile" and "businessTelephone" are missing', () => {
       beforeEach(() => {
-        delete payload.personalMobile
-        delete payload.personalTelephone
+        delete payload.businessMobile
+        delete payload.businessTelephone
       })
 
       test('it fails validation', () => {
@@ -41,8 +41,8 @@ describe('personal phone schema', () => {
           path: [],
           type: 'object.missing',
           context: {
-            peers: ['personalTelephone', 'personalMobile'],
-            peersWithLabels: ['personalTelephone', 'personalMobile'],
+            peers: ['businessTelephone', 'businessMobile'],
+            peersWithLabels: ['businessTelephone', 'businessMobile'],
             label: 'value',
             value: {}
           }
@@ -51,68 +51,68 @@ describe('personal phone schema', () => {
       })
     })
 
-    describe('because "personalMobile" is too short', () => {
+    describe('because "businessMobile" is too short', () => {
       beforeEach(() => {
-        payload.personalMobile = '012'
+        payload.businessMobile = '012'
       })
 
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile phone number must be 10 characters or more',
-          path: ['personalMobile'],
+          message: 'Business mobile phone number must be 10 characters or more',
+          path: ['businessMobile'],
           type: 'string.min'
         }))
         expect(value).toEqual(payload)
       })
     })
 
-    describe('because "personalMobile" is too long', () => {
+    describe('because "businessMobile" is too long', () => {
       beforeEach(() => {
-        payload.personalMobile = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
+        payload.businessMobile = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
       })
 
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile phone number must be 50 characters or less',
-          path: ['personalMobile'],
+          message: 'Business mobile phone number must be 50 characters or less',
+          path: ['businessMobile'],
           type: 'string.max'
         }))
         expect(value).toEqual(payload)
       })
     })
 
-    describe('because "personalTelephone" is too short', () => {
+    describe('because "businessTelephone" is too short', () => {
       beforeEach(() => {
-        payload.personalTelephone = '012'
+        payload.businessTelephone = '012'
       })
 
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal telephone number must be 10 characters or more',
-          path: ['personalTelephone'],
+          message: 'Business telephone number must be 10 characters or more',
+          path: ['businessTelephone'],
           type: 'string.min'
         }))
         expect(value).toEqual(payload)
       })
     })
 
-    describe('because "personalTelephone" is too long', () => {
+    describe('because "businessTelephone" is too long', () => {
       beforeEach(() => {
-        payload.personalTelephone = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
+        payload.businessTelephone = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
       })
 
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal telephone number must be 50 characters or less',
-          path: ['personalTelephone'],
+          message: 'Business telephone number must be 50 characters or less',
+          path: ['businessTelephone'],
           type: 'string.max'
         }))
         expect(value).toEqual(payload)

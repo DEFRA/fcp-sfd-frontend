@@ -11,11 +11,12 @@ const personalDobCheckPresenter = (personalDetails) => {
   moment.locale('en-gb')
 
   return {
-    backLink: { href: '/personal-dob-change' },
-    changeLink: '/personal-dob-change',
+    backLink: { href: '/account-date-of-birth-change' },
+    userName: personalDetails.info.fullName.fullNameJoined ?? null,
+    changeLink: '/account-date-of-birth-change',
     pageTitle: 'Check your date of birth is correct before submitting',
     metaDescription: 'Check the date of birth for your personal account are correct.',
-    dobText: moment(personalDob).format('LL')
+    dateOfBirth: moment(personalDob).format('LL')
   }
 }
 

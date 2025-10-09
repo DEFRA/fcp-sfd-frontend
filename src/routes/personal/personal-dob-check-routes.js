@@ -4,7 +4,7 @@ import { updatePersonalDobChangeService } from '../../services/personal/update-p
 
 const getPersonalDobCheck = {
   method: 'GET',
-  path: '/personal-dob-check',
+  path: '/account-date-of-birth-check',
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
@@ -16,7 +16,7 @@ const getPersonalDobCheck = {
 
 const postPersonalDobCheck = {
   method: 'POST',
-  path: '/personal-dob-check',
+  path: '/account-date-of-birth-check',
   handler: async (request, h) => {
     const { yar, auth } = request
     await updatePersonalDobChangeService(yar, auth.credentials)

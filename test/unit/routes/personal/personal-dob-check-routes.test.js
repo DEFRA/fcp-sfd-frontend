@@ -35,7 +35,7 @@ describe('personal dob check', () => {
     vi.clearAllMocks()
   })
 
-  describe('GET /personal-dob-check', () => {
+  describe('GET /account-date-of-birth-check ', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         h = {
@@ -47,7 +47,7 @@ describe('personal dob check', () => {
 
       test('should have the correct method and path', () => {
         expect(getPersonalDobCheck.method).toBe('GET')
-        expect(getPersonalDobCheck.path).toBe('/personal-dob-check')
+        expect(getPersonalDobCheck.path).toBe('/account-date-of-birth-check')
       })
 
       test('it fetches the data from the session', async () => {
@@ -64,7 +64,7 @@ describe('personal dob check', () => {
     })
   })
 
-  describe('POST /personal-dob-check', () => {
+  describe('POST /account-date-of-birth-check ', () => {
     beforeEach(() => {
       h = {
         redirect: vi.fn(() => h)
@@ -106,10 +106,11 @@ const getMockData = () => {
 
 const getPageData = () => {
   return {
-    backLink: { href: '/personal-dob-change' },
-    changeLink: '/personal-dob-change',
+    backLink: { href: '/account-date-of-birth-change' },
+    changeLink: '/account-date-of-birth-change',
+    userName: 'John Doe',
     pageTitle: 'Check your date of birth is correct before submitting',
     metaDescription: 'Check the date of birth for your personal account are correct.',
-    dobText: '7 November 2025'
+    dateOfBirth: '7 November 2025'
   }
 }

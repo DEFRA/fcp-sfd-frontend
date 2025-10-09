@@ -47,7 +47,7 @@ describe('personal date of birth change', () => {
     }
   })
 
-  describe('GET /personal-dob-change', () => {
+  describe('GET /account-date-of-birth-change', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         fetchPersonalChangeService.mockReturnValue(getMockData())
@@ -55,7 +55,7 @@ describe('personal date of birth change', () => {
 
       test('should have the correct method and path', () => {
         expect(getPersonalDobChange.method).toBe('GET')
-        expect(getPersonalDobChange.path).toBe('/personal-dob-change')
+        expect(getPersonalDobChange.path).toBe('/account-date-of-birth-change')
       })
 
       test('it fetches the data from the session', async () => {
@@ -72,7 +72,7 @@ describe('personal date of birth change', () => {
     })
   })
 
-  describe('POST /personal-dob-change', () => {
+  describe('POST /account-date-of-birth-change', () => {
     beforeEach(() => {
       request.payload = { day: '7', month: '9', year: '1985' }
 
@@ -90,7 +90,7 @@ describe('personal date of birth change', () => {
             'changePersonalDob',
             request.payload
           )
-          expect(h.redirect).toHaveBeenCalledWith('/personal-dob-check')
+          expect(h.redirect).toHaveBeenCalledWith('/account-date-of-birth-check')
         })
       })
     })
@@ -100,7 +100,10 @@ describe('personal date of birth change', () => {
 const getMockData = () => {
   return {
     info: {
-      dateOfBirth: '1982-07-05'
+      dateOfBirth: '1982-07-05',
+      fullName: {
+        fullNameJoined: 'John Doe'
+      }
     }
   }
 }
@@ -109,7 +112,9 @@ const getPageData = () => {
   return {
     backLink: { href: '/personal-details' },
     pageTitle: 'What is your date of birth?',
-    metaDescription: 'For example, 31 3 1980',
+    hint: 'For example, 31 3 1980',
+    metaDescription: 'Update the date of birth for your personal account.',
+    userName: 'John Doe',
     dobDay: 5,
     dobMonth: 7,
     dobYear: 1982

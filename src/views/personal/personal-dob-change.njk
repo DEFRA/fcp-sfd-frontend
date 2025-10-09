@@ -8,23 +8,11 @@
 {% from "common/sub-header/macro.njk" import subHeader %}
 
 {% block beforeContent %}
-  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ subHeader(userName=userName) }}
   {{ appBackSignOutLink(backLink)}}
 {% endblock %}
 
 {% block content %}
-  {% if errors %}
-    {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: [
-          {
-            text: 'Date of birth must be a date in the past and valid',
-            href: "#month"
-          }
-        ]
-    }) }}
-  {% endif %}
-
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <form method="post" novalidate>
@@ -40,26 +28,26 @@
             }
           },
           hint: {
-            text: metaDescription
+            text: hint
           },
-          errorMessage: errors and {
-                text: 'Date of birth must be a date in the past and valid'
+          errorMessage: dateError and {
+                text: dateError
           },
           items: [
             {
-              classes: "govuk-input--width-2 ",
+              classes: dayClass or "govuk-input--width-2 ",
               name: "day",
               value: dobDay,
               id: 'dobDay'
             },
             {
-              classes: "govuk-input--width-2 ",
+              classes: monthClass or 'govuk-input--width-2',
               name: "month",
               value: dobMonth,
               id: 'dobMonth'
             },
             {
-              classes: "govuk-input--width-4 ",
+              classes: yearClass or "govuk-input--width-4 ",
               name: "year",
               value: dobYear,
               id: 'dobYear'

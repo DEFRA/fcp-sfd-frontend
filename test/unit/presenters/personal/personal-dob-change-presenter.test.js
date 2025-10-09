@@ -10,7 +10,10 @@ describe('personalDobChangePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
-        dateOfBirth: '1990-05-01'
+        dateOfBirth: '1990-05-01',
+        fullName: {
+          fullNameJoined: 'Alfred Waldron'
+        }
       }
     }
   })
@@ -22,7 +25,9 @@ describe('personalDobChangePresenter', () => {
       expect(result).toEqual({
         backLink: { href: '/personal-details' },
         pageTitle: 'What is your date of birth?',
-        metaDescription: 'For example, 31 3 1980',
+        userName: 'Alfred Waldron',
+        hint: 'For example, 31 3 1980',
+        metaDescription: 'Update the date of birth for your personal account.',
         dobDay: 1,
         dobMonth: 5,
         dobYear: 1990
@@ -38,7 +43,9 @@ describe('personalDobChangePresenter', () => {
       expect(result).toEqual({
         backLink: { href: '/personal-details' },
         pageTitle: 'What is your date of birth?',
-        metaDescription: 'For example, 31 3 1980',
+        userName: 'Alfred Waldron',
+        hint: 'For example, 31 3 1980',
+        metaDescription: 'Update the date of birth for your personal account.',
         dobDay: '25',
         dobMonth: '06',
         dobYear: '1984'

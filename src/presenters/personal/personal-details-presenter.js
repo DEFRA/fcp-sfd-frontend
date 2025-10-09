@@ -3,9 +3,11 @@
  * @module personalDetailsPresenter
  */
 
+import moment from 'moment'
 import { formatAddress } from '../base-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
+  moment.locale('en-gb')
   return {
     backLink: { href: '/home' },
     notification: yar ? yar.flash('notification')[0] : null,
@@ -21,8 +23,8 @@ const personalDetailsPresenter = (data, yar) => {
       link: '/account-phone-numbers-change'
     },
     personalEmail: data.contact.email,
-    dateOfBirth: data.info.dateOfBirth,
-    dobChangeLink: '/personal-dob-change'
+    dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
+    dobChangeLink: '/account-date-of-birth-change'
   }
 }
 

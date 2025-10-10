@@ -117,7 +117,7 @@ describe('business address schema', () => {
       })
     })
 
-    describe('because "city" is longer than 100 characters', () => {
+    describe('because "city" is longer than 60 characters', () => {
       beforeEach(() => {
         payload.city = 'The quick brown fox jumps over the lazy dog while wondering if it forgot to bring its umbrella today.'
       })
@@ -126,7 +126,7 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Town or city must be 100 characters or less',
+          message: 'Town or city must be 60 characters or less',
           path: ['city'],
           type: 'string.max'
         }))
@@ -134,7 +134,7 @@ describe('business address schema', () => {
       })
     })
 
-    describe('because "county" is longer than 100 characters', () => {
+    describe('because "county" is longer than 60 characters', () => {
       beforeEach(() => {
         payload.county = 'The quick brown fox jumps over the lazy dog while wondering if it forgot to bring its umbrella today.'
       })
@@ -143,7 +143,7 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'County must be 100 characters or less',
+          message: 'County must be 60 characters or less',
           path: ['county'],
           type: 'string.max'
         }))
@@ -151,7 +151,7 @@ describe('business address schema', () => {
       })
     })
 
-    describe('because "postcode" is longer than 10 characters', () => {
+    describe('because "postcode" is longer than 8 characters', () => {
       beforeEach(() => {
         payload.postcode = 'More than 10 characters'
       })
@@ -160,7 +160,7 @@ describe('business address schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Postal code or zip code must be 10 characters or less',
+          message: 'Postal code or zip code must be 8 characters or less',
           path: ['postcode'],
           type: 'string.max'
         }))

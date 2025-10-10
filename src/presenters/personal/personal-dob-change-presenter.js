@@ -4,16 +4,30 @@
  */
 
 const personalDobChangePresenter = (data, payload) => {
-  const personalDob = new Date([data.info.dateOfBirth])
+  const dateInputValues = generateDateInputValues(data, payload)
   return {
     backLink: { href: '/personal-details' },
     userName: data.info.fullName.fullNameJoined ?? null,
     pageTitle: 'What is your date of birth?',
     metaDescription: 'Update the date of birth for your personal account.',
     hint: 'For example, 31 3 1980',
-    dobDay: payload ? payload.day || '' : data.changePersonalDob?.day || personalDob.getDate(),
-    dobMonth: payload ? payload.month || '' : data.changePersonalDob?.month || personalDob.getMonth() + 1,
-    dobYear: payload ? payload.year || '' : data.changePersonalDob?.year || personalDob.getFullYear()
+    ...dateInputValues
+  }
+}
+
+const generateDateInputValues = (data, payload) => {
+  if (payload) {
+    return {
+      dobDay: payload.day || '',
+      dobMonth: payload.month || '',
+      dobYear: payload.year || ''
+    }
+  }
+  const personalDob = new Date([data.info.dateOfBirth])
+  return {
+    dobDay: data.changePersonalDob?.day || personalDob.getDate(),
+    dobMonth: data.changePersonalDob?.month || personalDob.getMonth() + 1,
+    dobYear: data.changePersonalDob?.year || personalDob.getFullYear()
   }
 }
 

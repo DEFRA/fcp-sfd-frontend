@@ -33,4 +33,11 @@ describe('personalDobCheckPresenter', () => {
       })
     })
   })
+
+  test('it should return userName as null', () => {
+    delete data.info.fullName.fullNameJoined
+    const result = personalDobCheckPresenter(data)
+
+    expect(result.userName).toEqual(null)
+  })
 })

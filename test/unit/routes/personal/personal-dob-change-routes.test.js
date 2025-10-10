@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
+import { formatDateValidationErrors } from '../../../../src/utils/format-date-validation-errors.js'
 
 // Thing under test
 import { personalDobChangeRoutes } from '../../../../src/routes/personal/personal-dob-change-routes.js'
@@ -16,6 +17,10 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
 
 vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', () => ({
   fetchPersonalChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/utils/format-date-validation-errors.js', () => ({
+  formatDateValidationErrors: vi.fn()
 }))
 
 describe('personal date of birth change', () => {
@@ -91,6 +96,15 @@ describe('personal date of birth change', () => {
             request.payload
           )
           expect(h.redirect).toHaveBeenCalledWith('/account-date-of-birth-check')
+        })
+      })
+      describe('and the validation fails', () => {
+        test('it calls formatDateValidationErrors with error details ', async () => {
+          const details = 'anything'
+          const err = { details }
+          await postPersonalDobChange.options.validate.failAction(request, h, err)
+
+          expect(formatDateValidationErrors).toHaveBeenCalledWith(details)
         })
       })
     })

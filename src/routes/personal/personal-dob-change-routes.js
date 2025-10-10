@@ -26,7 +26,7 @@ const postPersonalDobChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
-        const errors = formatDateValidationErrors(err.details || [])
+        const errors = formatDateValidationErrors(err.details)
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
         const pageData = personalDobChangePresenter(personalDetails, payload)
 

@@ -43,7 +43,7 @@ describe('fetchBusinessNameChangeService', () => {
       test('it returns the correct data', async () => {
         const result = await fetchBusinessNameChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessName: 'HENLEY, RE' })
         expect(result).toEqual({ ...data, changeBusinessName: 'HENLEY, RE' })
       })

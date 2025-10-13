@@ -3,6 +3,8 @@
  * @module businessAddressEnterPresenter
  */
 
+import { formatOriginalAddress, formatChangedAddress } from '../base-presenter.js'
+
 const businessAddressEnterPresenter = (data, payload) => {
   return {
     backLink: { href: '/business-address-change' },
@@ -12,56 +14,6 @@ const businessAddressEnterPresenter = (data, payload) => {
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null,
     userName: data.customer.fullName ?? null
-  }
-}
-
-const formatChangedAddress = (changeBusinessAddress) => {
-  // If the change address has a UPRN we need to map the lookup address to the manual one
-  if (changeBusinessAddress.uprn) {
-    const { flatName, buildingName, buildingNumberRange, street, city, county, country, postcode } = changeBusinessAddress
-
-    const addressLine1 = [flatName, buildingName, buildingNumberRange].filter(Boolean).join(', ')
-
-    return {
-      address1: addressLine1 || null,
-      address2: street ?? null,
-      address3: null,
-      city: city ?? null,
-      county: county ?? null,
-      country: country ?? null,
-      postcode: postcode ?? null
-    }
-  } else {
-    // If the change address has no UPRN it means its been manually entered and we don't need to map it
-    return changeBusinessAddress
-  }
-}
-
-const formatOriginalAddress = (originalAddress) => {
-  const { manual, country, postcode, lookup } = originalAddress
-
-  if (lookup.uprn) {
-    const addressLine1 = [lookup.flatName, lookup.buildingName, lookup.buildingNumberRange].filter(Boolean).join(', ')
-
-    return {
-      address1: addressLine1 || null,
-      address2: lookup.street ?? null,
-      address3: null,
-      city: lookup.city ?? null,
-      county: lookup.county ?? null,
-      country: country ?? null,
-      postcode: postcode ?? null
-    }
-  }
-
-  return {
-    address1: manual.line1 ?? null,
-    address2: manual.line2 ?? null,
-    address3: manual.line3 ?? null,
-    city: manual.line4 ?? null,
-    county: manual.line5 ?? null,
-    country: country ?? null,
-    postcode: postcode ?? null
   }
 }
 

@@ -5,7 +5,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { updateBusinessVatRemoveService } from '../../../../src/services/business/update-business-vat-remove-service.js'
 import { businessVatRemovePresenter } from '../../../../src/presenters/business/business-vat-remove-presenter.js'
-import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Thing under test
 import { businessVatRemoveRoutes } from '../../../../src/routes/business/business-vat-remove-routes.js'
@@ -64,9 +63,9 @@ describe('business VAT remove', () => {
       })
 
       test('it fetches the data from the session', async () => {
-        await getBusinessVatRemove.handler(request, getUserSessionToken, h)
+        await getBusinessVatRemove.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, getUserSessionToken, request.auth.credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
       })
 
       test('should render business-vat-registration-remove view with page data', async () => {

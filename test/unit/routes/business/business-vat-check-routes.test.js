@@ -1,5 +1,6 @@
 // Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
@@ -56,7 +57,7 @@ describe('business VAT check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessVatCheck.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, getUserSessionToken)
       })
 
       test('should render business-vat-registration-number-check view with page data', async () => {

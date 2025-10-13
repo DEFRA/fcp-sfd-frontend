@@ -50,18 +50,7 @@ const getInputConbinationMessage = (errors, datePartList) => {
       monthClass,
       dateErrorRef: dayErrorRef
     }
-
-    if (isDateInputEmpty(errors, 'month') && isDateInputEmpty(errors, 'day')) {
-      return {
-        dateError: 'Date of birth must include a day and month',
-        ...dayMonthInputErrorClass
-      }
-    }
-
-    return {
-      dateError,
-      ...dayMonthInputErrorClass
-    }
+    return inputCobinationMessage(errors, 'day', 'month', dayMonthInputErrorClass)
   }
 
   if (datePartList.includes('month') && datePartList.includes('year')) {
@@ -70,16 +59,7 @@ const getInputConbinationMessage = (errors, datePartList) => {
       monthClass,
       dateErrorRef: monthErrorRef
     }
-    if (isDateInputEmpty(errors, 'month') && isDateInputEmpty(errors, 'year')) {
-      return {
-        dateError: 'Date of birth must include a month and year',
-        ...monthYearInputErrorClass
-      }
-    }
-    return {
-      dateError,
-      ...monthYearInputErrorClass
-    }
+    return inputCobinationMessage(errors, 'month', 'year', monthYearInputErrorClass)
   }
 
   if (datePartList.includes('day') && datePartList.includes('year')) {
@@ -88,19 +68,24 @@ const getInputConbinationMessage = (errors, datePartList) => {
       dayClass,
       dateErrorRef: dayErrorRef
     }
-    if (isDateInputEmpty(errors, 'day') && isDateInputEmpty(errors, 'year')) {
-      return {
-        dateError: 'Date of birth must include a day and year',
-        ...dayYearInputErrorClass
-      }
-    }
-    return {
-      dateError,
-      ...dayYearInputErrorClass
-    }
+    return inputCobinationMessage(errors, 'day', 'year', dayYearInputErrorClass)
   }
 
   return getInputMessage(errors, datePartList)
+}
+
+const inputCobinationMessage = (errors, inputOne, inputTwo, errorClass) => {
+  if (isDateInputEmpty(errors, inputOne) && isDateInputEmpty(errors, inputTwo)) {
+    return {
+      dateError: `Date of birth must include a ${inputOne} and ${inputTwo}`,
+      ...errorClass
+    }
+  }
+
+  return {
+    dateError,
+    ...errorClass
+  }
 }
 
 const getInputMessage = (errors, datePartList) => {

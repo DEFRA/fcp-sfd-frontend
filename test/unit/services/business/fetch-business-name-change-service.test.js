@@ -1,5 +1,6 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
@@ -61,7 +62,7 @@ describe('fetchBusinessNameChangeService', () => {
       test('it returns the correct data', async () => {
         const result = await fetchBusinessNameChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', data)
         expect(result).toEqual(data)
       })

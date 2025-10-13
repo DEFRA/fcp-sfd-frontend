@@ -10,7 +10,6 @@ import { mappedData } from '../../../mocks/mock-business-details'
 // Thing under test
 import { fetchBusinessPhoneNumbersChangeService } from '../../../../src/services/business/fetch-business-phone-numbers-change-service.js'
 
-
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
   fetchBusinessDetailsService: vi.fn()

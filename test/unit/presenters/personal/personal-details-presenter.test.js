@@ -50,7 +50,8 @@ describe('personalDetailsPresenter', () => {
           action: 'Change',
           link: '/account-phone-numbers-change'
         },
-        personalEmail: data.contact.email
+        personalEmail: data.contact.email,
+        personalEmailChangeLink: '/account-email-change'
       })
     })
   })

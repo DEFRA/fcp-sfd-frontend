@@ -50,7 +50,7 @@ const getInputConbinationMessage = (errors, datePartList) => {
       monthClass,
       dateErrorRef: dayErrorRef
     }
-    return inputCobinationMessage(errors, 'day', 'month', dayMonthInputErrorClass)
+    return inputCombinationMessage(errors, 'day', 'month', dayMonthInputErrorClass)
   }
 
   if (datePartList.includes('month') && datePartList.includes('year')) {
@@ -59,7 +59,7 @@ const getInputConbinationMessage = (errors, datePartList) => {
       monthClass,
       dateErrorRef: monthErrorRef
     }
-    return inputCobinationMessage(errors, 'month', 'year', monthYearInputErrorClass)
+    return inputCombinationMessage(errors, 'month', 'year', monthYearInputErrorClass)
   }
 
   if (datePartList.includes('day') && datePartList.includes('year')) {
@@ -68,13 +68,13 @@ const getInputConbinationMessage = (errors, datePartList) => {
       dayClass,
       dateErrorRef: dayErrorRef
     }
-    return inputCobinationMessage(errors, 'day', 'year', dayYearInputErrorClass)
+    return inputCombinationMessage(errors, 'day', 'year', dayYearInputErrorClass)
   }
 
   return getInputMessage(errors, datePartList)
 }
 
-const inputCobinationMessage = (errors, inputOne, inputTwo, errorClass) => {
+const inputCombinationMessage = (errors, inputOne, inputTwo, errorClass) => {
   if (isDateInputEmpty(errors, inputOne) && isDateInputEmpty(errors, inputTwo)) {
     return {
       dateError: `Date of birth must include a ${inputOne} and ${inputTwo}`,
@@ -148,9 +148,5 @@ const getInputMessage = (errors, datePartList) => {
   }
 }
 
-const isDateInputEmpty = (errors, datePart) => {
-  if (errors.some(e => e.path[0] === datePart && e.context.value === '')) {
-    return true
-  }
-  return false
-}
+const isDateInputEmpty = (errors, datePart) =>
+  errors.some(({ path, context }) => path[0] === datePart && context.value === '')

@@ -13,6 +13,14 @@ describe('formatDateValidationErrors', () => {
     const result = formatDateValidationErrors(errors)
     expect(result.dateError).toEqual('Date of birth must be a real date')
   })
+  test('it should return "Enter your date of birth" when all of day, month and year are empty', () => {
+    const errors = [
+      { path: ['day'], message: 'Anything', context: { value: '' } },
+      { path: ['month'], message: 'Anything', context: { value: '' } },
+      { path: ['year'], message: 'Anything', context: { value: '' } }]
+    const result = formatDateValidationErrors(errors)
+    expect(result.dateError).toEqual('Enter your date of birth')
+  })
 
   test('it should return "Date of birth must be a real date" as default value', () => {
     const errors = [{ path: ['default'], message: 'Anything', context: { value: 'anything' } }]

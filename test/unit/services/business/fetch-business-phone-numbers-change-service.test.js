@@ -41,9 +41,9 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials, getUserSessionToken)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessMobile: null, changeBusinessTelephone: '01234031859' })
         expect(result).toEqual({ ...data, changeBusinessMobile: null, changeBusinessTelephone: '01234031859' })
       })
@@ -60,9 +60,9 @@ describe('fetchBusinessPhoneNumbersChangeService', () => {
       })
 
       test('it returns the correct data', async () => {
-        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials)
+        const result = await fetchBusinessPhoneNumbersChangeService(yar, credentials, getUserSessionToken)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessTelephone: '01234031859' })
         expect(result).toEqual({ ...data, changeBusinessTelephone: '01234031859' })
       })

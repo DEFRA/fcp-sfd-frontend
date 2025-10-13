@@ -64,7 +64,7 @@ describe('business VAT remove', () => {
       })
 
       test('it fetches the data from the session', async () => {
-        await getBusinessVatRemove.handler(request, h)
+        await getBusinessVatRemove.handler(request, getUserSessionToken, h)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, getUserSessionToken, request.auth.credentials)
       })

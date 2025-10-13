@@ -6,8 +6,6 @@ import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
 import { personalAddressChangeErrorService } from '../../services/personal/personal-address-change-error-service.js'
 
-const PERSONAL_ADDRESS_CHANGE_VIEW = 'personal/personal-address-change'
-
 const getPersonalAddressChange = {
   method: 'GET',
   path: '/account-address-change',
@@ -16,7 +14,7 @@ const getPersonalAddressChange = {
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalPostcode')
     const pageData = personalAddressChangePresenter(personalDetails)
 
-    return h.view(PERSONAL_ADDRESS_CHANGE_VIEW, pageData)
+    return h.view('personal/personal-address-change', pageData)
   }
 }
 
@@ -31,7 +29,7 @@ const postPersonalAddressChange = {
         const { yar, auth, payload } = request
         const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.personalPostcode, err.details)
 
-        return h.view(PERSONAL_ADDRESS_CHANGE_VIEW, pageData).code(BAD_REQUEST).takeover()
+        return h.view('personal/personal-address-change', pageData).code(BAD_REQUEST).takeover()
       }
     }
   },
@@ -44,7 +42,7 @@ const postPersonalAddressChange = {
     if (addresses.error) {
       const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.personalPostcode, addresses.error)
 
-      return h.view(PERSONAL_ADDRESS_CHANGE_VIEW, pageData).code(BAD_REQUEST).takeover()
+      return h.view('personal/personal-address-change', pageData).code(BAD_REQUEST).takeover()
     }
 
     return h.redirect('/account-address-select')

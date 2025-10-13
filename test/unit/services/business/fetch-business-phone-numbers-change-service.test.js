@@ -1,6 +1,6 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
-
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
@@ -9,7 +9,7 @@ import { mappedData } from '../../../mocks/mock-business-details'
 
 // Thing under test
 import { fetchBusinessPhoneNumbersChangeService } from '../../../../src/services/business/fetch-business-phone-numbers-change-service.js'
-import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
+
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({

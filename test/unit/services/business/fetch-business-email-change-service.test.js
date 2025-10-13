@@ -43,7 +43,7 @@ describe('fetchBusinessEmailChangeService', () => {
       test('it returns the correct data', async () => {
         const result = await fetchBusinessEmailChangeService(yar, credentials)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken)
         expect(yar.set).toHaveBeenCalledWith('businessDetails', { ...data, changeBusinessEmail: 'henleyrej@eryelnehk.com.test' })
         expect(result).toEqual({ ...data, changeBusinessEmail: 'henleyrej@eryelnehk.com.test' })
       })

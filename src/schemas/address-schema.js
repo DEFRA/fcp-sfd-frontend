@@ -5,9 +5,9 @@ import {
   COUNTY_MAX,
   POSTCODE_MAX,
   COUNTRY_MAX
-} from '../../constants/validation-fields.js'
+} from '../constants/validation-fields.js'
 
-export const personalAddressSchema = Joi.object({
+export const addressSchema = Joi.object({
   address1: Joi.string()
     .required()
     .max(ADDRESS_LINE_MAX)

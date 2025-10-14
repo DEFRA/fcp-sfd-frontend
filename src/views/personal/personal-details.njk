@@ -120,13 +120,13 @@
             text: "Personal email address"
           },
           value: {
-            text: personalEmail
+            text: personalEmail.email
           },
           actions: {
             items: [
               {
-                href: personalEmailChangeLink,
-                text: "Change",
+                href: personalEmail.link,
+                text: personalEmail.action,
                 visuallyHiddenText: "personal email address"
               }
             ]

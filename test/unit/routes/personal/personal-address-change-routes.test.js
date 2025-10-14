@@ -155,7 +155,7 @@ describe('personal address change routes', () => {
           expect(personalAddressChangeErrorService).toHaveBeenCalledWith(
             request.yar,
             request.auth.credentials,
-            request.payload.personalPostcode,
+            request.payload.postcode,
             err.details
           )
         })

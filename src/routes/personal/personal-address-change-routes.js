@@ -27,7 +27,7 @@ const postPersonalAddressChange = {
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
-        const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.personalPostcode, err.details)
+        const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.postcode, err.details)
 
         return h.view('personal/personal-address-change', pageData).code(BAD_REQUEST).takeover()
       }
@@ -40,7 +40,7 @@ const postPersonalAddressChange = {
     const addresses = await addressLookupService(payload.postcode, yar, 'personal')
 
     if (addresses.error) {
-      const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.personalPostcode, addresses.error)
+      const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.postcode, addresses.error)
 
       return h.view('personal/personal-address-change', pageData).code(BAD_REQUEST).takeover()
     }

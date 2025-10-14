@@ -14,9 +14,9 @@ export const personalDobSchema = Joi.object({
     'number.integer': 'year must be valid',
     'any.required': 'year is required',
     'number.min': 'year must be 4 digits and greater than 1000',
-    'number.max': 'Date of birth must be a date in the past'
+    'number.max': 'Date of birth must be in the past'
   }),
-  month: Joi.when('year', { is: maxYear, then: Joi.number().required().integer().max(maxCurrentMonth).messages({ 'number.max': 'Date of birth must be a date in the past' }), otherwise: Joi.number().required().integer().max(MAX_MONTH) }).messages({
+  month: Joi.when('year', { is: maxYear, then: Joi.number().required().integer().max(maxCurrentMonth).messages({ 'number.max': 'Date of birth must be in the past' }), otherwise: Joi.number().required().integer().max(MAX_MONTH) }).messages({
     'number.integer': 'month must be valid',
     'number.empty': 'Enter a valid month',
     'any.required': 'month is required',

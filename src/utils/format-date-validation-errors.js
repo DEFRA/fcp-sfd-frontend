@@ -34,9 +34,9 @@ export const formatDateValidationErrors = (errors) => {
       ...allInputErrorClass
     }
   }
-  if (errors.some(e => e.message === 'Date of birth must be a date in the past')) {
+  if (errors.some(e => e.message === 'Date of birth must be in the past')) {
     return {
-      dateError: 'Date of birth must be a date in the past',
+      dateError: 'Date of birth must be in the past',
       ...allInputErrorClass
     }
   }

@@ -28,12 +28,12 @@ describe('formatDateValidationErrors', () => {
     expect(result.dateError).toEqual('Date of birth must be a real date')
   })
   describe('when not all of day, month and year are invalid', () => {
-    test('it should return "Date of birth must be a date in the past" when any error object has the message ', () => {
+    test('it should return "Date of birth must be in the past" when any error object has the message ', () => {
       const errors = [
         { path: ['day'], message: 'Anything', context: { value: 'anything' } },
-        { path: ['month'], message: 'Date of birth must be a date in the past', context: { value: 'anything' } }]
+        { path: ['month'], message: 'Date of birth must be in the past', context: { value: 'anything' } }]
       const result = formatDateValidationErrors(errors)
-      expect(result.dateError).toEqual('Date of birth must be a date in the past')
+      expect(result.dateError).toEqual('Date of birth must be in the past')
     })
 
     test('it should return "Date of birth must be a real date" when day and month are invalid', () => {

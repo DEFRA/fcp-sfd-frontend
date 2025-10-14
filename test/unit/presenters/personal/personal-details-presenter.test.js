@@ -51,7 +51,7 @@ describe('personalDetailsPresenter', () => {
           link: '/account-phone-numbers-change'
         },
         personalEmail: {
-          email: data.contact.email,
+          email: data.contact.email ?? 'Not added',
           action: 'Change',
           link: '/account-email-change'
         }
@@ -147,6 +147,26 @@ describe('personalDetailsPresenter', () => {
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.fullName).toBe('John Doe')
+      })
+    })
+  })
+
+  describe('the "personalEmail.email" property', () => {
+    describe('when the email property is missing', () => {
+      test('it should return the text "Not added"', () => {
+        data.contact.email = null
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.personalEmail.email).toEqual('Not added')
+      })
+    })
+
+    describe('when the email property has a value', () => {
+      test('it should return the email address', () => {
+        data.contact.email = 'test@test.com'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.personalEmail.email).toEqual('test@test.com')
       })
     })
   })

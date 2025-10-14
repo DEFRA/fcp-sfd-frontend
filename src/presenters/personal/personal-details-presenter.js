@@ -21,7 +21,7 @@ const personalDetailsPresenter = (data, yar) => {
       link: '/account-phone-numbers-change'
     },
     personalEmail: {
-      email: data.contact.email,
+      email: data.contact.email ?? 'Not added',
       action: data.contact.email ? 'Change' : 'Add',
       link: '/account-email-change'
     },

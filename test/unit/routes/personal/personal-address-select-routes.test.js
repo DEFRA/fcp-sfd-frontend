@@ -63,7 +63,7 @@ describe('personal address select routes', () => {
         expect(fetchPersonalChangeService).toHaveBeenCalledWith(
           request.yar,
           request.auth.credentials,
-          ['changePersonalPostcode', 'changePersonalAddresses']
+          ['changePersonalPostcode', 'changePersonalAddresses', 'changePersonalAddress']
         )
       })
 

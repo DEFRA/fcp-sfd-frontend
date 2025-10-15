@@ -10,7 +10,7 @@ const getPersonalAddressSelect = {
   path: '/account-address-select',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, ['changePersonalPostcode', 'changePersonalAddresses'])
+    const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, ['changePersonalPostcode', 'changePersonalAddresses', 'changePersonalAddress'])
     const pageData = personalAddressSelectPresenter(personalDetails)
 
     return h.view('personal/personal-address-select', pageData)

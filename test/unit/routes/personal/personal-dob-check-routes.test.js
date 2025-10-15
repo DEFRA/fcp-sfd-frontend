@@ -110,7 +110,7 @@ const getPageData = () => {
     changeLink: '/account-date-of-birth-change',
     userName: 'John Doe',
     pageTitle: 'Check your date of birth is correct before submitting',
-    metaDescription: 'Check the date of birth for your personal account are correct.',
+    metaDescription: 'Check the date of birth for your personal account is correct.',
     dateOfBirth: '7 November 2025'
   }
 }

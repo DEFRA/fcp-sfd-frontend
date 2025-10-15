@@ -19,7 +19,7 @@ const updatePersonalDobChangeService = async (yar, credentials) => {
   const personalDetails = await fetchPersonalChangeService(yar, credentials, 'changePersonalDob')
   const { day, month, year } = personalDetails.changePersonalDob
   const personalDob = new Date([`${month}/${day}/${year}`])
-  moment.locale('en-gb')
+  moment.locale('en-ca')
 
   const variables = {
     input: {

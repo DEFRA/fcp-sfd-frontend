@@ -15,11 +15,11 @@ export const formatValidationErrors = (errors) => {
     // Multi-field validation for a single combined input (used for date inputs where one error message applies to
     // multiple fields)
     if (Array.isArray(path) && path.length > 1) {
-      path.forEach(field => {
+      for (const field of path) {
         if (!formattedErrors[field]) {
           formattedErrors[field] = { text }
         }
-      })
+      }
       return
     }
 

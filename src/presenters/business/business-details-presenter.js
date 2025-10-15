@@ -3,7 +3,7 @@
  * @module businessDetailsPresenter
  */
 
-import { formatAddress } from '../base-presenter.js'
+import { formatDisplayAddress } from '../base-presenter.js'
 
 const businessDetailsPresenter = (data, yar) => {
   return {
@@ -11,7 +11,7 @@ const businessDetailsPresenter = (data, yar) => {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',
-    address: formatAddress(data.address),
+    address: formatDisplayAddress(data.address),
     businessName: data.info.businessName,
     businessTelephone: {
       telephone: data.contact.landline ?? 'Not added',

@@ -4,7 +4,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
-import { formatDateValidationErrors } from '../../../../src/utils/format-date-validation-errors.js'
 
 // Thing under test
 import { personalDobChangeRoutes } from '../../../../src/routes/personal/personal-dob-change-routes.js'
@@ -17,10 +16,6 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
 
 vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', () => ({
   fetchPersonalChangeService: vi.fn()
-}))
-
-vi.mock('../../../../src/utils/format-date-validation-errors.js', () => ({
-  formatDateValidationErrors: vi.fn()
 }))
 
 describe('personal date of birth change', () => {
@@ -98,13 +93,45 @@ describe('personal date of birth change', () => {
           expect(h.redirect).toHaveBeenCalledWith('/account-date-of-birth-check')
         })
       })
+
       describe('and the validation fails', () => {
-        test('it calls formatDateValidationErrors with error details ', async () => {
-          const details = 'anything'
-          const err = { details }
+        let err
+
+        beforeEach(() => {
+          err = {
+            details: [
+              {
+                message: 'Date of birth must include a day',
+                path: ['day'],
+                type: 'dob.missingDay'
+              }
+            ]
+          }
+        })
+
+        test('it fetches the personal details', async () => {
           await postPersonalDobChange.options.validate.failAction(request, h, err)
 
-          expect(formatDateValidationErrors).toHaveBeenCalledWith(details)
+          expect(fetchPersonalChangeService).toHaveBeenCalledWith(
+            request.yar,
+            request.auth.credentials,
+            'changePersonalDob'
+          )
+        })
+
+        test('it returns the page successfully with the error summary banner', async () => {
+          await postPersonalDobChange.options.validate.failAction(request, h, err)
+
+          expect(h.view).toHaveBeenCalledWith('personal/personal-dob-change', getPageDataError())
+        })
+
+        test('it should handle undefined errors', async () => {
+          await postPersonalDobChange.options.validate.failAction(request, h, [])
+
+          const pageData = getPageDataError()
+          pageData.errors = {}
+
+          expect(h.view).toHaveBeenCalledWith('personal/personal-dob-change', pageData)
         })
       })
     })
@@ -132,5 +159,23 @@ const getPageData = () => {
     day: 5,
     month: 7,
     year: 1982
+  }
+}
+
+const getPageDataError = () => {
+  return {
+    backLink: { href: '/personal-details' },
+    pageTitle: 'What is your date of birth?',
+    hint: 'For example, 31 3 1980',
+    metaDescription: 'Update the date of birth for your personal account.',
+    userName: 'John Doe',
+    day: '7',
+    month: '9',
+    year: '1985',
+    errors: {
+      day: {
+        text: 'Date of birth must include a day'
+      }
+    }
   }
 }

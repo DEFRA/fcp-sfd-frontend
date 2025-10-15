@@ -41,7 +41,7 @@ const backLink = (postcodeLookup) => {
 
 const changeLink = (postcodeLookup) => {
   if (postcodeLookup) {
-    return '/account-address-select'
+    return '/account-address-change'
   } else {
     return '/account-address-enter'
   }

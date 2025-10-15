@@ -28,9 +28,9 @@ describe('personalDobChangePresenter', () => {
         userName: 'Alfred Waldron',
         hint: 'For example, 31 3 1980',
         metaDescription: 'Update the date of birth for your personal account.',
-        dobDay: 1,
-        dobMonth: 5,
-        dobYear: 1990
+        day: 1,
+        month: 5,
+        year: 1990
       })
     })
   })
@@ -46,9 +46,9 @@ describe('personalDobChangePresenter', () => {
         userName: 'Alfred Waldron',
         hint: 'For example, 31 3 1980',
         metaDescription: 'Update the date of birth for your personal account.',
-        dobDay: '25',
-        dobMonth: '06',
-        dobYear: '1984'
+        day: '25',
+        month: '06',
+        year: '1984'
       })
     })
   })
@@ -64,9 +64,9 @@ describe('personalDobChangePresenter', () => {
         userName: 'Alfred Waldron',
         hint: 'For example, 31 3 1980',
         metaDescription: 'Update the date of birth for your personal account.',
-        dobDay: '20',
-        dobMonth: '4',
-        dobYear: '1979'
+        day: '20',
+        month: '4',
+        year: '1979'
       })
     })
 
@@ -80,9 +80,9 @@ describe('personalDobChangePresenter', () => {
         userName: 'Alfred Waldron',
         hint: 'For example, 31 3 1980',
         metaDescription: 'Update the date of birth for your personal account.',
-        dobDay: '',
-        dobMonth: '',
-        dobYear: ''
+        day: '',
+        month: '',
+        year: ''
       })
     })
   })

@@ -18,16 +18,16 @@ const personalDobChangePresenter = (data, payload) => {
 const generateDateInputValues = (data, payload) => {
   if (payload) {
     return {
-      dobDay: payload.day || '',
-      dobMonth: payload.month || '',
-      dobYear: payload.year || ''
+      day: payload.day || '',
+      month: payload.month || '',
+      year: payload.year || ''
     }
   }
   const personalDob = new Date([data.info.dateOfBirth])
   return {
-    dobDay: data.changePersonalDob?.day || personalDob.getDate(),
-    dobMonth: data.changePersonalDob?.month || personalDob.getMonth() + 1,
-    dobYear: data.changePersonalDob?.year || personalDob.getFullYear()
+    day: data.changePersonalDob?.day || personalDob.getDate(),
+    month: data.changePersonalDob?.month || personalDob.getMonth() + 1,
+    year: data.changePersonalDob?.year || personalDob.getFullYear()
   }
 }
 

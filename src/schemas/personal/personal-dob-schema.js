@@ -1,36 +1,75 @@
 import Joi from 'joi'
 
-const currentDate = new Date()
-const maxYear = currentDate.getFullYear()
-const maxCurrentMonth = currentDate.getMonth()
-const MAX_MONTH = 12
-const MAX_MONTH_29 = 29
-const MAX_MONTH_30 = 30
-const MAX_MONTH_31 = 31
-const MIN_YEAR = 1000
-
 export const personalDobSchema = Joi.object({
-  year: Joi.number().required().integer().min(MIN_YEAR).max(maxYear).messages({
-    'number.integer': 'year must be valid',
-    'any.required': 'year is required',
-    'number.min': 'year must be 4 digits and greater than 1000',
-    'number.max': 'Date of birth must be in the past'
-  }),
-  month: Joi.when('year', { is: maxYear, then: Joi.number().required().integer().max(maxCurrentMonth).messages({ 'number.max': 'Date of birth must be in the past' }), otherwise: Joi.number().required().integer().max(MAX_MONTH) }).messages({
-    'number.integer': 'month must be valid',
-    'number.empty': 'Enter a valid month',
-    'any.required': 'month is required',
-    'number.base': 'must have value'
-  }),
-  day: Joi.alternatives()
-    .conditional('month', [
-      { is: 1, then: Joi.number().required().integer().max(MAX_MONTH_29) },
-      { is: 3, then: Joi.number().required().integer().max(MAX_MONTH_30) },
-      { is: 5, then: Joi.number().required().integer().max(MAX_MONTH_30) },
-      { is: 8, then: Joi.number().required().integer().max(MAX_MONTH_30) },
-      { is: 10, then: Joi.number().required().integer().max(MAX_MONTH_30), otherwise: Joi.number().required().integer().max(MAX_MONTH_31) }
-    ]).messages({
-      'number.integer': 'month must be valid',
-      'any.required': 'month is required'
-    })
+  day: Joi.string().allow(''),
+  month: Joi.string().allow(''),
+  year: Joi.string().allow('')
+}).custom((value, helpers) => {
+  const { day, month, year } = value
+
+  // Create an error and manually set its path to allow the input boxes to highlight
+  const makeError = (code, fields) => {
+    const error = helpers.error(code)
+    error.path = fields
+
+    return error
+  }
+
+  // Nothing entered
+  if (!day && !month && !year) {
+    return makeError('dob.missingAll', ['day', 'month', 'year'])
+  }
+
+  // Missing combinations
+  if (!day && month && year) {
+    return makeError('dob.missingDay', ['day'])
+  }
+  if (day && !month && year) {
+    return makeError('dob.missingMonth', ['month'])
+  }
+  if (day && month && !year) {
+    return makeError('dob.missingYear', ['year'])
+  }
+  if (!day && !month && year) {
+    return makeError('dob.missingDayMonth', ['day', 'month'])
+  }
+  if (!day && month && !year) {
+    return makeError('dob.missingDayYear', ['day', 'year'])
+  }
+  if (day && !month && !year) {
+    return makeError('dob.missingMonthYear', ['month', 'year'])
+  }
+
+  // Year not 4 digits
+  if (year && year.length !== 4) {
+    return makeError('dob.yearLength', ['year'])
+  }
+
+  // Validate the actual date
+  const d = parseInt(day, 10)
+  const m = parseInt(month, 10)
+  const y = parseInt(year, 10)
+  const date = new Date(y, m - 1, d)
+
+  if (date.getFullYear() !== y || date.getMonth() + 1 !== m || date.getDate() !== d) {
+    return makeError('dob.invalid', ['day', 'month', 'year'])
+  }
+
+  // Future date check
+  if (date > new Date()) {
+    return makeError('dob.future', ['day', 'month', 'year'])
+  }
+
+  return value
+}).messages({
+  'dob.missingAll': 'Enter your date of birth',
+  'dob.missingDay': 'Date of birth must include a day',
+  'dob.missingMonth': 'Date of birth must include a month',
+  'dob.missingYear': 'Date of birth must include a year',
+  'dob.missingDayMonth': 'Date of birth must include a day and month',
+  'dob.missingDayYear': 'Date of birth must include a day and year',
+  'dob.missingMonthYear': 'Date of birth must include a month and year',
+  'dob.yearLength': 'Enter a year with 4 numbers, like 1975',
+  'dob.invalid': 'Date of birth must be a real date',
+  'dob.future': 'Date of birth must be in the past'
 })

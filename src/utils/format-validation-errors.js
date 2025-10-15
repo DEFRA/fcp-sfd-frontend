@@ -12,6 +12,17 @@ export const formatValidationErrors = (errors) => {
   errors.forEach(error => {
     const { type, context, message: text, path } = error
 
+    // Multi-field validation for a single combined input (used for date inputs where one error message applies to
+    // multiple fields)
+    if (Array.isArray(path) && path.length > 1) {
+      path.forEach(field => {
+        if (!formattedErrors[field]) {
+          formattedErrors[field] = { text }
+        }
+      })
+      return
+    }
+
     // Multi-field validation: show error on all related fields (e.g., businessTelephone + businessMobile)
     if (type === 'object.missing' && Array.isArray(context?.peers)) {
       // Apply the same error message to all related fields

@@ -43,7 +43,8 @@ describe('personalDetailsPresenter', () => {
         ],
         crn: data.crn,
         fullName: 'John M Doe', // Assumes your mock fullName is { first: 'John', middle: 'M', last: 'Doe' }
-        dateOfBirth: data.info.dateOfBirth,
+        dateOfBirth: '1 January 1990',
+        dobChangeLink: '/account-date-of-birth-change',
         personalTelephone: {
           telephone: data.contact.telephone ?? 'Not added',
           mobile: 'Not added',

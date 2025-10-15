@@ -46,9 +46,9 @@ export const personalDobSchema = Joi.object({
   }
 
   // Validate the actual date
-  const d = parseInt(day, 10)
-  const m = parseInt(month, 10)
-  const y = parseInt(year, 10)
+  const d = Number.parseInt(day, 10)
+  const m = Number.parseInt(month, 10)
+  const y = Number.parseInt(year, 10)
   const date = new Date(y, m - 1, d)
 
   if (date.getFullYear() !== y || date.getMonth() + 1 !== m || date.getDate() !== d) {

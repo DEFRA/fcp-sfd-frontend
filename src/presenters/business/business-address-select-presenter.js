@@ -12,7 +12,7 @@ const businessAddressSelectPresenter = (data) => {
     sbi: data.info.sbi ?? null,
     userName: data.customer.fullName ?? null,
     postcode: data.changeBusinessPostcode.postcode,
-    displayAddresses: formatDisplayAddresses(data.changeBusinessAddresses)
+    displayAddresses: formatDisplayAddresses(data.changeBusinessAddresses, data.changeBusinessAddress)
   }
 }
 
@@ -35,12 +35,17 @@ const businessAddressSelectPresenter = (data) => {
  * Using the UPRN alone as the identifying value caused the wrong address to be returned.
  * Concatenating the UPRN with the full display address ensures the dropdown option value is unique for each entry.
  */
-function formatDisplayAddresses (addresses) {
+function formatDisplayAddresses (addresses, previouslyPickedAddress) {
   const displayAddresses = addresses.map(address => ({
     value: `${address.uprn}${address.displayAddress}`,
     text: address.displayAddress,
-    selected: false
+    selected:
+      previouslyPickedAddress?.uprn === address.uprn &&
+      previouslyPickedAddress?.displayAddress === address.displayAddress
   }))
+
+  // Check if any address is already selected
+  const hasSelectedAddress = displayAddresses.some(addr => addr.selected)
 
   // Add a display summary option to the beginning of the list
   // e.g. "18 addresses found"
@@ -49,7 +54,7 @@ function formatDisplayAddresses (addresses) {
   displayAddresses.unshift({
     value: 'display',
     text,
-    selected: true
+    selected: !hasSelectedAddress
   })
 
   return displayAddresses

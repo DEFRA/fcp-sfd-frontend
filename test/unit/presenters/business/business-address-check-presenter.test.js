@@ -185,10 +185,10 @@ describe('businessAddressCheckPresenter', () => {
         }
       })
 
-      test('it should return changeLink as "/business-address-select"', () => {
+      test('it should return changeLink as "/business-address-change"', () => {
         const result = businessAddressCheckPresenter(data)
 
-        expect(result.changeLink).toEqual('/business-address-select')
+        expect(result.changeLink).toEqual('/business-address-change')
       })
     })
 

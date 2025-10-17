@@ -3,27 +3,26 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
+import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 
 // Thing under test
-import { businessAddressEnterRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
-const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressEnterRoutes
+import { personalAddressEnterRoutes } from '../../../../src/routes/personal/personal-address-enter-routes.js'
+const [getPersonalAddressEnter, postPersonalAddressEnter] = personalAddressEnterRoutes
 
 // Mocks
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
-  fetchBusinessChangeService: vi.fn()
+vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', () => ({
+  fetchPersonalChangeService: vi.fn()
 }))
 
-describe('business address enter', () => {
+describe('personal address enter', () => {
   let request
   let h
 
   const credentials = {
-    sbi: '123456789',
     crn: '987654321',
     email: 'test@example.com'
   }
@@ -47,32 +46,32 @@ describe('business address enter', () => {
     }
   })
 
-  describe('GET /business-address-enter', () => {
+  describe('GET /account-address-enter', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        fetchBusinessChangeService.mockReturnValue(getMockData())
+        fetchPersonalChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
-        expect(getBusinessAddressEnter.method).toBe('GET')
-        expect(getBusinessAddressEnter.path).toBe('/business-address-enter')
+        expect(getPersonalAddressEnter.method).toBe('GET')
+        expect(getPersonalAddressEnter.path).toBe('/account-address-enter')
       })
 
-      test('it calls fetchBusinessChangeService', async () => {
-        await getBusinessAddressEnter.handler(request, h)
+      test('it calls fetchPersonalChangeService', async () => {
+        await getPersonalAddressEnter.handler(request, h)
 
-        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessAddress')
+        expect(fetchPersonalChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changePersonalAddress')
       })
 
-      test('should render business-address-enter view with page data', async () => {
-        await getBusinessAddressEnter.handler(request, h)
+      test('should render personal-address-enter view with page data', async () => {
+        await getPersonalAddressEnter.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageData())
+        expect(h.view).toHaveBeenCalledWith('personal/personal-address-enter', getPageData())
       })
     })
   })
 
-  describe('POST /business-address-enter', () => {
+  describe('POST /account-address-enter', () => {
     beforeEach(() => {
       request.payload = {
         address1: 'New address 1',
@@ -84,21 +83,21 @@ describe('business address enter', () => {
         country: 'United Kingdom'
       }
 
-      fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessAddress: request.payload })
+      fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalAddress: request.payload })
     })
 
     describe('when a request succeeds', () => {
       describe('and the validation passes', () => {
         test('it sets the session data and redirects', async () => {
-          await postBusinessAddressEnter.options.handler(request, h)
+          await postPersonalAddressEnter.options.handler(request, h)
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessDetails',
-            'changeBusinessAddress',
+            'personalDetails',
+            'changePersonalAddress',
             request.payload
           )
-          expect(h.redirect).toHaveBeenCalledWith('/business-address-check')
+          expect(h.redirect).toHaveBeenCalledWith('/account-address-check')
         })
       })
 
@@ -117,29 +116,29 @@ describe('business address enter', () => {
           }
         })
 
-        test('it fetches the business details', async () => {
-          await postBusinessAddressEnter.options.validate.failAction(request, h, err)
+        test('it fetches the personal details', async () => {
+          await postPersonalAddressEnter.options.validate.failAction(request, h, err)
 
-          expect(fetchBusinessChangeService).toHaveBeenCalledWith(
+          expect(fetchPersonalChangeService).toHaveBeenCalledWith(
             request.yar,
             request.auth.credentials,
-            'changeBusinessAddress'
+            'changePersonalAddress'
           )
         })
 
         test('it returns the page successfully with the error summary banner', async () => {
-          await postBusinessAddressEnter.options.validate.failAction(request, h, err)
+          await postPersonalAddressEnter.options.validate.failAction(request, h, err)
 
-          expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageDataError())
+          expect(h.view).toHaveBeenCalledWith('personal/personal-address-enter', getPageDataError())
         })
 
         test('it should handle undefined errors', async () => {
-          await postBusinessAddressEnter.options.validate.failAction(request, h, [])
+          await postPersonalAddressEnter.options.validate.failAction(request, h, [])
 
           const pageData = getPageDataError()
           pageData.errors = {}
 
-          expect(h.view).toHaveBeenCalledWith('business/business-address-enter', pageData)
+          expect(h.view).toHaveBeenCalledWith('personal/personal-address-enter', pageData)
         })
       })
     })
@@ -162,20 +161,18 @@ const getMockData = () => {
       country: 'United Kingdom'
     },
     info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
-    customer: {
-      fullName: 'Alfred Waldron'
+      fullName: {
+        fullNameJoined: 'Alfred Waldron'
+      }
     }
   }
 }
 
 const getPageData = () => {
   return {
-    backLink: { href: '/business-address-change' },
-    pageTitle: 'Enter your business address',
-    metaDescription: 'Enter the address for your business.',
+    backLink: { href: '/account-address-change' },
+    pageTitle: 'Enter your personal address',
+    metaDescription: 'Enter the address for your personal account.',
     address: {
       address1: '10 Skirbeck Way',
       address2: '',
@@ -185,17 +182,15 @@ const getPageData = () => {
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    businessName: 'Agile Farm Ltd',
-    sbi: '123456789',
     userName: 'Alfred Waldron'
   }
 }
 
 const getPageDataError = () => {
   return {
-    backLink: { href: '/business-address-change' },
-    pageTitle: 'Enter your business address',
-    metaDescription: 'Enter the address for your business.',
+    backLink: { href: '/account-address-change' },
+    pageTitle: 'Enter your personal address',
+    metaDescription: 'Enter the address for your personal account.',
     address: {
       address1: 'New address 1',
       address2: '',
@@ -205,8 +200,6 @@ const getPageDataError = () => {
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    businessName: 'Agile Farm Ltd',
-    sbi: '123456789',
     userName: 'Alfred Waldron',
     errors: {
       postcode: {

@@ -2,18 +2,18 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
+import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { addressLookupService } from '../../../../src/services/os-places/address-lookup-service.js'
-import { businessAddressChangeErrorService } from '../../../../src/services/business/business-address-change-error-service.js'
+import { personalAddressChangeErrorService } from '../../../../src/services/personal/personal-address-change-error-service.js'
 
 // Thing under test
-import { businessAddressChangeRoutes } from '../../../../src/routes/business/business-address-change-routes.js'
-const [getBusinessAddressChange, postBusinessAddressChange] = businessAddressChangeRoutes
+import { personalAddressChangeRoutes } from '../../../../src/routes/personal/personal-address-change-routes.js'
+const [getPersonalAddressChange, postPersonalAddressChange] = personalAddressChangeRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
-  fetchBusinessChangeService: vi.fn()
+vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', () => ({
+  fetchPersonalChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
@@ -24,16 +24,15 @@ vi.mock('../../../../src/services/os-places/address-lookup-service.js', () => ({
   addressLookupService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/business-address-change-error-service.js', () => ({
-  businessAddressChangeErrorService: vi.fn()
+vi.mock('../../../../src/services/personal/personal-address-change-error-service.js', () => ({
+  personalAddressChangeErrorService: vi.fn()
 }))
 
-describe('business address change routes', () => {
+describe('personal address change routes', () => {
   let request
   let h
 
   const credentials = {
-    sbi: '123456789',
     crn: '987654321',
     email: 'test@example.com'
   }
@@ -58,36 +57,36 @@ describe('business address change routes', () => {
     }
   })
 
-  describe('GET /business-address-change', () => {
+  describe('GET /personal-address-change', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        fetchBusinessChangeService.mockResolvedValue(getMockData())
+        fetchPersonalChangeService.mockResolvedValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
-        expect(getBusinessAddressChange.method).toBe('GET')
-        expect(getBusinessAddressChange.path).toBe('/business-address-change')
+        expect(getPersonalAddressChange.method).toBe('GET')
+        expect(getPersonalAddressChange.path).toBe('/account-address-change')
       })
 
-      test('it calls fetchBusinessChangeService', async () => {
-        await getBusinessAddressChange.handler(request, h)
+      test('it calls fetchPersonalChangeService', async () => {
+        await getPersonalAddressChange.handler(request, h)
 
-        expect(fetchBusinessChangeService).toHaveBeenCalledWith(
+        expect(fetchPersonalChangeService).toHaveBeenCalledWith(
           request.yar,
           request.auth.credentials,
-          'changeBusinessPostcode'
+          'changePersonalPostcode'
         )
       })
 
-      test('should render business-address-change view with page data', async () => {
-        await getBusinessAddressChange.handler(request, h)
+      test('should render personal-address-change view with page data', async () => {
+        await getPersonalAddressChange.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('business/business-address-change', getPageData())
+        expect(h.view).toHaveBeenCalledWith('personal/personal-address-change', getPageData())
       })
     })
   })
 
-  describe('POST /business-address-change', () => {
+  describe('POST /personal-address-change', () => {
     beforeEach(() => {
       request.payload = {
         postcode: 'SK22 1DL'
@@ -102,33 +101,33 @@ describe('business address change routes', () => {
           })
 
           test('it sets session data', async () => {
-            await postBusinessAddressChange.handler(request, h)
+            await postPersonalAddressChange.handler(request, h)
 
             expect(setSessionData).toHaveBeenCalledWith(
               request.yar,
-              'businessDetails',
-              'changeBusinessPostcode',
+              'personalDetails',
+              'changePersonalPostcode',
               request.payload
             )
           })
 
-          test('it redirects to /business-address-select if addresses found', async () => {
-            await postBusinessAddressChange.handler(request, h)
+          test('it redirects to /account-address-select if addresses found', async () => {
+            await postPersonalAddressChange.handler(request, h)
 
-            expect(h.redirect).toHaveBeenCalledWith('/business-address-select')
+            expect(h.redirect).toHaveBeenCalledWith('/account-address-select')
           })
         })
 
         describe('and no addresses are found for the postcode', () => {
           beforeEach(() => {
             addressLookupService.mockResolvedValue({ error: 'No addresses found for this postcode' })
-            businessAddressChangeErrorService.mockResolvedValue(getPageDataError())
+            personalAddressChangeErrorService.mockResolvedValue(getPageDataError())
           })
 
           test('it returns the page successfully with the error summary banner', async () => {
-            await postBusinessAddressChange.handler(request, h)
+            await postPersonalAddressChange.handler(request, h)
 
-            expect(h.view).toHaveBeenCalledWith('business/business-address-change', getPageDataError())
+            expect(h.view).toHaveBeenCalledWith('personal/personal-address-change', getPageDataError())
           })
         })
       })
@@ -147,13 +146,13 @@ describe('business address change routes', () => {
             ]
           }
 
-          businessAddressChangeErrorService.mockResolvedValue(getPageDataError())
+          personalAddressChangeErrorService.mockResolvedValue(getPageDataError())
         })
 
-        test('calls businessAddressChangeErrorService with the correct errors', async () => {
-          await postBusinessAddressChange.options.validate.failAction(request, h, err)
+        test('calls personalAddressChangeErrorService with the correct errors', async () => {
+          await postPersonalAddressChange.options.validate.failAction(request, h, err)
 
-          expect(businessAddressChangeErrorService).toHaveBeenCalledWith(
+          expect(personalAddressChangeErrorService).toHaveBeenCalledWith(
             request.yar,
             request.auth.credentials,
             request.payload.postcode,
@@ -162,9 +161,9 @@ describe('business address change routes', () => {
         })
 
         test('it returns the page successfully with the error summary banner', async () => {
-          await postBusinessAddressChange.handler(request, h)
+          await postPersonalAddressChange.handler(request, h)
 
-          expect(h.view).toHaveBeenCalledWith('business/business-address-change', getPageDataError())
+          expect(h.view).toHaveBeenCalledWith('personal/personal-address-change', getPageDataError())
         })
       })
     })
@@ -173,24 +172,20 @@ describe('business address change routes', () => {
 
 const getPageData = () => {
   return {
-    backLink: { href: '/business-details' },
-    pageTitle: 'What is your business address?',
-    metaDescription: 'Update the address for your business.',
+    backLink: { href: '/personal-details' },
+    pageTitle: 'What is your personal address?',
+    metaDescription: 'Update the address for your personal account.',
     postcode: 'SK22 1DL',
-    businessName: 'Agile Farm Ltd',
-    sbi: '123456789',
     userName: 'Alfred Waldron'
   }
 }
 
 const getPageDataError = () => {
   return {
-    backLink: { href: '/business-details' },
-    pageTitle: 'What is your business address?',
-    metaDescription: 'Update the address for your business.',
+    backLink: { href: '/personal-details' },
+    pageTitle: 'What is your personal address?',
+    metaDescription: 'Update the address for your personal account.',
     postcode: 'SK22 1DL',
-    businessName: 'Agile Farm Ltd',
-    sbi: '123456789',
     userName: 'Alfred Waldron',
     errors: {
       text: 'No addresses found for this postcode'
@@ -213,11 +208,9 @@ const getMockData = () => {
       country: 'United Kingdom'
     },
     info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
-    customer: {
-      fullName: 'Alfred Waldron'
+      fullName: {
+        fullNameJoined: 'Alfred Waldron'
+      }
     }
   }
 }

@@ -3,15 +3,15 @@
  * for front-end display and DAL updating.
  * https://docs.os.uk/os-apis/accessing-os-apis/os-places-api/datasets as a reference for the datasets
  *
- * @module businessAddressLookupMapper
+ * @module addressLookupMapper
  */
 
 import { COUNTRY_NAMES } from '../constants/country-names.js'
-import { businessAddressLookupSchema } from '../schemas/business/business-address-lookup-schema.js'
+import { addressLookupSchema } from '../schemas/os-places/address-lookup-schema.js'
 
-const businessAddressLookupMapper = (addresses) => {
+const addressLookupMapper = (addresses) => {
   return addresses.map((address) => {
-    const { error } = businessAddressLookupSchema.validate(address)
+    const { error } = addressLookupSchema.validate(address)
 
     if (error) {
       return null
@@ -46,8 +46,8 @@ const businessAddressLookupMapper = (addresses) => {
 
     return {
       displayAddress: ADDRESS,
-      buildingName,
       flatName: SUB_BUILDING_NAME ?? null,
+      buildingName,
       buildingNumberRange: BUILDING_NUMBER ?? null,
       street,
       dependentLocality: DEPENDENT_LOCALITY ?? null,
@@ -66,5 +66,5 @@ const filterAndJoin = (addressesProperties) => {
 }
 
 export {
-  businessAddressLookupMapper
+  addressLookupMapper
 }

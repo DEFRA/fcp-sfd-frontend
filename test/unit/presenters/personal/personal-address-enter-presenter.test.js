@@ -2,20 +2,18 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { businessAddressEnterPresenter } from '../../../../src/presenters/business/business-address-enter-presenter.js'
+import { personalAddressEnterPresenter } from '../../../../src/presenters/personal/personal-address-enter-presenter.js'
 
-describe('businessAddressEnterPresenter', () => {
+describe('personalAddressEnterPresenter', () => {
   let data
   let payload
 
   beforeEach(() => {
     data = {
       info: {
-        businessName: 'Agile Farm Ltd',
-        sbi: '123456789'
-      },
-      customer: {
-        fullName: 'Alfred Waldron'
+        fullName: {
+          fullNameJoined: 'Mr Test Name'
+        }
       },
       address: {
         lookup: {},
@@ -33,14 +31,14 @@ describe('businessAddressEnterPresenter', () => {
     }
   })
 
-  describe('when provided with business address enter data', () => {
+  describe('when provided with personal address enter data', () => {
     test('it correctly presents the data', () => {
-      const result = businessAddressEnterPresenter(data)
+      const result = personalAddressEnterPresenter(data)
 
       expect(result).toEqual({
-        backLink: { href: '/business-address-change' },
-        pageTitle: 'Enter your business address',
-        metaDescription: 'Enter the address for your business.',
+        backLink: { href: '/account-address-change' },
+        pageTitle: 'Enter your personal address',
+        metaDescription: 'Enter the address for your personal account.',
         address: {
           address1: '10 Skirbeck Way',
           address2: 'Lonely Lane',
@@ -50,37 +48,7 @@ describe('businessAddressEnterPresenter', () => {
           county: 'Somerset',
           postcode: 'SK22 1DL'
         },
-        businessName: 'Agile Farm Ltd',
-        sbi: '123456789',
-        userName: 'Alfred Waldron'
-      })
-    })
-  })
-
-  describe('the "businessName" property', () => {
-    describe('when the businessName property is missing', () => {
-      beforeEach(() => {
-        delete data.info.businessName
-      })
-
-      test('it should return businessName as null', () => {
-        const result = businessAddressEnterPresenter(data)
-
-        expect(result.businessName).toEqual(null)
-      })
-    })
-  })
-
-  describe('the "sbi" property', () => {
-    describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
-      beforeEach(() => {
-        delete data.info.sbi
-      })
-
-      test('it should return sbi as null', () => {
-        const result = businessAddressEnterPresenter(data)
-
-        expect(result.sbi).toEqual(null)
+        userName: 'Mr Test Name'
       })
     })
   })
@@ -88,11 +56,11 @@ describe('businessAddressEnterPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.info.fullName.fullNameJoined
       })
 
       test('it should return userName as null', () => {
-        const result = businessAddressEnterPresenter(data)
+        const result = personalAddressEnterPresenter(data)
 
         expect(result.userName).toEqual(null)
       })
@@ -112,15 +80,15 @@ describe('businessAddressEnterPresenter', () => {
       })
 
       test('it should return the changed address as the address', () => {
-        const result = businessAddressEnterPresenter(data, payload)
+        const result = personalAddressEnterPresenter(data, payload)
 
         expect(result.address).toEqual(payload)
       })
     })
 
-    describe('when provided with a changed business address without UPRN', () => {
+    describe('when provided with a changed personal address without UPRN', () => {
       beforeEach(() => {
-        data.changeBusinessAddress = {
+        data.changePersonalAddress = {
           address1: 'A different address',
           city: 'Maidstone',
           county: 'A new county',
@@ -130,16 +98,16 @@ describe('businessAddressEnterPresenter', () => {
       })
 
       test('it should return the changed address as-is', () => {
-        const result = businessAddressEnterPresenter(data)
+        const result = personalAddressEnterPresenter(data)
 
-        expect(result.address).toEqual(data.changeBusinessAddress)
+        expect(result.address).toEqual(data.changePersonalAddress)
       })
     })
 
-    describe('when provided with a changed business address with UPRN', () => {
+    describe('when provided with a changed personal address with UPRN', () => {
       describe('and there are values missing', () => {
         beforeEach(() => {
-          data.changeBusinessAddress = {
+          data.changePersonalAddress = {
             uprn: '123456',
             flatName: null,
             buildingName: null,
@@ -153,7 +121,7 @@ describe('businessAddressEnterPresenter', () => {
         })
 
         test('it should format the changed address correctly', () => {
-          const result = businessAddressEnterPresenter(data)
+          const result = personalAddressEnterPresenter(data)
 
           expect(result.address).toEqual({
             address1: null,
@@ -169,7 +137,7 @@ describe('businessAddressEnterPresenter', () => {
 
       describe('and there are no values missing', () => {
         beforeEach(() => {
-          data.changeBusinessAddress = {
+          data.changePersonalAddress = {
             uprn: '123456',
             flatName: 'Flat 1A',
             buildingName: 'Rosewood Court',
@@ -183,7 +151,7 @@ describe('businessAddressEnterPresenter', () => {
         })
 
         test('it should format the changed address correctly', () => {
-          const result = businessAddressEnterPresenter(data)
+          const result = personalAddressEnterPresenter(data)
 
           expect(result.address).toEqual({
             address1: 'Flat 1A, Rosewood Court, 120-124',
@@ -198,14 +166,14 @@ describe('businessAddressEnterPresenter', () => {
       })
     })
 
-    describe('when provided with an original business address with UPRN', () => {
+    describe('when provided with an original personal address with UPRN', () => {
       describe('and there are no values missing', () => {
         beforeEach(() => {
-          delete data.changeBusinessAddress
+          delete data.changePersonalAddress
         })
 
         test('it should format the original address correctly', () => {
-          const result = businessAddressEnterPresenter(data)
+          const result = personalAddressEnterPresenter(data)
 
           expect(result.address).toEqual({
             address1: '10 Skirbeck Way',
@@ -232,7 +200,7 @@ describe('businessAddressEnterPresenter', () => {
         })
 
         test('it should format the original address correctly', () => {
-          const result = businessAddressEnterPresenter(data)
+          const result = personalAddressEnterPresenter(data)
 
           expect(result.address).toEqual({
             address1: null,
@@ -247,7 +215,7 @@ describe('businessAddressEnterPresenter', () => {
       })
     })
 
-    describe('when provided with an original business address without UPRN', () => {
+    describe('when provided with an original personal address without UPRN', () => {
       beforeEach(() => {
         data.address = {
           lookup: {
@@ -264,7 +232,7 @@ describe('businessAddressEnterPresenter', () => {
       })
 
       test('it should format the original address correctly', () => {
-        const result = businessAddressEnterPresenter(data)
+        const result = personalAddressEnterPresenter(data)
 
         expect(result.address).toEqual({
           address1: 'Flat 1A, Rosewood Court, 120-124',
@@ -290,7 +258,7 @@ describe('businessAddressEnterPresenter', () => {
       })
 
       test('it should return the address fields as null', () => {
-        const result = businessAddressEnterPresenter(data)
+        const result = personalAddressEnterPresenter(data)
 
         expect(result.address).toEqual({
           address1: null,

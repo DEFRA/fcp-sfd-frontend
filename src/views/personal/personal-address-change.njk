@@ -7,7 +7,7 @@
 {% from "common/sub-header/macro.njk" import subHeader %}
 
 {% block beforeContent %}
-  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ subHeader(userName=userName) }}
   {{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
@@ -45,7 +45,7 @@
             }
           }) }}
 
-          <p class="govuk-body"><a href="/business-address-enter" class="govuk-link">Enter address manually</a></p>
+          <p class="govuk-body"><a href="/account-address-enter" class="govuk-link">Enter address manually</a></p>
 
         </fieldset>
 

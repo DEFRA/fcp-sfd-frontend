@@ -77,7 +77,7 @@ describe('business phone schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business mobile phone number must be 100 characters or less',
+          message: 'Business mobile phone number must be 50 characters or less',
           path: ['businessMobile'],
           type: 'string.max'
         }))
@@ -111,7 +111,7 @@ describe('business phone schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business telephone number must be 100 characters or less',
+          message: 'Business telephone number must be 50 characters or less',
           path: ['businessTelephone'],
           type: 'string.max'
         }))

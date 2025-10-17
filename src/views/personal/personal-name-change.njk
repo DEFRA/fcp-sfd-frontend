@@ -1,0 +1,74 @@
+{% extends 'common/layout.njk' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
+{% from "common/sub-header/macro.njk" import subHeader %}
+
+{% block beforeContent %}
+  {{ subHeader(userName=userName) }}
+  {{ appBackSignOutLink(backLink) }}
+{% endblock %}
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors | toErrorList
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <form method="post" novalidate>
+        <input type="hidden" name="crumb" value="{{ crumb }}">
+        <fieldset class="govuk-fieldset">
+          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+            <h1 class="govuk-fieldset__heading">
+              {{ pageTitle }}
+            </h1>
+          </legend>
+
+          {{ govukInput({
+            label: {
+              text: "First name"
+            },
+            id: "firstName",
+            name: "firstName",
+            value: firstName,
+            errorMessage: errors.firstName and {
+              text: errors.firstName.text
+            }
+          }) }}
+
+          {{ govukInput({
+            label: {
+              text: "Middle name"
+            },
+            id: "middleName",
+            name: "middleName",
+            value: middleName,
+            errorMessage: errors.middleName and {
+              text: errors.middleName.text
+            }
+          }) }}
+
+          {{ govUkInput({
+            label: {
+              text: "Last name"
+            },
+            id: "lastName",
+            name: "lastName",
+            value: lastName,
+            errorMessage: errors.lastName and {
+              text: errors.lastName.text
+            }
+          }) }}
+        </fieldset>
+
+        {{ govukButton({ text: "Continue", preventDoubleClick: true }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

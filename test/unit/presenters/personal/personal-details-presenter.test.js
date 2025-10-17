@@ -44,30 +44,80 @@ describe('personalDetailsPresenter', () => {
         crn: data.crn,
         fullName: 'John M Doe', // Assumes your mock fullName is { first: 'John', middle: 'M', last: 'Doe' }
         dateOfBirth: data.info.dateOfBirth,
-        personalTelephone: data.contact.telephone ?? 'Not added',
-        personalMobile: data.contact.mobile ?? 'Not added',
+        personalTelephone: {
+          telephone: data.contact.telephone ?? 'Not added',
+          mobile: 'Not added',
+          action: 'Change',
+          link: '/account-phone-numbers-change'
+        },
         personalEmail: data.contact.email
       })
     })
   })
 
-  describe('the "personalTelephone" property', () => {
-    test('returns "Not added" if telephone is missing', () => {
-      data.contact.telephone = null
-
+  describe('when both telephone and mobile properties have values', () => {
+    test('it should return the actual values', () => {
+      data.contact.telephone = '01234567890'
+      data.contact.mobile = '07123456789'
       const result = personalDetailsPresenter(data, yar)
 
-      expect(result.personalTelephone).toBe('Not added')
+      expect(result.personalTelephone.telephone).toEqual('01234567890')
+      expect(result.personalTelephone.mobile).toEqual('07123456789')
+    })
+  })
+
+  describe('the "personalTelephone" property', () => {
+    describe('when the telephone property is missing', () => {
+      test('returns "Not added" if telephone is missing', () => {
+        data.contact.telephone = null
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.personalTelephone.telephone).toBe('Not added')
+      })
     })
   })
 
   describe('the "personalMobile" property', () => {
-    test('returns "Not added" if mobile is missing', () => {
-      data.contact.mobile = null
+    describe('when the mobile property is missing', () => {
+      test('returns "Not added" if mobile is missing', () => {
+        data.contact.mobile = null
 
-      const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar)
 
-      expect(result.personalMobile).toBe('Not added')
+        expect(result.personalTelephone.mobile).toBe('Not added')
+      })
+    })
+  })
+
+  describe('the "personalPhoneAction" property', () => {
+    describe('when both telephone and mobile properties have values', () => {
+      test('it should return the text "Change"', () => {
+        data.contact.telephone = '01234567890'
+        data.contact.mobile = '07123456789'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.personalTelephone.action).toEqual('Change')
+      })
+    })
+
+    describe('when only one of the properties has a value', () => {
+      test('it should return the text "Change"', () => {
+        data.contact.telephone = '01234567890'
+        data.contact.mobile = null
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.personalTelephone.action).toEqual('Change')
+      })
+    })
+
+    describe('when both properties are null', () => {
+      test('it should return the text "Add"', () => {
+        data.contact.telephone = null
+        data.contact.mobile = null
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.personalTelephone.action).toEqual('Add')
+      })
     })
   })
 

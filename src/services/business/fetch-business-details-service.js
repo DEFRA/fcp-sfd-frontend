@@ -13,17 +13,12 @@ import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-business-details.js'
 import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
-const fetchBusinessDetailsService = async (yar, credentials, getUserSessionToken) => {
-  const businessDetails = yar.get('businessDetails')
-  if (businessDetails) {
-    return businessDetails
+const fetchBusinessDetailsService = async (credentials, getUserSessionToken) => {
+  if (!config.get('featureToggle.dalConnection')) {
+    return mappedData
   }
 
-  const businessDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(credentials) : mappedData
-
-  yar.set('businessDetails', businessDetailsData)
-
-  return businessDetailsData
+  return getFromDal(credentials)
 }
 
 const getFromDal = async (credentials) => {

@@ -1,4 +1,4 @@
-import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessVatChangePresenter } from '../../presenters/business/business-vat-change-presenter.js'
 import { businessVatSchema } from '../../schemas/business/business-vat-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
@@ -9,7 +9,8 @@ const getBusinessVatChange = {
   method: 'GET',
   path: '/business-vat-registration-number-change',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials, request)
+    const { yar, auth } = request
+    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
     const pageData = businessVatChangePresenter(businessDetails)
 
     return h.view('business/business-vat-registration-number-change', pageData)
@@ -22,13 +23,13 @@ const postBusinessVatChange = {
   options: {
     validate: {
       payload: businessVatSchema,
-      options: {
-        abortEarly: false
-      },
+      options: { abortEarly: false },
       failAction: async (request, h, err) => {
+        const { yar, auth, payload } = request
+
         const errors = formatValidationErrors(err.details || [])
-        const businessDetailsData = request.yar.get('businessDetails')
-        const pageData = businessVatChangePresenter(businessDetailsData, request.payload.vatNumber)
+        const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
+        const pageData = businessVatChangePresenter(businessDetails, payload.vatNumber)
 
         return h.view('business/business-vat-registration-number-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }

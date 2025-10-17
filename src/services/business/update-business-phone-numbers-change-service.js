@@ -1,41 +1,37 @@
-import { dalConnector } from '../../dal/connector.js'
-import { updateBusinessPhoneNumbersMutation } from '../../dal/mutations/update-business-phone-numbers.js'
-import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
+/**
+ * Service to update a business's phone numbers (landline and mobile)
+ *
+ * Fetches the pending business phone number changes from the session
+ * Calls the DAL to persist the updated phone numbers using updateDalService
+ * Clears the cached business details data from the session
+ * Displays a success flash notification to the user
+ *
+ * @module updateBusinessPhoneNumbersChangeService
+ */
+
+import { updateBusinessPhoneNumbersMutation } from '../../dal/mutations/business/update-business-phone-numbers.js'
+import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
+import { updateDalService } from '../DAL/update-dal-service.js'
 import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessDetailsService(yar, credentials, getUserSessionToken)
-  await updateBusinessPhone(businessDetails)
-
-  // Update the cached data to now reflect the real data
-  businessDetails.contact.landline = businessDetails.changeBusinessTelephone ?? null
-  businessDetails.contact.mobile = businessDetails.changeBusinessMobile ?? null
-
-  delete businessDetails.changeBusinessTelephone
-  delete businessDetails.changeBusinessMobile
-
-  yar.set('businessDetails', businessDetails)
-
-  flashNotification(yar, 'Success', 'You have updated your business phone numbers')
-}
-
-const updateBusinessPhone = async (businessDetails) => {
+  const businessDetails = await fetchBusinessChangeService(yar, credentials, getUserSessionToken, 'changeBusinessPhoneNumbers')
   const variables = {
     input: {
       phone: {
-        landline: businessDetails.changeBusinessTelephone ?? null,
-        mobile: businessDetails.changeBusinessMobile ?? null
+        landline: businessDetails.changeBusinessPhoneNumbers.businessTelephone ?? null,
+        mobile: businessDetails.changeBusinessPhoneNumbers.businessMobile ?? null
       },
       sbi: businessDetails.info.sbi
     }
   }
 
-  const response = await dalConnector(updateBusinessPhoneNumbersMutation, variables, getUserSessionToken)
+  await updateDalService(updateBusinessPhoneNumbersMutation, variables, getUserSessionToken)
 
-  if (response.errors) {
-    throw new Error('DAL error from mutation')
-  }
+  yar.clear('businessDetails')
+
+  flashNotification(yar, 'Success', 'You have updated your business phone numbers')
 }
 
 export {

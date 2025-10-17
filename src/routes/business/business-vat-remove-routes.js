@@ -9,8 +9,9 @@ const getBusinessVatRemove = {
   method: 'GET',
   path: '/business-vat-registration-remove',
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials, request)
+    const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
+
     return h.view('business/business-vat-registration-remove', pageData)
   }
 }
@@ -21,23 +22,18 @@ const postBusinessVatRemove = {
   options: {
     validate: {
       payload: businessVatRemoveSchema,
-      options: {
-        abortEarly: false
-      },
+      options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
-        const businessDetailsData = request.yar.get('businessDetails')
-        const pageData = businessVatRemovePresenter(businessDetailsData)
+        const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
+        const pageData = businessVatRemovePresenter(businessDetails)
 
         return h.view('business/business-vat-registration-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {
-      const { confirmRemove } = request.payload
-
-      if (confirmRemove === 'yes') {
+      if (request.payload.confirmRemove === 'yes') {
         await updateBusinessVatRemoveService(request.yar, request.auth.credentials)
-        return h.redirect('/business-details')
       }
 
       return h.redirect('/business-details')

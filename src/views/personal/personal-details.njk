@@ -32,9 +32,9 @@
       {% endfor %}
     {% endset %}
 
-    {% set displayPersonalPhone %}
-      <div>Telephone: <div class="govuk-hint" style="display: inline;">{{personalTelephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint" style="display: inline;">{{personalMobile}}</div></div>
+    {% set displayPersonalTelephone %}
+      <div>Telephone: <span class="govuk-hint display-inline">{{personalTelephone.telephone}}</span></div>
+      <div>Mobile: <span class="govuk-hint display-inline">{{personalTelephone.mobile}}</span></div>
     {% endset %}
 
     {{ govukSummaryList({
@@ -91,7 +91,7 @@
           actions: {
             items: [
               {
-                href: "/",
+                href: "/account-address-change",
                 text: "Change",
                 visuallyHiddenText: "personal address"
               }
@@ -103,13 +103,13 @@
             text: "Personal phone numbers"
           },
           value: {
-            html: displayPersonalPhone
+            html: displayPersonalTelephone
           },
           actions: {
             items: [
               {
-                href: "/",
-                text: "Change",
+                href: personalTelephone.link,
+                text: personalTelephone.action,
                 visuallyHiddenText: "personal phone numbers"
               }
             ]

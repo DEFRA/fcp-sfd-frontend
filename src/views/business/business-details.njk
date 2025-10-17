@@ -76,7 +76,7 @@
           actions: {
             items: [
               {
-                href: "/business-address-enter",
+                href: "/business-address-change",
                 text: "Change",
                 visuallyHiddenText: "business address"
               }
@@ -137,7 +137,7 @@
           <dt class="govuk-summary-list__key">
             VAT registration number
           </dt>
-         {# Logic to display the correct link actions for the VAT number #} 
+         {# Logic to display the correct link actions for the VAT number #}
          {% if hasVatNumber %}
           <dd class="govuk-summary-list__value">
             {{ vatNumber }}
@@ -157,8 +157,8 @@
               </ul>
            {% else %}
            <dd class="govuk-summary-list__value">
-            Number not added
-          </dd> 
+            No number added
+          </dd>
           <dd class="govuk-summary-list__actions">
           <a class="govuk-link" href="/business-vat-registration-number-change">
                 Add<span class="govuk-visually-hidden"> VAT registration number</span>

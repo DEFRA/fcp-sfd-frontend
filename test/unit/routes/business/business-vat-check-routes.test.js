@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Things we need to mock
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessVatChangeService } from '../../../../src/services/business/update-business-vat-change-service.js'
 
 // Thing under test
@@ -11,8 +11,8 @@ import { businessVatCheckRoutes } from '../../../../src/routes/business/business
 const [getBusinessVatCheck, postBusinessVatCheck] = businessVatCheckRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/business/update-business-vat-change-service.js', () => ({
@@ -21,10 +21,7 @@ vi.mock('../../../../src/services/business/update-business-vat-change-service.js
 
 describe('business VAT check', () => {
   const request = {
-    yar: {
-      set: vi.fn(),
-      get: vi.fn().mockReturnValue(getMockData())
-    },
+    yar: {},
     auth: {
       credentials: {
         sbi: '123456789',
@@ -33,6 +30,7 @@ describe('business VAT check', () => {
       }
     }
   }
+
   let h
 
   beforeEach(() => {
@@ -46,7 +44,7 @@ describe('business VAT check', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        fetchBusinessDetailsService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
       test('should have the correct method and path', () => {
@@ -57,7 +55,7 @@ describe('business VAT check', () => {
       test('it fetches the data from the session', async () => {
         await getBusinessVatCheck.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials, getUserSessionToken)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessVat')
       })
 
       test('should render business-vat-registration-number-check view with page data', async () => {
@@ -82,7 +80,7 @@ describe('business VAT check', () => {
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('calls the update service', async () => {
+      test('calls updateBusinessVatChangeService with yar and credentials', async () => {
         await postBusinessVatCheck.handler(request, h)
 
         expect(updateBusinessVatChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)

@@ -1,7 +1,19 @@
-import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
+/**
+ * Service to update a business's address
+ *
+ * Fetches the pending business address change from the session
+ * Prepares the address variables, handling both postcode-lookup and manually entered addresses
+ * Calls the DAL to persist the updated address using updateDalService
+ * Clears the cached business details data from the session
+ * Displays a success flash notification to the user
+ *
+ * @module updateBusinessAddressChangeService
+ */
+
+import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
-import { updateBusinessAddressMutation } from '../../dal/mutations/update-business-address.js'
-import { dalConnector } from '../../dal/connector.js'
+import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
+import { updateDalService } from '../DAL/update-dal-service.js'
 import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
@@ -71,7 +83,7 @@ const businessAddressVariables = (businessDetails) => {
 
   if (change.uprn) {
     // Address chosen via postcode lookup
-    variables.input.address = {
+    variables.input.address.withUprn = {
       buildingNumberRange: change.buildingNumberRange ?? null,
       buildingName: change.buildingName ?? null,
       flatName: change.flatName ?? null,
@@ -91,7 +103,7 @@ const businessAddressVariables = (businessDetails) => {
     }
   } else {
     // Address entered manually
-    variables.input.address = {
+    variables.input.address.withoutUprn = {
       buildingNumberRange: null,
       buildingName: null,
       flatName: null,
@@ -110,50 +122,6 @@ const businessAddressVariables = (businessDetails) => {
   }
 
   return variables
-}
-
-const mapPayloadToBusinessDetails = (businessDetails) => {
-  const { changeBusinessAddress, address } = businessDetails
-
-  // Only the option fields are guarded with a null check
-  if (changeBusinessAddress.uprn) {
-    address.lookup.uprn = changeBusinessAddress.uprn
-    address.lookup.buildingNumberRange = changeBusinessAddress.buildingNumberRange ?? null
-    address.lookup.buildingName = changeBusinessAddress.buildingName ?? null
-    address.lookup.flatName = changeBusinessAddress.flatName ?? null
-    address.lookup.street = changeBusinessAddress.street ?? null
-    address.lookup.city = changeBusinessAddress.city ?? null
-    address.lookup.county = changeBusinessAddress.county ?? null
-    address.postcode = changeBusinessAddress.postcode ?? null
-    address.country = changeBusinessAddress.country ?? null
-
-    // Clear manual fields
-    address.manual.line1 = null
-    address.manual.line2 = null
-    address.manual.line3 = null
-    address.manual.line4 = null
-    address.manual.line5 = null
-  } else {
-    address.manual.line1 = changeBusinessAddress.address1
-    address.manual.line2 = changeBusinessAddress.address2 ?? null
-    address.manual.line3 = changeBusinessAddress.address3 ?? null
-    address.manual.line4 = changeBusinessAddress.city
-    address.manual.line5 = changeBusinessAddress.county ?? null
-    address.postcode = changeBusinessAddress.postcode
-    address.country = changeBusinessAddress.country
-
-    // Clear lookup fields
-    address.lookup.city = null
-    address.lookup.uprn = null
-    address.lookup.buildingNumberRange = null
-    address.lookup.buildingName = null
-    address.lookup.flatName = null
-    address.lookup.street = null
-    address.lookup.county = null
-  }
-
-  // Once the changed address has been mapped to the business details we then delete the stored address
-  delete businessDetails.changeBusinessAddress
 }
 
 export {

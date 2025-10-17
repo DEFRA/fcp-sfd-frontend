@@ -40,7 +40,7 @@ export const formatNumber = (payloadNumber, changedNumber, originalNumber) => {
  * @private
  */
 
-export const formatAddress = (address) => {
+export const formatDisplayAddress = (address) => {
   const { lookup, manual, postcode, country } = address
 
   let addressLines = []
@@ -74,4 +74,79 @@ export const formatAddress = (address) => {
     postcode,
     country
   ]
+}
+
+/**
+ * Formats an original address fetched from the DAL into a flattened structure
+ * suitable for display or form population on the `address-enter` pages.
+ *
+ * If the address contains a UPRN, it is treated as a lookup address;
+ * otherwise, it is treated as a manually entered address.
+ *
+ * @param {Object} originalAddress - The full address object from the DAL
+ *
+ * @returns {Object} A flattened address object with consistent keys
+ */
+export const formatOriginalAddress = (originalAddress) => {
+  const { manual, country, postcode, lookup } = originalAddress
+
+  if (lookup.uprn) {
+    const addressLine1 = [lookup.flatName, lookup.buildingName, lookup.buildingNumberRange].filter(Boolean).join(', ')
+
+    return {
+      address1: addressLine1 || null,
+      address2: lookup.street ?? null,
+      address3: null,
+      city: lookup.city ?? null,
+      county: lookup.county ?? null,
+      country: country ?? null,
+      postcode: postcode ?? null
+    }
+  }
+
+  return {
+    address1: manual.line1 ?? null,
+    address2: manual.line2 ?? null,
+    address3: manual.line3 ?? null,
+    city: manual.line4 ?? null,
+    county: manual.line5 ?? null,
+    country: country ?? null,
+    postcode: postcode ?? null
+  }
+}
+
+/**
+ * Formats a changed address object into a consistent structure for form display.
+ *
+ * If the address includes a UPRN, it indicates the user selected it from an address lookup.
+ * In that case, the lookup fields (`flatName`, `buildingName`, and `buildingNumberRange`)
+ * are combined into `address1` and mapped into the manual address format used by the form.
+ *
+ * If the address does not include a UPRN, it is assumed to be manually entered and returned as-is.
+ *
+ * @param {Object} changeBusinessAddress - The changed address object to format
+ *
+ * @returns {Object} A formatted address object with fields `address1`, `address2`, `address3`,
+ * `city`, `county`, `country`, and `postcode`.
+ */
+export const formatChangedAddress = (changeBusinessAddress) => {
+  // If the change address has a UPRN we need to map the lookup address to the manual one
+  if (changeBusinessAddress.uprn) {
+    const { flatName, buildingName, buildingNumberRange, street, city, county, country, postcode } = changeBusinessAddress
+
+    const addressLine1 = [flatName, buildingName, buildingNumberRange].filter(Boolean).join(', ')
+
+    return {
+      address1: addressLine1 || null,
+      address2: street ?? null,
+      address3: null,
+      city: city ?? null,
+      county: county ?? null,
+      country: country ?? null,
+      postcode: postcode ?? null
+    }
+  } else {
+    // If the change address has no UPRN it means its been manually entered and we don't need to map it
+    return changeBusinessAddress
+  }
 }

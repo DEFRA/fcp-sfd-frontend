@@ -14,16 +14,33 @@ import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessAddress')
-  const variables = businessAddressVariables(businessDetails)
+  const businessDetails = await fetchBusinessDetailsService(yar, credentials, getUserSessionToken)
 
-  await updateDalService(updateBusinessAddressMutation, variables)
+  // Update the address on the DAL
+  await updateBusinessAddress(businessDetails)
 
-  yar.clear('businessDetails')
+  // Map the new address to the cached business details
+  mapPayloadToBusinessDetails(businessDetails)
+
+  // Update the session cache
+  yar.set('businessDetails', businessDetails)
 
   flashNotification(yar, 'Success', 'You have updated your business address')
+}
+
+/**
+ * Sends the updated business address to the DAL.
+ */
+const updateBusinessAddress = async (businessDetails) => {
+  const variables = businessAddressVariables(businessDetails)
+  const response = await dalConnector(updateBusinessAddressMutation, variables, getUserSessionToken)
+
+  if (response.errors) {
+    throw new Error('DAL error from mutation')
+  }
 }
 
 /**

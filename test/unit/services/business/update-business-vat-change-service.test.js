@@ -58,7 +58,7 @@ describe('updateBusinessVatChangeService', () => {
           vat: 'GB123456789',
           sbi: '107183280'
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('it clears the businessDetails from session', async () => {

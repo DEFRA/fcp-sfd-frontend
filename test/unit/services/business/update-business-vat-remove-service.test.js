@@ -46,14 +46,14 @@ describe('updateBusinessVatRemoveService', () => {
     })
 
     test('it calls dalConnector with correct mutation and variable', async () => {
-      await updateBusinessVatRemoveService(yar, credentials)
+      await updateBusinessVatRemoveService(yar, credentials, getUserSessionToken)
 
       expect(updateDalService).toHaveBeenCalledWith(updateBusinessVATMutation, {
         input: {
           vat: '',
           sbi: '107183280'
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('adds a flash notification confirming the VAT removal', async () => {

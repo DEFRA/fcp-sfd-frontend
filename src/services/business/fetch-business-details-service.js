@@ -11,8 +11,9 @@ import { businessDetailsQuery } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-business-details.js'
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
-const fetchBusinessDetailsService = async (credentials) => {
+const fetchBusinessDetailsService = async (credentials, getUserSessionToken) => {
   if (!config.get('featureToggle.dalConnection')) {
     return mappedData
   }
@@ -23,7 +24,7 @@ const fetchBusinessDetailsService = async (credentials) => {
 const getFromDal = async (credentials) => {
   const { sbi, crn } = credentials
 
-  const dalResponse = await dalConnector(businessDetailsQuery, { sbi, crn })
+  const dalResponse = await dalConnector(businessDetailsQuery, { sbi, crn }, getUserSessionToken)
 
   if (dalResponse.data) {
     const mappedResponse = mapBusinessDetails(dalResponse.data)

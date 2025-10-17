@@ -137,5 +137,21 @@ describe('businessAddressSelectPresenter', () => {
         expect(result.displayAddresses[0].text).toEqual('1 address found')
       })
     })
+
+    describe('when a previously picked address exists', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          uprn: '100000222222',
+          displayAddress: 'TechWorks Ltd, Customer Services, Innovation House, 42, Harbour Street, Manchester, M1 7YZ'
+        }
+      })
+
+      test('the matching address should be selected and the display option should not be selected', () => {
+        const result = businessAddressSelectPresenter(data)
+
+        expect(result.displayAddresses[0].selected).toBe(false)
+        expect(result.displayAddresses[2].selected).toBe(true)
+      })
+    })
   })
 })

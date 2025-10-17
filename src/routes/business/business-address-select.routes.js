@@ -10,7 +10,7 @@ const getBusinessAddressSelect = {
   path: '/business-address-select',
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses'])
+    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses', 'changeBusinessAddress'])
     const pageData = businessAddressSelectPresenter(businessDetails)
 
     return h.view('business/business-address-select', pageData)

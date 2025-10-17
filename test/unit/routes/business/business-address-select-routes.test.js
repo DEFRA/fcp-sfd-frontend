@@ -64,7 +64,7 @@ describe('business address select change', () => {
         expect(fetchBusinessChangeService).toHaveBeenCalledWith(
           request.yar,
           request.auth.credentials,
-          ['changeBusinessPostcode', 'changeBusinessAddresses']
+          ['changeBusinessPostcode', 'changeBusinessAddresses', 'changeBusinessAddress']
         )
       })
 

@@ -43,7 +43,7 @@ const backLink = (postcodeLookup) => {
 
 const changeLink = (postcodeLookup) => {
   if (postcodeLookup) {
-    return '/business-address-select'
+    return '/business-address-change'
   } else {
     return '/business-address-enter'
   }

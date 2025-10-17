@@ -6,7 +6,8 @@ import {
   formatDisplayAddress,
   formatNumber,
   formatOriginalAddress,
-  formatChangedAddress
+  formatChangedAddress,
+  formatDisplayAddresses
 } from '../../../src/presenters/base-presenter.js'
 
 describe('basePresenter', () => {
@@ -309,6 +310,74 @@ describe('basePresenter', () => {
 
         expect(result).toEqual(changeBusinessAddress)
       })
+    })
+  })
+
+  describe('#formatDisplayAddresses', () => {
+    let addresses
+    let previouslyPickedAddress
+
+    beforeEach(() => {
+      addresses = [
+        { uprn: '111', displayAddress: '1 Main Street, London, SW1A 1AA' },
+        { uprn: '222', displayAddress: '2 High Road, Bristol, BS1 4ST' }
+      ]
+      previouslyPickedAddress = null
+    })
+
+    test('it should return formatted addresses with correct values and text', () => {
+      const result = formatDisplayAddresses(addresses, previouslyPickedAddress)
+
+      expect(result).toHaveLength(3)
+      expect(result[1]).toEqual({
+        value: '1111 Main Street, London, SW1A 1AA',
+        text: '1 Main Street, London, SW1A 1AA',
+        selected: false
+      })
+      expect(result[2]).toEqual({
+        value: '2222 High Road, Bristol, BS1 4ST',
+        text: '2 High Road, Bristol, BS1 4ST',
+        selected: false
+      })
+    })
+
+    test('it should prepend a summary row showing the correct number of addresses', async () => {
+      const result = formatDisplayAddresses(addresses, previouslyPickedAddress)
+
+      expect(result[0]).toEqual({
+        value: 'display',
+        text: '2 addresses found',
+        selected: true
+      })
+    })
+
+    test('it should show "1 address found" if only one address exists', async () => {
+      const result = formatDisplayAddresses([addresses[0]], previouslyPickedAddress)
+
+      expect(result[0]).toEqual({
+        value: 'display',
+        text: '1 address found',
+        selected: true
+      })
+    })
+
+    test('it should mark the previously picked address as selected', async () => {
+      previouslyPickedAddress = { uprn: '222', displayAddress: '2 High Road, Bristol, BS1 4ST' }
+
+      const result = formatDisplayAddresses(addresses, previouslyPickedAddress)
+
+      expect(result[2].selected).toEqual(true)
+      expect(result[0].selected).toBe(false)
+    })
+
+    test('it should leave summary row selected if no address matches the previously picked address', async () => {
+      previouslyPickedAddress = { uprn: '999', displayAddress: 'Nonexistent Address' }
+
+      const result = formatDisplayAddresses(addresses, previouslyPickedAddress)
+
+      expect(result[0].selected).toBe(true)
+      expect(result[1].selected).toBe(false)
+      expect(result[2].selected).toBe(false)
     })
   })
 })

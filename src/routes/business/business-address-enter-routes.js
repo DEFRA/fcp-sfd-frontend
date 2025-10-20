@@ -1,5 +1,5 @@
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
-import { businessAddressSchema } from '../../schemas/business/business-address-schema.js'
+import { addressSchema } from '../../schemas/address-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessAddressEnterPresenter } from '../../presenters/business/business-address-enter-presenter.js'
@@ -22,7 +22,7 @@ const postBusinessAddressEnter = {
   path: '/business-address-enter',
   options: {
     validate: {
-      payload: businessAddressSchema,
+      payload: addressSchema,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

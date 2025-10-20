@@ -2,14 +2,14 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { businessAddressSchema } from '../../../../src/schemas/business/business-address-schema.js'
+import { addressSchema } from '../../../src/schemas/address-schema.js'
 
-describe('business address schema', () => {
+describe('address schema', () => {
   let payload
   let schema
 
   beforeEach(() => {
-    schema = businessAddressSchema
+    schema = addressSchema
 
     payload = {
       address1: '10',
@@ -153,7 +153,7 @@ describe('business address schema', () => {
 
     describe('because "postcode" is longer than 8 characters', () => {
       beforeEach(() => {
-        payload.postcode = 'More than 10 characters'
+        payload.postcode = 'More than 8 characters'
       })
 
       test('it fails validation', () => {

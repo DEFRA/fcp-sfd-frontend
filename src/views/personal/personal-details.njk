@@ -66,7 +66,7 @@
           actions: {
             items: [
               {
-                href: "/",
+                href: dobChangeLink,
                 text: "Change",
                 visuallyHiddenText: "date of birth"
               }
@@ -91,7 +91,7 @@
           actions: {
             items: [
               {
-                href: "/",
+                href: "/account-address-change",
                 text: "Change",
                 visuallyHiddenText: "personal address"
               }
@@ -120,13 +120,13 @@
             text: "Personal email address"
           },
           value: {
-            text: personalEmail
+            text: personalEmail.email
           },
           actions: {
             items: [
               {
-                href: "/",
-                text: "Change",
+                href: personalEmail.link,
+                text: personalEmail.action,
                 visuallyHiddenText: "personal email address"
               }
             ]

@@ -1,19 +1,17 @@
 /**
- * Formats data ready for presenting in the `/business-address-enter` page
- * @module businessAddressEnterPresenter
+ * Formats data ready for presenting in the `/account-address-enter` page
+ * @module personalAddressEnterPresenter
  */
 
 import { formatOriginalAddress, formatChangedAddress } from '../base-presenter.js'
 
-const businessAddressEnterPresenter = (data, payload) => {
+const personalAddressEnterPresenter = (data, payload) => {
   return {
-    backLink: { href: '/business-address-change' },
-    pageTitle: 'Enter your business address',
-    metaDescription: 'Enter the address for your business.',
-    address: formatAddress(payload, data.changeBusinessAddress, data.address),
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null
+    backLink: { href: '/account-address-change' },
+    pageTitle: 'Enter your personal address',
+    metaDescription: 'Enter the address for your personal account.',
+    address: formatAddress(payload, data.changePersonalAddress, data.address),
+    userName: data.info.fullName.fullNameJoined ?? null
   }
 }
 
@@ -24,23 +22,23 @@ const businessAddressEnterPresenter = (data, payload) => {
  *
  * 1. If `payload` exists, it returns `payload` as-is (usually due to a validation error).
  *
- * 2. If `changeBusinessAddress` exists:
+ * 2. If `changePersonalAddress` exists:
  *    - Returns a formatted address combining `flatName`, `buildingName`, and `buildingNumberRange` into `address1`
  *      if it contains a `uprn` (selected from address lookup).
  *
- *    - Otherwise, returns `changeBusinessAddress` as-is (manually entered address).
+ *    - Otherwise, returns `changePersonalAddress` as-is (manually entered address).
  *
  * 3. If `originalAddress` exists:
  *    - Returns a formatted address from `lookup` if `lookup.uprn` is present (selected from postcode lookup).
  *    - Otherwise, returns a formatted address from `manual` lines.
  */
-const formatAddress = (payload, changeBusinessAddress, originalAddress) => {
+const formatAddress = (payload, changePersonalAddress, originalAddress) => {
   if (payload) {
     return payload
   }
 
-  if (changeBusinessAddress) {
-    return formatChangedAddress(changeBusinessAddress)
+  if (changePersonalAddress) {
+    return formatChangedAddress(changePersonalAddress)
   }
 
   if (originalAddress) {
@@ -51,5 +49,5 @@ const formatAddress = (payload, changeBusinessAddress, originalAddress) => {
 }
 
 export {
-  businessAddressEnterPresenter
+  personalAddressEnterPresenter
 }

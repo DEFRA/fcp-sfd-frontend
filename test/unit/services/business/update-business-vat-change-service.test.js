@@ -6,7 +6,6 @@ import { fetchBusinessChangeService } from '../../../../src/services/business/fe
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { updateBusinessVATMutation } from '../../../../src/dal/mutations/business/update-business-vat.js'
-import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -59,7 +58,7 @@ describe('updateBusinessVatChangeService', () => {
           vat: 'GB123456789',
           sbi: '107183280'
         }
-      }, getUserSessionToken)
+      })
     })
 
     test('it clears the businessDetails from session', async () => {

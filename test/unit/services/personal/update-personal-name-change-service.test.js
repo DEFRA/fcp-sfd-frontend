@@ -60,11 +60,9 @@ describe('updatePersonalNameChangeService', () => {
 
       expect(updateDalService).toHaveBeenCalledWith(updatePersonalNameMutation, {
         input: {
-          name: {
-            first: 'John',
-            last: 'Doe',
-            middle: 'M'
-          },
+          first: 'John',
+          last: 'Doe',
+          middle: 'M',
           crn: mappedData.crn
         }
       })
@@ -80,11 +78,9 @@ describe('updatePersonalNameChangeService', () => {
 
         expect(updateDalService).toHaveBeenCalledWith(updatePersonalNameMutation, {
           input: {
-            name: {
-              first: 'John',
-              last: 'Doe',
-              middle: null
-            },
+            first: 'John',
+            last: 'Doe',
+            middle: null,
             crn: mappedData.crn
           }
         })

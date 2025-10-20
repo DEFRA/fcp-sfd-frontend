@@ -116,6 +116,51 @@ describe('formatValidationErrors', () => {
     })
   })
 
+  describe('and the error applies to multiple related fields (e.g day, month, year)', () => {
+    beforeEach(() => {
+      errorDetails = [
+        {
+          path: ['day', 'month', 'year'],
+          message: 'Enter a valid date of birth',
+          type: 'dob.invalid'
+        }
+      ]
+    })
+
+    test('should apply the same error message to each related field', () => {
+      const result = formatValidationErrors(errorDetails)
+
+      expect(result).toEqual({
+        day: { text: 'Enter a valid date of birth' },
+        month: { text: 'Enter a valid date of birth' },
+        year: { text: 'Enter a valid date of birth' }
+      })
+    })
+
+    test('should not overwrite existing field errors', () => {
+      const preExistingErrors = [
+        {
+          path: ['day'],
+          message: 'Day is missing',
+          type: 'dob.missingDay'
+        },
+        {
+          path: ['day', 'month', 'year'],
+          message: 'Enter a valid date of birth',
+          type: 'dob.invalid'
+        }
+      ]
+
+      const result = formatValidationErrors(preExistingErrors)
+
+      expect(result).toEqual({
+        day: { text: 'Day is missing' },
+        month: { text: 'Enter a valid date of birth' },
+        year: { text: 'Enter a valid date of birth' }
+      })
+    })
+  })
+
   describe('when there are no validation errors', () => {
     test('should return an empty object', () => {
       expect(formatValidationErrors([])).toEqual({})

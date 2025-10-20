@@ -10,11 +10,12 @@
  * @module updateBusinessAddressChangeService
  */
 
-import { fetchBusinessChangeService } from './fetch-business-change-service.js'
+import { fetchBusinessDetailsService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 import { getUserSessionToken } from '../../utils/get-user-session-token.js'
+import { mapPayloadToBusinessDetails } from '../../utils/mappers/map-payload-to-business-details.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(yar, credentials, getUserSessionToken)
@@ -36,7 +37,7 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
  */
 const updateBusinessAddress = async (businessDetails) => {
   const variables = businessAddressVariables(businessDetails)
-  const response = await dalConnector(updateBusinessAddressMutation, variables, getUserSessionToken)
+  const response = await updateDalService(updateBusinessAddressMutation, variables, getUserSessionToken)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

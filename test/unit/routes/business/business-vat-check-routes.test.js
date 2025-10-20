@@ -1,6 +1,5 @@
 // Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Things we need to mock
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'

@@ -52,7 +52,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
     test('it fetches the business details with credentials', async () => {
       await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
-      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessPhoneNumbers')
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken, 'changeBusinessPhoneNumbers')
     })
 
     test('it calls updateDalService with correct mutation and variables', async () => {

@@ -12,6 +12,7 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessPhoneNumbersChangeService } from '../../../../src/services/business/update-business-phone-numbers-change-service'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
@@ -65,7 +66,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
           },
           sbi: mappedData.info.sbi
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('it clears the businessDetails from session', async () => {

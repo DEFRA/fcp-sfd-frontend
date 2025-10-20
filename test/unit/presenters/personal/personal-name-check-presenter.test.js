@@ -11,7 +11,10 @@ describe('personalNameCheckPresenter', () => {
     data = {
       info: {
         fullName: {
-          fullNameJoined: 'Alfred Waldron'
+          first: 'Alfred',
+          middle: 'M',
+          last: 'Waldron',
+          fullNameJoined: 'Alfred M Waldron'
         }
       },
       changePersonalName: {
@@ -31,7 +34,7 @@ describe('personalNameCheckPresenter', () => {
         changeLink: '/account-name-change',
         pageTitle: 'Check your name is correct before submitting',
         metaDescription: 'Check the full name for your personal account is correct.',
-        userName: 'Alfred Waldron',
+        userName: 'Alfred M Waldron',
         fullName: 'John A Doe'
       })
     })
@@ -97,6 +100,50 @@ describe('personalNameCheckPresenter', () => {
         const result = personalNameCheckPresenter(data)
 
         expect(result.fullName).toEqual('Alice Brown')
+      })
+    })
+
+    describe('when changePersonalName is present', () => {
+      test('it should use changePersonalName over info.fullName', () => {
+        const result = personalNameCheckPresenter(data)
+
+        expect(result.fullName).toEqual('John A Doe')
+      })
+    })
+
+    describe('when changePersonalName is missing', () => {
+      beforeEach(() => {
+        delete data.changePersonalName
+      })
+
+      test('it should fallback to info.fullName', () => {
+        const result = personalNameCheckPresenter(data)
+
+        expect(result.fullName).toEqual('Alfred M Waldron')
+      })
+    })
+
+    describe('when changePersonalName is null', () => {
+      beforeEach(() => {
+        data.changePersonalName = null
+      })
+
+      test('it should fallback to info.fullName', () => {
+        const result = personalNameCheckPresenter(data)
+
+        expect(result.fullName).toEqual('Alfred M Waldron')
+      })
+    })
+
+    describe('when changePersonalName is undefined', () => {
+      beforeEach(() => {
+        data.changePersonalName = undefined
+      })
+
+      test('it should fallback to info.fullName', () => {
+        const result = personalNameCheckPresenter(data)
+
+        expect(result.fullName).toEqual('Alfred M Waldron')
       })
     })
   })

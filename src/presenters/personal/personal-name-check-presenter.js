@@ -4,11 +4,6 @@
  */
 
 const personalNameCheckPresenter = (personalDetails) => {
-  const formatFullName = (nameData) => {
-    const { first, middle, last } = nameData
-    return `${first} ${middle ? middle + ' ' : ''}${last}`
-  }
-
   return {
     backLink: { href: '/account-name-change' },
     changeLink: '/account-name-change',
@@ -17,6 +12,14 @@ const personalNameCheckPresenter = (personalDetails) => {
     userName: personalDetails.info.fullName.fullNameJoined ?? null,
     fullName: formatFullName(personalDetails.changePersonalName ?? personalDetails.info.fullName)
   }
+}
+
+/**
+ * Formats the full name (first, middle and last) into a single string
+ */
+const formatFullName = (nameData) => {
+  const { first, middle, last } = nameData
+  return `${first} ${middle ? middle + ' ' : ''}${last}`
 }
 
 export {

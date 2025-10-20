@@ -13,7 +13,7 @@ const getPersonalNameChange = {
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalName')
     const pageData = personalNameChangePresenter(personalDetails)
 
-    return h.view('personal/personal-name-change.njk', pageData)
+    return h.view('personal/personal-name-change', pageData)
   }
 }
 
@@ -31,7 +31,7 @@ const postPersonalNameChange = {
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalName')
         const pageData = personalNameChangePresenter(personalDetails, payload)
 
-        return h.view('personal/personal-name-change.njk', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('personal/personal-name-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

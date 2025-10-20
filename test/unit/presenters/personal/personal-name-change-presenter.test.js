@@ -6,7 +6,7 @@ import { personalNameChangePresenter } from '../../../../src/presenters/personal
 
 describe('personalNameChangePresenter', () => {
   let data
-  let payload = {}
+  let payload
 
   beforeEach(() => {
     data = {
@@ -15,11 +15,12 @@ describe('personalNameChangePresenter', () => {
           first: 'Alfred',
           middle: 'M',
           last: 'Waldron',
-          fullNameJoined: 'Alfred Waldron'
+          fullNameJoined: 'Alfred M Waldron'
         }
       },
       changePersonalName: {}
     }
+    payload = {}
   })
 
   describe('when provided with personal name change data', () => {
@@ -30,7 +31,7 @@ describe('personalNameChangePresenter', () => {
         backLink: { href: '/personal-details' },
         pageTitle: 'What is your full name?',
         metaDescription: 'Update the full name for your personal account.',
-        userName: 'Alfred Waldron',
+        userName: 'Alfred M Waldron',
         first: 'Alfred',
         middle: 'M',
         last: 'Waldron'
@@ -91,8 +92,11 @@ describe('personalNameChangePresenter', () => {
     })
 
     describe('when provided with a payload with empty middle name', () => {
-      test('it should return middle as empty string', () => {
+      beforeEach(() => {
         payload = { middle: '' }
+      })
+
+      test('it should return middle as empty string', () => {
         const result = personalNameChangePresenter(data, payload)
 
         expect(result.middle).toEqual('')
@@ -134,6 +138,38 @@ describe('personalNameChangePresenter', () => {
         const result = personalNameChangePresenter(data, payload)
 
         expect(result.last).toEqual('Johnson')
+      })
+    })
+  })
+
+  describe('field fallback behavior', () => {
+    describe('the "first" property fallback', () => {
+      test('it should use payload over change and original', () => {
+        data.changePersonalName.first = 'ChangeFirst'
+        payload = { first: 'PayloadFirst' }
+
+        const result = personalNameChangePresenter(data, payload)
+        expect(result.first).toEqual('PayloadFirst')
+      })
+    })
+
+    describe('the "middle" property fallback', () => {
+      test('it should use payload over change and original', () => {
+        data.changePersonalName.middle = 'C'
+        payload = { middle: 'P' }
+
+        const result = personalNameChangePresenter(data, payload)
+        expect(result.middle).toEqual('P')
+      })
+    })
+
+    describe('the "last" property fallback', () => {
+      test('it should use payload over change and original', () => {
+        data.changePersonalName.last = 'ChangeLast'
+        payload = { last: 'PayloadLast' }
+
+        const result = personalNameChangePresenter(data, payload)
+        expect(result.last).toEqual('PayloadLast')
       })
     })
   })

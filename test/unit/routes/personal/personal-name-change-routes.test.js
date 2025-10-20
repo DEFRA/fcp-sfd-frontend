@@ -67,7 +67,7 @@ describe('personal name change', () => {
       test('it renders the personal-name-change view with correct page data', async () => {
         await getPersonalNameChange.handler(request, h)
 
-        expect(h.view).toHaveBeenCalledWith('personal/personal-name-change.njk', getPageData())
+        expect(h.view).toHaveBeenCalledWith('personal/personal-name-change', getPageData())
       })
     })
   })
@@ -126,7 +126,7 @@ describe('personal name change', () => {
         test('it returns the page successfully with the error summary banner', async () => {
           await postPersonalNameChange.options.validate.failAction(request, h, err)
 
-          expect(h.view).toHaveBeenCalledWith('personal/personal-name-change.njk', getPageDataError())
+          expect(h.view).toHaveBeenCalledWith('personal/personal-name-change', getPageDataError())
         })
       })
 
@@ -136,7 +136,7 @@ describe('personal name change', () => {
         const pageData = getPageDataError()
         pageData.errors = {}
 
-        expect(h.view).toHaveBeenCalledWith('personal/personal-name-change.njk', pageData)
+        expect(h.view).toHaveBeenCalledWith('personal/personal-name-change', pageData)
       })
     })
   })

@@ -34,11 +34,11 @@
             label: {
               text: "First name"
             },
-            id: "firstName",
-            name: "firstName",
-            value: firstName,
-            errorMessage: errors.firstName and {
-              text: errors.firstName.text
+            id: "first",
+            name: "first",
+            value: first,
+            errorMessage: errors.first and {
+              text: errors.first.text
             }
           }) }}
 
@@ -46,23 +46,23 @@
             label: {
               text: "Middle name"
             },
-            id: "middleName",
-            name: "middleName",
-            value: middleName,
-            errorMessage: errors.middleName and {
-              text: errors.middleName.text
+            id: "middle",
+            name: "middle",
+            value: middle,
+            errorMessage: errors.middle and {
+              text: errors.middle.text
             }
           }) }}
 
-          {{ govUkInput({
+          {{ govukInput({
             label: {
               text: "Last name"
             },
-            id: "lastName",
-            name: "lastName",
-            value: lastName,
-            errorMessage: errors.lastName and {
-              text: errors.lastName.text
+            id: "last",
+            name: "last",
+            value: last,
+            errorMessage: errors.last and {
+              text: errors.last.text
             }
           }) }}
         </fieldset>

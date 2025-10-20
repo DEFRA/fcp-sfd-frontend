@@ -6,6 +6,7 @@ import { fetchBusinessChangeService } from '../../../../src/services/business/fe
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/business/update-business-address.js'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -53,7 +54,7 @@ describe('updateBusinessAddressChangeService', () => {
     test('it fetches business details from the service', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessAddress')
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken, 'changeBusinessAddress')
     })
 
     test('it calls the updateDalService with correct mutation and variables', async () => {
@@ -81,7 +82,7 @@ describe('updateBusinessAddressChangeService', () => {
             }
           }
         }
-      })
+      }, getUserSessionToken)
     })
 
     test('adds a flash notification confirming the change in data', async () => {
@@ -139,7 +140,7 @@ describe('updateBusinessAddressChangeService', () => {
             }
           }
         }
-      })
+      }, getUserSessionToken)
     })
   })
 })

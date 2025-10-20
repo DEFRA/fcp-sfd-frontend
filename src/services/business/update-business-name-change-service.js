@@ -13,12 +13,13 @@ import { updateBusinessNameMutation } from '../../dal/mutations/business/update-
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const updateBusinessNameChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessName')
+  const businessDetails = await fetchBusinessChangeService(yar, credentials, getUserSessionToken, 'changeBusinessName')
   const variables = { input: { name: businessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
 
-  await updateDalService(updateBusinessNameMutation, variables)
+  await updateDalService(updateBusinessNameMutation, variables, getUserSessionToken)
 
   yar.clear('businessDetails')
 

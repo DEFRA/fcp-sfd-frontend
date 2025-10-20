@@ -13,13 +13,14 @@ import { updateDalService } from '../DAL/update-dal-service.js'
 import { updateBusinessEmailMutation } from '../../dal/mutations/business/update-business-email.js'
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
+import { getUserSessionToken } from '../../utils/get-user-session-token.js'
 
 const updateBusinessEmailChangeService = async (yar, credentials) => {
-  const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessEmail')
+  const businessDetails = await fetchBusinessChangeService(yar, credentials, getUserSessionToken, 'changeBusinessEmail')
 
   const variables = { input: { email: { address: businessDetails.changeBusinessEmail }, sbi: businessDetails.info.sbi } }
 
-  await updateDalService(updateBusinessEmailMutation, variables)
+  await updateDalService(updateBusinessEmailMutation, variables, getUserSessionToken)
 
   yar.clear('businessDetails')
 

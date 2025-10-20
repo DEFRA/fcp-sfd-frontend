@@ -12,6 +12,7 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service'
+import { getUserSessionToken } from '../../../../src/utils/get-user-session-token.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
@@ -47,7 +48,7 @@ describe('updateBusinessEmailChangeService', () => {
     test('it fetches the business details with credentials', async () => {
       await updateBusinessEmailChangeService(yar, credentials)
 
-      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessEmail')
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, getUserSessionToken, 'changeBusinessEmail')
     })
 
     test('it calls updateDalService with correct mutation and variables', async () => {
@@ -55,7 +56,13 @@ describe('updateBusinessEmailChangeService', () => {
 
       expect(updateDalService).toHaveBeenCalledWith(updateBusinessEmailMutation, {
         input: { email: { address: 'new-email@test.com' }, sbi: '107183280' }
-      })
+      }, getUserSessionToken)
+    })
+
+    test('it clears the businessDetails from session', async () => {
+      await updateBusinessEmailChangeService(yar, credentials)
+
+      expect(yar.clear).toHaveBeenCalledWith('businessDetails')
     })
 
     test('it clears the businessDetails from session', async () => {

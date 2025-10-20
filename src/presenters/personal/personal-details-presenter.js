@@ -22,7 +22,11 @@ const personalDetailsPresenter = (data, yar) => {
       action: data.contact.telephone || data.contact.mobile ? 'Change' : 'Add',
       link: '/account-phone-numbers-change'
     },
-    personalEmail: data.contact.email,
+    personalEmail: {
+      email: data.contact.email ?? 'Not added',
+      action: data.contact.email ? 'Change' : 'Add',
+      link: '/account-email-change'
+    },
     dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
     dobChangeLink: '/account-date-of-birth-change'
   }

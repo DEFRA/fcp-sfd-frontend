@@ -3,6 +3,8 @@
  * @module personalNameCheckPresenter
  */
 
+import { formatFullName } from '../base-presenter.js'
+
 const personalNameCheckPresenter = (personalDetails) => {
   return {
     backLink: { href: '/account-name-change' },
@@ -12,14 +14,6 @@ const personalNameCheckPresenter = (personalDetails) => {
     userName: personalDetails.info.fullName.fullNameJoined ?? null,
     fullName: formatFullName(personalDetails.changePersonalName ?? personalDetails.info.fullName)
   }
-}
-
-/**
- * Formats the full name (first, middle and last) into a single string
- */
-const formatFullName = (nameData) => {
-  const { first, middle, last } = nameData
-  return `${first} ${middle ? middle + ' ' : ''}${last}`
 }
 
 export {

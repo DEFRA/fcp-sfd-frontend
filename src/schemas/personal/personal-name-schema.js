@@ -23,7 +23,7 @@ export const personalNameSchema = Joi.object({
       'any.required': 'Enter last name'
     }),
   middle: Joi.string()
-    .empty('')
+    .allow('')
     .max(MIDDLE_NAME_MAX)
     .messages({
       'string.max': `Middle name must be ${MIDDLE_NAME_MAX} characters or less`

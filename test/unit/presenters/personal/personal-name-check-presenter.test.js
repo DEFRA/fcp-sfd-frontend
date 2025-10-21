@@ -30,7 +30,7 @@ describe('personalNameCheckPresenter', () => {
         pageTitle: 'Check your name is correct before submitting',
         metaDescription: 'Check the full name for your personal account is correct.',
         userName: 'Alfred M Waldron',
-        fullName: 'John A Doe'
+        fullName: 'Alfred M Waldron'
       })
     })
   })
@@ -53,16 +53,16 @@ describe('personalNameCheckPresenter', () => {
     describe('when provided with a name that has no middle name', () => {
       beforeEach(() => {
         data.changePersonalName = {
-          first: 'Jane',
+          first: 'Alfred',
           middle: '',
-          last: 'Smith'
+          last: 'Waldron'
         }
       })
 
       test('it should return fullName without middle name', () => {
         const result = personalNameCheckPresenter(data)
 
-        expect(result.fullName).toEqual('Jane Smith')
+        expect(result.fullName).toEqual('Alfred Waldron')
       })
     })
 

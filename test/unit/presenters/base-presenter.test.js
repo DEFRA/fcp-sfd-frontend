@@ -3,6 +3,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
 import {
+  formatFullName,
   formatDisplayAddress,
   formatNumber,
   formatOriginalAddress,
@@ -10,6 +11,42 @@ import {
 } from '../../../src/presenters/base-presenter.js'
 
 describe('basePresenter', () => {
+  describe('#formatFullName', () => {
+    let fullName
+
+    describe('when provided with a full name', () => {
+      beforeEach(() => {
+        fullName = {
+          first: 'Alfred',
+          middle: 'M',
+          last: 'Waldron'
+        }
+      })
+
+      test('it should return the full name as a string', () => {
+        const result = formatFullName(fullName)
+
+        expect(result).toBe('Alfred M Waldron')
+      })
+    })
+
+    describe('when provided with a full name that has no middle name', () => {
+      beforeEach(() => {
+        fullName = {
+          first: 'Alfred',
+          middle: '',
+          last: 'Waldron'
+        }
+      })
+
+      test('it should return the full name as a string', () => {
+        const result = formatFullName(fullName)
+
+        expect(result).toBe('Alfred Waldron')
+      })
+    })
+  })
+
   describe('#formatNumber', () => {
     let payload
     let changedNumber

@@ -50,22 +50,6 @@ describe('personalNameCheckPresenter', () => {
   })
 
   describe('the "fullName" property', () => {
-    describe('when provided with a name that has no middle name', () => {
-      beforeEach(() => {
-        data.changePersonalName = {
-          first: 'Alfred',
-          middle: '',
-          last: 'Waldron'
-        }
-      })
-
-      test('it should return fullName without middle name', () => {
-        const result = personalNameCheckPresenter(data)
-
-        expect(result.fullName).toEqual('Alfred Waldron')
-      })
-    })
-
     describe('when provided with a changed personal name', () => {
       beforeEach(() => {
         data.changePersonalName = {
@@ -75,7 +59,7 @@ describe('personalNameCheckPresenter', () => {
         }
       })
 
-      test('it should return fullName as the changed name', () => {
+      test('it should return the changed name as the fullName property', () => {
         const result = personalNameCheckPresenter(data)
 
         expect(result.fullName).toEqual('John A Doe')
@@ -87,7 +71,7 @@ describe('personalNameCheckPresenter', () => {
         delete data.changePersonalName
       })
 
-      test('it should return fullName', () => {
+      test('it should default to the original name', () => {
         const result = personalNameCheckPresenter(data)
 
         expect(result.fullName).toEqual('Alfred M Waldron')

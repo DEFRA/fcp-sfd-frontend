@@ -140,16 +140,6 @@ describe('personalDetailsPresenter', () => {
 
       expect(result.fullName).toBe('John M Doe')
     })
-
-    describe('when there is no middle name', () => {
-      test('returns a formatted full name without the middle name', () => {
-        data.info.fullName.middle = null
-
-        const result = personalDetailsPresenter(data, yar)
-
-        expect(result.fullName).toBe('John Doe')
-      })
-    })
   })
 
   describe('the "personalEmail.email" property', () => {

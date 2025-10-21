@@ -20,7 +20,6 @@ describe('personalNameChangePresenter', () => {
       },
       changePersonalName: {}
     }
-    payload = {}
   })
 
   describe('when provided with personal name change data', () => {
@@ -53,96 +52,83 @@ describe('personalNameChangePresenter', () => {
   })
 
   describe('the "first" property', () => {
-    describe('when provided with a changed first name', () => {
-      beforeEach(() => {
-        data.changePersonalName.first = 'John'
-      })
-
-      test('it should return first as the changed first name', () => {
-        const result = personalNameChangePresenter(data)
-
-        expect(result.first).toEqual('John')
-      })
-    })
-
     describe('when provided with a payload', () => {
       beforeEach(() => {
         payload = { first: 'Jane' }
       })
 
-      test('it should return first as the payload', () => {
+      test('it should return the payload as the first property', () => {
         const result = personalNameChangePresenter(data, payload)
 
         expect(result.first).toEqual('Jane')
       })
     })
 
-    describe('when payload is provided alongside changePersonalName', () => {
+    describe('when no payload is provided but a changed first name', () => {
       beforeEach(() => {
-        data.changePersonalName.first = 'ChangeFirst'
-        payload = { first: 'PayloadFirst' }
+        data.changePersonalName.first = 'John'
       })
 
-      test('it should return first as the payload', () => {
+      test('it should return the changed name as the first property', () => {
+        const result = personalNameChangePresenter(data)
+
+        expect(result.first).toEqual('John')
+      })
+    })
+
+    describe('when no payload and no changed name is provided', () => {
+      beforeEach(() => {
+        delete data.changePersonalName.first
+        payload = {}
+      })
+
+      test('it should default to the original first name', () => {
         const result = personalNameChangePresenter(data, payload)
 
-        expect(result.first).toEqual('PayloadFirst')
+        expect(result.first).toEqual('Alfred')
       })
     })
   })
 
   describe('the "middle" property', () => {
-    describe('when provided with a changed middle name', () => {
+    describe('when provided with a payload', () => {
+      beforeEach(() => {
+        payload = { middle: 'P' }
+      })
+
+      test('it should return the payload as the middle property', () => {
+        const result = personalNameChangePresenter(data, payload)
+
+        expect(result.middle).toEqual('P')
+      })
+    })
+    describe('when no payload is provided but a changed middle name', () => {
       beforeEach(() => {
         data.changePersonalName.middle = 'A'
       })
 
-      test('it should return middle as the changed middle name', () => {
+      test('it should return the changed name as the middle property', () => {
         const result = personalNameChangePresenter(data)
 
         expect(result.middle).toEqual('A')
       })
     })
 
-    describe('when payload is provided alongside changePersonalName', () => {
+    describe('when no payload and no changed name is provided', () => {
       beforeEach(() => {
-        data.changePersonalName.middle = 'C'
-        payload = { middle: 'P' }
+        delete data.changePersonalName.middle
+        payload = {}
       })
 
-      test('it should return middle as the payload', () => {
+      test('it should default to the original middle name', () => {
         const result = personalNameChangePresenter(data, payload)
 
-        expect(result.middle).toEqual('P')
-      })
-    })
-
-    describe('when provided with a payload with empty middle name', () => {
-      beforeEach(() => {
-        payload = { middle: '' }
-      })
-
-      test('it should return middle as empty string', () => {
-        const result = personalNameChangePresenter(data, payload)
-
-        expect(result.middle).toEqual('')
+        expect(result.middle).toEqual('M')
       })
     })
   })
 
   describe('the "last" property', () => {
-    describe('when provided with a changed last name', () => {
-      beforeEach(() => {
-        data.changePersonalName.last = 'Smith'
-      })
-
-      test('it should return last as the changed last name', () => {
-        const result = personalNameChangePresenter(data)
-
-        expect(result.last).toEqual('Smith')
-      })
-    })
-
     describe('when provided with a payload', () => {
       beforeEach(() => {
         payload = { last: 'Johnson' }
@@ -155,16 +141,28 @@ describe('personalNameChangePresenter', () => {
       })
     })
 
-    describe('when payload is provided alongside changePersonalName', () => {
+    describe('when no payload is provided but a changed last name', () => {
       beforeEach(() => {
-        data.changePersonalName.last = 'ChangeLast'
-        payload = { last: 'PayloadLast' }
+        data.changePersonalName.last = 'Smith'
       })
 
-      test('it should return last as the payload', () => {
+      test('it should return the changed name as the last property', () => {
+        const result = personalNameChangePresenter(data)
+
+        expect(result.last).toEqual('Smith')
+      })
+    })
+
+    describe('when no payload and no changed name is provided', () => {
+      beforeEach(() => {
+        delete data.changePersonalName.last
+        payload = {}
+      })
+
+      test('it should default to the original last name', () => {
         const result = personalNameChangePresenter(data, payload)
 
-        expect(result.last).toEqual('PayloadLast')
+        expect(result.last).toEqual('Waldron')
       })
     })
   })

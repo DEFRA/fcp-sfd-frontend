@@ -1,4 +1,6 @@
 import { personalDetailsRoutes } from './personal-details-routes.js'
+import { personalNameChangeRoutes } from './personal-name-change-routes.js'
+import { personalNameCheckRoutes } from './personal-name-check-routes.js'
 import { personalDobChangeRoutes } from './personal-dob-change-routes.js'
 import { personalDobCheckRoutes } from './personal-dob-check-routes.js'
 import { personalAddressEnterRoutes } from './personal-address-enter-routes.js'
@@ -12,6 +14,8 @@ import { personalEmailCheckRoutes } from './personal-email-check-routes.js'
 
 export const personalRoutes = [
   ...personalDetailsRoutes,
+  ...personalNameChangeRoutes,
+  ...personalNameCheckRoutes,
   ...personalDobChangeRoutes,
   ...personalDobCheckRoutes,
   ...personalAddressEnterRoutes,

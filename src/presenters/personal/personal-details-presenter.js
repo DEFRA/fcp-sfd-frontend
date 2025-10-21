@@ -4,7 +4,7 @@
  */
 
 import moment from 'moment'
-import { formatDisplayAddress } from '../base-presenter.js'
+import { formatFullName, formatDisplayAddress } from '../base-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
   moment.locale('en-gb')
@@ -30,12 +30,6 @@ const personalDetailsPresenter = (data, yar) => {
     dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
     dobChangeLink: '/account-date-of-birth-change'
   }
-}
-
-const formatFullName = (fullName) => {
-  const { first, middle, last } = fullName
-
-  return `${first} ${middle ? middle + ' ' : ''}${last}`
 }
 
 export {

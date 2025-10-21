@@ -16,11 +16,6 @@ describe('personalNameCheckPresenter', () => {
           last: 'Waldron',
           fullNameJoined: 'Alfred M Waldron'
         }
-      },
-      changePersonalName: {
-        first: 'John',
-        middle: 'A',
-        last: 'Doe'
       }
     }
   })
@@ -71,40 +66,16 @@ describe('personalNameCheckPresenter', () => {
       })
     })
 
-    describe('when provided with a name that has undefined middle name', () => {
+    describe('when provided with a changed personal name', () => {
       beforeEach(() => {
         data.changePersonalName = {
-          first: 'Bob',
-          middle: undefined,
-          last: 'Johnson'
+          first: 'John',
+          middle: 'A',
+          last: 'Doe'
         }
       })
 
-      test('it should return fullName without middle name', () => {
-        const result = personalNameCheckPresenter(data)
-
-        expect(result.fullName).toEqual('Bob Johnson')
-      })
-    })
-
-    describe('when provided with a name that has null middle name', () => {
-      beforeEach(() => {
-        data.changePersonalName = {
-          first: 'Alice',
-          middle: null,
-          last: 'Brown'
-        }
-      })
-
-      test('it should return fullName without middle name', () => {
-        const result = personalNameCheckPresenter(data)
-
-        expect(result.fullName).toEqual('Alice Brown')
-      })
-    })
-
-    describe('when changePersonalName is present', () => {
-      test('it should use changePersonalName over info.fullName', () => {
+      test('it should return fullName as the changed name', () => {
         const result = personalNameCheckPresenter(data)
 
         expect(result.fullName).toEqual('John A Doe')
@@ -116,31 +87,7 @@ describe('personalNameCheckPresenter', () => {
         delete data.changePersonalName
       })
 
-      test('it should fallback to info.fullName', () => {
-        const result = personalNameCheckPresenter(data)
-
-        expect(result.fullName).toEqual('Alfred M Waldron')
-      })
-    })
-
-    describe('when changePersonalName is null', () => {
-      beforeEach(() => {
-        data.changePersonalName = null
-      })
-
-      test('it should fallback to info.fullName', () => {
-        const result = personalNameCheckPresenter(data)
-
-        expect(result.fullName).toEqual('Alfred M Waldron')
-      })
-    })
-
-    describe('when changePersonalName is undefined', () => {
-      beforeEach(() => {
-        data.changePersonalName = undefined
-      })
-
-      test('it should fallback to info.fullName', () => {
+      test('it should return fullName', () => {
         const result = personalNameCheckPresenter(data)
 
         expect(result.fullName).toEqual('Alfred M Waldron')

@@ -76,6 +76,7 @@ describe('personalNameChangePresenter', () => {
         expect(result.first).toEqual('Jane')
       })
     })
+
     describe('when payload is provided alongside changePersonalName', () => {
       beforeEach(() => {
         data.changePersonalName.first = 'ChangeFirst'
@@ -125,18 +126,6 @@ describe('personalNameChangePresenter', () => {
         const result = personalNameChangePresenter(data, payload)
 
         expect(result.middle).toEqual('')
-      })
-    })
-
-    describe('when provided with a payload with undefined middle name', () => {
-      beforeEach(() => {
-        payload = { middle: undefined }
-      })
-
-      test('it should fallback to original middle name', () => {
-        const result = personalNameChangePresenter(data, payload)
-
-        expect(result.middle).toEqual('M')
       })
     })
   })

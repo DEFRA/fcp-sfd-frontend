@@ -28,6 +28,8 @@ Object.entries(filters).forEach(([name, filter]) => {
   nunjucksEnvironment.addFilter(name, filter)
 })
 
+nunjucksEnvironment.addGlobal('govukRebrand', true)
+
 export const vision = {
   plugin: hapiVision,
   options: {

@@ -165,3 +165,53 @@ export const formatChangedAddress = (changeBusinessAddress) => {
     return changeBusinessAddress
   }
 }
+
+/**
+ * Formats a list of address objects for display in a dropdown menu.
+ *
+ * Each address object is transformed into an option with:
+ * - `value`: a concatenation of the address UPRN and displayAddress
+ * - `text`: the formatted display address string
+ * - `selected`: true only if it matches the previously picked address
+ *
+ * A summary option is prepended to the start of the list, showing how many
+ * addresses were found. This summary option is selected by default unless
+ * a previously picked address exists.
+ *
+ * This function is shared across presenters that display address selection
+ * lists (e.g. personal or business address flows).
+ *
+ * Note: The `value` combines `uprn` and `displayAddress` to ensure uniqueness.
+ * Some addresses (for example, postcode LL55 2NF) have been observed to share
+ * the same UPRN, which caused incorrect selections when UPRN alone was used.
+ * Concatenating both fields guarantees each dropdown option has a unique value.
+ *
+ * @param {Array<Object>} addresses - List of address objects with `uprn` and `displayAddress` properties
+ * @param {Object} [previouslyPickedAddress] - Optional object representing the address previously selected by the user
+ *
+ * @returns {Array<Object>} Array of formatted address options ready for display
+ */
+export const formatDisplayAddresses = (addresses, previouslyPickedAddress) => {
+  const displayAddresses = addresses.map(address => ({
+    value: `${address.uprn}${address.displayAddress}`,
+    text: address.displayAddress,
+    selected:
+      previouslyPickedAddress?.uprn === address.uprn &&
+      previouslyPickedAddress?.displayAddress === address.displayAddress
+  }))
+
+  // Check if any address is already selected
+  const hasSelectedAddress = displayAddresses.some(addr => addr.selected)
+
+  // Add a display summary option to the beginning of the list
+  // e.g. "18 addresses found"
+  const text = addresses.length === 1 ? '1 address found' : `${addresses.length} addresses found`
+
+  displayAddresses.unshift({
+    value: 'display',
+    text,
+    selected: !hasSelectedAddress
+  })
+
+  return displayAddresses
+}

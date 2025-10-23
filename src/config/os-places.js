@@ -5,6 +5,12 @@ export const osPlacesConfig = {
       format: String,
       default: null,
       env: 'OS_PLACES_CLIENT_ID'
+    },
+    osPlacesStub: {
+      doc: 'Use the OS Places Stub',
+      format: Boolean,
+      default: false,
+      env: 'OS_PLACES_STUB'
     }
   }
 }

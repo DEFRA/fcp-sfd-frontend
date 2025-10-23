@@ -15,6 +15,7 @@ import { setSessionData } from '../../utils/session/set-session-data.js'
 import { placesAPI } from 'osdatahub'
 import { constants as httpConstants } from 'node:http2'
 import { addressLookupMapper } from '../../mappers/address-lookup-mapper.js'
+import { mockPostcode } from '../../services/os-places/os-places-stub.js'
 
 const logger = createLogger()
 
@@ -49,7 +50,7 @@ const fetchAddressesFromPostcodeLookup = async (postcode) => {
   try {
     const { clientId } = config.get('osPlacesConfig')
 
-    const response = await placesAPI.postcode(clientId, postcode, { limit: 150 })
+    const response = await fetchAddresses(clientId, postcode, { limit: 150 })
 
     return response.features ?? []
   } catch (error) {
@@ -60,6 +61,16 @@ const fetchAddressesFromPostcodeLookup = async (postcode) => {
       errors: [error]
     }
   }
+}
+
+const fetchAddresses = async (clientId, postcode, options = {}) => {
+  const { osPlacesStub } = config.get('osPlacesConfig')
+
+  if (osPlacesStub) {
+    return mockPostcode(postcode)
+  }
+
+  return placesAPI.postcode(clientId, postcode, options)
 }
 
 export {

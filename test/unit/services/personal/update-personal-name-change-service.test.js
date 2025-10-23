@@ -68,7 +68,7 @@ describe('updatePersonalNameChangeService', () => {
       })
     })
 
-    describe('when middle name is null', () => {
+    describe('when middle names are null', () => {
       beforeEach(() => {
         mappedData.changePersonalName.middle = null
       })
@@ -96,7 +96,7 @@ describe('updatePersonalNameChangeService', () => {
     test('adds a flash notification confirming the change in data', async () => {
       await updatePersonalNameChangeService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your personal name')
+      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your full name')
     })
   })
 })

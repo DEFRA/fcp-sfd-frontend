@@ -102,7 +102,7 @@ describe('personalNameChangePresenter', () => {
         expect(result.middle).toEqual('P')
       })
     })
-    describe('when no payload is provided but a changed middle name', () => {
+    describe('when no payload is provided but a changed middle names', () => {
       beforeEach(() => {
         data.changePersonalName.middle = 'A'
       })
@@ -120,7 +120,7 @@ describe('personalNameChangePresenter', () => {
         payload = {}
       })
 
-      test('it should default to the original middle name', () => {
+      test('it should default to the original middle names', () => {
         const result = personalNameChangePresenter(data, payload)
 
         expect(result.middle).toEqual('M')

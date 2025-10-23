@@ -31,7 +31,7 @@ describe('basePresenter', () => {
       })
     })
 
-    describe('when provided with a full name that has no middle name', () => {
+    describe('when provided with a full name that has no middle names', () => {
       beforeEach(() => {
         fullName = {
           first: 'Alfred',

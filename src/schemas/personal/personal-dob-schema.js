@@ -123,7 +123,7 @@ const getFullDate = (day, monthValue, year, helpers) => {
  * If the month is already numeric, it is simply parsed and returned as a number.
  */
 const getMonthNumber = (month, helpers) => {
-  if (Number.isNaN(month)) {
+  if (isNaN(month)) {
     const lower = month.toLowerCase()
     const mapped = MONTH_MAP[lower]
 

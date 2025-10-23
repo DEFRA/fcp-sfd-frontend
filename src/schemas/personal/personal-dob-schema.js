@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import { MONTH_MAP } from '../../constants/month-map.js'
+import { MAX_AGE_YEARS } from '../../constants/validation-fields.js'
 
 export const personalDobSchema = Joi.object({
   day: Joi.string().allow(''),
@@ -81,7 +82,7 @@ const checkNotTooOld = (fullDate, helpers) => {
 const getOldestAllowedDate = () => {
   const date = new Date()
   date.setUTCHours(0, 0, 0, 0)
-  date.setUTCFullYear(date.getUTCFullYear() - 120)
+  date.setUTCFullYear(date.getUTCFullYear() - MAX_AGE_YEARS)
 
   return date
 }
@@ -122,7 +123,7 @@ const getFullDate = (day, monthValue, year, helpers) => {
  * If the month is already numeric, it is simply parsed and returned as a number.
  */
 const getMonthNumber = (month, helpers) => {
-  if (isNaN(month)) {
+  if (Number.isNaN(month)) {
     const lower = month.toLowerCase()
     const mapped = MONTH_MAP[lower]
 

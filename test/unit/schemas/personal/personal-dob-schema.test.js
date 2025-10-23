@@ -242,5 +242,21 @@ describe('personal date of birth schema', () => {
         }))
       })
     })
+
+    describe('because the month entered is not in the correct format', () => {
+      beforeEach(() => {
+        payload = { day: '01', month: 'Ju', year: '1900' }
+      })
+
+      test('it fails validation', () => {
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: expect.stringContaining('Date of birth must be a real date'),
+          path: ['month'],
+          type: 'dob.invalid'
+        }))
+      })
+    })
   })
 })

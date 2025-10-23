@@ -128,7 +128,7 @@ const getMonthNumber = (month, helpers) => {
     const mapped = MONTH_MAP[lower]
 
     if (!mapped) {
-      return makeError(helpers, 'dob.invalidMonth', ['month'])
+      return makeError(helpers, 'dob.invalid', ['month'])
     }
 
     return mapped

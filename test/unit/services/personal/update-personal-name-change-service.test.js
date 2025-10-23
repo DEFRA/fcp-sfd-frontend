@@ -68,7 +68,7 @@ describe('updatePersonalNameChangeService', () => {
       })
     })
 
-    describe('when middle name is null', () => {
+    describe('when middle names are null', () => {
       beforeEach(() => {
         mappedData.changePersonalName.middle = null
       })

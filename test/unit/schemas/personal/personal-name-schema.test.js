@@ -150,7 +150,7 @@ describe('personal name schema', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Middle name must be 100 characters or less',
+          message: 'Middle names must be 100 characters or less',
           path: ['middle'],
           type: 'string.max'
         }))

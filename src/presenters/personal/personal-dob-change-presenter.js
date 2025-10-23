@@ -4,7 +4,7 @@
  */
 
 const personalDobChangePresenter = (data, payload) => {
-  const { day, month, year} = generateDateInputValues(data, payload)
+  const { day, month, year } = generateDateInputValues(data, payload)
 
   return {
     backLink: { href: '/personal-details' },

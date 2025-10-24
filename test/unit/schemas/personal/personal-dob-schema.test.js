@@ -27,6 +27,40 @@ describe('personal date of birth schema', () => {
     })
   })
 
+  describe('when the month has been entered as a string', () => {
+    beforeEach(() => {
+      payload = {
+        day: '12',
+        month: 'october',
+        year: '1990'
+      }
+    })
+
+    test('it confirms the data is valid', () => {
+      const { error, value } = schema.validate(payload, { abortEarly: false })
+
+      expect(error).toBeUndefined()
+      expect(value).toEqual(payload)
+    })
+  })
+
+  describe('when the month has been entered as a string abbreviation', () => {
+    beforeEach(() => {
+      payload = {
+        day: '12',
+        month: 'sept',
+        year: '1990'
+      }
+    })
+
+    test('it confirms the data is valid', () => {
+      const { error, value } = schema.validate(payload, { abortEarly: false })
+
+      expect(error).toBeUndefined()
+      expect(value).toEqual(payload)
+    })
+  })
+
   describe('when invalid data is provided', () => {
     describe('because all fields are missing', () => {
       beforeEach(() => {
@@ -189,6 +223,38 @@ describe('personal date of birth schema', () => {
           message: 'Date of birth must include a day and year',
           path: ['day', 'year'],
           type: 'dob.missingDayYear'
+        }))
+      })
+    })
+
+    describe('because the date is more than 120 years in the past', () => {
+      beforeEach(() => {
+        payload = { day: '01', month: '5', year: '1900' }
+      })
+
+      test('it fails validation', () => {
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: expect.stringContaining('Date of birth must be on or after'),
+          path: ['day', 'month', 'year'],
+          type: 'dob.tooOld'
+        }))
+      })
+    })
+
+    describe('because the month entered is not in the correct format', () => {
+      beforeEach(() => {
+        payload = { day: '01', month: 'Ju', year: '1900' }
+      })
+
+      test('it fails validation', () => {
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: expect.stringContaining('Date of birth must be a real date'),
+          path: ['month'],
+          type: 'dob.invalid'
         }))
       })
     })

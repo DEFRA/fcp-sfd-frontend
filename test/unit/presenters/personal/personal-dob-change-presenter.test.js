@@ -6,6 +6,7 @@ import { personalDobChangePresenter } from '../../../../src/presenters/personal/
 
 describe('personalDobChangePresenter', () => {
   let data
+  let payload
 
   beforeEach(() => {
     data = {
@@ -18,7 +19,7 @@ describe('personalDobChangePresenter', () => {
     }
   })
 
-  describe('when provided with personal date of birth in info object only', () => {
+  describe('when provided with personal date of birth data', () => {
     test('it correctly presents the data', () => {
       const result = personalDobChangePresenter(data)
 
@@ -28,69 +29,82 @@ describe('personalDobChangePresenter', () => {
         userName: 'Alfred Waldron',
         hint: 'For example, 31 3 1980',
         metaDescription: 'Update the date of birth for your personal account.',
-        day: 1,
-        month: 5,
-        year: 1990
+        day: '1',
+        month: '5',
+        year: '1990'
       })
     })
   })
 
-  describe('when provided with personal date of birth in info object and changePersonalDob ', () => {
-    test('it correctly presents the data', () => {
-      data.changePersonalDob = { day: '25', month: '06', year: '1984' }
-      const result = personalDobChangePresenter(data)
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.fullName.fullNameJoined
+      })
 
-      expect(result).toEqual({
-        backLink: { href: '/personal-details' },
-        pageTitle: 'What is your date of birth?',
-        userName: 'Alfred Waldron',
-        hint: 'For example, 31 3 1980',
-        metaDescription: 'Update the date of birth for your personal account.',
-        day: '25',
-        month: '06',
-        year: '1984'
+      test('it should return userName as null', () => {
+        const result = personalDobChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
       })
     })
   })
 
-  describe('when provided with payload ', () => {
-    test('it correctly presents payload property as input value when property is not null', () => {
-      const payload = { day: '20', month: '4', year: '1979' }
-      const result = personalDobChangePresenter(data, payload)
+  describe('the "day", "month" and "year" property', () => {
+    describe('when provided with a payload', () => {
+      beforeEach(() => {
+        payload = { day: '20', month: '10', year: '1997' }
+      })
 
-      expect(result).toEqual({
-        backLink: { href: '/personal-details' },
-        pageTitle: 'What is your date of birth?',
-        userName: 'Alfred Waldron',
-        hint: 'For example, 31 3 1980',
-        metaDescription: 'Update the date of birth for your personal account.',
-        day: '20',
-        month: '4',
-        year: '1979'
+      test('it should return the day, month and year from the payload', () => {
+        const result = personalDobChangePresenter(data, payload)
+
+        expect(result.day).toEqual('20')
+        expect(result.month).toEqual('10')
+        expect(result.year).toEqual('1997')
       })
     })
 
-    test('it correctly presents empty string as input value when payload property is null', () => {
-      const payload = {}
-      const result = personalDobChangePresenter(data, payload)
+    describe('when provided with a empty payload', () => {
+      beforeEach(() => {
+        payload = {}
+      })
 
-      expect(result).toEqual({
-        backLink: { href: '/personal-details' },
-        pageTitle: 'What is your date of birth?',
-        userName: 'Alfred Waldron',
-        hint: 'For example, 31 3 1980',
-        metaDescription: 'Update the date of birth for your personal account.',
-        day: '',
-        month: '',
-        year: ''
+      test('it should return the day, month and year from the payload', () => {
+        const result = personalDobChangePresenter(data, payload)
+
+        expect(result.day).toEqual('')
+        expect(result.month).toEqual('')
+        expect(result.year).toEqual('')
       })
     })
-  })
 
-  test('it should return userName as null when data does not have info.fullName.fullNameJoined', () => {
-    delete data.info.fullName.fullNameJoined
-    const result = personalDobChangePresenter(data)
+    describe('when provided with a changed personal date of birth', () => {
+      beforeEach(() => {
+        data.changePersonalDob = { day: '15', month: '11', year: '2000' }
+      })
 
-    expect(result.userName).toEqual(null)
+      test('it should return the day, month and year from the changePersonalDob object', () => {
+        const result = personalDobChangePresenter(data)
+
+        expect(result.day).toEqual('15')
+        expect(result.month).toEqual('11')
+        expect(result.year).toEqual('2000')
+      })
+    })
+
+    describe('when no payload and no changed dates are provided', () => {
+      beforeEach(() => {
+        delete data.changePersonalDob
+      })
+
+      test('it should return the day, month and year from the original date object', () => {
+        const result = personalDobChangePresenter(data)
+
+        expect(result.day).toEqual('1')
+        expect(result.month).toEqual('5')
+        expect(result.year).toEqual('1990')
+      })
+    })
   })
 })

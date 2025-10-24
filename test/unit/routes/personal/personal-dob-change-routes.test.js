@@ -156,9 +156,9 @@ const getPageData = () => {
     hint: 'For example, 31 3 1980',
     metaDescription: 'Update the date of birth for your personal account.',
     userName: 'John Doe',
-    day: 5,
-    month: 7,
-    year: 1982
+    day: '5',
+    month: '7',
+    year: '1982'
   }
 }
 

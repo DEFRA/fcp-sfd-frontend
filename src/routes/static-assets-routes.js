@@ -1,22 +1,19 @@
-import { constants as httpConstants } from 'node:http2'
+import path from 'node:path'
 import { config } from '../config/index.js'
 
 export const staticAssetRoutes = [
   {
     options: {
       auth: false,
-      cache: {
-        expiresIn: config.get('server.staticCacheTimeout'),
-        privacy: 'private'
-      }
+      cache: false
     },
     method: 'GET',
     path: '/favicon.ico',
     handler (_request, h) {
-      return h
-        .response()
-        .code(httpConstants.HTTP_STATUS_NO_CONTENT)
-        .type('image/x-icon')
+      return h.file(path.join(process.cwd(), '.public/assets/images/favicon.ico'))
+        .header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        .header('Pragma', 'no-cache')
+        .header('Expires', '0')
     }
   },
   {
@@ -31,7 +28,7 @@ export const staticAssetRoutes = [
     path: `${config.get('server.assetPath')}/{param*}`,
     handler: {
       directory: {
-        path: '.',
+        path: path.join(process.cwd(), '.public'),
         redirectToSlash: true
       }
     }

@@ -147,8 +147,12 @@ export default {
     new CopyPlugin({
       patterns: [
         {
+          from: path.join(govukFrontendPath, 'dist/govuk/assets/images/favicon.ico'),
+          to: 'assets/images/favicon.ico'
+        },
+        {
           from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand'),
-          to: 'assets'
+          to: 'assets/rebrand'
         }
       ]
     })

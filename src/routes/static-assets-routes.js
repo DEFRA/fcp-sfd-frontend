@@ -5,15 +5,15 @@ export const staticAssetRoutes = [
   {
     options: {
       auth: false,
-      cache: false
+      cache: {
+        expiresIn: 31536000,
+        privacy: 'public'
+      }
     },
     method: 'GET',
     path: '/favicon.ico',
     handler (_request, h) {
       return h.file(path.join(process.cwd(), '.public/assets/images/favicon.ico'))
-        .header('Cache-Control', 'no-cache, no-store, must-revalidate')
-        .header('Pragma', 'no-cache')
-        .header('Expires', '0')
     }
   },
   {
@@ -28,7 +28,10 @@ export const staticAssetRoutes = [
     path: `${config.get('server.assetPath')}/{param*}`,
     handler: {
       directory: {
-        path: path.join(process.cwd(), '.public'),
+        path: [
+          path.join(process.cwd(), '.public'),
+          path.join(process.cwd(), 'node_modules/govuk-frontend/dist/govuk/assets')
+        ],
         redirectToSlash: true
       }
     }

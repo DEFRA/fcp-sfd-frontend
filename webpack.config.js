@@ -1,7 +1,6 @@
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'path'
-import CopyPlugin from 'copy-webpack-plugin'
 import { CleanWebpackPlugin } from 'clean-webpack-plugin'
 import TerserPlugin from 'terser-webpack-plugin'
 import WebpackAssetsManifest from 'webpack-assets-manifest'
@@ -143,19 +142,7 @@ export default {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new WebpackAssetsManifest(),
-    new CopyPlugin({
-      patterns: [
-        {
-          from: path.join(govukFrontendPath, 'dist/govuk/assets/images/favicon.ico'),
-          to: 'assets/images/favicon.ico'
-        },
-        {
-          from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand'),
-          to: 'assets/rebrand'
-        }
-      ]
-    })
+    new WebpackAssetsManifest()
   ],
   stats: {
     errorDetails: true,

@@ -56,7 +56,7 @@ export const serverConfig = {
     assetPath: {
       doc: 'Asset path',
       format: String,
-      default: '/public',
+      default: '/assets',
       env: 'ASSET_PATH'
     },
     isProduction: {

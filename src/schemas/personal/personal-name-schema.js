@@ -2,7 +2,7 @@ import Joi from 'joi'
 import {
   FIRST_NAME_MAX,
   LAST_NAME_MAX,
-  MIDDLE_NAME_MAX
+  MIDDLE_NAMES_MAX
 } from '../../constants/validation-fields.js'
 
 export const personalNameSchema = Joi.object({
@@ -24,8 +24,8 @@ export const personalNameSchema = Joi.object({
     }),
   middle: Joi.string()
     .allow('')
-    .max(MIDDLE_NAME_MAX)
+    .max(MIDDLE_NAMES_MAX)
     .messages({
-      'string.max': `Middle name must be ${MIDDLE_NAME_MAX} characters or less`
+      'string.max': `Middle names must be ${MIDDLE_NAMES_MAX} characters or less`
     })
 })

@@ -6,9 +6,9 @@ import { addressLookupMapper } from '../../../../src/mappers/address-lookup-mapp
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { placesAPI } from 'osdatahub'
 import { constants as httpConstants } from 'node:http2'
+import { mockPostcode } from '../../../../src/services/os-places/os-places-stub.js'
 
-// Thing under test
-import { addressLookupService } from '../../../../src/services/os-places/address-lookup-service.js'
+const mockConfigGet = vi.fn()
 
 // Mocks
 vi.mock('../../../../src/mappers/address-lookup-mapper.js', () => ({
@@ -19,13 +19,13 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../src/config/index.js', () => ({
+vi.mock('../../../../src/config/index.js', () => ({
   config: {
-    get: vi.fn(() => ({ clientId: 'mock-client-id' }))
+    get: mockConfigGet
   }
 }))
 
-vi.mock('../../../src/utils/logger.js', () => ({
+vi.mock('../../../../src/utils/logger.js', () => ({
   createLogger: vi.fn().mockReturnValue({
     error: vi.fn()
   })
@@ -37,6 +37,13 @@ vi.mock('osdatahub', () => ({
   }
 }))
 
+vi.mock('../../../../src/services/os-places/os-places-stub.js', () => ({
+  mockPostcode: vi.fn()
+}))
+
+// Thing under test
+const { addressLookupService } = await import('../../../../src/services/os-places/address-lookup-service.js')
+
 describe('addressLookupService', () => {
   const yar = {}
   const postcode = 'SW1A 1AA'
@@ -47,81 +54,111 @@ describe('addressLookupService', () => {
     vi.clearAllMocks()
   })
 
-  describe('when called with a valid postcode', () => {
-    beforeEach(() => {
-      placesAPI.postcode.mockResolvedValue(mockAddresses)
+  describe('when osPlacesStub is not enabled', () => {
+    beforeEach(async () => {
+      mockConfigGet.mockReturnValue({
+        clientId: 'fake-client-id',
+        osPlacesStub: false
+      })
+    })
+
+    describe('when called with a valid postcode', () => {
+      beforeEach(() => {
+        placesAPI.postcode.mockResolvedValue(mockAddresses)
+        addressLookupMapper.mockReturnValue(mappedMockAddresses)
+      })
+
+      describe('and the context is for the business details data', () => {
+        test('returns mapped addresses and sets them in session when API returns results', async () => {
+          const result = await addressLookupService(postcode, yar, 'business')
+
+          expect(result).toEqual(mappedMockAddresses)
+          expect(addressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
+          expect(setSessionData).toHaveBeenCalledWith(
+            yar,
+            'businessDetails',
+            'changeBusinessAddresses',
+            mappedMockAddresses
+          )
+        })
+      })
+
+      describe('and the context is for the personal details data', () => {
+        test('returns mapped addresses and sets them in session when API returns results', async () => {
+          const result = await addressLookupService(postcode, yar, 'personal')
+
+          expect(result).toEqual(mappedMockAddresses)
+          expect(addressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
+          expect(setSessionData).toHaveBeenCalledWith(
+            yar,
+            'personalDetails',
+            'changePersonalAddresses',
+            mappedMockAddresses
+          )
+        })
+      })
+    })
+
+    describe('when called with a postcode that returns no addresses', () => {
+      beforeEach(() => {
+        placesAPI.postcode.mockResolvedValue({ features: [] })
+      })
+
+      test('returns a Joi-like error object', async () => {
+        const result = await addressLookupService(postcode, yar, 'business')
+
+        expect(result).toEqual({
+          error: [
+            {
+              message: 'No addresses found for this postcode',
+              path: ['postcode']
+            }
+          ]
+        })
+        expect(addressLookupMapper).not.toHaveBeenCalled()
+        expect(setSessionData).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the API errors', () => {
+      let error
+
+      beforeEach(() => {
+        error = new Error('Network error')
+        placesAPI.postcode.mockRejectedValue(error)
+      })
+
+      test('returns error object', async () => {
+        const result = await addressLookupService(postcode, yar)
+
+        expect(result).toEqual({
+          statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+          errors: [error]
+        })
+        expect(addressLookupMapper).not.toHaveBeenCalled()
+        expect(setSessionData).not.toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('when osPlacesStub is enabled', () => {
+    beforeEach(async () => {
+      mockConfigGet.mockReturnValue({
+        clientId: 'fake-client-id',
+        osPlacesStub: true
+      })
+
+      mockPostcode.mockReturnValue(mockData())
       addressLookupMapper.mockReturnValue(mappedMockAddresses)
     })
 
-    describe('and the context is for the business details data', () => {
-      test('returns mapped addresses and sets them in session when API returns results', async () => {
-        const result = await addressLookupService(postcode, yar, 'business')
-
-        expect(result).toEqual(mappedMockAddresses)
-        expect(addressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
-        expect(setSessionData).toHaveBeenCalledWith(
-          yar,
-          'businessDetails',
-          'changeBusinessAddresses',
-          mappedMockAddresses
-        )
-      })
-    })
-
-    describe('and the context is for the personal details data', () => {
-      test('returns mapped addresses and sets them in session when API returns results', async () => {
-        const result = await addressLookupService(postcode, yar, 'personal')
-
-        expect(result).toEqual(mappedMockAddresses)
-        expect(addressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
-        expect(setSessionData).toHaveBeenCalledWith(
-          yar,
-          'personalDetails',
-          'changePersonalAddresses',
-          mappedMockAddresses
-        )
-      })
-    })
-  })
-
-  describe('when called with a postcode that returns no addresses', () => {
-    beforeEach(() => {
-      placesAPI.postcode.mockResolvedValue({ features: [] })
-    })
-
-    test('returns a Joi-like error object', async () => {
+    test('calls mockPostcode instead of the real API and returns mapped results', async () => {
       const result = await addressLookupService(postcode, yar, 'business')
 
-      expect(result).toEqual({
-        error: [
-          {
-            message: 'No addresses found for this postcode',
-            path: ['postcode']
-          }
-        ]
-      })
-      expect(addressLookupMapper).not.toHaveBeenCalled()
-      expect(setSessionData).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('when the API errors', () => {
-    let error
-
-    beforeEach(() => {
-      error = new Error('Network error')
-      placesAPI.postcode.mockRejectedValue(error)
-    })
-
-    test('returns error object', async () => {
-      const result = await addressLookupService(postcode, yar)
-
-      expect(result).toEqual({
-        statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-        errors: [error]
-      })
-      expect(addressLookupMapper).not.toHaveBeenCalled()
-      expect(setSessionData).not.toHaveBeenCalled()
+      expect(mockPostcode).toHaveBeenCalledWith(postcode)
+      expect(placesAPI.postcode).not.toHaveBeenCalled()
+      expect(addressLookupMapper).toHaveBeenCalledWith(mockData().features)
+      expect(result).toEqual(mappedMockAddresses)
     })
   })
 })

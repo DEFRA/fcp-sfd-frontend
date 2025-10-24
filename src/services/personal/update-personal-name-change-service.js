@@ -30,7 +30,7 @@ const updatePersonalNameChangeService = async (yar, credentials) => {
 
   yar.clear('personalDetails')
 
-  flashNotification(yar, 'Success', 'You have updated your personal name')
+  flashNotification(yar, 'Success', 'You have updated your full name')
 }
 
 export {

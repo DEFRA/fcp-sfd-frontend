@@ -12,7 +12,6 @@ export const mapPersonalDetails = (value) => {
     info: {
       dateOfBirth: value.customer.info.dateOfBirth,
       fullName: {
-        title: value.customer.info.name.title,
         first: value.customer.info.name.first,
         last: value.customer.info.name.last,
         middle: value.customer.info.name.middle ?? null,
@@ -49,7 +48,6 @@ export const mapPersonalDetails = (value) => {
 
 const formatFullName = (name) => {
   return [
-    name.title,
     name.first,
     name.middle,
     name.last

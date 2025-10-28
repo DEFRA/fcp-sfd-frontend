@@ -51,7 +51,6 @@ export const businessDetailsQuery = `
       name {
         first
         last
-        title
       }
     }
   }

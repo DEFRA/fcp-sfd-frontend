@@ -4,11 +4,11 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 
 {% from "common/heading/macro.njk" import appHeading %}
-
 {% set mainClasses = "app-main-wrapper" %}
 
 {% block head %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
+
   {% if metaDescription %}
     <meta name="description" content="{{ metaDescription }}">
   {% endif %}
@@ -21,10 +21,12 @@
     containerClasses: "govuk-width-container",
     useTudorCrown: true
   }) }}
+
   {{ govukServiceNavigation({
     serviceName: serviceName,
     serviceUrl: serviceUrl
   }) }}
+
   <div class="govuk-width-container">
     {% include "common/phase-banner/phase-banner.njk" %}
   </div>

@@ -29,7 +29,6 @@ query Customer($crn: ID!) {
         first
         last
         middle
-        title
       }
       phone {
         landline

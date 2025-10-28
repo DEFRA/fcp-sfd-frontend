@@ -18,8 +18,7 @@ describe('businessDetailsMapper', () => {
           info: {
             name: {
               first: 'Software',
-              last: 'Developer',
-              title: 'Mr.'
+              last: 'Developer'
             }
           }
         }
@@ -27,25 +26,7 @@ describe('businessDetailsMapper', () => {
 
       const result = mapBusinessDetails(fullNameCheckData)
 
-      expect(result.customer.fullName).toEqual('Mr. Software Developer')
-    })
-
-    test('it should build the fullname correctly when title is missing', () => {
-      const fullNameData = {
-        ...dalData,
-        customer: {
-          info: {
-            name: {
-              first: 'Software',
-              last: 'Developer'
-            }
-          }
-        }
-      }
-
-      const result = mapBusinessDetails(fullNameData)
-
-      expect(result.customer.fullName).toBe('Software Developer')
+      expect(result.customer.fullName).toEqual('Software Developer')
     })
   })
 })

@@ -4,7 +4,6 @@ const dalData = {
     info: {
       dateOfBirth: '1990-01-01',
       name: {
-        title: 'Mr',
         first: 'John',
         middle: 'M',
         last: 'Doe'
@@ -41,11 +40,10 @@ const mappedData = {
   info: {
     dateOfBirth: '1990-01-01',
     fullName: {
-      title: 'Mr',
       first: 'John',
       last: 'Doe',
       middle: 'M',
-      fullNameJoined: 'Mr John M Doe'
+      fullNameJoined: 'John M Doe'
     }
   },
   address: {

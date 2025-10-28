@@ -62,7 +62,7 @@ describe('personalAddressChangeErrorService', () => {
         pageTitle: 'What is your personal address?',
         metaDescription: 'Update the address for your personal account.',
         postcode: 'AB12 3CD',
-        userName: 'Mr Test Name',
+        userName: 'Test Name',
         errors: [
           { text: 'An error occurred' }
         ]
@@ -86,7 +86,7 @@ const mockPersonalDetails = () => {
     },
     info: {
       fullName: {
-        fullNameJoined: 'Mr Test Name'
+        fullNameJoined: 'Test Name'
       }
     },
     changePersonalPostcode: {

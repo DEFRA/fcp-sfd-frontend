@@ -11,7 +11,7 @@ describe('personalAddressCheckPresenter', () => {
     data = {
       info: {
         fullName: {
-          fullNameJoined: 'Mr Test Name'
+          fullNameJoined: 'Test Name'
         }
       },
       address: {
@@ -42,7 +42,7 @@ describe('personalAddressCheckPresenter', () => {
           'SK22 1DL',
           'United Kingdom'
         ],
-        userName: 'Mr Test Name'
+        userName: 'Test Name'
       })
     })
   })

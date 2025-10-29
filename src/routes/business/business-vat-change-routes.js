@@ -4,10 +4,14 @@ import { businessVatSchema } from '../../schemas/business/business-vat-schema.js
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessVatChange = {
   method: 'GET',
   path: '/business-vat-registration-number-change',
+  options: {
+    auth: { scope: FULL_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
@@ -21,6 +25,7 @@ const postBusinessVatChange = {
   method: 'POST',
   path: '/business-vat-registration-number-change',
   options: {
+    auth: { scope: FULL_PERMISSIONS },
     validate: {
       payload: businessVatSchema,
       options: { abortEarly: false },

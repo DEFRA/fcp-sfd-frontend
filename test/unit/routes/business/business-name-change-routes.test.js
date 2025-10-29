@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
+// Test helpers
+import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessNameChangeRoutes } from '../../../../src/routes/business/business-name-change-routes.js'
 const [getBusinessNameChange, postBusinessNameChange] = businessNameChangeRoutes
@@ -56,9 +59,10 @@ describe('business name change', () => {
         })
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessNameChange.method).toBe('GET')
         expect(getBusinessNameChange.path).toBe('/business-name-change')
+        expect(getBusinessNameChange.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
       test('it calls fetchBusinessChangeService', async () => {
@@ -85,6 +89,12 @@ describe('business name change', () => {
           customer: { fullName: 'Alfred Waldron' },
           changeBusinessName: request.payload.businessName
         })
+      })
+
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessNameChange.method).toBe('POST')
+        expect(postBusinessNameChange.path).toBe('/business-name-change')
+        expect(postBusinessNameChange.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

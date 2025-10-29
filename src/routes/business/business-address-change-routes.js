@@ -5,10 +5,14 @@ import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
 import { businessAddressChangeErrorService } from '../../services/business/business-address-change-error-service.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessAddressChange = {
   method: 'GET',
   path: '/business-address-change',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessPostcode')
@@ -22,6 +26,7 @@ const postBusinessAddressChange = {
   method: 'POST',
   path: '/business-address-change',
   options: {
+    auth: { scope: AMEND_PERMISSIONS },
     validate: {
       payload: ukPostcodeSchema,
       options: { abortEarly: false },

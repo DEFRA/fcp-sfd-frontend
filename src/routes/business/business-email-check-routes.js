@@ -1,10 +1,14 @@
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { updateBusinessEmailChangeService } from '../../services/business/update-business-email-change-service.js'
 import { businessEmailCheckPresenter } from '../../presenters/business/business-email-check-presenter.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessEmailCheck = {
   method: 'GET',
   path: '/business-email-check',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessEmailChange = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessEmail')
@@ -17,6 +21,9 @@ const getBusinessEmailCheck = {
 const postBusinessEmailCheck = {
   method: 'POST',
   path: '/business-email-check',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     await updateBusinessEmailChangeService(yar, auth.credentials)

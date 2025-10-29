@@ -4,10 +4,14 @@ import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressesSchema } from '../../schemas/os-places/addresses-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessAddressSelect = {
   method: 'GET',
   path: '/business-address-select',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses', 'changeBusinessAddress'])
@@ -21,6 +25,7 @@ const postBusinessAddressSelect = {
   method: 'POST',
   path: '/business-address-select',
   options: {
+    auth: { scope: AMEND_PERMISSIONS },
     validate: {
       payload: addressesSchema,
       options: { abortEarly: false },

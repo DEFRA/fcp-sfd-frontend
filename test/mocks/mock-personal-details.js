@@ -32,6 +32,11 @@ const dalData = {
         uprn: '12345'
       }
     }
+  },
+  business: {
+    info: {
+      name: 'Acme Farms Ltd'
+    }
   }
 }
 
@@ -70,6 +75,11 @@ const mappedData = {
     email: 'test@example.com',
     telephone: '01234567890',
     mobile: null
+  },
+  business: {
+    info: {
+      name: 'Acme Farms Ltd'
+    }
   }
 }
 

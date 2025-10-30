@@ -28,7 +28,10 @@ describe('personalDetailsPresenter', () => {
       const result = personalDetailsPresenter(data, yar)
 
       expect(result).toEqual({
-        backLink: { href: '/home' },
+        backLink: {
+          text: `Back to ${data.business.info.name}`,
+          href: '/home'
+        },
         notification: { title: 'Update', text: 'Personal details updated successfully' },
         pageTitle: 'View and update your personal details',
         metaDescription: 'View and update your personal details.',
@@ -60,24 +63,23 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
-  describe('the backLink text', () => {
-    test('uses full business name when present and <= 50 chars', () => {
-      data.businessName = 'Acme Farms Ltd'
-      const result = personalDetailsPresenter(data, yar)
-      expect(result.backLink.text).toEqual('Back to Acme Farms Ltd')
+  describe('the backLink property', () => {
+    describe('when the businessName property is missing', () => {
+      test('it should return the text "Back"', () => {
+        data.business.info.name = null
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.backLink.text).toEqual('Back')
+      })
     })
 
-    test('truncates name > 50 with single ellipsis', () => {
-      const longName = 'Bright Acres Vertical Farming & Smart Greenhouse Systems Limited'
-      data.businessName = longName
-      const result = personalDetailsPresenter(data, yar)
-      expect(result.backLink.text).toEqual(`Back to ${longName.slice(0, 50)}…`)
-    })
+    describe('when the businessName property exceeds 50 characters', () => {
+      test('it should return the text truncated with an ellipsis', () => {
+        data.business.info.name = 'This is a very long business name that exceeds 50 characters'
+        const result = personalDetailsPresenter(data, yar)
 
-    test('is undefined when name missing to trigger macro default', () => {
-      data.businessName = null
-      const result = personalDetailsPresenter(data, yar)
-      expect(result.backLink.text).toBeUndefined()
+        expect(result.backLink.text).toEqual('Back to This is a very long business name that exceeds 50 …')
+      })
     })
   })
 

@@ -42,6 +42,11 @@ export const mapPersonalDetails = (value) => {
       email: value.customer.info.email.address,
       telephone: value.customer.info.phone.landline,
       mobile: value.customer.info.phone.mobile
+    },
+    business: {
+      info: {
+        name: value.business.info.name ?? null
+      }
     }
   }
 }

@@ -1,5 +1,4 @@
 import { fetchPersonalDetailsService } from '../../services/personal/fetch-personal-details-service.js'
-import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { personalDetailsPresenter } from '../../presenters/personal/personal-details-presenter.js'
 
 const getPersonalDetails = {
@@ -10,9 +9,7 @@ const getPersonalDetails = {
     yar.clear('personalDetails')
 
     const personalDetails = await fetchPersonalDetailsService(auth.credentials)
-    const businessDetails = await fetchBusinessDetailsService(auth.credentials)
-    const businessName = businessDetails.info.businessName
-    const pageData = personalDetailsPresenter({ ...personalDetails, businessName }, yar)
+    const pageData = personalDetailsPresenter(personalDetails, yar)
 
     return h.view('personal/personal-details.njk', pageData)
   }

@@ -10,7 +10,7 @@ const personalDetailsPresenter = (data, yar) => {
   moment.locale('en-gb')
   return {
     backLink: {
-      text: data.businessName ? formatBackLink(data.businessName) : 'Back',
+      text: data.business.info.name ? formatBackLink(data.business.info.name) : 'Back',
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,

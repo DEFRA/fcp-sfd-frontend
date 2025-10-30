@@ -1,4 +1,5 @@
 import { SCOPE } from '../constants/scope/business-details.js'
+import { homePresenter } from '../presenters/home-presenter.js'
 
 const index = {
   method: 'GET',
@@ -17,8 +18,10 @@ const home = {
   options: {
     auth: { scope: SCOPE }
   },
-  handler: (_request, h) => {
-    return h.view('home')
+  handler: (request, h) => {
+    const pageData = homePresenter(request.auth)
+
+    return h.view('home', pageData)
   }
 }
 

@@ -8,7 +8,7 @@ import { formatDisplayAddress } from '../base-presenter.js'
 const businessDetailsPresenter = (data, yar) => {
   return {
     backLink: {
-      text: data.info.businessName ? `Back to ${data.info.businessName}` : 'Back',
+      text: data.info.businessName ? formatBackLink(data.info.businessName) : 'Back',
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,
@@ -34,6 +34,13 @@ const businessDetailsPresenter = (data, yar) => {
     businessType: data.info.type,
     userName: data.customer.fullName
   }
+}
+
+const formatBackLink = (businessName) => {
+  if (businessName.length > 50) {
+    return `Back to ${businessName.slice(0, 50)}...`
+  }
+  return `Back to ${businessName}`
 }
 
 const formatCph = (countyParishHoldings) => {

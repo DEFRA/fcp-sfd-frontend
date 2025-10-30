@@ -4,7 +4,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 // Thing under test
 import { homePresenter } from '../../../src/presenters/home-presenter.js'
 
-//Test helpers
+// Test helpers
 import { VIEW_LEVEL_PERMISSION, AMEND_LEVEL_PERMISSION } from '../../../src/constants/scope/business-details.js'
 
 describe('homePresenter', () => {

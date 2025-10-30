@@ -27,8 +27,8 @@ describe('businessDetailsPresenter', () => {
 
       expect(result).toEqual({
         notification: { title: 'Update', text: 'Business details updated successfully' },
-        pageTitle: 'View and update your business details',
-        metaDescription: 'View and change the details for your business.',
+        pageTitle: 'View business details',
+        metaDescription: 'View and update your business details.',
         address: [
           'THE COACH HOUSE',
           'STOCKWELL HALL',
@@ -53,8 +53,47 @@ describe('businessDetailsPresenter', () => {
         businessType: data.info.type,
         userName: data.customer.fullName,
         backLink: { href: '/home' },
-        changeLinks: {}
+        changeLinks: {},
+        permissionsText: 'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
       })
+    })
+  })
+
+  describe('the "pageTitle" property', () => {
+    test('returns "View and update your business details" when user has amend or full permission', () => {
+      const result = businessDetailsPresenter(data, yar, ['BUSINESS_DETAILS:AMEND'])
+
+      expect(result.pageTitle).toEqual('View and update your business details')
+    })
+
+    test('returns "View business details" when user has only view permission', () => {
+      const result = businessDetailsPresenter(data, yar, ['view'])
+
+      expect(result.pageTitle).toEqual('View business details')
+    })
+  })
+
+  describe('the "permissionsText" property', () => {
+    test('returns amend-level permissions text when user has amend permission', () => {
+      const result = businessDetailsPresenter(data, yar, ['BUSINESS_DETAILS:AMEND'])
+
+      expect(result.permissionsText).toEqual(
+        'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
+      )
+    })
+
+    test('returns view-level permissions text when user has only view permission', () => {
+      const result = businessDetailsPresenter(data, yar, ['view'])
+
+      expect(result.permissionsText).toEqual(
+        'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
+      )
+    })
+
+    test('returns null when user has full permission', () => {
+      const result = businessDetailsPresenter(data, yar, ['BUSINESS_DETAILS:FULL_PERMISSION'])
+
+      expect(result.permissionsText).toBeNull()
     })
   })
 

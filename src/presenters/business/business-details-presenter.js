@@ -7,11 +7,13 @@ import { formatDisplayAddress } from '../base-presenter.js'
 import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const businessDetailsPresenter = (data, yar, permissionLevels) => {
+  const permissionGroup = checkPermissionType(permissionLevels)
+
   return {
     backLink: { href: '/home' },
     notification: yar ? yar.flash('notification')[0] : null,
-    pageTitle: 'View and update your business details',
-    metaDescription: 'View and change the details for your business.',
+    pageTitle: permissionGroup.viewPermission ? 'View business details' : 'View and update your business details',
+    metaDescription: 'View and update your business details.',
     address: formatDisplayAddress(data.address),
     businessName: data.info.businessName,
     businessTelephone: {
@@ -27,15 +29,51 @@ const businessDetailsPresenter = (data, yar, permissionLevels) => {
     businessLegalStatus: data.info.legalStatus,
     businessType: data.info.type,
     userName: data.customer.fullName,
-    changeLinks: setChangeLinks(data, permissionLevels)
+    changeLinks: setChangeLinks(data, permissionGroup),
+    permissionsText: setPermissionsText(permissionGroup)
   }
 }
 
-const setChangeLinks = (data, permissionLevels) => {
-  const amendPermission = permissionLevels.some(permission => AMEND_PERMISSIONS.includes(permission))
+const checkPermissionType = (permissionLevels) => {
   const fullPermission = permissionLevels.some(permission => FULL_PERMISSIONS.includes(permission))
+  if (fullPermission) {
+    return {
+      fullPermission,
+      viewPermission: false,
+      amendPermission: false
+    }
+  }
 
-  const amendLinks = {
+  const amendPermission = permissionLevels.some(permission => AMEND_PERMISSIONS.includes(permission))
+  if (amendPermission) {
+    return {
+      fullPermission: false,
+      viewPermission: false,
+      amendPermission
+    }
+  }
+
+  return {
+    amendPermission,
+    fullPermission,
+    viewPermission: true
+  }
+}
+
+const setPermissionsText = (permissionGroup) => {
+  if (permissionGroup.amendPermission) {
+    return 'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
+  }
+
+  if (permissionGroup.viewPermission) {
+    return 'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
+  }
+
+  return null
+}
+
+const getAmendLinks = (data) => {
+  return {
     businessAddress: {
       items: [
         {
@@ -64,78 +102,86 @@ const setChangeLinks = (data, permissionLevels) => {
       ]
     }
   }
+}
 
-  if (fullPermission) {
-    const fullPermissionLinks = {
-      businessName: {
-        items: [
-          {
-            href: '/business-name-change',
-            text: 'Change',
-            visuallyHiddenText: 'business name'
-          }
-        ]
-      },
-      businessLegal: {
-        items: [
-          {
-            href: '/business-legal-status-change',
-            text: 'Change',
-            visuallyHiddenText: 'business legal status'
-          }
-        ]
-      },
-      businessType: {
-        items: [
-          {
-            href: '/business-type-change',
-            text: 'Change',
-            visuallyHiddenText: 'business type'
-          }
-        ]
-      }
+const getFullPermissionLinks = (data) => {
+  const fullPermissionLinks = {
+    businessName: {
+      items: [
+        {
+          href: '/business-name-change',
+          text: 'Change',
+          visuallyHiddenText: 'business name'
+        }
+      ]
+    },
+    businessLegal: {
+      items: [
+        {
+          href: '/business-legal-status-change',
+          text: 'Change',
+          visuallyHiddenText: 'business legal status'
+        }
+      ]
+    },
+    businessType: {
+      items: [
+        {
+          href: '/business-type-change',
+          text: 'Change',
+          visuallyHiddenText: 'business type'
+        }
+      ]
     }
+  }
 
-    if (data.info.vat) {
-      fullPermissionLinks.businessVatNumber = {
-        items: [
-          {
-            href: '/business-vat-registration-remove',
-            text: 'Remove',
-            visuallyHiddenText: 'VAT registration number'
-          },
-          {
-            href: '/business-vat-registration-number-change',
-            text: 'Change',
-            visuallyHiddenText: 'VAT registration number'
-          }
-        ]
-      }
-    } else {
-      fullPermissionLinks.businessVatNumber = {
-        items: [
-          {
-            href: '/business-vat-registration-number-change',
-            text: 'Add',
-            visuallyHiddenText: 'VAT registration number'
-          }
-        ]
-      }
-    }
-
-    return {
-      ...amendLinks,
-      ...fullPermissionLinks,
-      fullPermission: true
-    }
-  } else if (amendPermission) {
-    return {
-      ...amendLinks,
-      amendPermission: true
+  if (data.info.vat) {
+    fullPermissionLinks.businessVatNumber = {
+      items: [
+        {
+          href: '/business-vat-registration-remove',
+          text: 'Remove',
+          visuallyHiddenText: 'VAT registration number'
+        },
+        {
+          href: '/business-vat-registration-number-change',
+          text: 'Change',
+          visuallyHiddenText: 'VAT registration number'
+        }
+      ]
     }
   } else {
-    return {}
+    fullPermissionLinks.businessVatNumber = {
+      items: [
+        {
+          href: '/business-vat-registration-number-change',
+          text: 'Add',
+          visuallyHiddenText: 'VAT registration number'
+        }
+      ]
+    }
   }
+
+  return fullPermissionLinks
+}
+
+const setChangeLinks = (data, permissionGroup) => {
+  if (permissionGroup.fullPermission) {
+    return {
+      ...getAmendLinks(data),
+      ...getFullPermissionLinks(data),
+      fullPermission: true
+    }
+  }
+
+  if (permissionGroup.amendPermission) {
+    return {
+      ...getAmendLinks(data),
+      amendPermission: true
+    }
+  }
+
+  return {}
 }
 
 const formatCph = (countyParishHoldings) => {

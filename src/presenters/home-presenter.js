@@ -8,7 +8,7 @@ import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
 const homePresenter = (authData) => {
   return {
     userName: authData.name ?? null,
-    businessDetails: setBusinessDetails(authData.credentials.scope),
+    businessDetails: setBusinessDetails(authData.credentials.scope)
   }
 }
 

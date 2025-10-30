@@ -7,6 +7,7 @@ import { businessDetailsPresenter } from '../../../../src/presenters/business/bu
 describe('businessDetailsPresenter', () => {
   let yar
   let data
+  let permission = ['view']
 
   beforeEach(async () => {
     vi.clearAllMocks()
@@ -22,7 +23,7 @@ describe('businessDetailsPresenter', () => {
 
   describe('when provided with business details data', () => {
     test('it correctly presents the data', () => {
-      const result = businessDetailsPresenter(data, yar)
+      const result = businessDetailsPresenter(data, yar, permission)
 
       expect(result).toEqual({
         notification: { title: 'Update', text: 'Business details updated successfully' },
@@ -42,20 +43,17 @@ describe('businessDetailsPresenter', () => {
           telephone: data.contact.landline,
           mobile: 'Not added'
         },
-        businessPhoneAction: 'Change',
         businessEmail: data.contact.email,
         sbi: data.info.sbi,
         vatNumber: data.info.vat,
-        hasVatNumber: data.info.vat,
-        vatRemoveLink: '/business-vat-registration-remove',
-        vatChangeLink: '/business-vat-registration-number-change',
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
         userName: data.customer.fullName,
-        backLink: { href: '/home' }
+        backLink: { href: '/home' },
+        changeLinks: {}
       })
     })
   })
@@ -64,7 +62,7 @@ describe('businessDetailsPresenter', () => {
     test('it should return the actual values', () => {
       data.contact.landline = '01234567890'
       data.contact.mobile = '07123456789'
-      const result = businessDetailsPresenter(data, yar)
+      const result = businessDetailsPresenter(data, yar, permission)
 
       expect(result.businessTelephone.telephone).toEqual('01234567890')
       expect(result.businessTelephone.mobile).toEqual('07123456789')
@@ -75,7 +73,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the landline property is missing', () => {
       test('it should return the text "Not added"', () => {
         data.contact.landline = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.businessTelephone.telephone).toEqual('Not added')
       })
@@ -85,41 +83,9 @@ describe('businessDetailsPresenter', () => {
   describe('the "businessMobile" property', () => {
     describe('when the businessMobile property is missing', () => {
       test('it should return the text "Not added"', () => {
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.businessTelephone.mobile).toEqual('Not added')
-      })
-    })
-  })
-
-  describe('the "businessPhoneAction" property', () => {
-    describe('when both business telephone and mobile properties have values', () => {
-      test('it should return the text "Change"', () => {
-        data.contact.landline = '01234567890'
-        data.contact.mobile = '07123456789'
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.businessPhoneAction).toEqual('Change')
-      })
-    })
-
-    describe('when only one of the properties has a value', () => {
-      test('it should return the text "Change"', () => {
-        data.contact.landline = '01234567890'
-        data.contact.mobile = null
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.businessPhoneAction).toEqual('Change')
-      })
-    })
-
-    describe('when both properties are null', () => {
-      test('it should return the text "Add"', () => {
-        data.contact.landline = null
-        data.contact.mobile = null
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.businessPhoneAction).toEqual('Add')
       })
     })
   })
@@ -128,24 +94,10 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, permission)
 
-        expect(result.vatNumber).toEqual('Number not added')
+        expect(result.vatNumber).toEqual('No number added')
       })
-    })
-  })
-
-  describe('the VAT link properties', () => {
-    test('it should return the correct remove link', () => {
-      const result = businessDetailsPresenter(data, yar)
-
-      expect(result.vatRemoveLink).toEqual('/business-vat-registration-remove')
-    })
-
-    test('it should return the correct change link', () => {
-      const result = businessDetailsPresenter(data, yar)
-
-      expect(result.vatChangeLink).toEqual('/business-vat-registration-number-change')
     })
   })
 
@@ -153,7 +105,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is empty', () => {
       test('it should return empty array', () => {
         data.info.countyParishHoldingNumbers = []
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.countyParishHoldingNumbers).toEqual([])
       })
@@ -164,7 +116,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.traderNumber = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.tradeNumber).toEqual(null)
       })
@@ -175,7 +127,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vendorNumber = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.vendorRegistrationNumber).toEqual(null)
       })
@@ -186,9 +138,180 @@ describe('businessDetailsPresenter', () => {
     describe('when yar is falsey', () => {
       test('it should return null', () => {
         yar = null
-        const result = businessDetailsPresenter(data, yar)
+        const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.notification).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "changeLinks" property', () => {
+    describe('when the permission level is less than full and amend', () => {
+      test('it returns an empty object', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.changeLinks).toEqual({})
+      })
+    })
+
+    describe('when the permission level is amend', () => {
+      beforeEach(() => {
+        permission = ['BUSINESS_DETAILS:AMEND']
+      })
+
+      test('returns the correct change links', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.changeLinks).toEqual({
+          businessAddress: {
+            items: [
+              {
+                href: '/business-address-change',
+                text: 'Change',
+                visuallyHiddenText: 'business address'
+              }
+            ]
+          },
+          businessTelephone: {
+            items: [
+              {
+                href: '/business-phone-numbers-change',
+                text: 'Change',
+                visuallyHiddenText: 'business phone numbers'
+              }
+            ]
+          },
+          businessEmail: {
+            items: [
+              {
+                href: '/business-email-change',
+                text: 'Change',
+                visuallyHiddenText: 'business email address'
+              }
+            ]
+          },
+          amendPermission: true
+        })
+      })
+
+      test('sets the amend permission property to true', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.changeLinks.amendPermission).toEqual(true)
+      })
+
+      test('returns the correct text if there is no landline of mobile', () => {
+        delete data.contact.landline
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.changeLinks.businessTelephone.items[0].text).toEqual('Add')
+      })
+    })
+
+    describe('when the permission level is full', () => {
+      beforeEach(() => {
+        permission = ['BUSINESS_DETAILS:FULL_PERMISSION']
+      })
+
+      describe('and a vat number is present', () => {
+        test('returns the correct change links', () => {
+          const result = businessDetailsPresenter(data, yar, permission)
+
+          expect(result.changeLinks).toEqual({
+            businessName: {
+              items: [
+                {
+                  href: '/business-name-change',
+                  text: 'Change',
+                  visuallyHiddenText: 'business name'
+                }
+              ]
+            },
+            businessLegal: {
+              items: [
+                {
+                  href: '/business-legal-status-change',
+                  text: 'Change',
+                  visuallyHiddenText: 'business legal status'
+                }
+              ]
+            },
+            businessType: {
+              items: [
+                {
+                  href: '/business-type-change',
+                  text: 'Change',
+                  visuallyHiddenText: 'business type'
+                }
+              ]
+            },
+            businessAddress: {
+              items: [
+                {
+                  href: '/business-address-change',
+                  text: 'Change',
+                  visuallyHiddenText: 'business address'
+                }
+              ]
+            },
+            businessTelephone: {
+              items: [
+                {
+                  href: '/business-phone-numbers-change',
+                  text: 'Change',
+                  visuallyHiddenText: 'business phone numbers'
+                }
+              ]
+            },
+            businessEmail: {
+              items: [
+                {
+                  href: '/business-email-change',
+                  text: 'Change',
+                  visuallyHiddenText: 'business email address'
+                }
+              ]
+            },
+            businessVatNumber: {
+              items: [
+                {
+                  href: '/business-vat-registration-remove',
+                  text: 'Remove',
+                  visuallyHiddenText: 'VAT registration number'
+                },
+                {
+                  href: '/business-vat-registration-number-change',
+                  text: 'Change',
+                  visuallyHiddenText: 'VAT registration number'
+                }
+              ]
+            },
+            fullPermission: true
+          })
+        })
+      })
+
+      describe('and a vat number is not present', () => {
+        test('returns the correct change links', () => {
+          delete data.info.vat
+          const result = businessDetailsPresenter(data, yar, permission)
+
+          expect(result.changeLinks.businessVatNumber).toEqual({
+            items: [
+              {
+                href: '/business-vat-registration-number-change',
+                text: 'Add',
+                visuallyHiddenText: 'VAT registration number'
+              }
+            ]
+          })
+        })
+      })
+
+      test('sets the amend permission property to true', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.changeLinks.fullPermission).toEqual(true)
       })
     })
   })

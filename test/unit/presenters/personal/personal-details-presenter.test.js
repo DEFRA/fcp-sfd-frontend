@@ -60,6 +60,27 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
+  describe('the backLink text', () => {
+    test('uses full business name when present and <= 50 chars', () => {
+      data.businessName = 'Acme Farms Ltd'
+      const result = personalDetailsPresenter(data, yar)
+      expect(result.backLink.text).toEqual('Back to Acme Farms Ltd')
+    })
+
+    test('truncates name > 50 with single ellipsis', () => {
+      const longName = 'Bright Acres Vertical Farming & Smart Greenhouse Systems Limited'
+      data.businessName = longName
+      const result = personalDetailsPresenter(data, yar)
+      expect(result.backLink.text).toEqual(`Back to ${longName.slice(0, 49)}…`)
+    })
+
+    test('is undefined when name missing to trigger macro default', () => {
+      data.businessName = null
+      const result = personalDetailsPresenter(data, yar)
+      expect(result.backLink.text).toBeUndefined()
+    })
+  })
+
   describe('when both telephone and mobile properties have values', () => {
     test('it should return the actual values', () => {
       data.contact.telephone = '01234567890'

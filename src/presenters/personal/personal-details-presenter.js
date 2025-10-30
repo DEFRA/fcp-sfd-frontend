@@ -9,7 +9,10 @@ import { formatFullName, formatDisplayAddress } from '../base-presenter.js'
 const personalDetailsPresenter = (data, yar) => {
   moment.locale('en-gb')
   return {
-    backLink: { href: '/home' },
+    backLink: {
+      text: data.businessName ? formatBackLink(data.businessName) : 'Back',
+      href: '/home'
+    },
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',
@@ -30,6 +33,13 @@ const personalDetailsPresenter = (data, yar) => {
     dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
     dobChangeLink: '/account-date-of-birth-change'
   }
+}
+
+const formatBackLink = (businessName) => {
+  if (businessName.length > 50) {
+    return `Back to ${businessName.slice(0, 50)}.....`
+  }
+  return `Back to ${businessName}`
 }
 
 export {

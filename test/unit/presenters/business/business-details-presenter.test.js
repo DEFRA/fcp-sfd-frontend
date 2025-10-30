@@ -25,6 +25,10 @@ describe('businessDetailsPresenter', () => {
       const result = businessDetailsPresenter(data, yar)
 
       expect(result).toEqual({
+        backLink: {
+          text: `Back to ${data.info.businessName}`,
+          href: '/home'
+        },
         notification: { title: 'Update', text: 'Business details updated successfully' },
         pageTitle: 'View and update your business details',
         metaDescription: 'View and change the details for your business.',
@@ -54,25 +58,35 @@ describe('businessDetailsPresenter', () => {
         countyParishHoldingNumbers: ['12/123/1234'],
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
-        userName: data.customer.fullName,
-        backLink: { href: '/home' }
+        userName: data.customer.fullName
       })
     })
   })
 
-  describe('when both business telephone and mobile properties have values', () => {
-    test('it should return the actual values', () => {
-      data.contact.landline = '01234567890'
-      data.contact.mobile = '07123456789'
-      const result = businessDetailsPresenter(data, yar)
+  describe('the "backLink" property', () => {
+    describe('when the businessName property is missing', () => {
+      test('it should return the text "Back"', () => {
+        data.info.businessName = null
+        const result = businessDetailsPresenter(data, yar)
 
-      expect(result.businessTelephone.telephone).toEqual('01234567890')
-      expect(result.businessTelephone.mobile).toEqual('07123456789')
+        expect(result.backLink.text).toEqual('Back')
+      })
     })
   })
 
   describe('the "businessTelephone" property', () => {
-    describe('when the landline property is missing', () => {
+    describe('when both business telephone and mobile properties have values', () => {
+      test('it should return the actual values', () => {
+        data.contact.landline = '01234567890'
+        data.contact.mobile = '07123456789'
+        const result = businessDetailsPresenter(data, yar)
+
+        expect(result.businessTelephone.telephone).toEqual('01234567890')
+        expect(result.businessTelephone.mobile).toEqual('07123456789')
+      })
+    })
+
+    describe('when the telephone property is missing', () => {
       test('it should return the text "Not added"', () => {
         data.contact.landline = null
         const result = businessDetailsPresenter(data, yar)
@@ -80,9 +94,7 @@ describe('businessDetailsPresenter', () => {
         expect(result.businessTelephone.telephone).toEqual('Not added')
       })
     })
-  })
 
-  describe('the "businessMobile" property', () => {
     describe('when the businessMobile property is missing', () => {
       test('it should return the text "Not added"', () => {
         const result = businessDetailsPresenter(data, yar)

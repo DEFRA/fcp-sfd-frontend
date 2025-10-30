@@ -23,8 +23,12 @@
       {% endif %}
 
     <h1 class="govuk-heading-l">
-      View and update your business details
+      {{ pageTitle }}
     </h1>
+
+    <p class="govuk-body">
+      {{permissionsText}}
+    </p>
 
     {% set formattedAddress %}
       {% for addressLine in address %}

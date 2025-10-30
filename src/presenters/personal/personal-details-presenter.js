@@ -4,7 +4,7 @@
  */
 
 import moment from 'moment'
-import { formatFullName, formatDisplayAddress } from '../base-presenter.js'
+import { formatBackLink, formatFullName, formatDisplayAddress } from '../base-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
   moment.locale('en-gb')
@@ -33,13 +33,6 @@ const personalDetailsPresenter = (data, yar) => {
     dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
     dobChangeLink: '/account-date-of-birth-change'
   }
-}
-
-const formatBackLink = (businessName) => {
-  if (businessName.length > 50) {
-    return `Back to ${businessName.slice(0, 50)}…`
-  }
-  return `Back to ${businessName}`
 }
 
 export {

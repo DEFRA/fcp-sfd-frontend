@@ -3,6 +3,17 @@
  */
 
 /**
+ * Formats the business name into back link text.
+ * If the business name is greater than 50 characters, it will be truncated with an ellipsis.
+*/
+export const formatBackLink = (businessName) => {
+  if (businessName.length > 50) {
+    return `Back to ${businessName.slice(0, 50)}…`
+  }
+  return `Back to ${businessName}`
+}
+
+/**
  * Formats the full name (first, middle and last) into a single string
  */
 export const formatFullName = (nameData) => {

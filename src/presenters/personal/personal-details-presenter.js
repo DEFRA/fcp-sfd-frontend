@@ -37,7 +37,7 @@ const personalDetailsPresenter = (data, yar) => {
 
 const formatBackLink = (businessName) => {
   if (businessName.length > 50) {
-    return `Back to ${businessName.slice(0, 50)}.....`
+    return `Back to ${businessName.slice(0, 50)}…`
   }
   return `Back to ${businessName}`
 }

@@ -71,7 +71,7 @@ describe('personalDetailsPresenter', () => {
       const longName = 'Bright Acres Vertical Farming & Smart Greenhouse Systems Limited'
       data.businessName = longName
       const result = personalDetailsPresenter(data, yar)
-      expect(result.backLink.text).toEqual(`Back to ${longName.slice(0, 49)}…`)
+      expect(result.backLink.text).toEqual(`Back to ${longName.slice(0, 50)}…`)
     })
 
     test('is undefined when name missing to trigger macro default', () => {

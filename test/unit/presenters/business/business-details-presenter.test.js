@@ -78,7 +78,7 @@ describe('businessDetailsPresenter', () => {
         data.info.businessName = 'This is a very long business name that exceeds 50 characters'
         const result = businessDetailsPresenter(data, yar)
 
-        expect(result.backLink.text).toEqual('Back to This is a very long business name that exceeds 50 .....')
+        expect(result.backLink.text).toEqual('Back to This is a very long business name that exceeds 50 …')
       })
     })
   })

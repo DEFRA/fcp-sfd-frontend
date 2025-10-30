@@ -83,18 +83,18 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
-  describe('when both telephone and mobile properties have values', () => {
-    test('it should return the actual values', () => {
-      data.contact.telephone = '01234567890'
-      data.contact.mobile = '07123456789'
-      const result = personalDetailsPresenter(data, yar)
-
-      expect(result.personalTelephone.telephone).toEqual('01234567890')
-      expect(result.personalTelephone.mobile).toEqual('07123456789')
-    })
-  })
-
   describe('the "personalTelephone" property', () => {
+    describe('when both telephone and mobile properties have values', () => {
+      test('it should return the actual values', () => {
+        data.contact.telephone = '01234567890'
+        data.contact.mobile = '07123456789'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.personalTelephone.telephone).toEqual('01234567890')
+        expect(result.personalTelephone.mobile).toEqual('07123456789')
+      })
+    })
+
     describe('when the telephone property is missing', () => {
       test('returns "Not added" if telephone is missing', () => {
         data.contact.telephone = null

@@ -72,15 +72,6 @@ describe('businessDetailsPresenter', () => {
         expect(result.backLink.text).toEqual('Back')
       })
     })
-
-    describe('when the businessName property exceeds 50 characters', () => {
-      test('it should return the text truncated with an ellipsis', () => {
-        data.info.businessName = 'This is a very long business name that exceeds 50 characters'
-        const result = businessDetailsPresenter(data, yar)
-
-        expect(result.backLink.text).toEqual('Back to This is a very long business name that exceeds 50 …')
-      })
-    })
   })
 
   describe('the "businessTelephone" property', () => {

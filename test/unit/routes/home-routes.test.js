@@ -8,6 +8,7 @@ const mockView = vi.fn()
 const mockH = {
   view: vi.fn().mockReturnValue(mockView)
 }
+let request
 
 describe('Root endpoint', () => {
   beforeEach(() => {
@@ -36,6 +37,15 @@ describe('Root endpoint', () => {
 describe('Home endpoint', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+
+    request = {
+      auth: {
+        name: 'John Doe',
+        credentials: {
+          scope: ['BUSINESS_DETAILS:FULL_PERMISSION']
+        }
+      }
+    }
   })
 
   test('should have the correct method and path', () => {
@@ -44,9 +54,15 @@ describe('Home endpoint', () => {
   })
 
   test('should render the home view with correct data', () => {
-    const result = home.handler(null, mockH)
+    const result = home.handler(request, mockH)
 
-    expect(mockH.view).toHaveBeenCalledWith('home')
+    expect(mockH.view).toHaveBeenCalledWith('home', {
+      userName: 'John Doe',
+      businessDetails: {
+        link: '/business-details',
+        text: 'View and update your business details'
+      }
+    })
     expect(result).toBe(mockView)
   })
 })

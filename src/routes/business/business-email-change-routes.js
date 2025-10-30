@@ -4,10 +4,14 @@ import { businessEmailSchema } from '../../schemas/business/business-email-schem
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessEmailChange = {
   method: 'GET',
   path: '/business-email-change',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessEmail')
@@ -21,6 +25,7 @@ const postBusinessEmailChange = {
   method: 'POST',
   path: '/business-email-change',
   options: {
+    auth: { scope: AMEND_PERMISSIONS },
     validate: {
       payload: businessEmailSchema,
       options: {

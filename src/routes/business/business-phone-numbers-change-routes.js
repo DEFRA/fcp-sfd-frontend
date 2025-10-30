@@ -4,10 +4,14 @@ import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessPhoneNumbersChangePresenter } from '../../presenters/business/business-phone-numbers-change-presenter.js'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessPhoneNumbers')
@@ -21,6 +25,7 @@ const postBusinessPhoneNumbersChange = {
   method: 'POST',
   path: '/business-phone-numbers-change',
   options: {
+    auth: { scope: AMEND_PERMISSIONS },
     validate: {
       payload: businessPhoneSchema,
       options: { abortEarly: false },

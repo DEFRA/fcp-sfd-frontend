@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { updateBusinessVatRemoveService } from '../../../../src/services/business/update-business-vat-remove-service.js'
 
+// Test helpers
+import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessVatRemoveRoutes } from '../../../../src/routes/business/business-vat-remove-routes.js'
 const [getBusinessVatRemove, postBusinessVatRemove] = businessVatRemoveRoutes
@@ -53,9 +56,10 @@ describe('business VAT remove', () => {
         fetchBusinessDetailsService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessVatRemove.method).toBe('GET')
         expect(getBusinessVatRemove.path).toBe('/business-vat-registration-remove')
+        expect(getBusinessVatRemove.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
       test('it calls fetchBusinessDetailService', async () => {
@@ -74,6 +78,12 @@ describe('business VAT remove', () => {
 
   describe('POST /business-vat-registration-remove', () => {
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessVatRemove.method).toBe('POST')
+        expect(postBusinessVatRemove.path).toBe('/business-vat-registration-remove')
+        expect(postBusinessVatRemove.options.auth.scope).toBe(FULL_PERMISSIONS)
+      })
+
       describe('and the payload confirmRemove property is "yes"', () => {
         beforeEach(() => {
           request.payload = { confirmRemove: 'yes' }

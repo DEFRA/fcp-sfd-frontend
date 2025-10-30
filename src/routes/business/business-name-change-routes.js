@@ -4,10 +4,14 @@ import { businessNameSchema } from '../../schemas/business/business-name-schema.
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
+  options: {
+    auth: { scope: FULL_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
@@ -21,6 +25,7 @@ const postBusinessNameChange = {
   method: 'POST',
   path: '/business-name-change',
   options: {
+    auth: { scope: FULL_PERMISSIONS },
     validate: {
       payload: businessNameSchema,
       options: { abortEarly: false },

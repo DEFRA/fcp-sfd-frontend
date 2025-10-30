@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service.js'
 
+// Test helpers
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessEmailCheckRoutes } from '../../../../src/routes/business/business-email-check-routes.js'
 const [getBusinessEmailCheck, postBusinessEmailCheck] = businessEmailCheckRoutes
@@ -46,9 +49,10 @@ describe('business email check', () => {
         fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessEmailCheck.method).toBe('GET')
         expect(getBusinessEmailCheck.path).toBe('/business-email-check')
+        expect(getBusinessEmailCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
       test('it fetches the data from the session', async () => {
@@ -73,6 +77,12 @@ describe('business email check', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessEmailCheck.method).toBe('POST')
+        expect(postBusinessEmailCheck.path).toBe('/business-email-check')
+        expect(postBusinessEmailCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
       test('it redirects to the /business-details page', async () => {
         await postBusinessEmailCheck.handler(request, h)
 

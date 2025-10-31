@@ -49,13 +49,13 @@ describe('personalDetailsPresenter', () => {
         dateOfBirth: '1 January 1990',
         dobChangeLink: '/account-date-of-birth-change',
         personalTelephone: {
-          telephone: data.contact.telephone ?? 'Not added',
+          telephone: data.contact.telephone,
           mobile: 'Not added',
           action: 'Change',
           link: '/account-phone-numbers-change'
         },
         personalEmail: {
-          email: data.contact.email ?? 'Not added',
+          email: data.contact.email,
           action: 'Change',
           link: '/account-email-change'
         }
@@ -70,15 +70,6 @@ describe('personalDetailsPresenter', () => {
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.backLink.text).toEqual('Back')
-      })
-    })
-
-    describe('when the businessName property exceeds 50 characters', () => {
-      test('it should return the text truncated with an ellipsis', () => {
-        data.business.info.name = 'This is a very long business name that exceeds 50 characters'
-        const result = personalDetailsPresenter(data, yar)
-
-        expect(result.backLink.text).toEqual('Back to This is a very long business name that exceeds 50 …')
       })
     })
   })

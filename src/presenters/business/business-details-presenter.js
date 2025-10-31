@@ -3,11 +3,14 @@
  * @module businessDetailsPresenter
  */
 
-import { formatDisplayAddress } from '../base-presenter.js'
+import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 
 const businessDetailsPresenter = (data, yar) => {
   return {
-    backLink: { href: '/home' },
+    backLink: {
+      text: data.info.businessName ? formatBackLink(data.info.businessName) : 'Back',
+      href: '/home'
+    },
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your business details',
     metaDescription: 'View and change the details for your business.',

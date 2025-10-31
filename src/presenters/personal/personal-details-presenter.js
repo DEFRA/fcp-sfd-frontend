@@ -4,12 +4,15 @@
  */
 
 import moment from 'moment'
-import { formatFullName, formatDisplayAddress } from '../base-presenter.js'
+import { formatBackLink, formatFullName, formatDisplayAddress } from '../base-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
   moment.locale('en-gb')
   return {
-    backLink: { href: '/home' },
+    backLink: {
+      text: data.business.info.name ? formatBackLink(data.business.info.name) : 'Back',
+      href: '/home'
+    },
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',

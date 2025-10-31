@@ -1,5 +1,5 @@
 export const personalDetailsQuery = `
-query Customer($crn: ID!) {
+query Customer($crn: ID!, $sbi: ID!) {
   customer(crn: $crn) {
     crn
     info {
@@ -34,6 +34,11 @@ query Customer($crn: ID!) {
         landline
         mobile
       }
+    }
+  }
+  business(sbi: $sbi) {
+    info {
+      name
     }
   }
 }

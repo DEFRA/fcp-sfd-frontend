@@ -40,7 +40,8 @@ describe('fetchPersonalDetailsService', () => {
 
     credentials = {
       crn: '64363553663',
-      email: 'test.farmer@test.farm.com'
+      email: 'test.farmer@test.farm.com',
+      sbi: '123456789'
     }
   })
 

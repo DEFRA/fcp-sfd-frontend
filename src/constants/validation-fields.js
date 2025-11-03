@@ -1,7 +1,7 @@
 export const FIRST_NAME_MAX = 100
 export const LAST_NAME_MAX = 100
 export const MIDDLE_NAMES_MAX = 100
-export const BUSINESS_NAME_MAX = 300
+export const BUSINESS_NAME_MAX = 160
 export const EMAIL_MAX = 254
 export const PHONE_NUMBER_MIN = 10
 export const PHONE_NUMBER_MAX = 50

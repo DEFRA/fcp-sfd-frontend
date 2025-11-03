@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
 
+// Test helpers
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessAddressCheckRoutes } from '../../../../src/routes/business/business-address-check-routes.js'
 const [getBusinessAddressCheck, postBusinessAddressCheck] = businessAddressCheckRoutes
@@ -46,9 +49,10 @@ describe('business address check', () => {
         fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessAddressCheck.method).toBe('GET')
         expect(getBusinessAddressCheck.path).toBe('/business-address-check')
+        expect(getBusinessAddressCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
       test('it fetches the data from the session', async () => {
@@ -73,6 +77,12 @@ describe('business address check', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessAddressCheck.method).toBe('POST')
+        expect(postBusinessAddressCheck.path).toBe('/business-address-check')
+        expect(postBusinessAddressCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
       test('it redirects to the /business-details page', async () => {
         await postBusinessAddressCheck.handler(request, h)
 

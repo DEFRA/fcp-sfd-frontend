@@ -4,10 +4,14 @@ import { businessVatRemovePresenter } from '../../presenters/business/business-v
 import { businessVatRemoveSchema } from '../../schemas/business/business-vat-remove-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessVatRemove = {
   method: 'GET',
   path: '/business-vat-registration-remove',
+  options: {
+    auth: { scope: FULL_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
@@ -20,6 +24,7 @@ const postBusinessVatRemove = {
   method: 'POST',
   path: '/business-vat-registration-remove',
   options: {
+    auth: { scope: FULL_PERMISSIONS },
     validate: {
       payload: businessVatRemoveSchema,
       options: { abortEarly: false },

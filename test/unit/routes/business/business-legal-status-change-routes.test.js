@@ -4,6 +4,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
+// Test helpers
+import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessLegalStatusRoutes } from '../../../../src/routes/business/business-legal-status-change-routes.js'
 const [getBusinessLegalStatusChange] = businessLegalStatusRoutes
@@ -41,9 +44,10 @@ describe('business legal status change', () => {
         fetchBusinessDetailsService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessLegalStatusChange.method).toBe('GET')
         expect(getBusinessLegalStatusChange.path).toBe('/business-legal-status-change')
+        expect(getBusinessLegalStatusChange.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
       test('it fetches the data from the fetchBusinessDetailsService', async () => {

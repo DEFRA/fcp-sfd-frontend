@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessVatChangeService } from '../../../../src/services/business/update-business-vat-change-service.js'
 
+// Test helpers
+import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessVatCheckRoutes } from '../../../../src/routes/business/business-vat-check-routes.js'
 const [getBusinessVatCheck, postBusinessVatCheck] = businessVatCheckRoutes
@@ -46,9 +49,10 @@ describe('business VAT check', () => {
         fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessVatCheck.method).toBe('GET')
         expect(getBusinessVatCheck.path).toBe('/business-vat-registration-number-check')
+        expect(getBusinessVatCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
       test('it fetches the data from the session', async () => {
@@ -73,6 +77,12 @@ describe('business VAT check', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessVatCheck.method).toBe('POST')
+        expect(postBusinessVatCheck.path).toBe('/business-vat-registration-number-check')
+        expect(postBusinessVatCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+      })
+
       test('it redirects to the /business-details page', async () => {
         await postBusinessVatCheck.handler(request, h)
 

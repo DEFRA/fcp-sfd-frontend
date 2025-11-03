@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
+// Test helpers
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessEmailChangeRoutes } from '../../../../src/routes/business/business-email-change-routes.js'
 const [getBusinessEmailChange, postBusinessEmailChange] = businessEmailChangeRoutes
@@ -53,9 +56,10 @@ describe('business email change', () => {
         fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessEmailChange.method).toBe('GET')
         expect(getBusinessEmailChange.path).toBe('/business-email-change')
+        expect(getBusinessEmailChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
       test('it calls fetchBusinessChangeService', async () => {
@@ -78,6 +82,12 @@ describe('business email change', () => {
         request.payload = { businessEmail: 'new-email@test.com' }
 
         fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessEmail: request.payload })
+      })
+
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessEmailChange.method).toBe('POST')
+        expect(postBusinessEmailChange.path).toBe('/business-email-change')
+        expect(postBusinessEmailChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

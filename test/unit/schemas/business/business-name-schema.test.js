@@ -60,16 +60,16 @@ describe('business name schema', () => {
       })
     })
 
-    describe('because "businessName" is longer than 300 characters', () => {
+    describe('because "businessName" is longer than 160 characters', () => {
       beforeEach(() => {
-        payload.businessName = 'This sentence is intentionally written to be longer than 300 characters so that it can serve as an example of a string with precisely 304 characters, which is useful for testing, validation, or any other scenario where a specific character count is required. Its being used as the business name variable.'
+        payload.businessName = 'This sentence is intentionally written to be longer than 160 characters so that it can serve as an example of a string with precisely 304 characters, which is useful for testing, validation, or any other scenario where a specific character count is required. Its being used as the business name variable.'
       })
 
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business name must be 300 characters or less',
+          message: 'Business name must be 160 characters or less',
           path: ['businessName'],
           type: 'string.max'
         }))

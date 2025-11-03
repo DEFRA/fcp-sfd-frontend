@@ -3,6 +3,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
 import {
+  formatBackLink,
   formatFullName,
   formatDisplayAddress,
   formatNumber,
@@ -12,6 +13,32 @@ import {
 } from '../../../src/presenters/base-presenter.js'
 
 describe('basePresenter', () => {
+  describe('#formatBackLink', () => {
+    let businessName
+
+    describe('when the businessName property is less than 50 characters', () => {
+      beforeEach(() => {
+        businessName = 'Acme Farms Ltd'
+      })
+
+      test('it should return the text "Back to Acme Farms Ltd"', () => {
+        const result = formatBackLink(businessName)
+        expect(result).toEqual('Back to Acme Farms Ltd')
+      })
+    })
+
+    describe('when the businessName property is greater than 50 characters', () => {
+      beforeEach(() => {
+        businessName = 'This is a very long business name that exceeds 50 characters'
+      })
+
+      test('it should return the text truncated with an ellipsis', () => {
+        const result = formatBackLink(businessName)
+        expect(result).toEqual('Back to This is a very long business name that exceeds 50 …')
+      })
+    })
+  })
+
   describe('#formatFullName', () => {
     let fullName
 

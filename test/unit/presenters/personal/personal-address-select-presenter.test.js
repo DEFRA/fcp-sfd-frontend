@@ -11,7 +11,7 @@ describe('personalAddressSelectPresenter', () => {
     data = {
       info: {
         fullName: {
-          fullNameJoined: 'Mr Test Name'
+          fullNameJoined: 'Test Name'
         }
       },
       changePersonalPostcode: {
@@ -39,7 +39,7 @@ describe('personalAddressSelectPresenter', () => {
         pageTitle: 'Choose your personal address',
         metaDescription: 'Choose the address for your personal account.',
         postcode: 'SK22 1DL',
-        userName: 'Mr Test Name',
+        userName: 'Test Name',
         displayAddresses: [
           {
             value: 'display',

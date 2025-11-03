@@ -35,8 +35,7 @@ const dalData = {
     info: {
       name: {
         first: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese',
-        last: 'Cook',
-        title: 'Mrs.'
+        last: 'Cook'
       }
     }
   }
@@ -79,7 +78,7 @@ const mappedData = {
     mobile: null
   },
   customer: {
-    fullName: 'Mrs. Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
+    fullName: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
   }
 }
 

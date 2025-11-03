@@ -3,14 +3,17 @@
  * @module businessDetailsPresenter
  */
 
-import { formatDisplayAddress } from '../base-presenter.js'
+import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const businessDetailsPresenter = (data, yar, permissionLevels) => {
   const permissionGroup = checkPermissionType(permissionLevels)
 
   return {
-    backLink: { href: '/home' },
+    backLink: {
+      text: data.info.businessName ? formatBackLink(data.info.businessName) : 'Back',
+      href: '/home'
+    },
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: permissionGroup.viewPermission ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',

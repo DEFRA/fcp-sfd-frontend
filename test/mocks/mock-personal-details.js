@@ -4,7 +4,6 @@ const dalData = {
     info: {
       dateOfBirth: '1990-01-01',
       name: {
-        title: 'Mr',
         first: 'John',
         middle: 'M',
         last: 'Doe'
@@ -33,6 +32,11 @@ const dalData = {
         uprn: '12345'
       }
     }
+  },
+  business: {
+    info: {
+      name: 'Acme Farms Ltd'
+    }
   }
 }
 
@@ -41,11 +45,10 @@ const mappedData = {
   info: {
     dateOfBirth: '1990-01-01',
     fullName: {
-      title: 'Mr',
       first: 'John',
       last: 'Doe',
       middle: 'M',
-      fullNameJoined: 'Mr John M Doe'
+      fullNameJoined: 'John M Doe'
     }
   },
   address: {
@@ -72,6 +75,11 @@ const mappedData = {
     email: 'test@example.com',
     telephone: '01234567890',
     mobile: null
+  },
+  business: {
+    info: {
+      name: 'Acme Farms Ltd'
+    }
   }
 }
 

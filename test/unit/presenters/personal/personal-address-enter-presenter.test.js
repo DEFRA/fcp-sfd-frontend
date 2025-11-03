@@ -12,7 +12,7 @@ describe('personalAddressEnterPresenter', () => {
     data = {
       info: {
         fullName: {
-          fullNameJoined: 'Mr Test Name'
+          fullNameJoined: 'Test Name'
         }
       },
       address: {
@@ -48,7 +48,7 @@ describe('personalAddressEnterPresenter', () => {
           county: 'Somerset',
           postcode: 'SK22 1DL'
         },
-        userName: 'Mr Test Name'
+        userName: 'Test Name'
       })
     })
   })

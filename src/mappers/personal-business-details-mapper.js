@@ -10,8 +10,8 @@ export const mapPersonalBusinessDetails = (value) => {
   return {
     info: {
       fullName: {
-        first: value.customer.info.name.first ?? null,
-        last: value.customer.info.name.last ?? null,
+        first: value.customer.info.name.first,
+        last: value.customer.info.name.last,
         middle: value.customer.info.name.middle ?? null
       }
     },

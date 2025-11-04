@@ -21,8 +21,7 @@ const mappedData = {
     fullName: {
       first: 'John',
       middle: 'M',
-      last: 'Doe',
-      fullNameJoined: 'John M Doe'
+      last: 'Doe'
     }
   },
   business: {

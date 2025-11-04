@@ -12,24 +12,14 @@ export const mapPersonalBusinessDetails = (value) => {
       fullName: {
         first: value.customer.info.name.first ?? null,
         last: value.customer.info.name.last ?? null,
-        middle: value.customer.info.name.middle ?? null,
-        fullNameJoined: formatFullName(value.customer.info.name)
+        middle: value.customer.info.name.middle ?? null
       }
     },
     business: {
       info: {
-        sbi: value.business?.sbi ?? null,
-        name: value.business?.info?.name ?? null
+        sbi: value.business.sbi ?? null,
+        name: value.business.info.name ?? null
       }
     }
   }
-}
-
-const formatFullName = (name) => {
-  if (!name) return null
-  return [
-    name.first,
-    name.middle,
-    name.last
-  ].filter(Boolean).join(' ')
 }

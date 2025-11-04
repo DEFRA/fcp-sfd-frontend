@@ -1,4 +1,3 @@
-// should this be renamed PersonalBusiness?
 export const personalBusinessDetailsQuery = `
   query Name($crn: ID!, $sbi: ID!) {
     customer(crn: $crn) {

@@ -30,6 +30,7 @@ services:
       DAL_EMAIL_HEADER: ${DAL_EMAIL_HEADER}
       OS_PLACES_CLIENT_ID: ${OS_PLACES_CLIENT_ID}
       OS_PLACES_STUB: ${OS_PLACES_STUB:-false}
+      IAHW_ENDPOINT: https://ffc-ahwr-farmer-test.azure.defra.cloud/sign-in?ssoOrgId=
 
   kits-mock:
     image: defradigital/fcp-dal-upstream-mock:0.38.0

@@ -4,11 +4,15 @@
  */
 
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
+import { config } from '../config/index.js'
 
 const homePresenter = (authData) => {
+  const IAHWEndpoint = config.get('servicesConfig.IAHWEndpoint')
+
   return {
     userName: authData.name ?? null,
-    businessDetails: setBusinessDetails(authData.credentials.scope)
+    businessDetails: setBusinessDetails(authData.credentials.scope),
+    IAHWLink: `${IAHWEndpoint}+${authData.credentials.ssoOrgId}`
   }
 }
 

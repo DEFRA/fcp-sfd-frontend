@@ -4,11 +4,16 @@
  */
 
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
+import { formatFullName } from './base-presenter.js'
 
-const homePresenter = (authData) => {
+const homePresenter = (homeData, permissionGroups) => {
   return {
-    userName: authData.name ?? null,
-    businessDetails: setBusinessDetails(authData.credentials.scope)
+    pageTitle: 'Your business',
+    metaDescription: 'Home page for your business\'s schemes and details.',
+    fullName: formatFullName(homeData.info.fullName),
+    businessName: homeData.business.info.name,
+    businessDetails: setBusinessDetails(permissionGroups),
+    sbi: homeData.business.info.sbi
   }
 }
 

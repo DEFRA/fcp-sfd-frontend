@@ -1,5 +1,6 @@
 import { SCOPE } from '../constants/scope/business-details.js'
 import { homePresenter } from '../presenters/home-presenter.js'
+import { fetchPersonalBusinessDetailsService } from '../services/fetch-personal-business-details-service.js'
 
 const index = {
   method: 'GET',
@@ -18,8 +19,10 @@ const home = {
   options: {
     auth: { scope: SCOPE }
   },
-  handler: (request, h) => {
-    const pageData = homePresenter(request.auth)
+  handler: async (request, h) => {
+    const { auth } = request
+    const homeData = await fetchPersonalBusinessDetailsService(auth.credentials)
+    const pageData = homePresenter(homeData, auth.credentials.scope)
 
     return h.view('home', pageData)
   }

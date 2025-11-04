@@ -11,10 +11,9 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        <span class="govuk-caption-l">{{ auth.name }}</span>
-        You have signed in
-      </h1>
+      <span class="govuk-caption-xl">{{ fullName }}</span>
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-2">{{ businessName }}</h1>
+      <p class="govuk-caption-m">Single business identifier (SBI): {{ sbi }}</p>
 
       <h3 class="govuk-heading-m"> Business details</h3>
       <p>

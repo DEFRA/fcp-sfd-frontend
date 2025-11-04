@@ -8,53 +8,62 @@ import { homePresenter } from '../../../src/presenters/home-presenter.js'
 import { VIEW_LEVEL_PERMISSION, AMEND_LEVEL_PERMISSION } from '../../../src/constants/scope/business-details.js'
 
 describe('homePresenter', () => {
-  let authData
+  let data
+  let permissionGroups
 
   beforeEach(() => {
-    authData = {
-      name: 'Alfred Waldron',
-      credentials: {
-        scope: ['BUSINESS_DETAILS:VIEW']
+    data = {
+      info: {
+        fullName: {
+          first: 'Alfred',
+          middle: 'M',
+          last: 'Waldron'
+        }
+      },
+      business: {
+        info: {
+          sbi: '123456789',
+          name: 'Test Farm Ltd'
+        }
       }
     }
+    permissionGroups = ['BUSINESS_DETAILS:VIEW']
   })
 
-  describe('when provided with auth data', () => {
+  describe('when provided with home data and permission groups', () => {
     test('it correctly presents the data', () => {
-      const result = homePresenter(authData)
+      const result = homePresenter(data, permissionGroups)
 
       expect(result).toEqual({
-        userName: 'Alfred Waldron',
+        pageTitle: 'Your business',
+        metaDescription: 'Home page for your business\'s schemes and details.',
+        fullName: 'Alfred M Waldron',
+        businessName: 'Test Farm Ltd',
         businessDetails: {
           link: '/business-details',
           text: 'View business details'
-        }
+        },
+        sbi: '123456789'
       })
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the name property is missing', () => {
-      beforeEach(() => {
-        delete authData.name
-      })
+  describe('the "fullName" property', () => {
+    test('returns a formatted full name', () => {
+      const result = homePresenter(data, permissionGroups)
 
-      test('it should return userName as null', () => {
-        const result = homePresenter(authData)
-
-        expect(result.userName).to.equal(null)
-      })
+      expect(result.fullName).toEqual('Alfred M Waldron')
     })
   })
 
   describe('the "businessDetails" property', () => {
     describe('when the user has only view-level permissions', () => {
       beforeEach(() => {
-        authData.credentials.scope = [VIEW_LEVEL_PERMISSION]
+        permissionGroups = [VIEW_LEVEL_PERMISSION]
       })
 
       test('it should return text "View business details"', () => {
-        const result = homePresenter(authData)
+        const result = homePresenter(data, permissionGroups)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -65,11 +74,11 @@ describe('homePresenter', () => {
 
     describe('when the user has amend or full permissions', () => {
       beforeEach(() => {
-        authData.credentials.scope = [AMEND_LEVEL_PERMISSION]
+        permissionGroups = [AMEND_LEVEL_PERMISSION]
       })
 
       test('it should return text "View and update your business details"', () => {
-        const result = homePresenter(authData)
+        const result = homePresenter(data, permissionGroups)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',

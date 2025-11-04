@@ -1,14 +1,22 @@
+// Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { homeRoutes } from '../../../src/routes/home-routes.js'
 
+// Things we need to mock
+import { fetchPersonalBusinessDetailsService } from '../../../src/services/fetch-personal-business-details-service.js'
+import { homePresenter } from '../../../src/presenters/home-presenter.js'
+
+// Thing under test
+import { homeRoutes } from '../../../src/routes/home-routes.js'
 const [index, home] = homeRoutes
 
-const mockView = vi.fn()
+// Mocks
+vi.mock('../../../src/services/fetch-personal-business-details-service.js', () => ({
+  fetchPersonalBusinessDetailsService: vi.fn()
+}))
 
-const mockH = {
-  view: vi.fn().mockReturnValue(mockView)
-}
-let request
+vi.mock('../../../src/presenters/home-presenter.js', () => ({
+  homePresenter: vi.fn()
+}))
 
 describe('Root endpoint', () => {
   beforeEach(() => {
@@ -35,34 +43,65 @@ describe('Root endpoint', () => {
 })
 
 describe('Home endpoint', () => {
+  let h
+  let request
+  let pageData
+
   beforeEach(() => {
     vi.clearAllMocks()
+  })
 
-    request = {
-      auth: {
-        name: 'John Doe',
-        credentials: {
-          scope: ['BUSINESS_DETAILS:FULL_PERMISSION']
+  describe('GET /home', () => {
+    describe('when a request is valid', () => {
+      beforeEach(() => {
+        h = {
+          view: vi.fn().mockReturnValue({})
         }
-      }
-    }
-  })
 
-  test('should have the correct method and path', () => {
-    expect(home.method).toBe('GET')
-    expect(home.path).toBe('/home')
-  })
+        request = {
+          auth: {
+            credentials: {
+              sbi: '123456789',
+              scope: ['BUSINESS_DETAILS:FULL_PERMISSION']
+            }
+          }
+        }
 
-  test('should render the home view with correct data', () => {
-    const result = home.handler(request, mockH)
+        pageData = getPageData()
+        fetchPersonalBusinessDetailsService.mockResolvedValue(getMockData())
+        homePresenter.mockReturnValue(pageData)
+      })
 
-    expect(mockH.view).toHaveBeenCalledWith('home', {
-      userName: 'John Doe',
-      businessDetails: {
-        link: '/business-details',
-        text: 'View and update your business details'
-      }
+      test('should have the correct method and path', () => {
+        expect(home.method).toBe('GET')
+        expect(home.path).toBe('/home')
+      })
+
+      test('it calls the fetch personal business details service and renders view', async () => {
+        await home.handler(request, h)
+
+        expect(fetchPersonalBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
+        expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope)
+        expect(h.view).toHaveBeenCalledWith('home', pageData)
+      })
     })
-    expect(result).toBe(mockView)
   })
+})
+
+const getMockData = () => ({
+  fullName: 'Alfred Waldron',
+  businessName: 'Test Farm Ltd',
+  sbi: '123456789'
+})
+
+const getPageData = () => ({
+  pageTitle: 'Your business',
+  metaDescription: 'Home page for your business\'s schemes and details.',
+  fullName: 'Alfred Waldron',
+  businessName: 'Test Farm Ltd',
+  businessDetails: {
+    link: '/business-details',
+    text: 'View and update your business details'
+  },
+  sbi: '123456789'
 })

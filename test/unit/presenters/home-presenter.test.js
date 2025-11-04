@@ -41,7 +41,7 @@ describe('homePresenter', () => {
         businessName: 'Test Farm Ltd',
         businessDetails: {
           link: '/business-details',
-          text: 'View business details'
+          text: 'View your Business details'
         },
         sbi: '123456789'
       })
@@ -67,7 +67,7 @@ describe('homePresenter', () => {
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
-          text: 'View business details'
+          text: 'View your Business details'
         })
       })
     })

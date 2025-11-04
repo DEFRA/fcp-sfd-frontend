@@ -21,8 +21,8 @@ const home = {
   },
   handler: async (request, h) => {
     const { auth } = request
-    const homeData = await fetchPersonalBusinessDetailsService(auth.credentials)
-    const pageData = homePresenter(homeData, auth.credentials.scope)
+    const data = await fetchPersonalBusinessDetailsService(auth.credentials)
+    const pageData = homePresenter(data, auth.credentials.scope)
 
     return h.view('home', pageData)
   }

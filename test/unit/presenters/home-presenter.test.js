@@ -43,7 +43,8 @@ describe('homePresenter', () => {
           link: '/business-details',
           text: 'View business details'
         },
-        sbi: '123456789'
+        sbi: '123456789',
+        IAHWLink: 'https://ffc-ahwr-farmer-test.azure.defra.cloud/sign-in?ssoOrgId=123456789'
       })
     })
   })

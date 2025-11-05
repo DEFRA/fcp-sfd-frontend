@@ -6,6 +6,7 @@
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
 import { formatFullName } from './base-presenter.js'
 import { config } from '../config/index.js'
+import { request } from 'http'
 
 const homePresenter = (data, permissionGroups) => {
   const IAHWEndpoint = config.get('servicesConfig.IAHWEndpoint')
@@ -16,7 +17,7 @@ const homePresenter = (data, permissionGroups) => {
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
     sbi: data.business.info.sbi,
-    IAHWLink: `${IAHWEndpoint}` + data.business.info.sbi
+    IAHWLink: `${IAHWEndpoint}${data.business.info.organisationId}`
   }
 }
 

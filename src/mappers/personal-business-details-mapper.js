@@ -17,6 +17,7 @@ export const mapPersonalBusinessDetails = (value) => {
     },
     business: {
       info: {
+        organisationId: value.business.organisationId ?? null,
         sbi: value.business.sbi ?? null,
         name: value.business.info.name ?? null
       }

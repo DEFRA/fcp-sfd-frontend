@@ -21,7 +21,7 @@ const setBusinessDetails = (permissionGroups) => {
   if (permissionGroups.includes(VIEW_LEVEL_PERMISSION)) {
     return {
       link: '/business-details',
-      text: 'View business details'
+      text: 'View your Business details'
     }
   }
 

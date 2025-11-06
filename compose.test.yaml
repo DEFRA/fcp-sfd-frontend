@@ -17,6 +17,7 @@ services:
       DEFRA_ID_CLIENT_SECRET: test-client-secret
       DEFRA_ID_SERVICE_ID: test-service-id
       DEFRA_ID_POLICY: test-policy
+      IAHW_ENDPOINT: https://ffc-ahwr-farmer-test.azure.defra.cloud/sign-in?ssoOrgId=
     depends_on:
       fcp-dal-api:
         condition: service_started

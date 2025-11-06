@@ -10,6 +10,7 @@ const dalData = {
   },
   business: {
     sbi: '123456789',
+    organisationId: '5565448',
     info: {
       name: 'Acme Farms Ltd'
     }
@@ -26,8 +27,9 @@ const mappedData = {
   },
   business: {
     info: {
-      sbi: '123456789',
-      name: 'Acme Farms Ltd'
+      name: 'Acme Farms Ltd',
+      organisationId: '5565448',
+      sbi: '123456789'
     }
   }
 }

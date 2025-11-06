@@ -5,15 +5,18 @@
 
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
 import { formatFullName } from './base-presenter.js'
+import { config } from '../config/index.js'
 
 const homePresenter = (data, permissionGroups) => {
+  const iahwEndpoint = config.get('servicesConfig.IAHWEndpoint')
   return {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
     fullName: formatFullName(data.info.fullName),
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
-    sbi: data.business.info.sbi
+    sbi: data.business.info.sbi,
+    iahwLink: `${iahwEndpoint}${data.business.info.organisationId}`
   }
 }
 

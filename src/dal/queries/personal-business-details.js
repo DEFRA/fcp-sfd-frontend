@@ -10,6 +10,7 @@ export const personalBusinessDetailsQuery = `
       }
     }
     business(sbi: $sbi) {
+      organisationId
       sbi
       info {
         name

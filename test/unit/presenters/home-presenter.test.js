@@ -23,7 +23,8 @@ describe('homePresenter', () => {
       business: {
         info: {
           sbi: '123456789',
-          name: 'Test Farm Ltd'
+          name: 'Test Farm Ltd',
+          organisationId: '5565448'
         }
       }
     }
@@ -43,7 +44,8 @@ describe('homePresenter', () => {
           link: '/business-details',
           text: 'View business details'
         },
-        sbi: '123456789'
+        sbi: '123456789',
+        iahwLink: 'https://ffc-ahwr-farmer-test.azure.defra.cloud/sign-in?ssoOrgId=5565448'
       })
     })
   })

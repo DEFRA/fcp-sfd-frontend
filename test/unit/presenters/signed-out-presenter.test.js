@@ -11,7 +11,7 @@ describe('signedOutPresenter', () => {
     expect(result).toEqual({
       pageTitle: 'You have signed out',
       metaDescription: 'If this is not what you wanted, you can',
-      signInText: 'sign back into Land and farm service',
+      signInText: 'sign back into the Land and farm service',
       signInLink: '/auth/sign-in'
     })
   })

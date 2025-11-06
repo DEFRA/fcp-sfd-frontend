@@ -8,7 +8,7 @@ import { formatFullName } from './base-presenter.js'
 import { config } from '../config/index.js'
 
 const homePresenter = (data, permissionGroups) => {
-  const IAHWEndpoint = config.get('servicesConfig.IAHWEndpoint')
+  const iahwEndpoint = config.get('servicesConfig.IAHWEndpoint')
   return {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',

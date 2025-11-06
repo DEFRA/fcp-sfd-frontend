@@ -38,7 +38,7 @@ describe('homePresenter', () => {
       expect(result).toEqual({
         pageTitle: 'Your business',
         metaDescription: 'Home page for your business\'s schemes and details.',
-        fullName: 'Alfred M Waldron',
+        fullName: 'Alfred Waldron',
         businessName: 'Test Farm Ltd',
         businessDetails: {
           link: '/business-details',
@@ -54,7 +54,7 @@ describe('homePresenter', () => {
     test('returns a formatted full name', () => {
       const result = homePresenter(data, permissionGroups)
 
-      expect(result.fullName).toEqual('Alfred M Waldron')
+      expect(result.fullName).toEqual('Alfred Waldron')
     })
   })
 

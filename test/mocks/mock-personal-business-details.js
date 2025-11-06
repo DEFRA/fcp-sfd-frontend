@@ -26,11 +26,10 @@ const mappedData = {
     }
   },
   business: {
-
     info: {
+      name: 'Acme Farms Ltd',
       organisationId: '5565448',
-      sbi: '123456789',
-      name: 'Acme Farms Ltd'
+      sbi: '123456789'
     }
   }
 }

@@ -16,7 +16,7 @@ const homePresenter = (data, permissionGroups) => {
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
     sbi: data.business.info.sbi,
-    IAHWLink: `${IAHWEndpoint}${data.business.info.organisationId}`
+    iahwLink: `${iahwEndpoint}${data.business.info.organisationId}`
   }
 }
 

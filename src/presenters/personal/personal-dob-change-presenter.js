@@ -3,14 +3,16 @@
  * @module personalDobChangePresenter
  */
 
+import { formatFirstLastName } from '../base-presenter.js'
+
 const personalDobChangePresenter = (data, payload) => {
   const { day, month, year } = generateDateInputValues(data, payload)
 
   return {
     backLink: { href: '/personal-details' },
-    userName: data.info.fullName.fullNameJoined ?? null,
     pageTitle: 'What is your date of birth?',
     metaDescription: 'Update the date of birth for your personal account.',
+    userName: formatFirstLastName(data.info.fullName) || null,
     hint: 'For example, 31 3 1980',
     day,
     month,

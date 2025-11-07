@@ -3,12 +3,14 @@
  * @module personalEmailChangePresenter
  */
 
+import { formatFirstLastName } from '../base-presenter.js'
+
 const personalEmailChangePresenter = (data, payload) => {
   return {
     backLink: { href: '/personal-details' },
     pageTitle: 'What is your personal email address?',
     metaDescription: 'Update the email address for your personal account.',
-    userName: data.info.fullName.fullNameJoined ?? null,
+    userName: formatFirstLastName(data.info.fullName) || null,
     personalEmail: payload ?? data.changePersonalEmail ?? data.contact.email
   }
 }

@@ -209,7 +209,8 @@ const getMockData = () => {
     },
     info: {
       fullName: {
-        fullNameJoined: 'Alfred Waldron'
+        first: 'Alfred',
+        last: 'Waldron'
       }
     }
   }

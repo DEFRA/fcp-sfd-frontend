@@ -146,7 +146,6 @@ const getMockData = () => {
   return {
     info: {
       fullName: {
-        fullNameJoined: 'Alfred Waldron',
         first: 'Alfred',
         middle: 'M',
         last: 'Waldron'

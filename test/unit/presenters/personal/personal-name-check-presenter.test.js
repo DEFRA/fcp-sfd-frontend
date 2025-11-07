@@ -13,8 +13,7 @@ describe('personalNameCheckPresenter', () => {
         fullName: {
           first: 'Alfred',
           middle: 'M',
-          last: 'Waldron',
-          fullNameJoined: 'Alfred M Waldron'
+          last: 'Waldron'
         }
       }
     }
@@ -29,7 +28,7 @@ describe('personalNameCheckPresenter', () => {
         changeLink: '/account-name-change',
         pageTitle: 'Check your name is correct before submitting',
         metaDescription: 'Check the full name for your personal account is correct.',
-        userName: 'Alfred M Waldron',
+        userName: 'Alfred Waldron',
         fullName: 'Alfred M Waldron'
       })
     })
@@ -38,7 +37,8 @@ describe('personalNameCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.fullNameJoined
+        delete data.info.fullName.first
+        delete data.info.fullName.last
       })
 
       test('it should return userName as null', () => {

@@ -143,7 +143,8 @@ const getMockData = () => {
     info: {
       dateOfBirth: '1982-07-05',
       fullName: {
-        fullNameJoined: 'John Doe'
+        first: 'John',
+        last: 'Doe'
       }
     }
   }

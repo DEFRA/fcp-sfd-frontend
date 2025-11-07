@@ -86,7 +86,8 @@ const mockPersonalDetails = () => {
     },
     info: {
       fullName: {
-        fullNameJoined: 'Test Name'
+        first: 'Test',
+        last: 'Name'
       }
     },
     changePersonalPostcode: {

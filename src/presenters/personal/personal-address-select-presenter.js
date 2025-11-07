@@ -3,14 +3,14 @@
  * @module personalAddressSelectPresenter
  */
 
-import { formatDisplayAddresses } from '../base-presenter.js'
+import { formatDisplayAddresses, formatFirstLastName } from '../base-presenter.js'
 
 const personalAddressSelectPresenter = (data) => {
   return {
     backLink: { href: '/account-address-change' },
     pageTitle: 'Choose your personal address',
     metaDescription: 'Choose the address for your personal account.',
-    userName: data.info.fullName.fullNameJoined ?? null,
+    userName: formatFirstLastName(data.info.fullName) || null,
     postcode: data.changePersonalPostcode.postcode,
     displayAddresses: formatDisplayAddresses(data.changePersonalAddresses, data.changePersonalAddress)
   }

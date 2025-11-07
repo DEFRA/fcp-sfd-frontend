@@ -12,7 +12,8 @@ describe('personalEmailChangePresenter', () => {
     data = {
       info: {
         fullName: {
-          fullNameJoined: 'Alfred Waldron'
+          first: 'Alfred',
+          last: 'Waldron'
         }
       },
       contact: {
@@ -38,7 +39,8 @@ describe('personalEmailChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.fullNameJoined
+        delete data.info.fullName.first
+        delete data.info.fullName.last
       })
 
       test('it should return userName as null', () => {

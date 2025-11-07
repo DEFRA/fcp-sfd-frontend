@@ -3,15 +3,15 @@
  * @module personalAddressEnterPresenter
  */
 
-import { formatOriginalAddress, formatChangedAddress } from '../base-presenter.js'
+import { formatOriginalAddress, formatChangedAddress, formatFirstLastName } from '../base-presenter.js'
 
 const personalAddressEnterPresenter = (data, payload) => {
   return {
     backLink: { href: '/account-address-change' },
     pageTitle: 'Enter your personal address',
     metaDescription: 'Enter the address for your personal account.',
-    address: formatAddress(payload, data.changePersonalAddress, data.address),
-    userName: data.info.fullName.fullNameJoined ?? null
+    userName: formatFirstLastName(data.info.fullName) || null,
+    address: formatAddress(payload, data.changePersonalAddress, data.address)
   }
 }
 

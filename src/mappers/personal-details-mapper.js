@@ -14,9 +14,7 @@ export const mapPersonalDetails = (value) => {
       fullName: {
         first: value.customer.info.name.first,
         last: value.customer.info.name.last,
-        middle: value.customer.info.name.middle ?? null,
-        // remove this once we have migrated to the new format
-        fullNameJoined: formatFullName(value.customer.info.name)
+        middle: value.customer.info.name.middle ?? null
       }
     },
     address: {
@@ -50,13 +48,4 @@ export const mapPersonalDetails = (value) => {
       }
     }
   }
-}
-
-// Remove this once we have migrated to the new format
-const formatFullName = (name) => {
-  return [
-    name.first,
-    name.middle,
-    name.last
-  ].filter(Boolean).join(' ')
 }

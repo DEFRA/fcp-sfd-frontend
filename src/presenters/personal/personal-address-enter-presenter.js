@@ -10,7 +10,7 @@ const personalAddressEnterPresenter = (data, payload) => {
     backLink: { href: '/account-address-change' },
     pageTitle: 'Enter your personal address',
     metaDescription: 'Enter the address for your personal account.',
-    userName: data.info.userName || null,
+    userName: data.info.userName,
     address: formatAddress(payload, data.changePersonalAddress, data.address)
   }
 }

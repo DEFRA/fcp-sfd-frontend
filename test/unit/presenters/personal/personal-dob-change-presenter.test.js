@@ -38,20 +38,6 @@ describe('personalDobChangePresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.info.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = personalDobChangePresenter(data)
-
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
   describe('the "day", "month" and "year" property', () => {
     describe('when provided with a payload', () => {
       beforeEach(() => {

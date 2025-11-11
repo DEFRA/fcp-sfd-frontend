@@ -35,18 +35,4 @@ describe('personalDobCheckPresenter', () => {
       })
     })
   })
-
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.info.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = personalDobCheckPresenter(data)
-
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
 })

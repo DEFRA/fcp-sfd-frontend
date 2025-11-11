@@ -64,19 +64,6 @@ describe('businessLegalStatusChangePresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.customer.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = businessLegalStatusChangePresenter(data)
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
   describe('the "businessLegalStatus" property', () => {
     describe('when the businessLegalStatus property is missing', () => {
       beforeEach(() => {

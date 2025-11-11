@@ -66,20 +66,6 @@ describe('businessTypeChangePresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.customer.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = businessTypeChangePresenter(data)
-
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
   describe('the "businessType" property', () => {
     describe('when the type property is missing', () => {
       beforeEach(() => {

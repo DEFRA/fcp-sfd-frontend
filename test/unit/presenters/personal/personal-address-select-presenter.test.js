@@ -63,20 +63,6 @@ describe('personalAddressSelectPresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.info.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = personalAddressSelectPresenter(data)
-
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
   describe('the "displayAddresses" property', () => {
     describe('when provided with an additional address', () => {
       beforeEach(() => {

@@ -8,7 +8,7 @@ const personalNameChangePresenter = (data, payload) => {
     backLink: { href: '/personal-details' },
     pageTitle: 'What is your full name?',
     metaDescription: 'Update the full name for your personal account.',
-    userName: data.info.userName || null,
+    userName: data.info.userName,
     first: payload?.first ?? data.changePersonalName?.first ?? data.info.fullName.first,
     middle: payload?.middle ?? data.changePersonalName?.middle ?? data.info.fullName.middle,
     last: payload?.last ?? data.changePersonalName?.last ?? data.info.fullName.last

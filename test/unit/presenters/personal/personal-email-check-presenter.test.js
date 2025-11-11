@@ -37,20 +37,6 @@ describe('personalEmailCheckPresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.info.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = personalEmailCheckPresenter(data)
-
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
   describe('the "personalEmail" property', () => {
     describe('when provided with a changed personal email', () => {
       beforeEach(() => {

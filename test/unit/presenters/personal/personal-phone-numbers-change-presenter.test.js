@@ -40,20 +40,6 @@ describe('personalPhoneNumbersChangePresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.info.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = personalPhoneNumbersChangePresenter(data)
-
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
   describe('the "personalMobile" property', () => {
     describe('when provided with a changed personalMobile', () => {
       beforeEach(() => {

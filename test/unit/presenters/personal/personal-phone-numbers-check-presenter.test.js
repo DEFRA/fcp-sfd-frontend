@@ -45,20 +45,6 @@ describe('personalPhoneNumbersCheckPresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    describe('when the userName property is missing', () => {
-      beforeEach(() => {
-        delete data.info.userName
-      })
-
-      test('it should return userName as null', () => {
-        const result = personalPhoneNumbersCheckPresenter(data)
-
-        expect(result.userName).toEqual(null)
-      })
-    })
-  })
-
   describe('the "personalTelephone" property', () => {
     describe('when the personalTelephone property is missing', () => {
       beforeEach(() => {

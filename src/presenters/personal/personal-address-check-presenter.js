@@ -3,8 +3,6 @@
  * @module personalAddressCheckPresenter
  */
 
-import { formatFirstLastName } from '../base-presenter.js'
-
 const personalAddressCheckPresenter = (personalDetails) => {
   const { changePersonalAddress, address, info } = personalDetails
 
@@ -13,7 +11,7 @@ const personalAddressCheckPresenter = (personalDetails) => {
     changeLink: changeLink(changePersonalAddress?.postcodeLookup),
     pageTitle: 'Check your personal address is correct before submitting',
     metaDescription: 'Check the address for your personal account is correct.',
-    userName: formatFirstLastName(info.fullName) || null,
+    userName: info.userName || null,
     address: formatAddress(changePersonalAddress ?? address)
   }
 }

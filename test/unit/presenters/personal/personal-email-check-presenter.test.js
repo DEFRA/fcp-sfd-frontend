@@ -13,7 +13,8 @@ describe('personalEmailCheckPresenter', () => {
         fullName: {
           first: 'Alfred',
           last: 'Waldron'
-        }
+        },
+        userName: 'Alfred Waldron'
       },
       contact: {
         email: 'test@test.com'
@@ -39,8 +40,7 @@ describe('personalEmailCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.first
-        delete data.info.fullName.last
+        delete data.info.userName
       })
 
       test('it should return userName as null', () => {

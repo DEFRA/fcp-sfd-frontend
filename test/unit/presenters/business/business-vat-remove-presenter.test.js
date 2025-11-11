@@ -15,7 +15,7 @@ describe('businessVatRemovePresenter', () => {
         vat: 'GB123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
+        userName: 'Alfred Waldron'
       }
     }
   })
@@ -67,7 +67,7 @@ describe('businessVatRemovePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {

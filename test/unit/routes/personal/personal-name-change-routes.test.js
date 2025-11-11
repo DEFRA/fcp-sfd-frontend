@@ -149,7 +149,8 @@ const getMockData = () => {
         first: 'Alfred',
         middle: 'M',
         last: 'Waldron'
-      }
+      },
+      userName: 'Alfred Waldron'
     }
   }
 }

@@ -4,7 +4,6 @@
  */
 
 import moment from 'moment'
-import { formatFirstLastName } from '../base-presenter.js'
 
 const personalDobCheckPresenter = (personalDetails) => {
   const { day, month, year } = personalDetails.changePersonalDob
@@ -15,7 +14,7 @@ const personalDobCheckPresenter = (personalDetails) => {
     backLink: { href: '/account-date-of-birth-change' },
     pageTitle: 'Check your date of birth is correct before submitting',
     metaDescription: 'Check the date of birth for your personal account is correct.',
-    userName: formatFirstLastName(personalDetails.info.fullName) || null,
+    userName: personalDetails.info.userName || null,
     changeLink: '/account-date-of-birth-change',
     dateOfBirth: moment(personalDob).format('LL')
   }

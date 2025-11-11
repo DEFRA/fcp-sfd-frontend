@@ -153,7 +153,8 @@ const getMockData = () => {
       fullName: {
         first: 'Alfred',
         last: 'Waldron'
-      }
+      },
+      userName: 'Alfred Waldron'
     },
     changePersonalPostcode: {
       postcode: 'SK22 1DL'

@@ -8,10 +8,10 @@ const businessNameChangePresenter = (data, payload) => {
     backLink: { href: '/business-details' },
     pageTitle: 'What is your business name?',
     metaDescription: 'Update the name for your business.',
+    userName: data.customer.userName || null,
     businessName: data.info.businessName ?? null,
     changeBusinessName: payload ?? data.changeBusinessName ?? data.info.businessName,
-    sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null
+    sbi: data.info.sbi ?? null
   }
 }
 

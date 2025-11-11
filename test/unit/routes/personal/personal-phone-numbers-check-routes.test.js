@@ -94,7 +94,8 @@ const getMockData = () => {
       fullName: {
         first: 'John',
         last: 'Doe'
-      }
+      },
+      userName: 'John Doe'
     },
     contact: {
       telephone: '01234567890',

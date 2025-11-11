@@ -3,7 +3,7 @@
  * @module personalNameCheckPresenter
  */
 
-import { formatFullName, formatFirstLastName } from '../base-presenter.js'
+import { formatFullName } from '../base-presenter.js'
 
 const personalNameCheckPresenter = (personalDetails) => {
   return {
@@ -11,7 +11,7 @@ const personalNameCheckPresenter = (personalDetails) => {
     changeLink: '/account-name-change',
     pageTitle: 'Check your name is correct before submitting',
     metaDescription: 'Check the full name for your personal account is correct.',
-    userName: formatFirstLastName(personalDetails.info.fullName) || null,
+    userName: personalDetails.info.userName || null,
     fullName: formatFullName(personalDetails.changePersonalName ?? personalDetails.info.fullName)
   }
 }

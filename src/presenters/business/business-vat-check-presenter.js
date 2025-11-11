@@ -9,10 +9,10 @@ const businessVatCheckPresenter = (data) => {
     changeLink: '/business-vat-registration-number-change',
     pageTitle: 'Check your VAT registration number is correct before submitting',
     metaDescription: 'Check the VAT registration number for your business is correct.',
+    userName: data.customer.userName || null,
     vatNumber: data.changeBusinessVat ?? data.info.vat ?? null,
     businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null
+    sbi: data.info.sbi ?? null
   }
 }
 

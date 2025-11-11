@@ -3,14 +3,12 @@
  * @module personalAddressChangePresenter
  */
 
-import { formatFirstLastName } from '../base-presenter.js'
-
 const personalAddressChangePresenter = (data, payload) => {
   return {
     backLink: { href: '/personal-details' },
     pageTitle: 'What is your personal address?',
     metaDescription: 'Update the address for your personal account.',
-    userName: formatFirstLastName(data.info.fullName) || null,
+    userName: data.info.userName || null,
     postcode: payload ?? data.changePersonalPostcode?.postcode ?? data.address.postcode
   }
 }

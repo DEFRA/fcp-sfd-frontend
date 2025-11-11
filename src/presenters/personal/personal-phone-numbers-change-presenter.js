@@ -3,14 +3,14 @@
  * @module personalPhoneNumbersChangePresenter
  */
 
-import { formatNumber, formatFirstLastName } from '../base-presenter.js'
+import { formatNumber } from '../base-presenter.js'
 
 const personalPhoneNumbersChangePresenter = (data, payload) => {
   return {
     backLink: { href: '/personal-details' },
     pageTitle: 'What are your personal phone numbers?',
     metaDescription: 'Update the phone numbers for your personal account.',
-    userName: formatFirstLastName(data.info.fullName) || null,
+    userName: data.info.userName || null,
     personalTelephone: formatNumber(payload?.personalTelephone, data.changePersonalPhoneNumbers?.personalTelephone, data.contact.telephone),
     personalMobile: formatNumber(payload?.personalMobile, data.changePersonalPhoneNumbers?.personalMobile, data.contact.mobile)
   }

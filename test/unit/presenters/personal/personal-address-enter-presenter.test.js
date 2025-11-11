@@ -14,7 +14,8 @@ describe('personalAddressEnterPresenter', () => {
         fullName: {
           first: 'Test',
           last: 'Name'
-        }
+        },
+        userName: 'Test Name'
       },
       address: {
         lookup: {},
@@ -57,8 +58,7 @@ describe('personalAddressEnterPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.first
-        delete data.info.fullName.last
+        delete data.info.userName
       })
 
       test('it should return userName as null', () => {

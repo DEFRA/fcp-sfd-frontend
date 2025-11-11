@@ -13,7 +13,8 @@ describe('personalPhoneNumbersCheckPresenter', () => {
         fullName: {
           first: 'John',
           last: 'Doe'
-        }
+        },
+        userName: 'John Doe'
       },
       contact: {
         telephone: '01234567890',
@@ -47,8 +48,7 @@ describe('personalPhoneNumbersCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.first
-        delete data.info.fullName.last
+        delete data.info.userName
       })
 
       test('it should return userName as null', () => {

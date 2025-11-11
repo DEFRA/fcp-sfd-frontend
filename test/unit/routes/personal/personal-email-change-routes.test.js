@@ -148,7 +148,8 @@ const getMockData = () => {
       fullName: {
         first: 'Alfred',
         last: 'Waldron'
-      }
+      },
+      userName: 'Alfred Waldron'
     },
     contact: {
       email: 'new-email@test.com'

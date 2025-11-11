@@ -92,7 +92,8 @@ const getMockData = () => {
       fullName: {
         first: 'Alfred',
         last: 'Waldron'
-      }
+      },
+      userName: 'Alfred Waldron'
     },
     changePersonalName: {
       first: 'John',

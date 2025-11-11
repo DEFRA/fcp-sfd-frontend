@@ -43,7 +43,8 @@ const mappedData = {
       first: 'John',
       last: 'Doe',
       middle: 'M'
-    }
+    },
+    userName: 'John Doe'
   },
   address: {
     lookup: {

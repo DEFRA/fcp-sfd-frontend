@@ -8,10 +8,10 @@ const businessVatRemovePresenter = (data) => {
     backLink: { href: '/business-details' },
     pageTitle: 'Are you sure you want to remove your VAT registration number?',
     metaDescription: 'Are you sure you want to remove your VAT registration number?',
+    userName: data.customer.userName || null,
     vatNumber: data.info.vat ?? null,
     businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null
+    sbi: data.info.sbi ?? null
   }
 }
 

@@ -168,7 +168,7 @@ const getMockData = () => {
       vat: 'GB123456789'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     }
   }
 }

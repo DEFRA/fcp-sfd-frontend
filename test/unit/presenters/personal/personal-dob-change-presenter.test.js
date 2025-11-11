@@ -15,7 +15,8 @@ describe('personalDobChangePresenter', () => {
         fullName: {
           first: 'Alfred',
           last: 'Waldron'
-        }
+        },
+        userName: 'Alfred Waldron'
       }
     }
   })
@@ -40,8 +41,7 @@ describe('personalDobChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.first
-        delete data.info.fullName.last
+        delete data.info.userName
       })
 
       test('it should return userName as null', () => {

@@ -47,7 +47,11 @@ export const mapBusinessDetails = (value) => {
       fullName: [
         value.customer.info.name.first,
         value.customer.info.name.last
-      ].filter(Boolean).join(' ')
+      ].filter(Boolean).join(' '),
+      userName: [
+        value.customer.info.name.first,
+        value.customer.info.name.last
+      ].filter(Boolean).join(' ') || null
     }
   }
 }

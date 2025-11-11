@@ -10,9 +10,9 @@ const businessAddressSelectPresenter = (data) => {
     backLink: { href: '/business-address-change' },
     pageTitle: 'Choose your business address',
     metaDescription: 'Choose the address for your business.',
+    userName: data.customer.userName || null,
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null,
     postcode: data.changeBusinessPostcode.postcode,
     displayAddresses: formatDisplayAddresses(data.changeBusinessAddresses, data.changeBusinessAddress)
   }

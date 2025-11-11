@@ -9,10 +9,10 @@ const businessNameCheckPresenter = (data) => {
     changeLink: '/business-name-change',
     pageTitle: 'Check your business name is correct before submitting',
     metaDescription: 'Check the name for your business is correct.',
+    userName: data.customer.userName || null,
     businessName: data.info.businessName ?? null,
     changeBusinessName: data.changeBusinessName ?? data.info.businessName,
-    sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null
+    sbi: data.info.sbi ?? null
   }
 }
 

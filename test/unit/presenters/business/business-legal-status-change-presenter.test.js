@@ -17,7 +17,7 @@ describe('businessLegalStatusChangePresenter', () => {
         sbi: '123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
+        userName: 'Alfred Waldron'
       }
     }
   })
@@ -67,7 +67,7 @@ describe('businessLegalStatusChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {

@@ -4,7 +4,8 @@ const mappedData = {
       first: 'John',
       middle: 'M',
       last: 'Doe'
-    }
+    },
+    userName: 'John Doe'
   },
   business: {
     info: {

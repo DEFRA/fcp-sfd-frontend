@@ -28,5 +28,23 @@ describe('businessDetailsMapper', () => {
 
       expect(result.customer.fullName).toEqual('Software Developer')
     })
+
+    test('it should build the userName correctly ', () => {
+      const userNameCheckData = {
+        ...dalData,
+        customer: {
+          info: {
+            name: {
+              first: 'Software',
+              last: 'Developer'
+            }
+          }
+        }
+      }
+
+      const result = mapBusinessDetails(userNameCheckData)
+
+      expect(result.customer.userName).toEqual('Software Developer')
+    })
   })
 })

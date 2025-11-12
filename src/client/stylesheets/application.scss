@@ -4,3 +4,10 @@
 @use "core";
 @use "heading";
 @use "navigation";
+
+.text-wrap-no-hyphen {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: none;
+  display: block;
+}

@@ -2,12 +2,12 @@ const dalData = {
   customer: {
     crn: '123456890',
     info: {
-      dateOfBirth: '1990-01-01',
       name: {
         first: 'John',
         middle: 'M',
         last: 'Doe'
       },
+      dateOfBirth: '1990-01-01',
       phone: {
         landline: '01234567890',
         mobile: null
@@ -38,13 +38,14 @@ const dalData = {
 const mappedData = {
   crn: '123456890',
   info: {
-    dateOfBirth: '1990-01-01',
+    userName: 'John Doe',
+    fullNameJoined: 'John M Doe',
     fullName: {
       first: 'John',
       last: 'Doe',
       middle: 'M'
     },
-    userName: 'John Doe'
+    dateOfBirth: '1990-01-01'
   },
   address: {
     lookup: {

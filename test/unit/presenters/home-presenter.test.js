@@ -13,16 +13,10 @@ describe('homePresenter', () => {
 
   beforeEach(() => {
     data = {
-      info: {
-        fullName: {
-          first: 'Alfred',
-          middle: 'M',
-          last: 'Waldron'
-        }
-      },
       business: {
         info: {
           sbi: '123456789',
+          userName: 'Alfred Waldron',
           name: 'Test Farm Ltd',
           organisationId: '5565448'
         }
@@ -38,7 +32,7 @@ describe('homePresenter', () => {
       expect(result).toEqual({
         pageTitle: 'Your business',
         metaDescription: 'Home page for your business\'s schemes and details.',
-        fullName: 'Alfred Waldron',
+        userName: 'Alfred Waldron',
         businessName: 'Test Farm Ltd',
         businessDetails: {
           link: '/business-details',
@@ -50,11 +44,11 @@ describe('homePresenter', () => {
     })
   })
 
-  describe('the "fullName" property', () => {
-    test('returns a formatted full name', () => {
+  describe('the "userName" property', () => {
+    test('returns the userName from business info', () => {
       const result = homePresenter(data, permissionGroups)
 
-      expect(result.fullName).toEqual('Alfred Waldron')
+      expect(result.userName).toEqual('Alfred Waldron')
     })
   })
 

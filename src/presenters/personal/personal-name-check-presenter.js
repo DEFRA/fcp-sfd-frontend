@@ -3,8 +3,6 @@
  * @module personalNameCheckPresenter
  */
 
-import { formatFullName } from '../base-presenter.js'
-
 const personalNameCheckPresenter = (personalDetails) => {
   return {
     backLink: { href: '/account-name-change' },
@@ -14,6 +12,14 @@ const personalNameCheckPresenter = (personalDetails) => {
     userName: personalDetails.info.userName,
     fullName: formatFullName(personalDetails.changePersonalName ?? personalDetails.info.fullName)
   }
+}
+
+const formatFullName = (nameData) => {
+  return [
+    nameData.first,
+    nameData.middle,
+    nameData.last
+  ].filter(Boolean).join(' ')
 }
 
 export {

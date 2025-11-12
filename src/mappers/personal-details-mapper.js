@@ -10,16 +10,21 @@ export const mapPersonalDetails = (value) => {
   return {
     crn: value.customer.crn,
     info: {
-      dateOfBirth: value.customer.info.dateOfBirth,
+      userName: [
+        value.customer.info.name.first,
+        value.customer.info.name.last
+      ].filter(Boolean).join(' '),
       fullName: {
         first: value.customer.info.name.first,
         last: value.customer.info.name.last,
         middle: value.customer.info.name.middle ?? null
       },
-      userName: [
+      fullNameJoined: [
         value.customer.info.name.first,
+        value.customer.info.name.middle,
         value.customer.info.name.last
-      ].filter(Boolean).join(' ') || null
+      ].filter(Boolean).join(' '),
+      dateOfBirth: value.customer.info.dateOfBirth
     },
     address: {
       lookup: {

@@ -31,5 +31,51 @@ describe('personalDetailsMapper', () => {
 
       expect(result.info.userName).toEqual('Software Developer')
     })
+
+    test('it should build the fullName object correctly ', () => {
+      const fullNameCheckData = {
+        ...dalData,
+        customer: {
+          ...dalData.customer,
+          info: {
+            ...dalData.customer.info,
+            name: {
+              first: 'Software',
+              last: 'Developer',
+              middle: 'Engineer'
+            }
+          }
+        }
+      }
+
+      const result = mapPersonalDetails(fullNameCheckData)
+
+      expect(result.info.fullName).toEqual({
+        first: 'Software',
+        last: 'Developer',
+        middle: 'Engineer'
+      })
+    })
+
+    test('it should build the fullNameJoined string correctly ', () => {
+      const fullNameCheckData = {
+        ...dalData,
+        customer: {
+          ...dalData.customer,
+          info: {
+            ...dalData.customer.info,
+            name: {
+              first: 'Software',
+              last: 'Developer',
+              middle: 'Engineer'
+            }
+          }
+        }
+      }
+
+      const result = mapPersonalDetails(fullNameCheckData)
+
+      expect(result.info.fullNameJoined).toEqual('Software Engineer Developer')
+    })
   })
 })

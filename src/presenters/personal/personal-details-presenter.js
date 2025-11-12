@@ -4,7 +4,7 @@
  */
 
 import moment from 'moment'
-import { formatBackLink, formatFullName, formatDisplayAddress } from '../base-presenter.js'
+import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
   moment.locale('en-gb')
@@ -16,9 +16,10 @@ const personalDetailsPresenter = (data, yar) => {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',
+    userName: data.info.userName,
     crn: data.crn,
     address: formatDisplayAddress(data.address),
-    fullName: formatFullName(data.info.fullName),
+    fullName: data.info.fullNameJoined,
     personalTelephone: {
       telephone: data.contact.telephone ?? 'Not added',
       mobile: data.contact.mobile ?? 'Not added',

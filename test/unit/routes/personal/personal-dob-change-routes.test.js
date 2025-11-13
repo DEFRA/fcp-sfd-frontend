@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 
+// Test helpers
+import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { personalDobChangeRoutes } from '../../../../src/routes/personal/personal-dob-change-routes.js'
 const [getPersonalDobChange, postPersonalDobChange] = personalDobChangeRoutes
@@ -53,9 +56,10 @@ describe('personal date of birth change', () => {
         fetchPersonalChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getPersonalDobChange.method).toBe('GET')
         expect(getPersonalDobChange.path).toBe('/account-date-of-birth-change')
+        expect(getPersonalDobChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it fetches the data from the session', async () => {
@@ -80,6 +84,12 @@ describe('personal date of birth change', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postPersonalDobChange.method).toBe('POST')
+        expect(postPersonalDobChange.path).toBe('/account-date-of-birth-change')
+        expect(postPersonalDobChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
+      })
+
       describe('and the validation passes', () => {
         test('it sets the session data and redirects', async () => {
           await postPersonalDobChange.options.handler(request, h)

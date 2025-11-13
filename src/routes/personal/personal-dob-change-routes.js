@@ -4,10 +4,14 @@ import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalDobChangePresenter } from '../../presenters/personal/personal-dob-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getPersonalDobChange = {
   method: 'GET',
   path: '/account-date-of-birth-change',
+  options: {
+    auth: { scope: VIEW_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
@@ -20,6 +24,7 @@ const postPersonalDobChange = {
   method: 'POST',
   path: '/account-date-of-birth-change',
   options: {
+    auth: { scope: VIEW_PERMISSIONS },
     validate: {
       payload: personalDobSchema,
       options: { abortEarly: false },

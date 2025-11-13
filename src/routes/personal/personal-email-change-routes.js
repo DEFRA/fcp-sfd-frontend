@@ -4,10 +4,14 @@ import { personalEmailSchema } from '../../schemas/personal/personal-email-schem
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getPersonalEmailChange = {
   method: 'GET',
   path: '/account-email-change',
+  options: {
+    auth: { scope: VIEW_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalEmail')
@@ -21,6 +25,7 @@ const postPersonalEmailChange = {
   method: 'POST',
   path: '/account-email-change',
   options: {
+    auth: { scope: VIEW_PERMISSIONS },
     validate: {
       payload: personalEmailSchema,
       options: { abortEarly: false },

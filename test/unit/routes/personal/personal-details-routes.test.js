@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchPersonalDetailsService } from '../../../../src/services/personal/fetch-personal-details-service.js'
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
 
+// Test helpers
+import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { personalDetailsRoutes } from '../../../../src/routes/personal/personal-details-routes.js'
 const [getPersonalDetails] = personalDetailsRoutes
@@ -48,6 +51,11 @@ describe('personal details', () => {
         pageData = getPageData()
         fetchPersonalDetailsService.mockResolvedValue(getMockData())
         personalDetailsPresenter.mockReturnValue(pageData)
+      })
+
+      test('it has the correct path and auth scope configured', () => {
+        expect(getPersonalDetails.path).toBe('/personal-details')
+        expect(getPersonalDetails.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it clears the personalDetails key from session', async () => {

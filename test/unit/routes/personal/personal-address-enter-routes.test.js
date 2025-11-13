@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 
+// Test helpers
+import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { personalAddressEnterRoutes } from '../../../../src/routes/personal/personal-address-enter-routes.js'
 const [getPersonalAddressEnter, postPersonalAddressEnter] = personalAddressEnterRoutes
@@ -52,9 +55,10 @@ describe('personal address enter', () => {
         fetchPersonalChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getPersonalAddressEnter.method).toBe('GET')
         expect(getPersonalAddressEnter.path).toBe('/account-address-enter')
+        expect(getPersonalAddressEnter.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it calls fetchPersonalChangeService', async () => {
@@ -87,6 +91,12 @@ describe('personal address enter', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postPersonalAddressEnter.method).toBe('POST')
+        expect(postPersonalAddressEnter.path).toBe('/account-address-enter')
+        expect(postPersonalAddressEnter.options.auth.scope).toBe(VIEW_PERMISSIONS)
+      })
+
       describe('and the validation passes', () => {
         test('it sets the session data and redirects', async () => {
           await postPersonalAddressEnter.options.handler(request, h)

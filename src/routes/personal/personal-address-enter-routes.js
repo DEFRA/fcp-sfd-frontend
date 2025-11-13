@@ -4,10 +4,14 @@ import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalAddressEnterPresenter } from '../../presenters/personal/personal-address-enter-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getPersonalAddressEnter = {
   method: 'GET',
   path: '/account-address-enter',
+  options: {
+    auth: { scope: VIEW_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalAddress')
@@ -21,6 +25,7 @@ const postPersonalAddressEnter = {
   method: 'POST',
   path: '/account-address-enter',
   options: {
+    auth: { scope: VIEW_PERMISSIONS },
     validate: {
       payload: addressSchema,
       options: { abortEarly: false },

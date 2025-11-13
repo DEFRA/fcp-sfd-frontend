@@ -35,7 +35,7 @@ describe('personalDetailsPresenter', () => {
         notification: { title: 'Update', text: 'Personal details updated successfully' },
         pageTitle: 'View and update your personal details',
         metaDescription: 'View and update your personal details.',
-        userName: data.info.userName,
+        userName: 'John Doe',
         address: [
           'THE COACH HOUSE',
           'STOCKWELL HALL',
@@ -150,11 +150,10 @@ describe('personalDetailsPresenter', () => {
   })
 
   describe('the "fullName" property', () => {
-    test('returns the fullNameJoined string from mapper', () => {
+    test('returns a formatted full name', () => {
       const result = personalDetailsPresenter(data, yar)
 
       expect(result.fullName).toBe('John M Doe')
-      expect(result.fullName).toBe(data.info.fullNameJoined)
     })
   })
 

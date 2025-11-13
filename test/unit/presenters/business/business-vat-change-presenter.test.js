@@ -68,6 +68,20 @@ describe('businessVatChangePresenter', () => {
     })
   })
 
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.customer.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = businessVatChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
   describe('the "vat number" property', () => {
     describe('when provided with a changed vat number', () => {
       beforeEach(() => {

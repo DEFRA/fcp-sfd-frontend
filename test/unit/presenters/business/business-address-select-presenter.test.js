@@ -93,6 +93,20 @@ describe('businessAddressSelectPresenter', () => {
     })
   })
 
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.customer.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = businessAddressSelectPresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
   describe('the "displayAddresses" property', () => {
     describe('when provided with an additional address', () => {
       beforeEach(() => {

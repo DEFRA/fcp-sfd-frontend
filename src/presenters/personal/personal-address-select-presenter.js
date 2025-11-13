@@ -10,7 +10,7 @@ const personalAddressSelectPresenter = (data) => {
     backLink: { href: '/account-address-change' },
     pageTitle: 'Choose your personal address',
     metaDescription: 'Choose the address for your personal account.',
-    userName: data.info.userName,
+    userName: data.info.userName ?? null,
     postcode: data.changePersonalPostcode.postcode,
     displayAddresses: formatDisplayAddresses(data.changePersonalAddresses, data.changePersonalAddress)
   }

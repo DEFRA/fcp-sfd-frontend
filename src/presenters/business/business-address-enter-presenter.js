@@ -10,7 +10,7 @@ const businessAddressEnterPresenter = (data, payload) => {
     backLink: { href: '/business-address-change' },
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
-    userName: data.customer.userName,
+    userName: data.customer.userName ?? null,
     address: formatAddress(payload, data.changeBusinessAddress, data.address),
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null

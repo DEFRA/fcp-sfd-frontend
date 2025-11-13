@@ -36,6 +36,20 @@ describe('personalAddressChangePresenter', () => {
     })
   })
 
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = personalAddressChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
   describe('the "postcode" property', () => {
     describe('when provided with a changed personal postcode', () => {
       beforeEach(() => {

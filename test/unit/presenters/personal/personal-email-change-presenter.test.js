@@ -11,11 +11,11 @@ describe('personalEmailChangePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
+        userName: 'Alfred Waldron',
         fullName: {
           first: 'Alfred',
           last: 'Waldron'
-        },
-        userName: 'Alfred Waldron'
+        }
       },
       contact: {
         email: 'test@test.com'
@@ -33,6 +33,20 @@ describe('personalEmailChangePresenter', () => {
         metaDescription: 'Update the email address for your personal account.',
         userName: 'Alfred Waldron',
         personalEmail: 'test@test.com'
+      })
+    })
+  })
+
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = personalEmailChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
       })
     })
   })

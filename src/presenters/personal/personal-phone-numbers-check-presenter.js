@@ -9,7 +9,7 @@ const personalPhoneNumbersCheckPresenter = (personalDetails) => {
     changeLink: '/account-phone-numbers-change',
     pageTitle: 'Check your personal phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your personal account are correct.',
-    userName: personalDetails.info.userName,
+    userName: personalDetails.info.userName ?? null,
     personalTelephone: {
       telephone: personalDetails.changePersonalPhoneNumbers.personalTelephone ?? 'Not added',
       mobile: personalDetails.changePersonalPhoneNumbers.personalMobile ?? 'Not added'

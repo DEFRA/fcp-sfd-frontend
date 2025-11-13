@@ -8,7 +8,7 @@ const businessAddressChangePresenter = (data, payload) => {
     backLink: { href: '/business-details' },
     pageTitle: 'What is your business address?',
     metaDescription: 'Update the address for your business.',
-    userName: data.customer.userName,
+    userName: data.customer.userName ?? null,
     postcode: payload ?? data.changeBusinessPostcode?.postcode ?? data.address.postcode,
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null

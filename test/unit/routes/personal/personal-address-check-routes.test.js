@@ -90,11 +90,11 @@ describe('personal address check', () => {
 const getMockData = () => {
   return {
     info: {
+      userName: 'Alfred Waldron',
       fullName: {
         first: 'Alfred',
         last: 'Waldron'
-      },
-      userName: 'Alfred Waldron'
+      }
     },
     address: {
       address1: '10 Skirbeck Way',

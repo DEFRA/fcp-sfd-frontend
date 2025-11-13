@@ -85,6 +85,20 @@ describe('businessAddressEnterPresenter', () => {
     })
   })
 
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.customer.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
   describe('the "address" property', () => {
     describe('when provided with a payload', () => {
       beforeEach(() => {

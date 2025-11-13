@@ -10,12 +10,12 @@ describe('personalNameCheckPresenter', () => {
   beforeEach(() => {
     data = {
       info: {
+        userName: 'Alfred Waldron',
         fullName: {
           first: 'Alfred',
           middle: 'M',
           last: 'Waldron'
-        },
-        userName: 'Alfred Waldron'
+        }
       }
     }
   })
@@ -31,6 +31,20 @@ describe('personalNameCheckPresenter', () => {
         metaDescription: 'Check the full name for your personal account is correct.',
         userName: 'Alfred Waldron',
         fullName: 'Alfred M Waldron'
+      })
+    })
+  })
+
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = personalNameCheckPresenter(data)
+
+        expect(result.userName).toEqual(null)
       })
     })
   })

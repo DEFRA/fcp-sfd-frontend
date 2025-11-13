@@ -11,7 +11,7 @@ const businessAddressCheckPresenter = (businessDetails) => {
     changeLink: changeLink(changeBusinessAddress?.postcodeLookup),
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
-    userName: customer.userName,
+    userName: customer.userName ?? null,
     address: formatAddress(changeBusinessAddress ?? address),
     businessName: info.businessName ?? null,
     sbi: info.sbi ?? null

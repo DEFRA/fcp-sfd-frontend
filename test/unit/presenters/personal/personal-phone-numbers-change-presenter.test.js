@@ -11,11 +11,11 @@ describe('personalPhoneNumbersChangePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
+        userName: 'Alfred Waldron',
         fullName: {
           first: 'Alfred',
           last: 'Waldron'
-        },
-        userName: 'Alfred Waldron'
+        }
       },
       contact: {
         telephone: '01234 567891',
@@ -36,6 +36,20 @@ describe('personalPhoneNumbersChangePresenter', () => {
         userName: 'Alfred Waldron',
         personalTelephone: '01234 567891',
         personalMobile: null
+      })
+    })
+  })
+
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = personalPhoneNumbersChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
       })
     })
   })

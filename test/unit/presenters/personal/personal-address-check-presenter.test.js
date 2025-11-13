@@ -49,6 +49,20 @@ describe('personalAddressCheckPresenter', () => {
     })
   })
 
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = personalAddressCheckPresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
   describe('the "address" property', () => {
     describe('when provided with a changePersonalAddress thats entered manually', () => {
       beforeEach(() => {

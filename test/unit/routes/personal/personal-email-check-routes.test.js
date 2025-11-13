@@ -90,11 +90,11 @@ describe('personal email check', () => {
 const getMockData = () => {
   return {
     info: {
+      userName: 'John Doe',
       fullName: {
         first: 'John',
         last: 'Doe'
-      },
-      userName: 'John Doe'
+      }
     },
     contact: {
       email: 'test@example.com'

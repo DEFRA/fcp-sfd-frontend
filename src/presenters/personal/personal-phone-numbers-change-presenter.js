@@ -10,7 +10,7 @@ const personalPhoneNumbersChangePresenter = (data, payload) => {
     backLink: { href: '/personal-details' },
     pageTitle: 'What are your personal phone numbers?',
     metaDescription: 'Update the phone numbers for your personal account.',
-    userName: data.info.userName,
+    userName: data.info.userName ?? null,
     personalTelephone: formatNumber(payload?.personalTelephone, data.changePersonalPhoneNumbers?.personalTelephone, data.contact.telephone),
     personalMobile: formatNumber(payload?.personalMobile, data.changePersonalPhoneNumbers?.personalMobile, data.contact.mobile)
   }

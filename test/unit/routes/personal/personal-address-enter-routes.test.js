@@ -161,11 +161,11 @@ const getMockData = () => {
       country: 'United Kingdom'
     },
     info: {
+      userName: 'Alfred Waldron',
       fullName: {
         first: 'Alfred',
         last: 'Waldron'
-      },
-      userName: 'Alfred Waldron'
+      }
     }
   }
 }

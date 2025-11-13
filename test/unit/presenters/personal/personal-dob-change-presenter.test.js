@@ -12,11 +12,11 @@ describe('personalDobChangePresenter', () => {
     data = {
       info: {
         dateOfBirth: '1990-05-01',
+        userName: 'Alfred Waldron',
         fullName: {
           first: 'Alfred',
           last: 'Waldron'
-        },
-        userName: 'Alfred Waldron'
+        }
       }
     }
   })
@@ -34,6 +34,20 @@ describe('personalDobChangePresenter', () => {
         day: '1',
         month: '5',
         year: '1990'
+      })
+    })
+  })
+
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.userName
+      })
+
+      test('it should return userName as null', () => {
+        const result = personalDobChangePresenter(data)
+
+        expect(result.userName).toEqual(null)
       })
     })
   })

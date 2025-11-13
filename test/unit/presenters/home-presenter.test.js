@@ -13,10 +13,12 @@ describe('homePresenter', () => {
 
   beforeEach(() => {
     data = {
+      info: {
+        userName: 'Alfred Waldron'
+      },
       business: {
         info: {
           sbi: '123456789',
-          userName: 'Alfred Waldron',
           name: 'Test Farm Ltd',
           organisationId: '5565448'
         }
@@ -45,7 +47,7 @@ describe('homePresenter', () => {
   })
 
   describe('the "userName" property', () => {
-    test('returns the userName from business info', () => {
+    test('returns the userName from info', () => {
       const result = homePresenter(data, permissionGroups)
 
       expect(result.userName).toEqual('Alfred Waldron')

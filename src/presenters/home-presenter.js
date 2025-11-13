@@ -11,7 +11,7 @@ const homePresenter = (data, permissionGroups) => {
   return {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
-    userName: data.business.info.userName,
+    userName: data.info.userName,
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
     sbi: data.business.info.sbi,

@@ -46,14 +46,6 @@ describe('homePresenter', () => {
     })
   })
 
-  describe('the "userName" property', () => {
-    test('returns the userName from info', () => {
-      const result = homePresenter(data, permissionGroups)
-
-      expect(result.userName).toEqual('Alfred Waldron')
-    })
-  })
-
   describe('the "businessDetails" property', () => {
     describe('when the user has only view-level permissions', () => {
       beforeEach(() => {

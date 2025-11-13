@@ -79,7 +79,6 @@ const mappedData = {
     mobile: null
   },
   customer: {
-    fullName: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook',
     userName: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
   }
 }

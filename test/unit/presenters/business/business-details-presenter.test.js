@@ -33,6 +33,7 @@ describe('businessDetailsPresenter', () => {
         notification: { title: 'Update', text: 'Business details updated successfully' },
         pageTitle: 'View business details',
         metaDescription: 'View and update your business details.',
+        userName: data.customer.userName,
         address: [
           'THE COACH HOUSE',
           'STOCKWELL HALL',
@@ -55,7 +56,6 @@ describe('businessDetailsPresenter', () => {
         countyParishHoldingNumbers: ['12/123/1234'],
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
-        userName: data.customer.userName,
         changeLinks: {},
         permissionsText: 'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
       })

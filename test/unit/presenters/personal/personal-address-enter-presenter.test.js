@@ -11,11 +11,11 @@ describe('personalAddressEnterPresenter', () => {
   beforeEach(() => {
     data = {
       info: {
+        userName: 'Test Name',
         fullName: {
           first: 'Test',
           last: 'Name'
-        },
-        userName: 'Test Name'
+        }
       },
       address: {
         lookup: {},

@@ -11,11 +11,11 @@ describe('personalAddressChangePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
+        userName: 'Test Name',
         fullName: {
           first: 'Test',
           last: 'Name'
-        },
-        userName: 'Test Name'
+        }
       },
       address: { postcode: 'SK22 1DL' },
       changePersonalPostcode: {}

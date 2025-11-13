@@ -44,10 +44,6 @@ export const mapBusinessDetails = (value) => {
       mobile: value.business.info.phone.mobile
     },
     customer: {
-      fullName: [
-        value.customer.info.name.first,
-        value.customer.info.name.last
-      ].filter(Boolean).join(' '),
       userName: [
         value.customer.info.name.first,
         value.customer.info.name.last

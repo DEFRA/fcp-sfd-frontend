@@ -12,10 +12,10 @@ const personalDobCheckPresenter = (personalDetails) => {
 
   return {
     backLink: { href: '/account-date-of-birth-change' },
-    userName: personalDetails.info.fullName.fullNameJoined ?? null,
-    changeLink: '/account-date-of-birth-change',
     pageTitle: 'Check your date of birth is correct before submitting',
     metaDescription: 'Check the date of birth for your personal account is correct.',
+    userName: personalDetails.info.userName ?? null,
+    changeLink: '/account-date-of-birth-change',
     dateOfBirth: moment(personalDob).format('LL')
   }
 }

@@ -143,8 +143,10 @@ const getMockData = () => {
     info: {
       sbi: '123456789',
       businessName: 'Agile Farm Ltd',
+      userName: 'Alfred Waldron',
       fullName: {
-        fullNameJoined: 'Alfred Waldron'
+        first: 'Alfred',
+        last: 'Waldron'
       }
     },
     contact: {

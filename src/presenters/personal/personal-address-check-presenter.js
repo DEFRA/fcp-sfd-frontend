@@ -11,8 +11,8 @@ const personalAddressCheckPresenter = (personalDetails) => {
     changeLink: changeLink(changePersonalAddress?.postcodeLookup),
     pageTitle: 'Check your personal address is correct before submitting',
     metaDescription: 'Check the address for your personal account is correct.',
-    address: formatAddress(changePersonalAddress ?? address),
-    userName: info.fullName.fullNameJoined ?? null
+    userName: info.userName ?? null,
+    address: formatAddress(changePersonalAddress ?? address)
   }
 }
 

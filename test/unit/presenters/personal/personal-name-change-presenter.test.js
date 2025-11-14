@@ -11,11 +11,11 @@ describe('personalNameChangePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
+        userName: 'Alfred Waldron',
         fullName: {
           first: 'Alfred',
           middle: 'M',
-          last: 'Waldron',
-          fullNameJoined: 'Alfred M Waldron'
+          last: 'Waldron'
         }
       },
       changePersonalName: {}
@@ -30,7 +30,7 @@ describe('personalNameChangePresenter', () => {
         backLink: { href: '/personal-details' },
         pageTitle: 'What is your full name?',
         metaDescription: 'Update the full name for your personal account.',
-        userName: 'Alfred M Waldron',
+        userName: 'Alfred Waldron',
         first: 'Alfred',
         middle: 'M',
         last: 'Waldron'
@@ -41,7 +41,7 @@ describe('personalNameChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.fullNameJoined
+        delete data.info.userName
       })
 
       test('it should return userName as null', () => {

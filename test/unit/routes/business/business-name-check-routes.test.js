@@ -105,7 +105,7 @@ const getMockData = () => {
       businessName: 'Agile Farm Ltd'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     },
     changeBusinessName: 'New Business Name Ltd'
   }

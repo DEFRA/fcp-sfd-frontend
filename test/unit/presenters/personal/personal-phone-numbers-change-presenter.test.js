@@ -11,8 +11,10 @@ describe('personalPhoneNumbersChangePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
+        userName: 'Alfred Waldron',
         fullName: {
-          fullNameJoined: 'Alfred Waldron'
+          first: 'Alfred',
+          last: 'Waldron'
         }
       },
       contact: {
@@ -41,7 +43,7 @@ describe('personalPhoneNumbersChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.fullNameJoined
+        delete data.info.userName
       })
 
       test('it should return userName as null', () => {

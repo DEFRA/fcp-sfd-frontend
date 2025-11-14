@@ -11,8 +11,10 @@ describe('personalAddressSelectPresenter', () => {
     data = {
       info: {
         fullName: {
-          fullNameJoined: 'Test Name'
-        }
+          first: 'Test',
+          last: 'Name'
+        },
+        userName: 'Test Name'
       },
       changePersonalPostcode: {
         postcode: 'SK22 1DL'
@@ -64,7 +66,7 @@ describe('personalAddressSelectPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.fullName.fullNameJoined
+        delete data.info.userName
       })
 
       test('it should return userName as null', () => {

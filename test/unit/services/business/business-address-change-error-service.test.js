@@ -91,7 +91,7 @@ const mockBusinessDetails = () => {
       sbi: '123456789'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     },
     changeBusinessPostcode: {
       postcode: 'AB12 3CD'

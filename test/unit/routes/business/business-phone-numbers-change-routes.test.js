@@ -156,7 +156,7 @@ const getMockData = () => {
       businessName: 'Agile Farm Ltd'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     },
     contact: {
       mobile: '01234 567891',

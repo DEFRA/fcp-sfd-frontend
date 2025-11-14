@@ -17,6 +17,7 @@ const businessDetailsPresenter = (data, yar, permissionLevels) => {
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: permissionGroup.viewPermission ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',
+    userName: data.customer.userName ?? null,
     address: formatDisplayAddress(data.address),
     businessName: data.info.businessName,
     businessTelephone: {
@@ -31,7 +32,6 @@ const businessDetailsPresenter = (data, yar, permissionLevels) => {
     countyParishHoldingNumbers: formatCph(data.info.countyParishHoldingNumbers),
     businessLegalStatus: data.info.legalStatus,
     businessType: data.info.type,
-    userName: data.customer.fullName,
     changeLinks: setChangeLinks(data, permissionGroup),
     permissionsText: setPermissionsText(permissionGroup)
   }

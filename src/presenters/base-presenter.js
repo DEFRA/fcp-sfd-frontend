@@ -16,17 +16,6 @@ export const formatBackLink = (businessName) => {
 }
 
 /**
- * Formats the full name (first, middle and last) into a single string
- */
-export const formatFullName = (nameData) => {
-  return [
-    nameData.first,
-    nameData.middle,
-    nameData.last
-  ].filter(Boolean).join(' ')
-}
-
-/**
  * The first time a user loads the phone numbers change page they won't have entered any data, so a payload
  * or a changedNumber won't be present. If a user has a validation issue then we want to replay the payload data to them.
  * We check if payload is not undefined because it could be a user has removed the 'mobile' number for example but

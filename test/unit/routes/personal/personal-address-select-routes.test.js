@@ -150,8 +150,10 @@ describe('personal address select routes', () => {
 const getMockData = () => {
   return {
     info: {
+      userName: 'Alfred Waldron',
       fullName: {
-        fullNameJoined: 'Alfred Waldron'
+        first: 'Alfred',
+        last: 'Waldron'
       }
     },
     changePersonalPostcode: {

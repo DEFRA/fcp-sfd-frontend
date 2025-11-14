@@ -160,7 +160,7 @@ const getMockData = () => {
       businessName: 'Agile Farm Ltd'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     },
     contact: {
       email: 'new-email@test.com'

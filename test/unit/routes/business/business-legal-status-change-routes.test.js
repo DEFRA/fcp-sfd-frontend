@@ -73,7 +73,7 @@ const getMockData = () => {
       legalStatus: 'Sole Proprietorship'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     }
   }
 }

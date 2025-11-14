@@ -14,11 +14,7 @@ describe('homePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
-        fullName: {
-          first: 'Alfred',
-          middle: 'M',
-          last: 'Waldron'
-        }
+        userName: 'Alfred Waldron'
       },
       business: {
         info: {
@@ -38,7 +34,7 @@ describe('homePresenter', () => {
       expect(result).toEqual({
         pageTitle: 'Your business',
         metaDescription: 'Home page for your business\'s schemes and details.',
-        fullName: 'Alfred M Waldron',
+        userName: 'Alfred Waldron',
         businessName: 'Test Farm Ltd',
         businessDetails: {
           link: '/business-details',
@@ -47,14 +43,6 @@ describe('homePresenter', () => {
         sbi: '123456789',
         iahwLink: 'https://ffc-ahwr-farmer-test.azure.defra.cloud/sign-in?ssoOrgId=5565448'
       })
-    })
-  })
-
-  describe('the "fullName" property', () => {
-    test('returns a formatted full name', () => {
-      const result = homePresenter(data, permissionGroups)
-
-      expect(result.fullName).toEqual('Alfred M Waldron')
     })
   })
 

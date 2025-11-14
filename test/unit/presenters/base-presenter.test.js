@@ -4,7 +4,6 @@ import { describe, test, expect, beforeEach } from 'vitest'
 // Thing under test
 import {
   formatBackLink,
-  formatFullName,
   formatDisplayAddress,
   formatNumber,
   formatOriginalAddress,
@@ -35,42 +34,6 @@ describe('basePresenter', () => {
       test('it should return the text truncated with an ellipsis', () => {
         const result = formatBackLink(businessName)
         expect(result).toEqual('Back to This is a very long business name that exceeds 50 …')
-      })
-    })
-  })
-
-  describe('#formatFullName', () => {
-    let fullName
-
-    describe('when provided with a full name', () => {
-      beforeEach(() => {
-        fullName = {
-          first: 'Alfred',
-          middle: 'M',
-          last: 'Waldron'
-        }
-      })
-
-      test('it should return the full name as a string', () => {
-        const result = formatFullName(fullName)
-
-        expect(result).toBe('Alfred M Waldron')
-      })
-    })
-
-    describe('when provided with a full name that has no middle names', () => {
-      beforeEach(() => {
-        fullName = {
-          first: 'Alfred',
-          middle: '',
-          last: 'Waldron'
-        }
-      })
-
-      test('it should return the full name as a string', () => {
-        const result = formatFullName(fullName)
-
-        expect(result).toBe('Alfred Waldron')
       })
     })
   })

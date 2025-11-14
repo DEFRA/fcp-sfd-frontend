@@ -43,13 +43,14 @@ const dalData = {
 const mappedData = {
   crn: '123456890',
   info: {
-    dateOfBirth: '1990-01-01',
+    userName: 'John Doe',
     fullName: {
       first: 'John',
       last: 'Doe',
-      middle: 'M',
-      fullNameJoined: 'John M Doe'
-    }
+      middle: 'M'
+    },
+    fullNameJoined: 'John M Doe',
+    dateOfBirth: '1990-01-01'
   },
   address: {
     lookup: {

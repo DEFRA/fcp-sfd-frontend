@@ -8,9 +8,9 @@ const personalDobChangePresenter = (data, payload) => {
 
   return {
     backLink: { href: '/personal-details' },
-    userName: data.info.fullName.fullNameJoined ?? null,
     pageTitle: 'What is your date of birth?',
     metaDescription: 'Update the date of birth for your personal account.',
+    userName: data.info.userName ?? null,
     hint: 'For example, 31 3 1980',
     day,
     month,

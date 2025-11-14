@@ -9,11 +9,10 @@
 export const mapPersonalBusinessDetails = (value) => {
   return {
     info: {
-      fullName: {
-        first: value.customer.info.name.first,
-        last: value.customer.info.name.last,
-        middle: value.customer.info.name.middle ?? null
-      }
+      userName: [
+        value.customer.info.name.first,
+        value.customer.info.name.last
+      ].filter(Boolean).join(' ')
     },
     business: {
       info: {

@@ -89,6 +89,7 @@ const getMockData = () => ({
 const getPageData = () => ({
   pageTitle: 'View and update your personal details',
   metaDescription: 'View and update your personal details.',
+  userName: 'Alfred Waldron',
   address: [
     '76 Robinswood Road',
     'Maidstone',
@@ -97,7 +98,7 @@ const getPageData = () => ({
     'United Kingdom'
   ],
   crn: '123456789',
-  userName: 'Alfred Waldron',
+  fullName: 'Alfred Waldron',
   dateOfBirth: '1980-01-01',
   personalTelephone: '01234567890',
   personalMobile: 'Not added',

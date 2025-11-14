@@ -73,7 +73,7 @@ const getMockData = () => {
       type: 'Farmer'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     }
   }
 }

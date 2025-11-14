@@ -90,8 +90,10 @@ describe('personal email check', () => {
 const getMockData = () => {
   return {
     info: {
+      userName: 'John Doe',
       fullName: {
-        fullNameJoined: 'John Doe'
+        first: 'John',
+        last: 'Doe'
       }
     },
     contact: {

@@ -11,8 +11,10 @@ describe('personalDobCheckPresenter', () => {
     data = {
       info: {
         dateOfBirth: '1990-05-01',
+        userName: 'Alfred Waldron',
         fullName: {
-          fullNameJoined: 'Alfred Waldron'
+          first: 'Alfred',
+          last: 'Waldron'
         }
       },
       changePersonalDob: { day: '25', month: '06', year: '1984' }
@@ -34,10 +36,17 @@ describe('personalDobCheckPresenter', () => {
     })
   })
 
-  test('it should return userName as null when data does not have info.fullName.fullNameJoined', () => {
-    delete data.info.fullName.fullNameJoined
-    const result = personalDobCheckPresenter(data)
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      beforeEach(() => {
+        delete data.info.userName
+      })
 
-    expect(result.userName).toEqual(null)
+      test('it should return userName as null', () => {
+        const result = personalDobCheckPresenter(data)
+
+        expect(result.userName).toEqual(null)
+      })
+    })
   })
 })

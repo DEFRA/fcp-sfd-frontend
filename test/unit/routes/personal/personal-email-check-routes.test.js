@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 import { updatePersonalEmailChangeService } from '../../../../src/services/personal/update-personal-email-change-service.js'
 
+// Test helpers
+import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { personalEmailCheckRoutes } from '../../../../src/routes/personal/personal-email-check-routes.js'
 const [getPersonalEmailCheck, postPersonalEmailCheck] = personalEmailCheckRoutes
@@ -45,9 +48,10 @@ describe('personal email check', () => {
         fetchPersonalChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getPersonalEmailCheck.method).toBe('GET')
         expect(getPersonalEmailCheck.path).toBe('/account-email-check')
+        expect(getPersonalEmailCheck.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it fetches the data from the session', async () => {
@@ -72,6 +76,12 @@ describe('personal email check', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postPersonalEmailCheck.method).toBe('POST')
+        expect(postPersonalEmailCheck.path).toBe('/account-email-check')
+        expect(postPersonalEmailCheck.options.auth.scope).toBe(VIEW_PERMISSIONS)
+      })
+
       test('it redirects to the /personal-details page', async () => {
         await postPersonalEmailCheck.handler(request, h)
 

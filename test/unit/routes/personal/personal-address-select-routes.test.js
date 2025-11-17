@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 
+// Test helpers
+import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { personalAddressSelectRoutes } from '../../../../src/routes/personal/personal-address-select-routes.js'
 const [getPersonalAddressSelect, postPersonalAddressSelect] = personalAddressSelectRoutes
@@ -52,9 +55,10 @@ describe('personal address select routes', () => {
         fetchPersonalChangeService.mockResolvedValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getPersonalAddressSelect.method).toBe('GET')
         expect(getPersonalAddressSelect.path).toBe('/account-address-select')
+        expect(getPersonalAddressSelect.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it calls fetchPersonalChangeService', async () => {
@@ -85,6 +89,12 @@ describe('personal address select routes', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postPersonalAddressSelect.method).toBe('POST')
+        expect(postPersonalAddressSelect.path).toBe('/account-address-select')
+        expect(postPersonalAddressSelect.options.auth.scope).toBe(VIEW_PERMISSIONS)
+      })
+
       describe('and the validation passes', () => {
         test('it sets the selected address in session and redirects', async () => {
           await postPersonalAddressSelect.options.handler(request, h)

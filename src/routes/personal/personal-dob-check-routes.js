@@ -1,10 +1,14 @@
 import { personalDobCheckPresenter } from '../../presenters/personal/personal-dob-check-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalDobChangeService } from '../../services/personal/update-personal-dob-change-service.js'
+import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getPersonalDobCheck = {
   method: 'GET',
   path: '/account-date-of-birth-check',
+  options: {
+    auth: { scope: VIEW_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
@@ -17,6 +21,9 @@ const getPersonalDobCheck = {
 const postPersonalDobCheck = {
   method: 'POST',
   path: '/account-date-of-birth-check',
+  options: {
+    auth: { scope: VIEW_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     await updatePersonalDobChangeService(yar, auth.credentials)

@@ -8,6 +8,7 @@ import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/busin
 
 const businessDetailsPresenter = (data, yar, permissionLevels) => {
   const permissionGroup = checkPermissionType(permissionLevels)
+  const countyParishHoldingNumbers = formatCph(data.info.countyParishHoldingNumbers)
 
   return {
     backLink: {
@@ -28,7 +29,8 @@ const businessDetailsPresenter = (data, yar, permissionLevels) => {
     vatNumber: data.info.vat ?? 'No number added',
     tradeNumber: data.info.traderNumber ?? null,
     vendorRegistrationNumber: data.info.vendorNumber ?? null,
-    countyParishHoldingNumbers: formatCph(data.info.countyParishHoldingNumbers),
+    countyParishHoldingNumbers,
+    countyParishHoldingNumbersText: `County Parish Holding (CPH) number${countyParishHoldingNumbers.length > 1 ? 's' : ''}`,
     businessLegalStatus: data.info.legalStatus,
     businessType: data.info.type,
     userName: data.customer.fullName,

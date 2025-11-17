@@ -53,6 +53,7 @@ describe('businessDetailsPresenter', () => {
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
+        countyParishHoldingNumbersText: 'County Parish Holding (CPH) number',
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
         userName: data.customer.fullName,
@@ -159,6 +160,47 @@ describe('businessDetailsPresenter', () => {
         const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.countyParishHoldingNumbers).toEqual([])
+      })
+    })
+  })
+
+  describe('the "countyParishHoldingNumbersText" property', () => {
+    describe('when there are no CPH numbers', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = []
+      })
+
+      test('it should return "County Parish Holding (CPH) number"', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
+      })
+    })
+
+    describe('when there is 1 CPH number', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = [{ cphNumber: '12/123/1234' }]
+      })
+
+      test('it should return "County Parish Holding (CPH) number"', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
+      })
+    })
+
+    describe('when there are multiple CPH numbers', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = [
+          { cphNumber: '12/123/1234' },
+          { cphNumber: '45/678/9012' }
+        ]
+      })
+
+      test('it should return "County Parish Holding (CPH) numbers"', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) numbers')
       })
     })
   })

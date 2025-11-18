@@ -190,7 +190,9 @@ const setChangeLinks = (data, permissionGroup) => {
 }
 
 const formatCph = (countyParishHoldings) => {
-  return countyParishHoldings.map(cph => cph.cphNumber)
+  return (countyParishHoldings || [])
+    .filter(cph => cph?.cphNumber) // removes null objects & null/undefined cphNumber
+    .map(cph => cph.cphNumber)
 }
 
 export {

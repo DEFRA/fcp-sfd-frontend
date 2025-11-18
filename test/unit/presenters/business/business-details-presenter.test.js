@@ -54,6 +54,7 @@ describe('businessDetailsPresenter', () => {
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
+        countyParishHoldingNumbersText: 'County Parish Holding (CPH) number',
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
         changeLinks: {},
@@ -153,12 +154,87 @@ describe('businessDetailsPresenter', () => {
   })
 
   describe('the "cph" property', () => {
-    describe('when the property is empty', () => {
-      test('it should return empty array', () => {
+    describe('when there are multiple CPH numbers', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = [
+          { cphNumber: '12/123/1234' },
+          { cphNumber: '45/678/9012' }
+        ]
+      })
+
+      test('it should return an array of CPH numbers', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbers).toEqual(['12/123/1234', '45/678/9012'])
+      })
+    })
+
+    describe('when the cph array is empty', () => {
+      beforeEach(() => {
         data.info.countyParishHoldingNumbers = []
+      })
+
+      test('it should return an array of CPH numbers', () => {
         const result = businessDetailsPresenter(data, yar, permission)
 
         expect(result.countyParishHoldingNumbers).toEqual([])
+      })
+    })
+
+    describe('when the cph array has incorrect values', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = [
+          { cphNumber: '123/456/7890' },
+          { cphNumber: null },
+          { cphNumber: undefined }
+        ]
+      })
+
+      test('it should filter out incorrect values', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbers).toEqual(['123/456/7890'])
+      })
+    })
+  })
+
+  describe('the "countyParishHoldingNumbersText" property', () => {
+    describe('when there are no CPH numbers', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = []
+      })
+
+      test('it should return "County Parish Holding (CPH) number"', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
+      })
+    })
+
+    describe('when there is 1 CPH number', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = [{ cphNumber: '12/123/1234' }]
+      })
+
+      test('it should return "County Parish Holding (CPH) number"', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
+      })
+    })
+
+    describe('when there are multiple CPH numbers', () => {
+      beforeEach(() => {
+        data.info.countyParishHoldingNumbers = [
+          { cphNumber: '12/123/1234' },
+          { cphNumber: '45/678/9012' }
+        ]
+      })
+
+      test('it should return "County Parish Holding (CPH) numbers"', () => {
+        const result = businessDetailsPresenter(data, yar, permission)
+
+        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) numbers')
       })
     })
   })

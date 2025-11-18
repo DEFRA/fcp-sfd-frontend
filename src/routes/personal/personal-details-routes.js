@@ -1,13 +1,9 @@
 import { fetchPersonalDetailsService } from '../../services/personal/fetch-personal-details-service.js'
 import { personalDetailsPresenter } from '../../presenters/personal/personal-details-presenter.js'
-import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getPersonalDetails = {
   method: 'GET',
   path: '/personal-details',
-  options: {
-    auth: { scope: VIEW_PERMISSIONS }
-  },
   handler: async (request, h) => {
     const { yar, auth } = request
     yar.clear('personalDetails')

@@ -4,14 +4,10 @@ import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressesSchema } from '../../schemas/os-places/addresses-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
-import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getPersonalAddressSelect = {
   method: 'GET',
   path: '/account-address-select',
-  options: {
-    auth: { scope: VIEW_PERMISSIONS }
-  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, ['changePersonalPostcode', 'changePersonalAddresses', 'changePersonalAddress'])
@@ -25,7 +21,6 @@ const postPersonalAddressSelect = {
   method: 'POST',
   path: '/account-address-select',
   options: {
-    auth: { scope: VIEW_PERMISSIONS },
     validate: {
       payload: addressesSchema,
       options: { abortEarly: false },

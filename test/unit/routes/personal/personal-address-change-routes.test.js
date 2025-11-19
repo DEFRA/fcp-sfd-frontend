@@ -7,9 +7,6 @@ import { setSessionData } from '../../../../src/utils/session/set-session-data.j
 import { addressLookupService } from '../../../../src/services/os-places/address-lookup-service.js'
 import { personalAddressChangeErrorService } from '../../../../src/services/personal/personal-address-change-error-service.js'
 
-// Test helpers
-import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
-
 // Thing under test
 import { personalAddressChangeRoutes } from '../../../../src/routes/personal/personal-address-change-routes.js'
 const [getPersonalAddressChange, postPersonalAddressChange] = personalAddressChangeRoutes
@@ -66,10 +63,9 @@ describe('personal address change routes', () => {
         fetchPersonalChangeService.mockResolvedValue(getMockData())
       })
 
-      test('should have the correct method, path and auth scope configured', () => {
+      test('should have the correct method and path configured', () => {
         expect(getPersonalAddressChange.method).toBe('GET')
         expect(getPersonalAddressChange.path).toBe('/account-address-change')
-        expect(getPersonalAddressChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it calls fetchPersonalChangeService', async () => {
@@ -98,10 +94,9 @@ describe('personal address change routes', () => {
     })
 
     describe('when a request succeeds', () => {
-      test('should have the correct method, path and auth scope configured', () => {
+      test('should have the correct method and path configured', () => {
         expect(postPersonalAddressChange.method).toBe('POST')
         expect(postPersonalAddressChange.path).toBe('/account-address-change')
-        expect(postPersonalAddressChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

@@ -5,9 +5,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 
-// Test helpers
-import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
-
 // Thing under test
 import { personalPhoneNumbersChangeRoutes } from '../../../../src/routes/personal/personal-phone-numbers-change-routes.js'
 const [getPersonalPhoneNumbersChange, postPersonalPhoneNumbersChange] = personalPhoneNumbersChangeRoutes
@@ -56,10 +53,9 @@ describe('personal phone numbers change', () => {
         fetchPersonalChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method, path and auth scope configured', () => {
+      test('should have the correct method and path configured', () => {
         expect(getPersonalPhoneNumbersChange.method).toBe('GET')
         expect(getPersonalPhoneNumbersChange.path).toBe('/account-phone-numbers-change')
-        expect(getPersonalPhoneNumbersChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it fetches the data from the session', async () => {
@@ -84,10 +80,9 @@ describe('personal phone numbers change', () => {
     })
 
     describe('when a request succeeds', () => {
-      test('should have the correct method, path and auth scope configured', () => {
+      test('should have the correct method and path configured', () => {
         expect(postPersonalPhoneNumbersChange.method).toBe('POST')
         expect(postPersonalPhoneNumbersChange.path).toBe('/account-phone-numbers-change')
-        expect(postPersonalPhoneNumbersChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

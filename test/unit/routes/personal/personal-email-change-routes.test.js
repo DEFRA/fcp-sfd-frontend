@@ -5,9 +5,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 
-// Test helpers
-import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
-
 // Thing under test
 import { personalEmailChangeRoutes } from '../../../../src/routes/personal/personal-email-change-routes.js'
 const [getPersonalEmailChange, postPersonalEmailChange] = personalEmailChangeRoutes
@@ -55,10 +52,9 @@ describe('personal email change', () => {
         fetchPersonalChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method, path and auth scope configured', () => {
+      test('should have the correct method and path configured', () => {
         expect(getPersonalEmailChange.method).toBe('GET')
         expect(getPersonalEmailChange.path).toBe('/account-email-change')
-        expect(getPersonalEmailChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       test('it calls fetchPersonalChangeService', async () => {
@@ -83,10 +79,9 @@ describe('personal email change', () => {
         fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalEmail: request.payload })
       })
 
-      test('should have the correct method, path and auth scope configured', () => {
+      test('should have the correct method and path configured', () => {
         expect(postPersonalEmailChange.method).toBe('POST')
         expect(postPersonalEmailChange.path).toBe('/account-email-change')
-        expect(postPersonalEmailChange.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

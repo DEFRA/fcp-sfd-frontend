@@ -18,7 +18,7 @@ const updateBusinessVatChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessVat')
   const variables = { input: { vat: businessDetails.changeBusinessVat, sbi: businessDetails.info.sbi } }
 
-  await updateDalService(updateBusinessVATMutation, variables)
+  await updateDalService(updateBusinessVATMutation, variables, credentials.sessionId)
 
   yar.clear('businessDetails')
 

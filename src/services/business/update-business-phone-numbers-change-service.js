@@ -26,7 +26,7 @@ const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
     }
   }
 
-  await updateDalService(updateBusinessPhoneNumbersMutation, variables)
+  await updateDalService(updateBusinessPhoneNumbersMutation, variables, credentials.sessionId)
 
   yar.clear('businessDetails')
 

@@ -19,7 +19,7 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessAddress')
   const variables = businessAddressVariables(businessDetails)
 
-  await updateDalService(updateBusinessAddressMutation, variables)
+  await updateDalService(updateBusinessAddressMutation, variables, credentials.sessionId)
 
   yar.clear('businessDetails')
 

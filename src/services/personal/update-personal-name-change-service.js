@@ -26,7 +26,7 @@ const updatePersonalNameChangeService = async (yar, credentials) => {
     }
   }
 
-  await updateDalService(updatePersonalNameMutation, variables)
+  await updateDalService(updatePersonalNameMutation, variables, credentials.sessionId)
 
   yar.clear('personalDetails')
 

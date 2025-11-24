@@ -21,9 +21,9 @@ const fetchBusinessDetailsService = async (credentials) => {
 }
 
 const getFromDal = async (credentials) => {
-  const { sbi, crn } = credentials
+  const { sbi, crn, sessionId } = credentials
 
-  const dalResponse = await dalConnector(businessDetailsQuery, { sbi, crn })
+  const dalResponse = await dalConnector(businessDetailsQuery, { sbi, crn }, sessionId)
 
   if (dalResponse.data) {
     const mappedResponse = mapBusinessDetails(dalResponse.data)

@@ -6,7 +6,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% block beforeContent %}
-  {{ appBackSignOutLink({ href: '/business-details'}) }}
+  {{ appBackSignOutLink({ href: backLink }) }}
 {% endblock %}
 
 {% block content %}

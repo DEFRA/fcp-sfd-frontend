@@ -9,6 +9,9 @@ import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 import { initTokenCache } from './utils/caching/token-cache.js'
 
+let serverInstance = null
+export const getServerInstance = () => serverInstance
+
 export const createServer = async () => {
   setupProxy()
 
@@ -64,6 +67,7 @@ export const createServer = async () => {
   await server.register(plugins)
 
   server.ext('onPreResponse', catchAll)
+  serverInstance = server
 
   return server
 }

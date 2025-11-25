@@ -7,6 +7,8 @@ const variables = {
   crn: '9477368292'
 }
 
+// Does this route need to be here?
+
 const exampleDalConnectionRoute = {
   method: 'GET',
   path: '/example',

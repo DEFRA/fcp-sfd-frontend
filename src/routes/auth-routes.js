@@ -30,6 +30,7 @@ const signInOidc = {
     }
 
     const { profile, token, refreshToken } = request.auth.credentials
+    console.log('🚀 ~ token:', token)
     // verify token returned from Defra Identity against public key
     await verifyToken(token)
 
@@ -38,7 +39,7 @@ const signInOidc = {
     // Therefore, we need to make additional API calls to get the permissions from Siti Agri
     // These calls are authenticated using the token returned from Defra Identity
     const { sbi, crn, sessionId } = profile
-    const { privileges, businessName } = await getPermissions(sbi, crn)
+    const { privileges, businessName } = await getPermissions(sbi, crn, sessionId, token)
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(sessionId, {
       isAuthenticated: true,

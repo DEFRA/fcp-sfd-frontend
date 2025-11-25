@@ -4,30 +4,41 @@ import { config } from '../config/index.js'
 import { formatDalResponse, mapDalErrors } from './dal-response.js'
 import { getTokenService } from '../services/DAL/token/get-token-service.js'
 import { getTokenCache } from '../utils/caching/token-cache.js'
+import { getServerInstance } from '../server.js'
 
 const logger = createLogger()
 
-export const dalConnector = async (query, variables) => {
+export const dalConnector = async (query, variables, sessionId, defraIdToken = null) => {
   const tokenCache = getTokenCache()
 
   try {
     const bearerToken = await getTokenService(tokenCache)
-    const emailHeader = config.get('dalConfig.email')
 
-    // Email will be replaced by defraID token
+    if (defraIdToken === null) {
+      defraIdToken = await getDefraIdToken(sessionId)
+    }
+
+    console.log('🚀 ~ defraIdToken:', defraIdToken)
+    console.log('🚀 ~ bearerToken:', bearerToken)
+
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
+        'gateway-type': 'external',
         Authorization: bearerToken,
-        email: emailHeader
+        'x-forwarded-authorization': defraIdToken
       },
       body: JSON.stringify({ query, variables })
     })
 
     const responseBody = await response.json()
+    console.log('🚀 ~ responseBody:', responseBody)
+    console.log('🚀 ~ responseBody:', responseBody.data)
 
     if (responseBody.errors) {
+      console.log('🚀 ~ responseBody:', responseBody.errors)
+      console.log('🚀 ~ responseBody:', responseBody.errors[0])
       const extendedErrors = mapDalErrors(responseBody.errors)
 
       return formatDalResponse({
@@ -47,4 +58,11 @@ export const dalConnector = async (query, variables) => {
       errors: [err]
     })
   }
+}
+
+const getDefraIdToken = async (sessionId) => {
+  const server = getServerInstance()
+  const sessionData = await server.app.cache.get(sessionId)
+
+  return sessionData?.token
 }

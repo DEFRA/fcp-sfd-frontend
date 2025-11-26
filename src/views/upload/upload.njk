@@ -1,0 +1,95 @@
+{% extends 'common/layout.njk' %}
+
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
+{% from "common/sub-header/macro.njk" import subHeader %}
+
+{% block beforeContent %}
+  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ appBackSignOutLink(backLink) }}
+{% endblock %}
+
+
+{% block content %}
+  {% if errors %}
+    {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errors | toErrorList
+    }) }}
+  {% endif %}
+
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">
+            Upload files
+        </h1>
+
+        <div class="govuk-warning-text">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-visually-hidden">Warning</span>
+                Keep your own copies of anything you send us.
+            </strong>
+        </div>
+
+        <p class="govuk-body">
+            You can upload up to 10 files in one batch.
+        </p>
+        <p class="govuk-body">
+            The size of each file must be less than 10MB, and files must be in one of these formats: doc, docx,
+            docm,
+            gif, jfif, jpeg, jpg, odt, pdf, pptx, tiff, txt, xls, xlsx, xlsm. If you’ve used standard settings and
+            programmes on a phone, tablet, digital camera or computer, files will likely meet these requirements.
+        </p>
+        <p class="govuk-body">
+            Each file name must be unique, 20 characters or less, contain only letters and numbers, and contain no
+            gaps.
+        </p>
+        <p class="govuk-body">
+            If you're sending files in relation to a grant or funding claim, <a class="govuk-link govuk-link--no-visited-state" href="https://www.gov.uk/guidance/funding-for-farmers">check if there is any other guidance to
+                follow,
+                depending on the scheme</a>.
+        </p>
+
+        <p class="govuk-body">
+            If documents do not meet the required standards, we may need to request further evidence from you, which
+            could cause delays.
+        </p>
+
+
+        <div class="container--doc-upload">
+            <h2 class="govuk-heading-m govuk-!-margin-top-7">
+                Upload a file
+            </h2>
+
+    <form method="post" action="http://localhost:7337/upload-and-scan/{{ uploadId }}" enctype="multipart/form-data" novalidate>
+      <input type="hidden" name="crumb" value="{{ crumb }}">
+      <div class="govuk-form-group">
+
+      {{ govukFileUpload({
+        id: "file-upload-1",
+        name: "fileUpload1",
+        label: {
+          text: "Upload a file"
+        }
+      }) }}
+      </div>
+
+      {{ govukButton({ text: "Submit", preventDoubleClick: true }) }}
+    </form>
+
+    </div>
+
+   
+
+  
+
+    
+  </div>
+</div>
+{% endblock %}

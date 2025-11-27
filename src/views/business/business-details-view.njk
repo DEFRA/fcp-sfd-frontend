@@ -1,0 +1,148 @@
+{% extends 'common/layout.njk' %}
+
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "common/sub-header/macro.njk" import subHeader %}
+{% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
+
+{% block beforeContent %}
+  {{ subHeader(businessName=newBusinessName or "Clarksons Farm", sbi="123456789", userName="John Smith") }}
+  {{ appBackSignOutLink({ text: "Back to " + (newBusinessName or "Clarksons Farm"), href: "/home" }) }}
+{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+      {# Notification banner #}
+      {% if notification %}
+        {{ govukNotificationBanner({
+          type: "success",
+          titleText: notification.title,
+          text: notification.text
+        }) }}
+      {% endif %}
+
+    <h1 class="govuk-heading-l">
+      {{ "View and update your business details" }}
+    </h1>
+
+    <p class="govuk-body">
+      You can view or update your business details below.
+    </p>
+
+    {% set formattedAddress %}
+      <div>123 Farm Road</div>
+      <div>Rural Village</div>
+      <div>County</div>
+      <div>AB12 3CD</div>
+    {% endset %}
+
+    {% set formattedCph %}
+      <div>12/345/6789</div>
+    {% endset %}
+
+    {% set displayBusinessTelephone %}
+      <div>Telephone: <div class="govuk-hint display-inline">01234 567890</div></div>
+      <div>Mobile: <div class="govuk-hint display-inline">07123 456789</div></div>
+    {% endset %}
+
+    <h2 class="govuk-heading-m">
+      Business contact details
+    </h2>
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Business name"
+          },
+          value: {
+            text: newBusinessName or "Clarksons Farm"
+          }
+        },
+        {
+          key: {
+            text: "Business address"
+          },
+          value: {
+            html: formattedAddress
+          }
+        },
+        {
+          key: {
+            text: "Business phone numbers"
+          },
+          value: {
+            html: displayBusinessTelephone
+          }
+        },
+        {
+          key: {
+            text: "Business email address"
+          },
+          value: {
+            text: "business@example.com"
+          }
+        }
+      ]
+    }) }}
+
+    <h2 class="govuk-heading-m">
+      Reference numbers
+    </h2>
+
+
+      {% set referenceRows = [
+        {
+          key: { text: "Single business identifier (SBI)" },
+          value: { text: "123456789" }
+        },
+        {
+          key: { text: "VAT registration number" },
+          value: { text: "GB123456789" }
+        },
+        {
+          key: { text: "Trader number"},
+          value: { html: "TR123456" }
+        },
+        {
+          key: { text: "Vendor registration number" },
+          value: { html: "VR987654" }
+        },
+        {
+          key: { text: "County Parish Holding (CPH) number" },
+          value: { html: formattedCph }
+        }
+      ]%}
+
+    {{ govukSummaryList({ rows: referenceRows }) }}
+
+    <h2 class="govuk-heading-m">
+      Additional details
+    </h2>
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Business legal status"
+          },
+          value: {
+            text: "Limited Company"
+          }
+        },
+        {
+          key: {
+            text: "Business type"
+          },
+          value: {
+            text: "Farm"
+          }
+        }
+      ]
+    }) }}
+  </div>
+</div>
+{{ govukButton({ text: "Update your business details", href: "/business-details", preventDoubleClick: true }) }}
+{% endblock %}

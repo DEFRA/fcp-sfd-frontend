@@ -4,7 +4,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-frontend)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-frontend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-frontend)
 
-Frontend service for the Land and farm service. This service provides the user interface for customers to interact with the Single Front Door service.
+Frontend service for the Farm and land service. This service provides the user interface for customers to interact with the Single Front Door service.
 
 ## Prerequisites
 

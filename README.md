@@ -23,7 +23,7 @@ Frontend service for the Farm and land service. This service provides the user i
 | DEFRA_ID_POLICY | null | No | The Defra Identity policy - Enables multiple microservices to share same DefraId active token (Must be the same for all FCP microservices) |
 | DEFRA_ID_CLIENT_ID | null | No | The Defra Identity client ID - Unique code for identifying fcp-sfd-frontend |
 | DEFRA_ID_CLIENT_SECRET | null | No | The Defra Identity client secret - client secret for fcp-sfd-frontend |
-| DEFRA_ID_SERVICE_ID | null | No |The Defra Identity service ID - Service ID for SFD |
+| DEFRA_ID_SERVICE_ID | null | No | The Defra Identity service ID - Service ID for SFD |
 | DEFRA_ID_REDIRECT_URL | null | No | The Defra Identity redirect URl - URL of the page to be redirected immediately after the user has successfully signed in |
 | DEFRA_ID_SIGN_OUT_REDIRECT_URL | null | No | The Defra Identity sign out redirect URL - URL of the page to be redirected after the user has successfully signed out |
 | DEFRA_ID_REFRESH_TOKENS | `true` | No | Defra Identity refresh tokens - Set to true to enable auto refresh of Defra Identity tokens |

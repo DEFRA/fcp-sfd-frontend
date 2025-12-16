@@ -19,7 +19,7 @@ const updatePersonalAddressChangeService = async (yar, credentials) => {
   const personalDetails = await fetchPersonalChangeService(yar, credentials, 'changePersonalAddress')
   const variables = personalAddressVariables(personalDetails)
 
-  await updateDalService(updatePersonalAddressMutation, variables)
+  await updateDalService(updatePersonalAddressMutation, variables, credentials.sessionId)
 
   yar.clear('personalDetails')
 

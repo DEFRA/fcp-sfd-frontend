@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Mocks
 import { fetchPersonalDetailsService } from '../../../../src/services/personal/fetch-personal-details-service.js'
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
+import { validatePersonalDetailsService } from '../../../../src/services/personal/validate-personal-details-service.js'
 
 // Thing under test
 import { personalDetailsRoutes } from '../../../../src/routes/personal/personal-details-routes.js'
@@ -14,6 +15,10 @@ vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', (
   fetchPersonalDetailsService: vi.fn()
 }))
 
+vi.mock('../../../../src/services/personal/validate-personal-details-service.js', () => ({
+  validatePersonalDetailsService: vi.fn()
+}))
+
 vi.mock('../../../../src/presenters/personal/personal-details-presenter.js', () => ({
   personalDetailsPresenter: vi.fn()
 }))
@@ -22,6 +27,7 @@ describe('personal details', () => {
   let h
   let request
   let pageData
+  let mockPersonalDetails
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -38,6 +44,7 @@ describe('personal details', () => {
           yar: { clear: vi.fn() },
           auth: {
             credentials: {
+              sessionId: 'test-session-id',
               sbi: '123456789',
               crn: '987654321',
               email: 'test@example.com'
@@ -45,8 +52,10 @@ describe('personal details', () => {
           }
         }
 
+        mockPersonalDetails = getMockData()
         pageData = getPageData()
         fetchPersonalDetailsService.mockResolvedValue(getMockData())
+        validatePersonalDetailsService.mockReturnValue(true)
         personalDetailsPresenter.mockReturnValue(pageData)
       })
 
@@ -54,17 +63,23 @@ describe('personal details', () => {
         expect(getPersonalDetails.path).toBe('/personal-details')
       })
 
-      test('it clears the personalDetails key from session', async () => {
+      test('clears personal details data from the session', async () => {
         await getPersonalDetails.handler(request, h)
 
         expect(request.yar.clear).toHaveBeenCalledWith('personalDetails')
+        expect(request.yar.clear).toHaveBeenCalledWith(request.auth.credentials.sessionId)
       })
 
       test('it calls the fetch personal details service and renders view', async () => {
         await getPersonalDetails.handler(request, h)
 
         expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(personalDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar)
+        expect(validatePersonalDetailsService).toHaveBeenCalledWith(
+          mockPersonalDetails,
+          request.yar,
+          request.auth.credentials.sessionId
+        )
+        expect(personalDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, true)
         expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
       })
     })

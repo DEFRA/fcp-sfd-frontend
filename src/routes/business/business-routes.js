@@ -15,8 +15,10 @@ import { businessVatChangeRoutes } from './business-vat-change-routes.js'
 import { businessVatCheckRoutes } from './business-vat-check-routes.js'
 import { businessVatRemoveRoutes } from './business-vat-remove-routes.js'
 import { exampleDalConnectionRoute } from './example-routes.js'
+import { businessDetailsViewRoute } from './business-details-view-routes.js'
 
 export const businessRoutes = [
+  ...businessDetailsViewRoute,
   ...businessAddressChangeRoutes,
   ...businessAddressSelectRoutes,
   ...businessAddressEnterRoutes,

@@ -6,7 +6,7 @@
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
-const businessDetailsPresenter = (data, yar, permissionLevels) => {
+const businessDetailsPresenter = (data, yar, permissionLevels, newName = null) => {
   const permissionGroup = checkPermissionType(permissionLevels)
   const countyParishHoldingNumbers = formatCph(data.info.countyParishHoldingNumbers)
 
@@ -20,7 +20,7 @@ const businessDetailsPresenter = (data, yar, permissionLevels) => {
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
     address: formatDisplayAddress(data.address),
-    businessName: data.info.businessName,
+    businessName: newName || data.info.businessName,
     businessTelephone: {
       telephone: data.contact.landline ?? 'Not added',
       mobile: data.contact.mobile ?? 'Not added'

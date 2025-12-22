@@ -54,13 +54,13 @@ const setValidationState = (yar, sessionId, isValid, validationErrors = []) => {
  * returned once.
  */
 const mapErrorPaths = (errorDetails) => {
-    const errorPathMap = {
+  const errorPathMap = {
     'info.fullName.first': 'name',
     'info.fullName.last': 'name',
     'contact.email': 'email',
     'contact.telephone': 'phone',
     'contact.mobile': 'phone',
-    'address': 'address'
+    address: 'address'
   }
 
   // Create a set to store unique error paths

@@ -6,8 +6,14 @@
 import moment from 'moment'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 
-const personalDetailsPresenter = (data, yar) => {
+
+const personalDetailsPresenter = (data, yar, validated) => {
+  const isValid = Boolean(validated)
   moment.locale('en-gb')
+
+const dobMoment = moment(data.info.dateOfBirth)
+const formattedDob = dobMoment.isValid() ? dobMoment.format('LL') : 'Not added'
+
   return {
     backLink: {
       text: data.business.info.name ? formatBackLink(data.business.info.name) : 'Back',
@@ -19,20 +25,22 @@ const personalDetailsPresenter = (data, yar) => {
     userName: data.info.userName ?? null,
     crn: data.crn,
     address: formatDisplayAddress(data.address),
+    addressChangeLink: isValid ? '/account-address-change' : '/personal-fix?source=address',
     fullName: data.info.fullNameJoined,
+    fullNameChangeLink: isValid ? '/account-name-change' : '/personal-fix?source=name',
     personalTelephone: {
       telephone: data.contact.telephone ?? 'Not added',
       mobile: data.contact.mobile ?? 'Not added',
       action: data.contact.telephone || data.contact.mobile ? 'Change' : 'Add',
-      link: '/account-phone-numbers-change'
+      changeLink: isValid ? '/account-phone-numbers-change' : '/personal-fix?source=phone'
     },
     personalEmail: {
       email: data.contact.email ?? 'Not added',
       action: data.contact.email ? 'Change' : 'Add',
-      link: '/account-email-change'
+      changeLink: isValid ? '/account-email-change' : '/personal-fix?source=email'
     },
-    dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
-    dobChangeLink: '/account-date-of-birth-change'
+    dateOfBirth: formattedDob,
+    dobChangeLink: isValid ? '/account-date-of-birth-change' : '/personal-fix?source=dob'
   }
 }
 

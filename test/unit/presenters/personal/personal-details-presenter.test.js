@@ -10,6 +10,7 @@ import { mappedData } from '../../../mocks/mock-personal-details.js'
 describe('personalDetailsPresenter', () => {
   let yar
   let data
+  let validated
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -21,11 +22,13 @@ describe('personalDetailsPresenter', () => {
     yar = {
       flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Personal details updated successfully' }])
     }
+
+    validated = true
   })
 
   describe('when provided with personal details data', () => {
     test('it correctly presents the data', () => {
-      const result = personalDetailsPresenter(data, yar)
+      const result = personalDetailsPresenter(data, yar, validated)
 
       expect(result).toEqual({
         backLink: {
@@ -47,20 +50,38 @@ describe('personalDetailsPresenter', () => {
         ],
         crn: data.crn,
         fullName: 'John M Doe',
+        fullNameChangeLink: '/account-name-change',
+        addressChangeLink: '/account-address-change',
         dateOfBirth: '1 January 1990',
         dobChangeLink: '/account-date-of-birth-change',
         personalTelephone: {
           telephone: data.contact.telephone,
           mobile: 'Not added',
           action: 'Change',
-          link: '/account-phone-numbers-change'
+          changeLink: '/account-phone-numbers-change'
         },
         personalEmail: {
           email: data.contact.email,
           action: 'Change',
-          link: '/account-email-change'
+          changeLink: '/account-email-change'
         }
       })
+    })
+  })
+
+  describe('when data is not validated', () => {
+    beforeEach(() => {
+      validated = false
+    })
+
+    test('uses fix links instead of account change links', () => {
+      const result = personalDetailsPresenter(data, yar, false)
+
+      expect(result.addressChangeLink).toBe('/personal-fix?source=address')
+      expect(result.fullNameChangeLink).toBe('/personal-fix?source=name')
+      expect(result.personalTelephone.changeLink).toBe('/personal-fix?source=phone')
+      expect(result.personalEmail.changeLink).toBe('/personal-fix?source=email')
+      expect(result.dobChangeLink).toBe('/personal-fix?source=dob')
     })
   })
 
@@ -68,7 +89,7 @@ describe('personalDetailsPresenter', () => {
     describe('when the businessName property is missing', () => {
       test('it should return the text "Back"', () => {
         data.business.info.name = null
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.backLink.text).toEqual('Back')
       })
@@ -80,7 +101,7 @@ describe('personalDetailsPresenter', () => {
       test('it should return the actual values', () => {
         data.contact.telephone = '01234567890'
         data.contact.mobile = '07123456789'
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalTelephone.telephone).toEqual('01234567890')
         expect(result.personalTelephone.mobile).toEqual('07123456789')
@@ -90,7 +111,7 @@ describe('personalDetailsPresenter', () => {
     describe('when the telephone property is missing', () => {
       test('returns "Not added" if telephone is missing', () => {
         data.contact.telephone = null
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalTelephone.telephone).toBe('Not added')
       })
@@ -102,7 +123,7 @@ describe('personalDetailsPresenter', () => {
       test('returns "Not added" if mobile is missing', () => {
         data.contact.mobile = null
 
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalTelephone.mobile).toBe('Not added')
       })
@@ -114,7 +135,7 @@ describe('personalDetailsPresenter', () => {
       test('it should return the text "Change"', () => {
         data.contact.telephone = '01234567890'
         data.contact.mobile = '07123456789'
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalTelephone.action).toEqual('Change')
       })
@@ -124,7 +145,7 @@ describe('personalDetailsPresenter', () => {
       test('it should return the text "Change"', () => {
         data.contact.telephone = '01234567890'
         data.contact.mobile = null
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalTelephone.action).toEqual('Change')
       })
@@ -134,7 +155,7 @@ describe('personalDetailsPresenter', () => {
       test('it should return the text "Add"', () => {
         data.contact.telephone = null
         data.contact.mobile = null
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalTelephone.action).toEqual('Add')
       })
@@ -151,7 +172,7 @@ describe('personalDetailsPresenter', () => {
 
   describe('the "fullName" property', () => {
     test('returns a formatted full name', () => {
-      const result = personalDetailsPresenter(data, yar)
+      const result = personalDetailsPresenter(data, yar, validated)
 
       expect(result.fullName).toBe('John M Doe')
     })
@@ -161,7 +182,7 @@ describe('personalDetailsPresenter', () => {
     describe('when the email property is missing', () => {
       test('it should return the text "Not added"', () => {
         data.contact.email = null
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalEmail.email).toEqual('Not added')
       })
@@ -170,7 +191,7 @@ describe('personalDetailsPresenter', () => {
     describe('when the email property has a value', () => {
       test('it should return the email address', () => {
         data.contact.email = 'test@test.com'
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalEmail.email).toEqual('test@test.com')
       })
@@ -181,7 +202,7 @@ describe('personalDetailsPresenter', () => {
     describe('when the personalEmail property is missing', () => {
       test('it should return the text "Add"', () => {
         data.contact.email = null
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalEmail.action).toEqual('Add')
       })
@@ -190,7 +211,7 @@ describe('personalDetailsPresenter', () => {
     describe('when the personalEmail property has a value', () => {
       test('it should return the text "Change"', () => {
         data.contact.email = 'test@test.com'
-        const result = personalDetailsPresenter(data, yar)
+        const result = personalDetailsPresenter(data, yar, validated)
 
         expect(result.personalEmail.action).toEqual('Change')
       })

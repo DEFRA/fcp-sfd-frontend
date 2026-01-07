@@ -15,7 +15,7 @@ const personalDobCheckPresenter = (personalDetails) => {
     metaDescription: 'Check the date of birth for your personal account is correct.',
     userName: personalDetails.info.userName ?? null,
     changeLink: '/account-date-of-birth-change',
-    dateOfBirth: moment(personalDob).format('LL')
+    dateOfBirth: moment(personalDob).format('D MMMM YYYY')
   }
 }
 

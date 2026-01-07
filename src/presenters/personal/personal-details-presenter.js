@@ -38,7 +38,7 @@ const personalDetailsPresenter = (data, yar) => {
 const formatDob = (dob) => {
   // We check if dob exists because moment will default to the current date if
   // passed undefined
-  const formattedDob = dob && moment(dob).isValid() ? moment(dob).format('LL') : null
+  const formattedDob = dob && moment(dob).isValid() ? moment(dob).format('D MMMM YYYY') : null
 
   return formattedDob
 }

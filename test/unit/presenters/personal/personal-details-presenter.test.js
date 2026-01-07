@@ -196,4 +196,33 @@ describe('personalDetailsPresenter', () => {
       })
     })
   })
+
+  describe('the "dateOfBirth" property', () => {
+    describe('when the date of birth is missing', () => {
+      test('it should return the text null', () => {
+        delete data.info.dateOfBirth
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dateOfBirth).toEqual(null)
+      })
+    })
+
+    describe('when the date of birth property is an invalid date', () => {
+      test('it should return null', () => {
+        data.info.dateOfBirth = '4000-14-01'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dateOfBirth).toEqual(null)
+      })
+    })
+
+    describe('when the date of birth property is valid', () => {
+      test('it should return it as a date', () => {
+        data.info.dateOfBirth = '2000-01-01'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dateOfBirth).toEqual('1 January 2000')
+      })
+    })
+  })
 })

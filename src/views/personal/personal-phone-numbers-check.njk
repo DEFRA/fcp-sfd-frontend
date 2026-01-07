@@ -26,9 +26,23 @@
           </dt>
           <dd class="govuk-summary-list__value">
             <p class="govuk-body">
-              Telephone: {{ personalTelephone.telephone }}
+              Telephone:
+              {% if personalTelephone.telephone %}
+                {{ personalTelephone.telephone }}
+              {% else %}
+                <span class="govuk-hint">
+                  Not added
+                </span>
+              {% endif %}
               <br>
-              Mobile: {{ personalTelephone.mobile }}
+              Mobile:
+              {% if personalTelephone.mobile %}
+                {{ personalTelephone.mobile }}
+              {% else %}
+                <span class="govuk-hint">
+                  Not added
+                </span>
+              {% endif %}
             </p>
           </dd>
           <dd class="govuk-summary-list__actions">

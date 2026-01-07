@@ -8,7 +8,6 @@ import moment from 'moment'
 const personalDobCheckPresenter = (personalDetails) => {
   const { day, month, year } = personalDetails.changePersonalDob
   const personalDob = new Date([`${month}/${day}/${year}`])
-  moment.locale('en-gb')
 
   return {
     backLink: { href: '/account-date-of-birth-change' },

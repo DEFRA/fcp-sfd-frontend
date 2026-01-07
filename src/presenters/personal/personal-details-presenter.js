@@ -6,10 +6,13 @@
 import moment from 'moment'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 
-moment.locale('en-gb')
 
 const personalDetailsPresenter = (data, yar, validated) => {
   const isValid = Boolean(validated)
+  moment.locale('en-gb')
+
+const dobMoment = moment(data.info.dateOfBirth)
+const formattedDob = dobMoment.isValid() ? dobMoment.format('LL') : 'Not added'
 
   return {
     backLink: {
@@ -36,7 +39,7 @@ const personalDetailsPresenter = (data, yar, validated) => {
       action: data.contact.email ? 'Change' : 'Add',
       changeLink: isValid ? '/account-email-change' : '/personal-fix?source=email'
     },
-    dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
+    dateOfBirth: formattedDob,
     dobChangeLink: isValid ? '/account-date-of-birth-change' : '/personal-fix?source=dob'
   }
 }

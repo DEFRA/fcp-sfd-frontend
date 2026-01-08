@@ -39,7 +39,7 @@ describe('personalPhoneNumbersCheckPresenter', () => {
         userName: 'John Doe',
         personalTelephone: {
           telephone: '01234567890',
-          mobile: 'Not added'
+          mobile: null
         }
       })
     })
@@ -68,7 +68,7 @@ describe('personalPhoneNumbersCheckPresenter', () => {
       test('it should return personalTelephone as "Not added"', () => {
         const result = personalPhoneNumbersCheckPresenter(data)
 
-        expect(result.personalTelephone.telephone).toEqual('Not added')
+        expect(result.personalTelephone.telephone).toEqual(null)
       })
     })
   })
@@ -82,7 +82,7 @@ describe('personalPhoneNumbersCheckPresenter', () => {
       test('it should return personalMobile as "Not added"', () => {
         const result = personalPhoneNumbersCheckPresenter(data)
 
-        expect(result.personalTelephone.mobile).toEqual('Not added')
+        expect(result.personalTelephone.mobile).toEqual(null)
       })
     })
   })

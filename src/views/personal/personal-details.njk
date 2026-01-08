@@ -37,6 +37,14 @@
       <div>Mobile: <span class="govuk-hint display-inline">{{personalTelephone.mobile}}</span></div>
     {% endset %}
 
+    {% set displayDOB %}
+      {% if dateOfBirth %}
+        {{ dateOfBirth }}
+      {% else %}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% endif %}
+    {% endset %}
+
     {{ govukSummaryList({
       rows: [
         {
@@ -61,7 +69,7 @@
             text: "Date of birth"
           },
           value: {
-            text: dateOfBirth
+            html: displayDOB
           },
           actions: {
             items: [

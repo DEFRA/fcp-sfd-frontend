@@ -7,7 +7,6 @@ import moment from 'moment'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 
 const personalDetailsPresenter = (data, yar) => {
-  moment.locale('en-gb')
   return {
     backLink: {
       text: data.business.info.name ? formatBackLink(data.business.info.name) : 'Back',
@@ -31,9 +30,17 @@ const personalDetailsPresenter = (data, yar) => {
       action: data.contact.email ? 'Change' : 'Add',
       link: '/account-email-change'
     },
-    dateOfBirth: moment(data.info.dateOfBirth).format('LL'),
+    dateOfBirth: formatDob(data.info.dateOfBirth),
     dobChangeLink: '/account-date-of-birth-change'
   }
+}
+
+const formatDob = (dob) => {
+  // We check if dob exists because moment will default to the current date if
+  // passed undefined
+  const formattedDob = dob && moment(dob).isValid() ? moment(dob).format('D MMMM YYYY') : null
+
+  return formattedDob
 }
 
 export {

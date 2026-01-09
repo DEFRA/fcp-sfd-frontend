@@ -1,5 +1,5 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { generateKeyPairSync } from 'crypto'
+import { generateKeyPairSync } from 'node:crypto'
 import { mockOidcConfig } from '../../mocks/setup-server-mocks.js'
 import Jwt from '@hapi/jwt'
 

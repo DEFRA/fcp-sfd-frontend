@@ -22,13 +22,13 @@ const homePresenter = (data, permissionGroups) => {
 const setBusinessDetails = (permissionGroups) => {
   if (permissionGroups.includes(VIEW_LEVEL_PERMISSION)) {
     return {
-      link: '/business-details',
+      link: '/business-details-view',
       text: 'View your Business details'
     }
   }
 
   return {
-    link: '/business-details',
+    link: '/business-details-view',
     text: 'View and update your business details'
   }
 }

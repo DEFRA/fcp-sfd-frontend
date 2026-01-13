@@ -40,6 +40,27 @@ vi.mock('../../../../src/plugins/template-renderer/context.js', async (importOri
   }
 })
 
+describe('When webpack manifest file read fails', () => {
+  test('Should handle error gracefully when manifest file is not found', async () => {
+    vi.clearAllMocks()
+
+    mockReadFileSync.mockImplementationOnce(() => {
+      throw new Error('ENOENT: no such file or directory')
+    })
+
+    const mockRequest = {
+      path: '/',
+      response: { source: { context: {} } },
+      server: { app: { cache: { get: vi.fn().mockResolvedValue(null) } } }
+    }
+
+    const result = await context(mockRequest)
+
+    expect(result).toBeDefined()
+    expect(result.assetPath).toBeDefined()
+  })
+})
+
 describe('#context', () => {
   const mockRequest = {
     path: '/',

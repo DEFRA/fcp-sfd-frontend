@@ -21,6 +21,14 @@
 import { personalDetailsSchema } from '../../schemas/personal/personal-details-schema.js'
 
 const validatePersonalDetailsService = (personalDetails, yar, sessionId) => {
+  console.log('🚀 ~ personalDetails:', personalDetails)
+  personalDetails.info.fullName.first = null
+  personalDetails.info.dateOfBirth = null
+  personalDetails.contact.telephone = null
+  personalDetails.contact.mobile = null
+  personalDetails.address.lookup.uprn = null
+  personalDetails.contact.email = 'test'
+
   const { error } = personalDetailsSchema.validate(personalDetails, { abortEarly: false })
 
   if (!error) {
@@ -57,6 +65,7 @@ const mapErrorPaths = (errorDetails) => {
   const errorPathMap = {
     'info.fullName.first': 'name',
     'info.fullName.last': 'name',
+    'info.dateOfBirth': 'dob',
     'contact.email': 'email',
     'contact.telephone': 'phone',
     'contact.mobile': 'phone',
@@ -67,8 +76,10 @@ const mapErrorPaths = (errorDetails) => {
   const errorPaths = new Set()
 
   for (const { path, type } of errorDetails) {
+    console.log('🚀 ~ path:', path)
     // Join the path segments into a single string e.g. ['info', 'fullName', 'first'] → 'info.fullName.first'
     const joinedErrorPath = path.join('.')
+    console.log('🚀 ~ joinedErrorPath:', joinedErrorPath)
 
     if (errorPathMap[joinedErrorPath]) {
       errorPaths.add(errorPathMap[joinedErrorPath])
@@ -79,6 +90,8 @@ const mapErrorPaths = (errorDetails) => {
       errorPaths.add('phone')
     }
   }
+
+  console.log('🚀 ~ errorPaths:', errorPaths)
 
   // Convert the set of unique fields into an array
   return Array.from(errorPaths)

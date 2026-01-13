@@ -16,6 +16,7 @@ const updateDalService = async (mutation, variables) => {
   const response = await dalConnector(mutation, variables)
 
   if (response.errors) {
+    console.log('🚀 ~ response.errors:', response.errors)
     throw new Error('DAL error from mutation')
   }
 

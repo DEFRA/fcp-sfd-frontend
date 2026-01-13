@@ -13,10 +13,21 @@
   <div class="govuk-grid-column-two-thirds">
       {# Notification banner #}
       {% if notification %}
+        {% if notification.text.length > 1%}
+          {% set notificationHtml %}
+            <h3 class="govuk-notification-banner__heading">You have updated your:</h3>
+            <ul class="govuk-list govuk-list--bullet">
+              {% for item in notification.text %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          {% endset %}
+        {% endif %}
+
         {{ govukNotificationBanner({
           type: "success",
           titleText: notification.title,
-          text: notification.text
+          html: notificationHtml or notification.text
         }) }}
       {% endif %}
 
@@ -49,7 +60,7 @@
           actions: {
             items: [
               {
-                href: "/account-name-change",
+                href: fullNameChangeLink,
                 text: "Change",
                 visuallyHiddenText: "Full name"
               }
@@ -91,7 +102,7 @@
           actions: {
             items: [
               {
-                href: "/account-address-change",
+                href: addressChangeLink,
                 text: "Change",
                 visuallyHiddenText: "personal address"
               }
@@ -108,7 +119,7 @@
           actions: {
             items: [
               {
-                href: personalTelephone.link,
+                href: personalTelephone.changeLink,
                 text: personalTelephone.action,
                 visuallyHiddenText: "personal phone numbers"
               }
@@ -125,7 +136,7 @@
           actions: {
             items: [
               {
-                href: personalEmail.link,
+                href: personalEmail.changeLink,
                 text: personalEmail.action,
                 visuallyHiddenText: "personal email address"
               }

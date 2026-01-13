@@ -32,7 +32,9 @@ const updatePersonalAddressChangeService = async (yar, credentials) => {
  * @returns {*|null} The value if defined, otherwise null
  * @private
  */
-const nullIfUndefined = (value) => value ?? null
+const nullIfUndefined = (value) => {
+  return value ?? null
+}
 
 /**
  * Builds address variables for an address chosen via postcode lookup (with UPRN).

@@ -5,6 +5,12 @@ export const featureToggleConfig = {
       format: Boolean,
       default: false,
       env: 'DAL_CONNECTION'
+    },
+    personalDetailsInterrupterEnabled: {
+      doc: 'Enables the personal details interrupter journey',
+      format: Boolean,
+      default: false,
+      env: 'PERSONAL_DETAILS_INTERRUPTER_ENABLED'
     }
   }
 }

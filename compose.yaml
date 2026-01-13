@@ -31,7 +31,7 @@ services:
       OS_PLACES_CLIENT_ID: ${OS_PLACES_CLIENT_ID}
       OS_PLACES_STUB: ${OS_PLACES_STUB:-false}
       IAHW_ENDPOINT: ${IAHW_ENDPOINT}
-      
+      PERSONAL_DETAILS_INTERRUPTER_ENABLED: ${PERSONAL_DETAILS_INTERRUPTER_ENABLED:-false}
 
   kits-mock:
     image: defradigital/fcp-dal-upstream-mock:0.38.0

@@ -82,15 +82,14 @@ const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) 
   }
 
   // Interrupter on and data invalid
-  const isSingleSection = sectionsNeedingUpdate.length === 1
-  const singleSection = isSingleSection ? sectionsNeedingUpdate[0] : null
+  const singleSection = sectionsNeedingUpdate.length === 1 ? sectionsNeedingUpdate[0] : null
 
   return {
-    name: isSingleSection && singleSection === 'name' ? CHANGE_LINKS.name : '/personal-fix?source=name',
-    address: isSingleSection && singleSection === 'address' ? CHANGE_LINKS.address : '/personal-fix?source=address',
-    phone: isSingleSection && singleSection === 'phone' ? CHANGE_LINKS.phone : '/personal-fix?source=phone',
-    email: isSingleSection && singleSection === 'email' ? CHANGE_LINKS.email : '/personal-fix?source=email',
-    dob: isSingleSection && singleSection === 'dob' ? CHANGE_LINKS.dob : '/personal-fix?source=dob'
+    name: singleSection === 'name' ? CHANGE_LINKS.name : '/personal-fix?source=name',
+    address: singleSection === 'address' ? CHANGE_LINKS.address : '/personal-fix?source=address',
+    phone: singleSection === 'phone' ? CHANGE_LINKS.phone : '/personal-fix?source=phone',
+    email: singleSection === 'email' ? CHANGE_LINKS.email : '/personal-fix?source=email',
+    dob: singleSection === 'dob' ? CHANGE_LINKS.dob : '/personal-fix?source=dob'
   }
 }
 

@@ -5,8 +5,11 @@
 
 import moment from 'moment'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
+import { config } from '../../config/index.js'
 
-const personalDetailsPresenter = (data, yar) => {
+const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
+  const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
+
   return {
     backLink: {
       text: data.business.info.name ? formatBackLink(data.business.info.name) : 'Back',
@@ -17,21 +20,76 @@ const personalDetailsPresenter = (data, yar) => {
     metaDescription: 'View and update your personal details.',
     userName: data.info.userName ?? null,
     crn: data.crn,
-    address: formatDisplayAddress(data.address),
-    fullName: data.info.fullNameJoined,
+    personalName: {
+      fullName: data.info.fullNameJoined,
+      action: getActionText(data.info.fullNameJoined),
+      changeLink: changeLinks.name
+    },
+    dob: {
+      fullDateOfBirth: formatDob(data.info.dateOfBirth),
+      action: getActionText(data.info.dateOfBirth),
+      changeLink: changeLinks.dob
+    },
+    personalAddress: {
+      address: formatDisplayAddress(data.address),
+      action: 'Change',
+      changeLink: changeLinks.address
+    },
     personalTelephone: {
       telephone: data.contact.telephone ?? 'Not added',
       mobile: data.contact.mobile ?? 'Not added',
-      action: data.contact.telephone || data.contact.mobile ? 'Change' : 'Add',
-      link: '/account-phone-numbers-change'
+      action: getActionText(data.contact.telephone || data.contact.mobile),
+      changeLink: changeLinks.phone
     },
     personalEmail: {
       email: data.contact.email ?? 'Not added',
-      action: data.contact.email ? 'Change' : 'Add',
-      link: '/account-email-change'
-    },
-    dateOfBirth: formatDob(data.info.dateOfBirth),
-    dobChangeLink: '/account-date-of-birth-change'
+      action: getActionText(data.contact.email),
+      changeLink: changeLinks.email
+    }
+  }
+}
+
+const getActionText = (value) => {
+  return Boolean(value) ? 'Change' : 'Add'
+}
+
+/**
+ * Builds change links for personal details based on whether the
+ * personal details interrupter is enabled and the validity of the data.
+ *
+ * When the interrupter is disabled or all personal details are valid,
+ * standard change links are returned.
+ *
+ * When the interrupter is enabled and details are invalid:
+ * - If only one section needs updating, its normal change link is used
+ * - Otherwise, all links point to the personal details fix journey
+ */
+const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) => {
+  const CHANGE_LINKS = {
+    name: '/account-name-change',
+    address: '/account-address-change',
+    phone: '/account-phone-numbers-change',
+    email: '/account-email-change',
+    dob: '/account-date-of-birth-change'
+  }
+
+  const personalDetailsInterrupterEnabled = config.get('featureToggle.personalDetailsInterrupterEnabled')
+
+  // Happy path – interrupter off or data is valid
+  if (!personalDetailsInterrupterEnabled || hasValidPersonalDetails || sectionsNeedingUpdate.length === 0) {
+    return CHANGE_LINKS
+  }
+
+  // Interrupter on and data invalid
+  const isSingleSection = sectionsNeedingUpdate.length === 1
+  const singleSection = isSingleSection ? sectionsNeedingUpdate[0] : null
+
+  return {
+    name: isSingleSection && singleSection === 'name' ? CHANGE_LINKS.name : '/personal-fix?source=name',
+    address: isSingleSection && singleSection === 'address' ? CHANGE_LINKS.address : '/personal-fix?source=address',
+    phone: isSingleSection && singleSection === 'phone' ? CHANGE_LINKS.phone : '/personal-fix?source=phone',
+    email: isSingleSection && singleSection === 'email' ? CHANGE_LINKS.email : '/personal-fix?source=email',
+    dob: isSingleSection && singleSection === 'dob' ? CHANGE_LINKS.dob : '/personal-fix?source=dob'
   }
 }
 

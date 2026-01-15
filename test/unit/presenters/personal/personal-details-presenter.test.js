@@ -47,8 +47,11 @@ describe('personalDetailsPresenter', () => {
         ],
         crn: data.crn,
         fullName: 'John M Doe',
-        dateOfBirth: '1 January 1990',
-        dobChangeLink: '/account-date-of-birth-change',
+        dateOfBirth: {
+          dob: '1 January 1990',
+          action: 'Change',
+          link: '/account-date-of-birth-change'
+        },
         personalTelephone: {
           telephone: data.contact.telephone,
           mobile: 'Not added',
@@ -197,31 +200,60 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
-  describe('the "dateOfBirth" property', () => {
-    describe('when the date of birth is missing', () => {
-      test('it should return the text null', () => {
+  describe('the "dateOfBirth.dob" property', () => {
+    describe('when dateOfBirth is missing', () => {
+      test('it should return the text "Not added"', () => {
         delete data.info.dateOfBirth
         const result = personalDetailsPresenter(data, yar)
 
-        expect(result.dateOfBirth).toEqual(null)
+        expect(result.dateOfBirth.dob).toEqual('Not added')
       })
     })
 
-    describe('when the date of birth property is an invalid date', () => {
-      test('it should return null', () => {
+    describe('when dateOfBirth is an invalid date', () => {
+      test('it should return the text "Not added"', () => {
         data.info.dateOfBirth = '4000-14-01'
         const result = personalDetailsPresenter(data, yar)
 
-        expect(result.dateOfBirth).toEqual(null)
+        expect(result.dateOfBirth.dob).toEqual('Not added')
       })
     })
 
-    describe('when the date of birth property is valid', () => {
-      test('it should return it as a date', () => {
+    describe('when dateOfBirth has a value', () => {
+      test('it should return the formatted date', () => {
         data.info.dateOfBirth = '2000-01-01'
         const result = personalDetailsPresenter(data, yar)
 
-        expect(result.dateOfBirth).toEqual('1 January 2000')
+        expect(result.dateOfBirth.dob).toEqual('1 January 2000')
+      })
+    })
+  })
+
+  describe('the "dateOfBirth.action" property', () => {
+    describe('when dateOfBirth is missing', () => {
+      test('it should return the text "Add"', () => {
+        delete data.info.dateOfBirth
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dateOfBirth.action).toEqual('Add')
+      })
+    })
+
+    describe('when dateOfBirth is an invalid date', () => {
+      test('it should return the text "Add"', () => {
+        data.info.dateOfBirth = '4000-14-01'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dateOfBirth.action).toEqual('Add')
+      })
+    })
+
+    describe('when dateOfBirth has a value', () => {
+      test('it should return the text "Change"', () => {
+        data.info.dateOfBirth = '2000-01-01'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dateOfBirth.action).toEqual('Change')
       })
     })
   })

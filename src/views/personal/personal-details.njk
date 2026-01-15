@@ -38,10 +38,10 @@
     {% endset %}
 
     {% set displayDOB %}
-      {% if dateOfBirth %}
-        {{ dateOfBirth }}
+      {% if dateOfBirth.dob === 'Not added' %}
+        <div><span class="govuk-hint display-inline">{{dateOfBirth.dob}}</span></div>
       {% else %}
-        <div><span class="govuk-hint display-inline">Not added</span></div>
+        <div>{{dateOfBirth.dob}}</div>
       {% endif %}
     {% endset %}
 
@@ -74,8 +74,8 @@
           actions: {
             items: [
               {
-                href: dobChangeLink,
-                text: "Change",
+                href: dateOfBirth.link,
+                text: dateOfBirth.action,
                 visuallyHiddenText: "date of birth"
               }
             ]

@@ -45,7 +45,12 @@ const mappedData = {
       last: 'Doe',
       middle: 'M'
     },
-    dateOfBirth: '1990-01-01'
+    dateOfBirth: {
+      full: '1990-01-01',
+      day: '01',
+      month: '01',
+      year: '1990'
+    }
   },
   address: {
     lookup: {

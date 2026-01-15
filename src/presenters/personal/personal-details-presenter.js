@@ -31,8 +31,8 @@ const personalDetailsPresenter = (data, yar) => {
       link: '/account-email-change'
     },
     dateOfBirth: {
-      dob: formatDob(data.info.dateOfBirth) ?? 'Not added',
-      action: formatDob(data.info.dateOfBirth) ? 'Change' : 'Add',
+      dob: formatDob(data.info.dateOfBirth.full) ?? 'Not added',
+      action: formatDob(data.info.dateOfBirth.full) ? 'Change' : 'Add',
       link: '/account-date-of-birth-change'
     }
   }

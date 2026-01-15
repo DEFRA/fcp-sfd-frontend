@@ -11,7 +11,12 @@ describe('personalDobChangePresenter', () => {
   beforeEach(() => {
     data = {
       info: {
-        dateOfBirth: '1990-05-01',
+        dateOfBirth: {
+          full: '1990-05-01',
+          day: '1',
+          month: '5',
+          year: '1990'
+        },
         userName: 'Alfred Waldron',
         fullName: {
           first: 'Alfred',

@@ -27,7 +27,7 @@ const generateDateInputValues = (data, payload) => {
     }
   }
 
-  const [year, month, day] = data.info.dateOfBirth.split('-').map(Number)
+  const { year, month, day } = data.info.dateOfBirth
 
   return {
     day: data.changePersonalDob?.day || `${day}`,

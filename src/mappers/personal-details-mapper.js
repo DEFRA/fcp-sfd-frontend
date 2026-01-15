@@ -7,6 +7,8 @@
  */
 
 export const mapPersonalDetails = (value) => {
+  const [year, month, day] = value.customer.info.dateOfBirth ? value.customer.info.dateOfBirth.split('-') : []
+
   return {
     crn: value.customer.crn,
     info: {
@@ -24,7 +26,12 @@ export const mapPersonalDetails = (value) => {
         value.customer.info.name.middle,
         value.customer.info.name.last
       ].filter(Boolean).join(' '),
-      dateOfBirth: value.customer.info.dateOfBirth
+      dateOfBirth: {
+        full: value.customer.info.dateOfBirth ?? null,
+        day: day ?? null,
+        month: month ?? null,
+        year: year ?? null
+      }
     },
     address: {
       lookup: {

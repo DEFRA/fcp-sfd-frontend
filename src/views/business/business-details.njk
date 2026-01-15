@@ -61,6 +61,14 @@
       </div>
     {% endset %}
 
+    {% set displayVatNumber %}
+      {% if vatNumber === 'Not added' %}
+        <span class="govuk-hint display-inline">{{ vatNumber }}</span>
+      {% else %}
+        <span>{{ vatNumber }}</span>
+      {% endif %}
+    {% endset %}
+
     <h2 class="govuk-heading-m">
       Business contact details
     </h2>
@@ -122,7 +130,7 @@
         },
         {
           key: { text: "VAT registration number" },
-          value: { text: vatNumber },
+          value: { html: displayVatNumber },
           actions: changeLinks.businessVatNumber
         }
       ]%}

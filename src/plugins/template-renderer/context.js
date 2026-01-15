@@ -19,7 +19,7 @@ export const context = async (request) => {
     try {
       webpackManifest = JSON.parse(readFileSync(manifestPath, 'utf-8'))
     } catch (error) {
-      logger.error(`Webpack ${path.basename(manifestPath)} not found`)
+      logger.error(`Webpack ${path.basename(manifestPath)} not found: ${error.message}`, error)
     }
   }
   const ctx = request.response.source?.context || {}

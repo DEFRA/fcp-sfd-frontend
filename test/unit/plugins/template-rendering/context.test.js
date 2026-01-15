@@ -10,9 +10,13 @@ vi.mock('../../../../src/config/navigation-items.js', () => ({
   }]
 }))
 
+const { mockLoggerErrorFn } = vi.hoisted(() => ({
+  mockLoggerErrorFn: vi.fn()
+}))
+
 vi.mock('../../../../src/utils/logger.js', () => ({
   createLogger: () => ({
-    error: vi.fn()
+    error: mockLoggerErrorFn
   })
 }))
 
@@ -38,6 +42,55 @@ vi.mock('../../../../src/plugins/template-renderer/context.js', async (importOri
       return result
     }
   }
+})
+
+describe('When webpack manifest file read fails', () => {
+  test('Should log error when manifest file is not found', async () => {
+    mockLoggerErrorFn.mockClear()
+    vi.clearAllMocks()
+    vi.resetModules()
+
+    vi.doUnmock('../../../../src/plugins/template-renderer/context.js')
+    vi.doUnmock('../../../../src/utils/logger.js')
+    vi.doUnmock('../../../../src/config/index.js')
+    vi.doUnmock('../../../../src/config/navigation-items.js')
+
+    vi.doMock('../../../../src/utils/logger.js', () => ({
+      createLogger: () => ({ error: mockLoggerErrorFn })
+    }))
+    vi.doMock('../../../../src/config/navigation-items.js', () => ({
+      getNavigationItems: () => []
+    }))
+    vi.doMock('../../../../src/config/index.js', () => ({
+      config: {
+        get: (key) => {
+          if (key === 'server.assetPath') return '/public'
+          if (key === 'server.root') return '/tmp'
+          if (key === 'server.serviceName') return 'Test Service'
+        }
+      }
+    }))
+
+    vi.spyOn(fs, 'readFileSync').mockImplementation(() => {
+      throw new Error('ENOENT: no such file or directory')
+    })
+
+    const { context: testContext } = await import('../../../../src/plugins/template-renderer/context.js')
+    const mockRequest = {
+      path: '/',
+      response: { source: { context: {} } },
+      server: { app: { cache: { get: vi.fn().mockResolvedValue(null) } } }
+    }
+
+    await testContext(mockRequest)
+
+    expect(mockLoggerErrorFn).toHaveBeenCalledWith(
+      expect.stringContaining('Webpack'),
+      expect.any(Error)
+    )
+    expect(mockLoggerErrorFn.mock.calls[0][0]).toContain('assets-manifest.json')
+    expect(mockLoggerErrorFn.mock.calls[0][0]).toContain('ENOENT: no such file or directory')
+  })
 })
 
 describe('#context', () => {

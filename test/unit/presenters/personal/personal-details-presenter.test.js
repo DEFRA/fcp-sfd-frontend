@@ -223,31 +223,60 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
-  describe('the "dateOfBirth" property', () => {
-    describe('when the date of birth is missing', () => {
-      test('it should return the text null', () => {
+  describe('the "dob.fullDateOfBirth" property', () => {
+    describe('when dateOfBirth is missing', () => {
+      test('it should return the text "Not added"', () => {
         delete data.info.dateOfBirth
-        const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+        const result = personalDetailsPresenter(data, yar)
 
-        expect(result.dob.fullDateOfBirth).toEqual(null)
+        expect(result.dob.fullDateOfBirth).toEqual('Not added')
       })
     })
 
-    describe('when the date of birth property is an invalid date', () => {
-      test('it should return null', () => {
+    describe('when dateOfBirth is an invalid date', () => {
+      test('it should return the text "Not added"', () => {
         data.info.dateOfBirth = '4000-14-01'
-        const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+        const result = personalDetailsPresenter(data, yar)
 
-        expect(result.dob.fullDateOfBirth).toEqual(null)
+        expect(result.dob.fullDateOfBirth).toEqual('Not added')
       })
     })
 
-    describe('when the date of birth property is valid', () => {
-      test('it should return it as a date', () => {
+    describe('when dateOfBirth has a value', () => {
+      test('it should return the formatted date', () => {
         data.info.dateOfBirth = '2000-01-01'
-        const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+        const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('1 January 2000')
+      })
+    })
+  })
+
+  describe('the "dob.action" property', () => {
+    describe('when dateOfBirth is missing', () => {
+      test('it should return the text "Add"', () => {
+        delete data.info.dateOfBirth
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dob.action).toEqual('Add')
+      })
+    })
+
+    describe('when dateOfBirth is an invalid date', () => {
+      test.only('it should return the text "Add"', () => {
+        data.info.dateOfBirth = '4000-14-01'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dob.action).toEqual('Add')
+      })
+    })
+
+    describe('when dateOfBirth has a value', () => {
+      test('it should return the text "Change"', () => {
+        data.info.dateOfBirth = '2000-01-01'
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dob.action).toEqual('Change')
       })
     })
   })

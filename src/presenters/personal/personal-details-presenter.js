@@ -9,6 +9,7 @@ import { config } from '../../config/index.js'
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
+  const { action: dobAction, formattedDob } = formatDob(data.info.dateOfBirth)
 
   return {
     backLink: {
@@ -26,8 +27,8 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
       changeLink: changeLinks.name
     },
     dob: {
-      fullDateOfBirth: formatDob(data.info.dateOfBirth),
-      action: getActionText(data.info.dateOfBirth),
+      fullDateOfBirth: formattedDob,
+      action: dobAction,
       changeLink: changeLinks.dob
     },
     personalAddress: {
@@ -50,7 +51,7 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
 }
 
 const getActionText = (value) => {
-  return Boolean(value) ? 'Change' : 'Add'
+  return value ? 'Change' : 'Add'
 }
 
 /**
@@ -98,7 +99,17 @@ const formatDob = (dob) => {
   // passed undefined
   const formattedDob = dob && moment(dob).isValid() ? moment(dob).format('D MMMM YYYY') : null
 
-  return formattedDob
+  if (formattedDob) {
+    return {
+      formattedDob,
+      action: 'Change'
+    }
+  }
+
+  return {
+    formattedDob: 'Not added',
+    action: 'Add'
+  }
 }
 
 export {

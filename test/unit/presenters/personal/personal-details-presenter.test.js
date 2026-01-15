@@ -90,6 +90,17 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
+  describe('the "userName" property', () => {
+    describe('when the userName property is missing', () => {
+      test('it should return null', () => {
+        data.info.userName = null
+        const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+        expect(result.userName).toBeNull()
+      })
+    })
+  })
+
   describe('the backLink property', () => {
     describe('when the businessName property is missing', () => {
       test('it should return the text "Back"', () => {
@@ -312,13 +323,30 @@ describe('personalDetailsPresenter', () => {
         })
       })
 
-      describe('and only one detail is invalid', () => {
+      describe('and only one name is invalid', () => {
+        beforeEach(() => {
+          hasValidPersonalDetails = false
+          sectionsNeedingUpdate = ['name']
+        })
+
+        test('all links except the name points to the interrupter journey', () => {
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+          expect(result.personalName.changeLink).toBe('/account-name-change')
+          expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
+          expect(result.personalTelephone.changeLink).toBe('/personal-fix?source=phone')
+          expect(result.personalEmail.changeLink).toBe('/personal-fix?source=email')
+          expect(result.dob.changeLink).toBe('/personal-fix?source=dob')
+        })
+      })
+
+      describe('and only address is invalid', () => {
         beforeEach(() => {
           hasValidPersonalDetails = false
           sectionsNeedingUpdate = ['address']
         })
 
-        test('all links except the one that needs updating point to the interrupter journey', () => {
+        test('all links except the address points to the interrupter journey', () => {
           const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
           expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
@@ -326,6 +354,57 @@ describe('personalDetailsPresenter', () => {
           expect(result.personalTelephone.changeLink).toBe('/personal-fix?source=phone')
           expect(result.personalEmail.changeLink).toBe('/personal-fix?source=email')
           expect(result.dob.changeLink).toBe('/personal-fix?source=dob')
+        })
+      })
+
+      describe('and only phone number is invalid', () => {
+        beforeEach(() => {
+          hasValidPersonalDetails = false
+          sectionsNeedingUpdate = ['phone']
+        })
+
+        test('all links except the phone number points to the interrupter journey', () => {
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+          expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
+          expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
+          expect(result.personalTelephone.changeLink).toBe('/account-phone-numbers-change')
+          expect(result.personalEmail.changeLink).toBe('/personal-fix?source=email')
+          expect(result.dob.changeLink).toBe('/personal-fix?source=dob')
+        })
+      })
+
+      describe('and only email is invalid', () => {
+        beforeEach(() => {
+          hasValidPersonalDetails = false
+          sectionsNeedingUpdate = ['email']
+        })
+
+        test('all links except the email points to the interrupter journey', () => {
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+          expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
+          expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
+          expect(result.personalTelephone.changeLink).toBe('/personal-fix?source=phone')
+          expect(result.personalEmail.changeLink).toBe('/account-email-change')
+          expect(result.dob.changeLink).toBe('/personal-fix?source=dob')
+        })
+      })
+
+      describe('and only dob is invalid', () => {
+        beforeEach(() => {
+          hasValidPersonalDetails = false
+          sectionsNeedingUpdate = ['dob']
+        })
+
+        test('all links except the dob points to the interrupter journey', () => {
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+          expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
+          expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
+          expect(result.personalTelephone.changeLink).toBe('/personal-fix?source=phone')
+          expect(result.personalEmail.changeLink).toBe('/personal-fix?source=email')
+          expect(result.dob.changeLink).toBe('/account-date-of-birth-change')
         })
       })
 

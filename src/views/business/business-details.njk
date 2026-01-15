@@ -43,8 +43,30 @@
     {% endset %}
 
     {% set displayBusinessTelephone %}
-      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone.telephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint display-inline">{{businessTelephone.mobile}}</div></div>
+      <div>
+        Telephone:
+        {% if businessTelephone.telephone === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ businessTelephone.telephone }}</span>
+        {% else %}
+          <span>{{ businessTelephone.telephone }}</span>
+        {% endif %}
+      </div>
+      <div>
+        Mobile:
+        {% if businessTelephone.mobile === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ businessTelephone.mobile }}</span>
+        {% else %}
+          <span>{{ businessTelephone.mobile }}</span>
+        {% endif %}
+      </div>
+    {% endset %}
+
+    {% set displayVatNumber %}
+      {% if vatNumber === 'No number added' %}
+        <span class="govuk-hint display-inline">{{ vatNumber }}</span>
+      {% else %}
+        <span>{{ vatNumber }}</span>
+      {% endif %}
     {% endset %}
 
     <h2 class="govuk-heading-m">
@@ -108,7 +130,7 @@
         },
         {
           key: { text: "VAT registration number" },
-          value: { text: vatNumber },
+          value: { html: displayVatNumber },
           actions: changeLinks.businessVatNumber
         }
       ]%}

@@ -33,8 +33,22 @@
     {% endset %}
 
     {% set displayPersonalTelephone %}
-      <div>Telephone: <span class="govuk-hint display-inline">{{personalTelephone.telephone}}</span></div>
-      <div>Mobile: <span class="govuk-hint display-inline">{{personalTelephone.mobile}}</span></div>
+      <div>
+        Telephone:
+        {% if personalTelephone.telephone === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ personalTelephone.telephone }}</span>
+        {% else %}
+          <span>{{ personalTelephone.telephone }}</span>
+        {% endif %}
+      </div>
+      <div>
+        Mobile:
+        {% if personalTelephone.mobile === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ personalTelephone.mobile }}</span>
+        {% else %}
+          <span>{{ personalTelephone.mobile }}</span>
+        {% endif %}
+      </div>
     {% endset %}
 
     {% set displayDOB %}

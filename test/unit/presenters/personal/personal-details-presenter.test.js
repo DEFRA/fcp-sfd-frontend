@@ -263,7 +263,7 @@ describe('personalDetailsPresenter', () => {
     })
 
     describe('when dateOfBirth is an invalid date', () => {
-      test.only('it should return the text "Add"', () => {
+      test('it should return the text "Add"', () => {
         data.info.dateOfBirth = '4000-14-01'
         const result = personalDetailsPresenter(data, yar)
 

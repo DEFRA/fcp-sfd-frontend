@@ -77,5 +77,49 @@ describe('personalDetailsMapper', () => {
 
       expect(result.info.fullNameJoined).toEqual('Software Engineer Developer')
     })
+
+    test('it should build the date of birth correctly when it exists', () => {
+      const fullNameCheckData = {
+        ...dalData,
+        customer: {
+          ...dalData.customer,
+          info: {
+            ...dalData.customer.info,
+            dateOfBirth: '1990-01-01'
+          }
+        }
+      }
+
+      const result = mapPersonalDetails(fullNameCheckData)
+
+      expect(result.info.dateOfBirth).toEqual({
+        full: '1990-01-01',
+        day: '01',
+        month: '01',
+        year: '1990'
+      })
+    })
+
+    test('it should build the date of birth correctly when it does not exist', () => {
+      const fullNameCheckData = {
+        ...dalData,
+        customer: {
+          ...dalData.customer,
+          info: {
+            ...dalData.customer.info,
+            dateOfBirth: null
+          }
+        }
+      }
+
+      const result = mapPersonalDetails(fullNameCheckData)
+
+      expect(result.info.dateOfBirth).toEqual({
+        full: null,
+        day: null,
+        month: null,
+        year: null
+      })
+    })
   })
 })

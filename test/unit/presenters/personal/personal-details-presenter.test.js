@@ -237,7 +237,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "dob.fullDateOfBirth" property', () => {
     describe('when dateOfBirth is missing', () => {
       test('it should return the text "Not added"', () => {
-        delete data.info.dateOfBirth
+        delete data.info.dateOfBirth.full
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('Not added')
@@ -246,7 +246,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth is an invalid date', () => {
       test('it should return the text "Not added"', () => {
-        data.info.dateOfBirth = '4000-14-01'
+        data.info.dateOfBirth.full = '4000-14-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('Not added')
@@ -255,7 +255,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth has a value', () => {
       test('it should return the formatted date', () => {
-        data.info.dateOfBirth = '2000-01-01'
+        data.info.dateOfBirth.full = '2000-01-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('1 January 2000')
@@ -266,7 +266,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "dob.action" property', () => {
     describe('when dateOfBirth is missing', () => {
       test('it should return the text "Add"', () => {
-        delete data.info.dateOfBirth
+        delete data.info.dateOfBirth.full
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.action).toEqual('Add')
@@ -275,7 +275,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth is an invalid date', () => {
       test('it should return the text "Add"', () => {
-        data.info.dateOfBirth = '4000-14-01'
+        data.info.dateOfBirth.full = '4000-14-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.action).toEqual('Add')
@@ -284,7 +284,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth has a value', () => {
       test('it should return the text "Change"', () => {
-        data.info.dateOfBirth = '2000-01-01'
+        data.info.dateOfBirth.full = '2000-01-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.action).toEqual('Change')

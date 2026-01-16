@@ -9,7 +9,7 @@ import { config } from '../../config/index.js'
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
-  const { action: dobAction, formattedDob } = formatDob(data.info.dateOfBirth)
+  const { action: dobAction, formattedDob } = formatDob(data.info.dateOfBirth.full)
 
   return {
     backLink: {

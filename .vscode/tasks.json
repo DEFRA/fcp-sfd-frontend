@@ -140,7 +140,7 @@
       "label": "🥸 DefraID: Enable stub",
       "detail": "Switch frontend to use DefraID stub and recreate containers",
       "type": "shell",
-      "command": "docker compose up -d --force-recreate",
+      "command": "docker compose up -d --force-recreate && echo \"DefraID stub enabled – containers restarted 🎉\"",
       "options": {
         "env": {
           "DEFRA_ID_WELL_KNOWN_URL": "http://host.docker.internal:3007/idphub/b2c/b2c_1a_cui_cpdev_signupsigninsfi/.well-known/openid-configuration"
@@ -160,7 +160,7 @@
       "label": "🤡 DefraID: Disable stub",
       "detail": "Switch frontend back to real DefraID and restart containers",
       "type": "shell",
-      "command": "docker compose up -d --force-recreate",
+      "command": "docker compose up -d --force-recreate && echo \"DefraID stub disabled – containers restarted 🎉\"",
       "group": "test",
       "presentation": {
         "echo": true,

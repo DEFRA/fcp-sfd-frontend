@@ -26,6 +26,14 @@
       View and update your personal details
     </h1>
 
+    {% set displayDOB %}
+      {% if dob.fullDateOfBirth === 'Not added' %}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        <div>{{ dob.fullDateOfBirth }}</div>
+      {% endif %}
+    {% endset %}
+
     {% set formattedAddress %}
       {% for addressLine in personalAddress.address %}
         <div>{{addressLine}}</div>
@@ -49,14 +57,6 @@
           <span>{{ personalTelephone.mobile }}</span>
         {% endif %}
       </div>
-    {% endset %}
-
-    {% set displayDOB %}
-      {% if dob.fullDateOfBirth %}
-        {{ dob.fullDateOfBirth }}
-      {% else %}
-        <div><span class="govuk-hint display-inline">Not added</span></div>
-      {% endif %}
     {% endset %}
 
     {{ govukSummaryList({

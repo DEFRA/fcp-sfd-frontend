@@ -13,21 +13,10 @@
   <div class="govuk-grid-column-two-thirds">
       {# Notification banner #}
       {% if notification %}
-        {% if notification.text.length > 1%}
-          {% set notificationHtml %}
-            <h3 class="govuk-notification-banner__heading">You have updated your:</h3>
-            <ul class="govuk-list govuk-list--bullet">
-              {% for item in notification.text %}
-                <li>{{ item }}</li>
-              {% endfor %}
-            </ul>
-          {% endset %}
-        {% endif %}
-
         {{ govukNotificationBanner({
           type: "success",
           titleText: notification.title,
-          html: notificationHtml or notification.text
+          text: notification.text
         }) }}
       {% endif %}
 

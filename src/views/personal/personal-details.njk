@@ -52,10 +52,10 @@
     {% endset %}
 
     {% set displayDOB %}
-      {% if dob.fullDateOfBirth %}
-        {{ dob.fullDateOfBirth }}
-      {% else %}
+      {% if dob.fullDateOfBirth === 'Not added' %}
         <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        <div>{{ dob.fullDateOfBirth }}</div>
       {% endif %}
     {% endset %}
 

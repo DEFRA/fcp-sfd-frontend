@@ -42,7 +42,7 @@ const postBusinessEmailChange = {
       }
     },
     handler: async (request, h) => {
-      setSessionData(request.yar, 'businessDetails', 'changeBusinessEmail', request.payload.businessEmail)
+      setSessionData(request.yar, 'businessDetailsUpdate', 'changeBusinessEmail', request.payload.businessEmail)
 
       return h.redirect('/business-email-check')
     }

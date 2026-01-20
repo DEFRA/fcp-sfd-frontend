@@ -21,7 +21,7 @@ const updateBusinessEmailChangeService = async (yar, credentials) => {
 
   await updateDalService(updateBusinessEmailMutation, variables)
 
-  yar.clear('businessDetails')
+  yar.clear('businessDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your business email address')
 }

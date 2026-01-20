@@ -95,7 +95,7 @@ describe('personal name change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'personalDetails',
+            'personalDetailsUpdate',
             'changePersonalName',
             request.payload
           )

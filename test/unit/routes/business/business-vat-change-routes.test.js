@@ -102,7 +102,7 @@ describe('business VAT change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessDetails',
+            'businessDetailsUpdate',
             'changeBusinessVat',
             request.payload.vatNumber
           )

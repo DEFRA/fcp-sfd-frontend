@@ -20,7 +20,7 @@ const updateBusinessVatChangeService = async (yar, credentials) => {
 
   await updateDalService(updateBusinessVATMutation, variables)
 
-  yar.clear('businessDetails')
+  yar.clear('businessDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your VAT registration number')
 }

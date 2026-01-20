@@ -97,7 +97,7 @@ describe('updateBusinessAddressChangeService', () => {
     test('it clears businessDetails from session', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(yar.clear).toHaveBeenCalledWith('businessDetails')
+      expect(yar.clear).toHaveBeenCalledWith('businessDetailsUpdate')
     })
   })
 

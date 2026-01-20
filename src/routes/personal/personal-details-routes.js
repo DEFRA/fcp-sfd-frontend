@@ -7,7 +7,7 @@ const getPersonalDetails = {
   path: '/personal-details',
   handler: async (request, h) => {
     const { yar, auth } = request
-    yar.clear('personalDetails')
+    yar.clear('personalDetailsUpdate')
     yar.clear('personalDetailsValidation')
 
     const personalDetails = await fetchPersonalDetailsService(auth.credentials)

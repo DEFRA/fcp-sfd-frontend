@@ -96,7 +96,7 @@ describe('personal email change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'personalDetails',
+            'personalDetailsUpdate',
             'changePersonalEmail',
             request.payload.personalEmail
           )

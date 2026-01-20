@@ -41,7 +41,7 @@ const postBusinessAddressChange = {
   handler: async (request, h) => {
     const { yar, auth, payload } = request
 
-    setSessionData(yar, 'businessDetails', 'changeBusinessPostcode', payload)
+    setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessPostcode', payload)
     const addresses = await addressLookupService(payload.postcode, yar, 'business')
 
     if (addresses.error) {

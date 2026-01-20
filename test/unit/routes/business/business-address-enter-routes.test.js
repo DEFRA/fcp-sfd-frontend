@@ -104,7 +104,7 @@ describe('business address enter', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessDetails',
+            'businessDetailsUpdate',
             'changeBusinessAddress',
             request.payload
           )

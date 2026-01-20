@@ -41,7 +41,7 @@ const postPersonalPhoneNumbersChange = {
         personalMobile: request.payload.personalMobile ?? null
       }
 
-      setSessionData(request.yar, 'personalDetails', 'changePersonalPhoneNumbers', request.payload)
+      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalPhoneNumbers', request.payload)
 
       return h.redirect('/account-phone-numbers-check')
     }

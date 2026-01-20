@@ -97,7 +97,7 @@ describe('business phone numbers change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessDetails',
+            'businessDetailsUpdate',
             'changeBusinessPhoneNumbers',
             request.payload
           )

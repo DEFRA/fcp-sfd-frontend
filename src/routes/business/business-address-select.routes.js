@@ -48,7 +48,7 @@ const postBusinessAddressSelect = {
 
       selectedAddress.postcodeLookup = true
 
-      setSessionData(request.yar, 'businessDetails', 'changeBusinessAddress', selectedAddress)
+      setSessionData(request.yar, 'businessDetailsUpdate', 'changeBusinessAddress', selectedAddress)
 
       return h.redirect('/business-address-check')
     }

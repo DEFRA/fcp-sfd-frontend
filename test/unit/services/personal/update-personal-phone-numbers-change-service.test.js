@@ -68,10 +68,10 @@ describe('updatePersonalPhoneNumbersChangeService', () => {
       })
     })
 
-    test('it clears the personalDetails from session', async () => {
+    test('it clears the personalDetailsUpdate from session', async () => {
       await updatePersonalPhoneNumbersChangeService(yar, credentials)
 
-      expect(yar.clear).toHaveBeenCalledWith('personalDetails')
+      expect(yar.clear).toHaveBeenCalledWith('personalDetailsUpdate')
     })
 
     test('adds a flash notification confirming the change in data', async () => {

@@ -41,7 +41,7 @@ const addressLookupService = async (postcode, yar, context) => {
   const mappedAddresses = addressLookupMapper(addresses)
   const changeAddress = context === 'business' ? 'changeBusinessAddresses' : 'changePersonalAddresses'
 
-  setSessionData(yar, `${context}Details`, `${changeAddress}`, mappedAddresses)
+  setSessionData(yar, `${context}DetailsUpdate`, `${changeAddress}`, mappedAddresses)
 
   return mappedAddresses
 }

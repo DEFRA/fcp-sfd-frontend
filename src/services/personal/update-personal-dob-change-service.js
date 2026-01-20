@@ -30,7 +30,7 @@ const updatePersonalDobChangeService = async (yar, credentials) => {
 
   await updateDalService(updatePersonalDobMutation, variables)
 
-  yar.clear('personalDetails')
+  yar.clear('personalDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your date of birth')
 }

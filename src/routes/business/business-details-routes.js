@@ -10,7 +10,7 @@ const getBusinessDetails = {
   },
   handler: async (request, h) => {
     const { yar, auth } = request
-    yar.clear('businessDetails')
+    yar.clear('businessDetailsUpdate')
 
     const businessDetails = await fetchBusinessDetailsService(auth.credentials)
     const pageData = businessDetailsPresenter(businessDetails, yar, request.auth.credentials.scope)

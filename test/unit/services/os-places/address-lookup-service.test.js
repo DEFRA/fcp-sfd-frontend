@@ -76,7 +76,7 @@ describe('addressLookupService', () => {
           expect(addressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
           expect(setSessionData).toHaveBeenCalledWith(
             yar,
-            'businessDetails',
+            'businessDetailsUpdate',
             'changeBusinessAddresses',
             mappedMockAddresses
           )
@@ -91,7 +91,7 @@ describe('addressLookupService', () => {
           expect(addressLookupMapper).toHaveBeenCalledWith(mockAddresses.features)
           expect(setSessionData).toHaveBeenCalledWith(
             yar,
-            'personalDetails',
+            'personalDetailsUpdate',
             'changePersonalAddresses',
             mappedMockAddresses
           )

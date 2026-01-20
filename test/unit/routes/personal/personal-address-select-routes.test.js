@@ -96,7 +96,7 @@ describe('personal address select routes', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'personalDetails',
+            'personalDetailsUpdate',
             'changePersonalAddress',
             {
               displayAddress: '123 Test Street, LONDON, E1 6AN',

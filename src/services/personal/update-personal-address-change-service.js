@@ -21,7 +21,7 @@ const updatePersonalAddressChangeService = async (yar, credentials) => {
 
   await updateDalService(updatePersonalAddressMutation, variables)
 
-  yar.clear('personalDetails')
+  yar.clear('personalDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your personal address')
 }

@@ -91,7 +91,7 @@ describe('personal date of birth change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'personalDetails',
+            'personalDetailsUpdate',
             'changePersonalDob',
             request.payload
           )

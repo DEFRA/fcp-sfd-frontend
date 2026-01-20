@@ -102,7 +102,7 @@ describe('business email change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessDetails',
+            'businessDetailsUpdate',
             'changeBusinessEmail',
             request.payload.businessEmail
           )

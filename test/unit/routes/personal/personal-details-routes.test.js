@@ -72,7 +72,7 @@ describe('personal details', () => {
       test('clears personal details journey state from the session', async () => {
         await getPersonalDetails.handler(request, h)
 
-        expect(request.yar.clear).toHaveBeenCalledWith('personalDetails')
+        expect(request.yar.clear).toHaveBeenCalledWith('personalDetailsUpdate')
         expect(request.yar.clear).toHaveBeenCalledWith('personalDetailsValidation')
       })
 

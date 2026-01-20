@@ -34,7 +34,7 @@ const postPersonalDobChange = {
       }
     },
     handler: (request, h) => {
-      setSessionData(request.yar, 'personalDetails', 'changePersonalDob', request.payload)
+      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalDob', request.payload)
 
       return h.redirect('/account-date-of-birth-check')
     }

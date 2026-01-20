@@ -62,7 +62,7 @@ describe('business details', () => {
       test('it clears the businessDetails key from session', async () => {
         await getBusinessDetails.handler(request, h)
 
-        expect(request.yar.clear).toHaveBeenCalledWith('businessDetails')
+        expect(request.yar.clear).toHaveBeenCalledWith('businessDetailsUpdate')
       })
 
       test('it calls the fetch business details service', async () => {

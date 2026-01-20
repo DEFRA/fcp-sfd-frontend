@@ -110,7 +110,7 @@ describe('personal address change routes', () => {
 
             expect(setSessionData).toHaveBeenCalledWith(
               request.yar,
-              'personalDetails',
+              'personalDetailsUpdate',
               'changePersonalPostcode',
               request.payload
             )

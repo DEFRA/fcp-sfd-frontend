@@ -28,7 +28,7 @@ const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
 
   await updateDalService(updateBusinessPhoneNumbersMutation, variables)
 
-  yar.clear('businessDetails')
+  yar.clear('businessDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your business phone numbers')
 }

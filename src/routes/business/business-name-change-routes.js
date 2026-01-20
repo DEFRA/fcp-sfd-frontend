@@ -40,7 +40,7 @@ const postBusinessNameChange = {
       }
     },
     handler: async (request, h) => {
-      setSessionData(request.yar, 'businessDetails', 'changeBusinessName', request.payload.businessName)
+      setSessionData(request.yar, 'businessDetailsUpdate', 'changeBusinessName', request.payload.businessName)
 
       return h.redirect('/business-name-check')
     }

@@ -58,8 +58,21 @@ const buildListOfErrors = (orderedSectionsToFix, source) => {
 /**
  * Builds the introductory text for the personal fix page.
  *
- * The wording varies depending on how many sections need fixing
- * and whether the user selected a specific section (source).
+ * The text depends on:
+ * - how many personal detail sections need fixing
+ * - whether the user started the journey from a specific section (source)
+ *
+ * `source` is the section link the user clicked to begin the fix journey
+ * (for example, clicking "Change personal address" sets source to `address`).
+ *
+ * Behaviour:
+ * - If exactly two sections need fixing, both are named explicitly in the text.
+ * - If more than two sections need fixing and a source is provided, the source
+ *   section is named and the remaining fixes are implied.
+ * - If no source is provided, a generic message is shown.
+ *
+ * Note: There should never be a case where only one section needs fixing,
+ * as the user would be taken directly to the standard update journey.
  */
 const buildUpdateText = (orderedSectionsToFix, source) => {
   if (orderedSectionsToFix.length === 2) {
@@ -68,11 +81,11 @@ const buildUpdateText = (orderedSectionsToFix, source) => {
     return `We will ask you to update ${UPDATE_TEXT_LABELS[second]} as well as ${UPDATE_TEXT_LABELS[first]}.`
   }
 
-  if (!source) {
-    return 'We will ask you to update these details.'
+  if (source) {
+    return `We will ask you to update these details as well as ${UPDATE_TEXT_LABELS[source]}:`
   }
 
-  return `We will ask you to update these details as well as ${UPDATE_TEXT_LABELS[source]}:`
+  return 'We will ask you to update these details.'
 }
 
 export {

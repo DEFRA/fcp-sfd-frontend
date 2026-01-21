@@ -1,12 +1,19 @@
 /**
  * Initialises the personal details fix journey in the user's session.
  *
- * This sets:
- * - An ordered list of personal detail sections that need fixing
- * - The section the user selected (source), if provided
+ * This service is the single place where the fix journey order is defined.
+ * It calculates and stores the ordered list of personal detail sections
+ * that the user needs to fix.
  *
- * If a source is provided, that section is shown first, followed by any
- * remaining sections in display order.
+ * This sets:
+ * - orderedSectionsToFix: the ordered list of sections to fix
+ * - source: the section the user selected to start the journey (if provided)
+ *
+ * If a source is provided, that section is placed first, followed by the
+ * remaining sections in the order defined by this service.
+ *
+ * Downstream routes and presenters read this data from the session and
+ * don't reorder it.
  *
  * @module initialisePersonalFixJourneyService
  */

@@ -228,7 +228,24 @@
               }) }}
             {% endif %}
 
-            {% if section === 'dob' %}
+              {% if section === 'dob' %}
+                {% if errors %}
+                  {% set dateError =
+                    errors.day
+                    or errors.month
+                    or errors.year
+                  %}
+
+                  {% if errors.day %}
+                    {% set dayErrorClass = " govuk-input--error" %}
+                  {% endif %}
+                  {% if errors.month %}
+                    {% set monthErrorClass = " govuk-input--error" %}
+                  {% endif %}
+                  {% if errors.year %}
+                    {% set yearErrorClass = " govuk-input--error" %}
+                  {% endif %}
+                {% endif %}
               <h2 class="govuk-heading-m">Personal date of birth</h2>
               {{ govukDateInput({
                 label: {

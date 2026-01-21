@@ -1,63 +1,48 @@
 /**
- * Validates a personal details fix payload against a dynamically constructed Joi
- * schema.
+ * Validates the personal fix payload data.
  *
- * This service is used on the Personal Fix page where users may need to correct
- * multiple sections of their personal details. Based on the supplied list of
- * sections the user needs to correct (e.g. name, dob, email, phone, address), the
- * service:
+ * This service validates the payload for each personal details section the user
+ * is fixing (e.g. name, date of birth, email), running each Joi schema separately
+ * and collecting any validation errors.
  *
- * 1. Looks up the corresponding Joi schemas from `personalDetailsSchema`
- * 2. Combines them into a single Joi object schema
- * 3. Validates the supplied payload against that combined schema
+ * The schemas are validated individually rather than being combined into a single
+ * Joi schema because combining schemas caused issues with custom validation.
+ * In particular, the date of birth schema uses custom validation logic to check
+ * for real and valid dates. When schemas were combined, failures in other schemas
+ * could prevent this custom date of birth validation from running, meaning some
+ * date-related errors were not surfaced.
  *
- * This allows us to reuse existing validation schemas while only validating
- * the fields relevant to the sections the user is currently updating.
+ * By validating each schema independently (and allowing unknown fields), we ensure
+ * that all section-specific validation logic runs correctly and that all relevant
+ * errors are returned to the user.
+ *
  * @module validatePersonalFixService
  */
 
-import Joi from 'joi'
 import { personalDetailsSchema } from '../../schemas/personal/personal-details-schema.js'
 
 const validatePersonalFixService = (payload, orderedSectionsToFix) => {
-  // Get the schemas for the supplied data sections
-  const selectedSchemas = getSelectedSchemas(orderedSectionsToFix)
-
-  // Merge all the schemas into one
-  const combinedSchema = buildCombinedSchema(selectedSchemas)
-
-  // Validate the payload against the combined schema
-  return combinedSchema.validate(payload, { abortEarly: false })
-}
-
-const getSelectedSchemas = (orderedSectionsToFix) => {
-  const schemas = []
+  const errors = []
 
   for (const section of orderedSectionsToFix) {
     const schema = personalDetailsSchema[section]
 
-    if (schema) {
-      schemas.push(schema)
+    const result = schema.validate(payload, { abortEarly: false, allowUnknown: true })
+
+    if (result.error) {
+      errors.push(...result.error.details)
     }
   }
 
-  return schemas
-}
-
-/**
- * Combines multiple Joi object schemas into a single schema
- * while preserving their validation rules.
- *
- * Joi.concat merges two Joi schemas together to form a single schema that applies all of the rules from both
- */
-const buildCombinedSchema = (schemas) => {
-  let combinedSchema = Joi.object()
-
-  for (const schema of schemas) {
-    combinedSchema = combinedSchema.concat(schema)
+  if (errors.length > 0) {
+    return {
+      error: {
+        details: errors
+      }
+    }
   }
 
-  return combinedSchema
+  return { value: payload }
 }
 
 export {

@@ -11,6 +11,12 @@ export const featureToggleConfig = {
       format: Boolean,
       default: false,
       env: 'PERSONAL_DETAILS_INTERRUPTER_ENABLED'
+    },
+    cphEnabled: {
+      doc: 'Enables County Parish Holding (CPH) data in business details',
+      format: Boolean,
+      default: false,
+      env: 'CPH_ENABLED'
     }
   }
 }

@@ -56,3 +56,59 @@ export const businessDetailsQuery = `
   }
 }
 `
+
+export const businessDetailsQueryWithoutCph = `
+  query Business($sbi: ID!, $crn: ID!) {
+  business(sbi: $sbi) {
+    organisationId
+    sbi
+    info {
+      name
+      vat
+      traderNumber
+      vendorNumber
+      legalStatus {
+        code
+        type
+      }
+      type {
+        code
+        type
+      }
+      address {
+        buildingNumberRange
+        buildingName
+        flatName
+        street
+        city
+        county
+        postalCode
+        country
+        dependentLocality
+        doubleDependentLocality
+        line1
+        line2
+        line3
+        line4
+        line5
+        uprn
+      }
+      email {
+        address
+      }
+      phone {
+        mobile
+        landline
+      }
+    }
+  }
+  customer(crn: $crn) {
+    info {
+      name {
+        first
+        last
+      }
+    }
+  }
+}
+`

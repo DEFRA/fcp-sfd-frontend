@@ -3,23 +3,7 @@
  * @module personalFixPresenter
  */
 
-const SECTION_ORDER = ['name', 'dob', 'address', 'phone', 'email']
-
-const SECTION_LABELS = {
-  name: 'personal name',
-  dob: 'personal date of birth',
-  address: 'personal address',
-  phone: 'personal phone number',
-  email: 'personal email address'
-}
-
-const UPDATE_TEXT_LABELS = {
-  name: 'your personal name',
-  dob: 'your date of birth',
-  address: 'your personal address',
-  phone: 'at least one personal phone number',
-  email: 'your personal email address'
-}
+import { PERSONAL_SECTION_ORDER, PERSONAL_UPDATE_TEXT_LABELS, PERSONAL_SECTION_LABELS } from '../../constants/interrupter-journey.js'
 
 const personalFixPresenter = (personalDetails) => {
   const { source, orderedSectionsToFix } = personalDetails
@@ -46,9 +30,9 @@ const personalFixPresenter = (personalDetails) => {
 const buildListOfErrors = (orderedSectionsToFix, source) => {
   const result = []
 
-  for (const field of SECTION_ORDER) {
+  for (const field of PERSONAL_SECTION_ORDER) {
     if (orderedSectionsToFix.includes(field) && field !== source) {
-      result.push(SECTION_LABELS[field])
+      result.push(PERSONAL_SECTION_LABELS[field])
     }
   }
 
@@ -78,11 +62,11 @@ const buildUpdateText = (orderedSectionsToFix, source) => {
   if (orderedSectionsToFix.length === 2) {
     const [first, second] = orderedSectionsToFix
 
-    return `We will ask you to update ${UPDATE_TEXT_LABELS[second]} as well as ${UPDATE_TEXT_LABELS[first]}.`
+    return `We will ask you to update ${PERSONAL_UPDATE_TEXT_LABELS[second]} as well as ${PERSONAL_UPDATE_TEXT_LABELS[first]}.`
   }
 
   if (source) {
-    return `We will ask you to update these details as well as ${UPDATE_TEXT_LABELS[source]}:`
+    return `We will ask you to update these details as well as ${PERSONAL_UPDATE_TEXT_LABELS[source]}:`
   }
 
   return 'We will ask you to update these details.'

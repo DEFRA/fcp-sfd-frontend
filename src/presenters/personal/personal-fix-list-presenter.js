@@ -4,22 +4,7 @@
  */
 
 import { formatNumber, formatChangedAddress } from '../base-presenter.js'
-
-const SECTION_FIELD_ORDER = {
-  name: ['first', 'middle', 'last'],
-  dob: ['day', 'month', 'year'],
-  address: [
-    'address1',
-    'address2',
-    'address3',
-    'city',
-    'county',
-    'postcode',
-    'country'
-  ],
-  phone: ['personalTelephone', 'personalMobile'],
-  email: ['personalEmail']
-}
+import { PERSONAL_SECTION_FIELD_ORDER } from '../../constants/interrupter-journey.js'
 
 const personalFixListPresenter = (personalDetails, payload, errors = null) => {
   const { day, month, year } = formatDateOfBirth(personalDetails, payload)
@@ -78,7 +63,7 @@ const sortErrorsBySectionOrder = (errors, orderedSectionsToFix) => {
 
   for (const section of orderedSectionsToFix) {
     // A section (i.e 'name') can have multiple fields (i.e 'first', 'middle', 'last')
-    const fieldsInSection = SECTION_FIELD_ORDER[section] || []
+    const fieldsInSection = PERSONAL_SECTION_FIELD_ORDER[section] || []
 
     for (const field of fieldsInSection) {
       // If there's an error for this field, add it to the sorted list with the error details

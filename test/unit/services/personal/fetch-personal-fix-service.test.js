@@ -83,7 +83,7 @@ describe('fetchPersonalFixService', () => {
     test('it overlays the dob fix onto personal details', async () => {
       const result = await fetchPersonalFixService(credentials, sessionData)
 
-      expect(result.changePersonalDOB).toEqual({
+      expect(result.changePersonalDob).toEqual({
         day: '12',
         month: '12',
         year: '1990'

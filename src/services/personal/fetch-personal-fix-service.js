@@ -27,7 +27,7 @@ const fetchPersonalFixService = async (credentials, sessionData = {}) => {
   }
 
   if (personalFixUpdates.dob) {
-    updatedPersonalDetails.changePersonalDOB = personalFixUpdates.dob
+    updatedPersonalDetails.changePersonalDob = personalFixUpdates.dob
   }
 
   if (personalFixUpdates.email) {

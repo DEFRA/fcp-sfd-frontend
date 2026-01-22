@@ -59,7 +59,8 @@ describe('personal fix list routes', () => {
     }
 
     const responseStub = {
-      code: vi.fn().mockReturnThis()
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
     }
 
     h = {

@@ -151,7 +151,7 @@
         %}
       {% endif %}
 
-      {% if countyParishHoldingNumbers and countyParishHoldingNumbers | length %}
+      {% if showCph and countyParishHoldingNumbers and countyParishHoldingNumbers | length %}
         {% set _ = referenceRows.push({
             key: { text: countyParishHoldingNumbersText },
             value: { html: formattedCph }

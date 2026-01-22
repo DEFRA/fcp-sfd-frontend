@@ -4,11 +4,15 @@
  */
 
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
+import { config } from '../../config/index.js'
 import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const businessDetailsPresenter = (data, yar, permissionLevels) => {
   const permissionGroup = checkPermissionType(permissionLevels)
-  const countyParishHoldingNumbers = formatCph(data.info.countyParishHoldingNumbers)
+  const cphEnabled = config.get('featureToggle.cphEnabled')
+  const countyParishHoldingNumbers = cphEnabled
+    ? formatCph(data.info.countyParishHoldingNumbers)
+    : []
 
   return {
     backLink: {
@@ -32,6 +36,7 @@ const businessDetailsPresenter = (data, yar, permissionLevels) => {
     vendorRegistrationNumber: data.info.vendorNumber ?? null,
     countyParishHoldingNumbers,
     countyParishHoldingNumbersText: `County Parish Holding (CPH) number${countyParishHoldingNumbers.length > 1 ? 's' : ''}`,
+    showCph: cphEnabled,
     businessLegalStatus: data.info.legalStatus,
     businessType: data.info.type,
     changeLinks: setChangeLinks(data, permissionGroup),

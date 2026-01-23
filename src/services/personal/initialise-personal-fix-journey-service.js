@@ -32,6 +32,7 @@ const initialisePersonalFixJourneyService = (yar, source) => {
   // Replace validation sections with the ordered fix list
   sessionData.orderedSectionsToFix = orderedSectionsToFix
   delete sessionData.sectionsNeedingUpdate
+  delete sessionData.personalFixUpdates
 
   if (source) {
     // Source is only set when coming from the personal details page

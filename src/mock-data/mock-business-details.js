@@ -83,7 +83,16 @@ const mappedData = {
   }
 }
 
+const mappedDataWithoutCph = {
+  ...mappedData,
+  info: {
+    ...mappedData.info,
+    countyParishHoldingNumbers: []
+  }
+}
+
 export {
   dalData,
-  mappedData
+  mappedData,
+  mappedDataWithoutCph
 }

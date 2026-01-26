@@ -3,13 +3,13 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
 import { dalConnector } from '../../../../src/dal/connector.js'
-import {
-  businessDetailsQuery,
-  businessDetailsQueryWithoutCph
-} from '../../../../src/dal/queries/business-details.js'
-const mockMappedValue = vi.fn()
-const mockConfigGet = vi.fn()
+import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../../../src/dal/queries/business-details.js'
 
+// Mock dependencies
+const mockMappedValue = vi.fn()
+const mockConfigValues = {}
+
+// Mock imports
 vi.mock('../../../../src/dal/connector.js', () => ({
   dalConnector: vi.fn()
 }))
@@ -20,7 +20,7 @@ vi.mock('../../../../src/mappers/business-details-mapper.js', () => ({
 
 vi.mock('../../../../src/config/index.js', () => ({
   config: {
-    get: mockConfigGet
+    get: (key) => mockConfigValues[key]
   }
 }))
 
@@ -39,6 +39,11 @@ describe('fetchBusinessDetailsService', () => {
     vi.clearAllMocks()
     vi.resetModules()
 
+    // Reset config values
+    Object.keys(mockConfigValues).forEach(key => {
+      delete mockConfigValues[key]
+    })
+
     data = { data: dalData }
     mappedDalData = mappedData
 
@@ -51,19 +56,12 @@ describe('fetchBusinessDetailsService', () => {
 
   describe('when DAL_CONNECTION is true', () => {
     beforeEach(() => {
-      mockConfigGet.mockImplementation((key) => {
-        if (key === 'featureToggle.dalConnection') {
-          return true
-        }
-
-        if (key === 'featureToggle.cphEnabled') {
-          return true
-        }
-
-        return undefined
+      Object.assign(mockConfigValues, {
+        'featureToggle.dalConnection': true,
+        'featureToggle.cphEnabled': true
       })
       dalConnector.mockResolvedValue(data)
-      mockMappedValue.mockResolvedValue(mappedDalData)
+      mockMappedValue.mockReturnValue(mappedDalData)
     })
 
     test('dalConnector is called', async () => {
@@ -82,17 +80,7 @@ describe('fetchBusinessDetailsService', () => {
     })
 
     test('it uses businessDetailsQueryWithoutCph when CPH_ENABLED is false', async () => {
-      mockConfigGet.mockImplementation((key) => {
-        if (key === 'featureToggle.dalConnection') {
-          return true
-        }
-
-        if (key === 'featureToggle.cphEnabled') {
-          return false
-        }
-
-        return undefined
-      })
+      mockConfigValues['featureToggle.cphEnabled'] = false
 
       await fetchBusinessDetailsService(credentials)
 
@@ -100,6 +88,32 @@ describe('fetchBusinessDetailsService', () => {
         businessDetailsQueryWithoutCph,
         expect.any(Object)
       )
+    })
+
+    test('it strips CPH numbers when CPH_ENABLED is false', async () => {
+      mockConfigValues['featureToggle.cphEnabled'] = false
+      // Mock DAL data without CPH (simulating businessDetailsQueryWithoutCph response)
+      const dalDataWithoutCph = {
+        ...dalData,
+        business: {
+          ...dalData.business,
+          countyParishHoldings: undefined
+        }
+      }
+      dalConnector.mockResolvedValue({ data: dalDataWithoutCph })
+      // Mock mapper to return data without CPH (mapper will default to empty array)
+      const mappedDataWithoutCph = {
+        ...mappedDalData,
+        info: {
+          ...mappedDalData.info,
+          countyParishHoldingNumbers: []
+        }
+      }
+      mockMappedValue.mockReturnValue(mappedDataWithoutCph)
+
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(result.info.countyParishHoldingNumbers).toEqual([])
     })
 
     test('it correctly returns mappedData if dalConnector response has object data', async () => {
@@ -118,16 +132,9 @@ describe('fetchBusinessDetailsService', () => {
 
   describe('when DAL_CONNECTION is false', () => {
     beforeEach(() => {
-      mockConfigGet.mockImplementation((key) => {
-        if (key === 'featureToggle.dalConnection') {
-          return false
-        }
-
-        if (key === 'featureToggle.cphEnabled') {
-          return true
-        }
-
-        return undefined
+      Object.assign(mockConfigValues, {
+        'featureToggle.dalConnection': false,
+        'featureToggle.cphEnabled': true
       })
     })
 
@@ -141,6 +148,14 @@ describe('fetchBusinessDetailsService', () => {
       const result = await fetchBusinessDetailsService(credentials)
 
       expect(result).toMatchObject(mappedData)
+    })
+
+    test('it strips CPH numbers when CPH_ENABLED is false', async () => {
+      mockConfigValues['featureToggle.cphEnabled'] = false
+
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(result.info.countyParishHoldingNumbers).toEqual([])
     })
   })
 })

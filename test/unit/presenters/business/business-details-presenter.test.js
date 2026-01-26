@@ -7,16 +7,6 @@ import { businessDetailsPresenter } from '../../../../src/presenters/business/bu
 // Mock data
 import { mappedData } from '../../../mocks/mock-business-details.js'
 
-// Mock dependencies
-import { config } from '../../../../src/config/index.js'
-
-// Mock imports
-vi.mock('../../../../src/config/index.js', () => ({
-  config: {
-    get: vi.fn()
-  }
-}))
-
 describe('businessDetailsPresenter', () => {
   let yar
   let data
@@ -24,9 +14,6 @@ describe('businessDetailsPresenter', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-
-    // Default: CPH ON
-    config.get.mockReturnValue(true)
 
     // Deep clone the data to avoid mutation across tests
     data = JSON.parse(JSON.stringify(mappedData))
@@ -71,7 +58,6 @@ describe('businessDetailsPresenter', () => {
         vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
         countyParishHoldingNumbersText: 'County Parish Holding (CPH) number',
-        showCph: true,
         businessLegalStatus: data.info.legalStatus,
         businessType: data.info.type,
         changeLinks: {},
@@ -171,14 +157,6 @@ describe('businessDetailsPresenter', () => {
   })
 
   describe('the "cph" property', () => {
-    test('it hides CPH data when the feature toggle is disabled', () => {
-      config.get.mockReturnValue(false)
-      const result = businessDetailsPresenter(data, yar, permission)
-
-      expect(result.showCph).toEqual(false)
-      expect(result.countyParishHoldingNumbers).toEqual([])
-    })
-
     describe('when there are multiple CPH numbers', () => {
       beforeEach(() => {
         data.info.countyParishHoldingNumbers = [

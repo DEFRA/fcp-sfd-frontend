@@ -15,7 +15,7 @@ describe('initialisePersonalFixJourneyService', () => {
         name: {
           first: 'John',
           last: 'Doe'
-        },
+        }
       }
     }
 

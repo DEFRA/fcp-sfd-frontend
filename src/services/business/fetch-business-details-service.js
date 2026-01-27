@@ -7,23 +7,29 @@
  */
 
 import { dalConnector } from '../../dal/connector.js'
-import { businessDetailsQuery } from '../../dal/queries/business-details.js'
+import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
-import { mappedData } from '../../mock-data/mock-business-details.js'
+import { mappedData, mappedDataWithoutCph } from '../../mock-data/mock-business-details.js'
 
 const fetchBusinessDetailsService = async (credentials) => {
-  if (!config.get('featureToggle.dalConnection')) {
-    return mappedData
+  const cphEnabled = config.get('featureToggle.cphEnabled')
+  const dalConnectionEnabled = config.get('featureToggle.dalConnection')
+
+  if (!dalConnectionEnabled) {
+    return cphEnabled
+      ? mappedData
+      : mappedDataWithoutCph
   }
 
-  return getFromDal(credentials)
+  return getFromDal(credentials, cphEnabled)
 }
 
-const getFromDal = async (credentials) => {
+const getFromDal = async (credentials, isCPHEnabled) => {
   const { sbi, crn } = credentials
+  const query = isCPHEnabled ? businessDetailsQuery : businessDetailsQueryWithoutCph
 
-  const dalResponse = await dalConnector(businessDetailsQuery, { sbi, crn })
+  const dalResponse = await dalConnector(query, { sbi, crn })
 
   if (dalResponse.data) {
     const mappedResponse = mapBusinessDetails(dalResponse.data)

@@ -19,6 +19,7 @@ services:
       DEFRA_ID_POLICY: test-policy
       IAHW_ENDPOINT: https://ffc-ahwr-farmer-test.azure.defra.cloud/sign-in?ssoOrgId=
       PERSONAL_DETAILS_INTERRUPTER_ENABLED: false
+      CPH_ENABLED: false
     depends_on:
       fcp-dal-api:
         condition: service_started

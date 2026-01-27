@@ -4,16 +4,19 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Thing under test
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
 
+// Mock data
+import { mappedData } from '../../../mocks/mock-business-details.js'
+
 describe('businessDetailsPresenter', () => {
   let yar
   let data
   let permission = ['view']
 
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks()
-    vi.resetModules() // vi is weird about clearing modules after each test, you must import AFTER calling reset
-    const { mappedData } = await import('../../../mocks/mock-business-details.js')
-    data = mappedData
+
+    // Deep clone the data to avoid mutation across tests
+    data = JSON.parse(JSON.stringify(mappedData))
 
     // Mock yar session manager
     yar = {

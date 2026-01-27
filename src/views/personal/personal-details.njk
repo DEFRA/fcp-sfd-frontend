@@ -13,16 +13,10 @@
   <div class="govuk-grid-column-two-thirds">
       {# Notification banner #}
       {% if notification %}
-        {% set bannerHtml %}
-          <p class="govuk-notification-banner__heading">
-            {{ notification.html or notification.text }}
-          </p>
-        {% endset %}
-
         {{ govukNotificationBanner({
           type: "success",
           titleText: notification.title,
-          html: bannerHtml
+          html: notification.html or notification.text
         })}}
       {% endif %}
 

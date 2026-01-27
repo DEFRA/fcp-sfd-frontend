@@ -98,7 +98,7 @@ describe('personal fix check routes', () => {
       test('it calls updatePersonalFixService with yar and credentials', async () => {
         await postPersonalFixCheck.handler(request, h)
 
-        expect(updatePersonalFixService).toHaveBeenCalledWith(request.yar, credentials)
+        expect(updatePersonalFixService).toHaveBeenCalledWith(sessionData, request.yar, credentials)
         expect(h.redirect).toHaveBeenCalledWith('/personal-details')
       })
     })

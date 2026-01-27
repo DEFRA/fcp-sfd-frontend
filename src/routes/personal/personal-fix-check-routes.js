@@ -22,7 +22,8 @@ const postPersonalFixCheck = {
   handler: async (request, h) => {
     const { yar, auth } = request
 
-    await updatePersonalFixService(yar, auth.credentials)
+    const sessionData = yar.get('personalDetailsValidation')
+    await updatePersonalFixService(sessionData, yar, auth.credentials)
 
     return h.redirect('/personal-details')
   }

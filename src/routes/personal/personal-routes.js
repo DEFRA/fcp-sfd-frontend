@@ -13,6 +13,7 @@ import { personalEmailChangeRoutes } from './personal-email-change-routes.js'
 import { personalEmailCheckRoutes } from './personal-email-check-routes.js'
 import { personalFixRoutes } from './personal-fix-routes.js'
 import { personalFixListRoutes } from './personal-fix-list-routes.js'
+import { personalFixCheckRoutes } from './personal-fix-check-routes.js'
 
 export const personalRoutes = [
   ...personalDetailsRoutes,
@@ -29,5 +30,6 @@ export const personalRoutes = [
   ...personalEmailChangeRoutes,
   ...personalEmailCheckRoutes,
   ...personalFixRoutes,
-  ...personalFixListRoutes
+  ...personalFixListRoutes,
+  ...personalFixCheckRoutes
 ]

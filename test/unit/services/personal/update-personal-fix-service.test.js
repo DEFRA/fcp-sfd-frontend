@@ -107,5 +107,25 @@ describe('updatePersonalFixService', () => {
         'You have updated your personal email address'
       )
     })
+
+    describe('when the success message is html', () => {
+      beforeEach(() => {
+        buildPersonalSuccessMessage.mockReturnValue({
+          type: 'html',
+          value: '<p>You have updated your personal email address</p>'
+        })
+      })
+
+      test('it flashes a success notification with html content', async () => {
+        await updatePersonalFixService(sessionData, yar, credentials)
+
+        expect(flashNotification).toHaveBeenCalledWith(
+          yar,
+          'Success',
+          null,
+          '<p>You have updated your personal email address</p>'
+        )
+      })
+    })
   })
 })

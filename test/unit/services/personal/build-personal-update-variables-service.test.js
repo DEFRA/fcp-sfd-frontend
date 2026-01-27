@@ -32,7 +32,7 @@ describe('buildPersonalUpdateVariables', () => {
           crn: '123456789',
           phone: {
             landline: '0123456789',
-            mobile: '07123456789'
+            mobile: null
           }
         },
         updateCustomerDateOfBirthInput: {
@@ -60,6 +60,51 @@ describe('buildPersonalUpdateVariables', () => {
             uprn: '1234567890'
           }
         }
+      })
+    })
+
+    describe('when middle name is missing', () => {
+      beforeEach(() => {
+        personalDetails = basePersonalDetails()
+        delete personalDetails.info.fullName.middle
+      })
+
+      test('it defaults middle name to null', () => {
+        const result = buildPersonalUpdateVariables(personalDetails)
+
+        expect(result.updateCustomerNameInput.middle).toBeNull()
+      })
+    })
+
+    describe('when base address fields are missing', () => {
+      beforeEach(() => {
+        personalDetails = basePersonalDetails()
+        personalDetails.address = {
+          uprn: '1234567890'
+        }
+      })
+
+      test('it defaults missing address fields to null', () => {
+        const result = buildPersonalUpdateVariables(personalDetails)
+
+        expect(result.updateCustomerAddressInput.address).toEqual({
+          buildingNumberRange: null,
+          buildingName: null,
+          flatName: null,
+          street: null,
+          city: null,
+          county: null,
+          postalCode: null,
+          country: null,
+          dependentLocality: null,
+          doubleDependentLocality: null,
+          line1: null,
+          line2: null,
+          line3: null,
+          line4: null,
+          line5: null,
+          uprn: '1234567890'
+        })
       })
     })
   })
@@ -224,7 +269,7 @@ const basePersonalDetails = () => {
     contact: {
       email: 'jane.doe@example.com',
       telephone: '0123456789',
-      mobile: '07123456789'
+      mobile: null
     },
     address: {
       uprn: '1234567890',

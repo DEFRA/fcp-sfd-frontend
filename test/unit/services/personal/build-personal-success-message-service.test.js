@@ -59,8 +59,8 @@ describe('buildPersonalSuccessMessage', () => {
 
   describe('when multiple personal details have changed', () => {
     beforeEach(() => {
-      personalDetails.changePersonalName = { first: 'John', last: 'Doe' }
       personalDetails.changePersonalEmail = { personalEmail: 'test@email.com' }
+      personalDetails.changePersonalPhoneNumbers = { personalPhoneNumbers: '0123456789' }
       personalDetails.changePersonalAddress = { postcode: 'AB12 3CD' }
     })
 
@@ -83,8 +83,8 @@ describe('buildPersonalSuccessMessage', () => {
       const result = buildPersonalSuccessMessage(personalDetails)
 
       expect(result.value).toContain('<ul class="govuk-list govuk-list--bullet">')
-      expect(result.value).toContain('<li>full name</li>')
       expect(result.value).toContain('<li>personal email address</li>')
+      expect(result.value).toContain('<li>personal phone numbers</li>')
       expect(result.value).toContain('<li>personal address</li>')
     })
   })

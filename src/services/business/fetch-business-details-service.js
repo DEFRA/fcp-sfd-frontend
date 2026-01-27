@@ -13,18 +13,21 @@ import { config } from '../../config/index.js'
 import { mappedData, mappedDataWithoutCph } from '../../mock-data/mock-business-details.js'
 
 const fetchBusinessDetailsService = async (credentials) => {
-  if (!config.get('featureToggle.dalConnection')) {
-    return config.get('featureToggle.cphEnabled')
+  const cphEnabled = config.get('featureToggle.cphEnabled')
+  const dalConnectionEnabled = config.get('featureToggle.dalConnection')
+
+  if (!dalConnectionEnabled) {
+    return cphEnabled
       ? mappedData
       : mappedDataWithoutCph
   }
 
-  return getFromDal(credentials)
+  return getFromDal(credentials, cphEnabled)
 }
 
-const getFromDal = async (credentials) => {
+const getFromDal = async (credentials, isCPHEnabled) => {
   const { sbi, crn } = credentials
-  const query = getBusinessDetailsQuery()
+  const query = isCPHEnabled ? businessDetailsQuery : businessDetailsQueryWithoutCph
 
   const dalResponse = await dalConnector(query, { sbi, crn })
 
@@ -35,14 +38,6 @@ const getFromDal = async (credentials) => {
   }
 
   return dalResponse
-}
-
-const getBusinessDetailsQuery = () => {
-  if (config.get('featureToggle.cphEnabled')) {
-    return businessDetailsQuery
-  }
-
-  return businessDetailsQueryWithoutCph
 }
 
 export {

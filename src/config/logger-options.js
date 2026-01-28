@@ -25,7 +25,7 @@ export const loggerOptions = {
     remove: true
   },
   level: logConfig.level,
-    // Local development logger settings
+  // Local development logger settings
   ...(isLocal && {
     serializers: {
       req: req => ({

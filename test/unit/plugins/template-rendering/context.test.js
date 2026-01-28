@@ -10,14 +10,19 @@ vi.mock('../../../../src/config/navigation-items.js', () => ({
   }]
 }))
 
+const { mockLoggerErrorFn } = vi.hoisted(() => ({
+  mockLoggerErrorFn: vi.fn()
+}))
+
 vi.mock('../../../../src/utils/logger.js', () => ({
   createLogger: () => ({
-    error: vi.fn()
+    error: mockLoggerErrorFn
   })
 }))
 
 const mockReadFileSync = vi.spyOn(fs, 'readFileSync').mockImplementation(() => '{}')
 const mockLoggerError = vi.fn()
+const mockCacheGet = vi.fn()
 vi.spyOn(console, 'error').mockImplementation(mockLoggerError)
 
 vi.mock('../../../../src/plugins/template-renderer/context.js', async (importOriginal) => {
@@ -37,6 +42,55 @@ vi.mock('../../../../src/plugins/template-renderer/context.js', async (importOri
       return result
     }
   }
+})
+
+describe('When webpack manifest file read fails', () => {
+  test('Should log error when manifest file is not found', async () => {
+    mockLoggerErrorFn.mockClear()
+    vi.clearAllMocks()
+    vi.resetModules()
+
+    vi.doUnmock('../../../../src/plugins/template-renderer/context.js')
+    vi.doUnmock('../../../../src/utils/logger.js')
+    vi.doUnmock('../../../../src/config/index.js')
+    vi.doUnmock('../../../../src/config/navigation-items.js')
+
+    vi.doMock('../../../../src/utils/logger.js', () => ({
+      createLogger: () => ({ error: mockLoggerErrorFn })
+    }))
+    vi.doMock('../../../../src/config/navigation-items.js', () => ({
+      getNavigationItems: () => []
+    }))
+    vi.doMock('../../../../src/config/index.js', () => ({
+      config: {
+        get: (key) => {
+          if (key === 'server.assetPath') return '/public'
+          if (key === 'server.root') return '/tmp'
+          if (key === 'server.serviceName') return 'Test Service'
+        }
+      }
+    }))
+
+    vi.spyOn(fs, 'readFileSync').mockImplementation(() => {
+      throw new Error('ENOENT: no such file or directory')
+    })
+
+    const { context: testContext } = await import('../../../../src/plugins/template-renderer/context.js')
+    const mockRequest = {
+      path: '/',
+      response: { source: { context: {} } },
+      server: { app: { cache: { get: vi.fn().mockResolvedValue(null) } } }
+    }
+
+    await testContext(mockRequest)
+
+    expect(mockLoggerErrorFn).toHaveBeenCalledWith(
+      expect.stringContaining('Webpack'),
+      expect.any(Error)
+    )
+    expect(mockLoggerErrorFn.mock.calls[0][0]).toContain('assets-manifest.json')
+    expect(mockLoggerErrorFn.mock.calls[0][0]).toContain('ENOENT: no such file or directory')
+  })
 })
 
 describe('#context', () => {
@@ -76,7 +130,7 @@ describe('#context', () => {
             url: '/'
           }
         ],
-        serviceName: 'Single Front Door',
+        serviceName: 'Land and farm service',
         serviceUrl: '/'
       })
     })
@@ -149,7 +203,134 @@ describe('#context cache', () => {
             url: '/'
           }
         ],
-        serviceName: 'Single Front Door',
+        serviceName: 'Land and farm service',
+        serviceUrl: '/'
+      })
+    })
+  })
+  describe('session cache', () => {
+    const session = {
+      name: 'A Farmer',
+      isAuthenticated: true,
+      scope: ['user']
+    }
+
+    let request
+
+    beforeEach(() => {
+      request = {
+
+        server: {
+          app: {
+            cache: {
+              get: mockCacheGet
+            }
+          }
+        },
+        response: {
+          source: {
+            context: {}
+          }
+        },
+        auth: {
+          isAuthenticated: true,
+          credentials: {
+            sessionId: 'sessionId'
+          }
+        }
+      }
+
+      mockCacheGet.mockResolvedValue(session)
+    })
+
+    test('return value should contain request.response.source.context', async () => {
+      request.response.source.context = { existingContext: 'request context value' }
+      const result = await context(request)
+      expect(result).toEqual({
+        existingContext: 'request context value',
+        assetPath: '/public/assets',
+        auth: {
+          name: 'A Farmer',
+          isAuthenticated: true,
+          scope: ['user']
+        },
+        breadcrumbs: [],
+        getAssetPath: expect.any(Function),
+        navigation: [
+          {
+            isActive: true,
+            text: 'Home',
+            url: '/'
+          }
+        ],
+        serviceName: 'Land and farm service',
+        serviceUrl: '/'
+      })
+    })
+
+    test('return value should contain no request.response.source.context when request.response.source is null', async () => {
+      request.response.source = null
+      const result = await context(request)
+      expect(result).toEqual({
+        assetPath: '/public/assets',
+        auth: {
+          name: 'A Farmer',
+          isAuthenticated: true,
+          scope: ['user']
+        },
+        breadcrumbs: [],
+        getAssetPath: expect.any(Function),
+        navigation: [
+          {
+            isActive: true,
+            text: 'Home',
+            url: '/'
+          }
+        ],
+        serviceName: 'Land and farm service',
+        serviceUrl: '/'
+      })
+    })
+
+    test('should return property auth equal null if not authenticated', async () => {
+      request.auth.isAuthenticated = false
+      const result = await context(request)
+      expect(result).toEqual({
+        assetPath: '/public/assets',
+        auth: null,
+        breadcrumbs: [],
+        getAssetPath: expect.any(Function),
+        navigation: [
+          {
+            isActive: true,
+            text: 'Home',
+            url: '/'
+          }
+        ],
+        serviceName: 'Land and farm service',
+        serviceUrl: '/'
+      })
+    })
+
+    test('should return property auth equal session data if authenticated', async () => {
+      const result = await context(request)
+      expect(result).toEqual({
+        assetPath: '/public/assets',
+        auth: {
+          name: 'A Farmer',
+          isAuthenticated: true,
+          scope: ['user']
+        },
+        breadcrumbs: [],
+        getAssetPath: expect.any(Function),
+        navigation: [
+          {
+            isActive: true,
+            text: 'Home',
+            url: '/'
+          }
+        ],
+        serviceName: 'Land and farm service',
         serviceUrl: '/'
       })
     })

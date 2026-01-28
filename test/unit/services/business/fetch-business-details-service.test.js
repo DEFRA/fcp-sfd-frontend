@@ -1,120 +1,168 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
-import { dalConnector } from '../../../../src/dal/connector.js'
 
 // Things we need to mock
-const mockMappedValue = vi.fn()
-const mockConfigGet = vi.fn()
+import { dalConnector } from '../../../../src/dal/connector.js'
+import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../../../src/dal/queries/business-details.js'
 
+// Mock dependencies
+const mockMapBusinessDetails = vi.fn()
+const mockConfigValues = {}
+
+// Mock imports
 vi.mock('../../../../src/dal/connector.js', () => ({
   dalConnector: vi.fn()
 }))
 
 vi.mock('../../../../src/mappers/business-details-mapper.js', () => ({
-  mapBusinessDetails: mockMappedValue
+  mapBusinessDetails: mockMapBusinessDetails
 }))
 
 vi.mock('../../../../src/config/index.js', () => ({
   config: {
-    get: mockConfigGet
+    get: (key) => mockConfigValues[key]
   }
 }))
 
 // Test helpers
-const { mappedData, dalData } = await import('../../../mocks/mock-business-details.js')
+const { mappedData, mappedDataWithoutCph, dalData } = await import('../../../../src/mock-data/mock-business-details.js')
 
 // Thing under test
 const { fetchBusinessDetailsService } = await import('../../../../src/services/business/fetch-business-details-service.js')
 
 describe('fetchBusinessDetailsService', () => {
-  let data
-  let mappedDalData
-  let yar
   let credentials
 
   beforeEach(async () => {
     vi.clearAllMocks()
-    vi.resetModules()
 
-    data = { data: dalData }
-    mappedDalData = mappedData
+    // Reset config values
+    Object.keys(mockConfigValues).forEach(key => {
+      delete mockConfigValues[key]
+    })
+
+    credentials = {
+      sbi: '132432422',
+      crn: '64363553663',
+      email: 'test.farmer@test.farm.com'
+    }
   })
 
-  describe('when there is no session data in cache', () => {
+  describe('when DAL_CONNECTION is true and CPH_ENABLED is true', () => {
     beforeEach(() => {
-      yar = {
-        get: vi.fn().mockReturnValue(null),
-        set: vi.fn()
-      }
-      credentials = {
-        sbi: '132432422',
-        crn: '64363553663',
-        email: 'test.farmer@test.farm.com'
-      }
-    })
-    describe('when DAL_CONNECTION is true', () => {
-      beforeEach(() => {
-        mockConfigGet.mockReturnValue(true)
-        dalConnector.mockResolvedValue(data)
-        mockMappedValue.mockResolvedValue(mappedDalData)
+      Object.assign(mockConfigValues, {
+        'featureToggle.dalConnection': true,
+        'featureToggle.cphEnabled': true
       })
-
-      test('dalConnector is called', async () => {
-        await fetchBusinessDetailsService(yar, credentials)
-        expect(dalConnector).toHaveBeenCalled()
-      })
-
-      test('it correctly returns mappedData if dalConnector response has object data', async () => {
-        const result = await fetchBusinessDetailsService(yar, credentials)
-        expect(result).toMatchObject(mappedDalData)
-      })
-
-      test('it returns the full response object if dalConnector response has no object data', async () => {
-        const dalErrorResponse = { error: 'error response from dal' }
-        dalConnector.mockResolvedValue(dalErrorResponse)
-        const result = await fetchBusinessDetailsService(yar, credentials)
-        expect(result).toMatchObject(dalErrorResponse)
-      })
+      dalConnector.mockResolvedValue({ data: dalData })
+      mockMapBusinessDetails.mockReturnValue(mappedData)
     })
 
-    describe('when DAL_CONNECTION is false', () => {
-      beforeEach(() => {
-        mockConfigGet.mockReturnValue(false)
-        dalConnector.mockResolvedValue({})
-        mockMappedValue.mockResolvedValue({})
-      })
-      test('dalConnector is not called', async () => {
-        await fetchBusinessDetailsService(yar, credentials)
-        expect(dalConnector).not.toHaveBeenCalled()
-      })
+    test('should call dalConnector with businessDetailsQuery', async () => {
+      await fetchBusinessDetailsService(credentials)
 
-      test('it correctly returns data static data source', async () => {
-        const result = await fetchBusinessDetailsService(yar, credentials)
-        expect(result).toMatchObject(mappedData)
-      })
+      expect(dalConnector).toHaveBeenCalledWith(
+        businessDetailsQuery,
+        { sbi: credentials.sbi, crn: credentials.crn }
+      )
+    })
+
+    test('should map and return the DAL response when it contains data', async () => {
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(dalConnector).toHaveBeenCalled()
+      expect(mockMapBusinessDetails).toHaveBeenCalledWith(dalData)
+      expect(result).toEqual(mappedData)
+    })
+
+    test('should return the raw DAL response when it has no data property', async () => {
+      const errorResponse = { error: 'error response from dal' }
+      dalConnector.mockResolvedValue(errorResponse)
+
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(mockMapBusinessDetails).not.toHaveBeenCalled()
+      expect(result).toEqual(errorResponse)
     })
   })
 
-  describe('when there is session data in cache', () => {
+  describe('when DAL_CONNECTION is true and CPH_ENABLED is false', () => {
     beforeEach(() => {
-      yar = {
-        get: vi.fn().mockReturnValue(getSessionData)
-      }
+      Object.assign(mockConfigValues, {
+        'featureToggle.dalConnection': true,
+        'featureToggle.cphEnabled': false
+      })
+      dalConnector.mockResolvedValue({ data: dalData })
+      mockMapBusinessDetails.mockReturnValue(mappedData)
     })
 
-    test('it correctly returns session data', async () => {
-      const result = await fetchBusinessDetailsService(yar, credentials)
-      expect(result).toMatchObject(getSessionData)
+    test('should call dalConnector with businessDetailsQueryWithoutCph', async () => {
+      await fetchBusinessDetailsService(credentials)
+
+      expect(dalConnector).toHaveBeenCalledWith(
+        businessDetailsQueryWithoutCph,
+        { sbi: credentials.sbi, crn: credentials.crn }
+      )
+    })
+
+    test('should map and return the DAL response when it contains data', async () => {
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(dalConnector).toHaveBeenCalled()
+      expect(mockMapBusinessDetails).toHaveBeenCalledWith(dalData)
+      expect(result).toEqual(mappedData)
+    })
+
+    test('should return the raw DAL response when it has no data property', async () => {
+      const errorResponse = { error: 'error response from dal' }
+      dalConnector.mockResolvedValue(errorResponse)
+
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(mockMapBusinessDetails).not.toHaveBeenCalled()
+      expect(result).toEqual(errorResponse)
+    })
+  })
+
+  describe('when DAL_CONNECTION is false and CPH_ENABLED is true', () => {
+    beforeEach(() => {
+      Object.assign(mockConfigValues, {
+        'featureToggle.dalConnection': false,
+        'featureToggle.cphEnabled': true
+      })
+    })
+
+    test('should not call dalConnector', async () => {
+      await fetchBusinessDetailsService(credentials)
+
+      expect(dalConnector).not.toHaveBeenCalled()
+    })
+
+    test('should correctly return mappedData', async () => {
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(result).toEqual(mappedData)
+    })
+  })
+
+  describe('when DAL_CONNECTION is false and CPH_ENABLED is false', () => {
+    beforeEach(() => {
+      Object.assign(mockConfigValues, {
+        'featureToggle.dalConnection': false,
+        'featureToggle.cphEnabled': false
+      })
+    })
+
+    test('should not call dalConnector', async () => {
+      await fetchBusinessDetailsService(credentials)
+
+      expect(dalConnector).not.toHaveBeenCalled()
+    })
+
+    test('should correctly return mappedDataWithoutCph', async () => {
+      const result = await fetchBusinessDetailsService(credentials)
+
+      expect(result).toEqual(mappedDataWithoutCph)
     })
   })
 })
-
-const getSessionData = {
-  data: {
-    business: {
-      info: {
-        name: 'Farm Name From Cache'
-      }
-    }
-  }
-}

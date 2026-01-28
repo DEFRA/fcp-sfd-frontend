@@ -2,8 +2,10 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
+import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/business/update-business-address.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -12,12 +14,16 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
   flashNotification: vi.fn()
+}))
+
+vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
+  updateDalService: vi.fn().mockResolvedValue({})
 }))
 
 describe('updateBusinessAddressChangeService', () => {
@@ -34,67 +40,106 @@ describe('updateBusinessAddressChangeService', () => {
       country: 'United Kingdom'
     }
 
-    fetchBusinessDetailsService.mockReturnValue(mappedData)
+    fetchBusinessChangeService.mockReturnValue(mappedData)
+
     yar = {
-      set: vi.fn().mockReturnValue()
+      clear: vi.fn()
     }
-    credentials = { sbi: '123456789', crn: '987654321', email: 'test@example.com' }
+
+    credentials = { sbi: '123456789', crn: '987654321' }
   })
 
-  describe('when called', () => {
-    test('it correctly saves the data to the session', async () => {
+  describe('when called with a manually entered address', () => {
+    test('it fetches business details from the service', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
-      expect(yar.set).toHaveBeenCalledWith('businessDetails', savedData())
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessAddress')
+    })
+
+    test('it calls the updateDalService with correct mutation and variables', async () => {
+      await updateBusinessAddressChangeService(yar, credentials)
+
+      expect(updateDalService).toHaveBeenCalledWith(updateBusinessAddressMutation, {
+        input: {
+          sbi: '107183280',
+          address: {
+            withoutUprn: {
+              buildingNumberRange: null,
+              buildingName: null,
+              flatName: null,
+              street: null,
+              city: 'Maidstone',
+              county: null,
+              postalCode: 'BA123 ABC',
+              country: 'United Kingdom',
+              line1: 'A different address',
+              line2: null,
+              line3: null,
+              line4: 'Maidstone',
+              line5: null,
+              uprn: null
+            }
+          }
+        }
+      })
     })
 
     test('adds a flash notification confirming the change in data', async () => {
       await updateBusinessAddressChangeService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business address')
+      expect(flashNotification).toHaveBeenCalledWith(
+        yar,
+        'Success',
+        'You have updated your business address'
+      )
+    })
+
+    test('it clears businessDetails from session', async () => {
+      await updateBusinessAddressChangeService(yar, credentials)
+
+      expect(yar.clear).toHaveBeenCalledWith('businessDetailsUpdate')
+    })
+  })
+
+  describe('when called with a lookup (UPRN) address', () => {
+    beforeEach(() => {
+      mappedData.changeBusinessAddress = {
+        uprn: '1234567890',
+        buildingName: 'Test House',
+        city: 'London',
+        postcode: 'W1A 1AA',
+        country: 'United Kingdom'
+      }
+    })
+
+    test('it calls the updateDalService with correct lookup variables', async () => {
+      await updateBusinessAddressChangeService(yar, credentials)
+
+      expect(updateDalService).toHaveBeenCalledWith(updateBusinessAddressMutation, {
+        input: {
+          sbi: '107183280',
+          address: {
+            withUprn: {
+              buildingNumberRange: null,
+              buildingName: 'Test House',
+              flatName: null,
+              street: null,
+              city: 'London',
+              county: null,
+              postalCode: 'W1A 1AA',
+              country: 'United Kingdom',
+              dependentLocality: null,
+              doubleDependentLocality: null,
+              line1: null,
+              line2: null,
+              line3: null,
+              line4: null,
+              line5: null,
+              uprn: '1234567890'
+            }
+          }
+        }
+      })
     })
   })
 })
-
-const savedData = () => {
-  return {
-    address: {
-      country: 'United Kingdom',
-      lookup: {
-        buildingName: null,
-        buildingNumberRange: null,
-        city: null,
-        county: null,
-        flatName: null,
-        street: null
-      },
-      manual: {
-        line1: 'A different address',
-        line2: null,
-        line3: 'Child Okeford',
-        line4: 'Maidstone',
-        line5: null
-      },
-      postcode: 'BA123 ABC'
-    },
-    contact: {
-      email: 'henleyrej@eryelnehk.com.test',
-      landline: '01234031859',
-      mobile: null
-    },
-    customer: {
-      fullName: 'Mrs. Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
-    },
-    info: {
-      businessName: 'HENLEY, RE',
-      countyParishHoldingNumbers: [{ cphNumber: '12/123/1234' }],
-      legalStatus: 'Sole Proprietorship',
-      sbi: '107183280',
-      traderNumber: '010203040506070880980',
-      type: 'Not Specified',
-      vat: 'GB123456789',
-      vendorNumber: '694523'
-    }
-  }
-}

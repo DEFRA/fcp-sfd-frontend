@@ -7,26 +7,26 @@ describe('businessDetailsMapper', () => {
   describe('when given valid raw DAL data ', () => {
     test('it should map the values to the correct format ', () => {
       const result = mapBusinessDetails(dalData)
+
       expect(result).toEqual(mappedData)
     })
 
-    test('it should build the fullname correctly ', () => {
-      const fullNameCheckData = {
+    test('it should build the userName correctly ', () => {
+      const userNameCheckData = {
         ...dalData,
         customer: {
           info: {
             name: {
               first: 'Software',
-              last: 'Developer',
-              title: 'Mr.'
+              last: 'Developer'
             }
           }
         }
       }
 
-      const result = mapBusinessDetails(fullNameCheckData)
+      const result = mapBusinessDetails(userNameCheckData)
 
-      expect(result.customer.fullName).toEqual('Mr. Software Developer')
+      expect(result.customer.userName).toEqual('Software Developer')
     })
   })
 })

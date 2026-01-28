@@ -3,58 +3,69 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
+
+// Test helpers
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
-import { businessAddressRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
-const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressRoutes
+import { businessAddressEnterRoutes } from '../../../../src/routes/business/business-address-enter-routes.js'
+const [getBusinessAddressEnter, postBusinessAddressEnter] = businessAddressEnterRoutes
 
 // Mocks
 vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
   setSessionData: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 describe('business address enter', () => {
-  const request = {
-    yar: {},
-    auth: {
-      credentials: {
-        sbi: '123456789',
-        crn: '987654321',
-        email: 'test@example.com'
-      }
-    }
-  }
+  let request
   let h
-  let err
+
+  const credentials = {
+    sbi: '123456789',
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    request = {
+      auth: { credentials },
+      payload: {}
+    }
+
+    const responseStub = {
+      code: vi.fn().mockReturnThis(),
+      takeover: vi.fn().mockReturnThis()
+    }
+
+    h = {
+      redirect: vi.fn(),
+      view: vi.fn(() => responseStub)
+    }
   })
 
   describe('GET /business-address-enter', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
-        h = {
-          view: vi.fn().mockReturnValue({})
-        }
-
-        fetchBusinessDetailsService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessAddressEnter.method).toBe('GET')
         expect(getBusinessAddressEnter.path).toBe('/business-address-enter')
+        expect(getBusinessAddressEnter.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
-      test('it fetches the data from the session', async () => {
+      test('it calls fetchBusinessChangeService', async () => {
         await getBusinessAddressEnter.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessAddress')
       })
 
       test('should render business-address-enter view with page data', async () => {
@@ -67,53 +78,43 @@ describe('business address enter', () => {
 
   describe('POST /business-address-enter', () => {
     beforeEach(() => {
-      const responseStub = {
-        code: vi.fn().mockReturnThis(),
-        takeover: vi.fn().mockReturnThis()
-      }
-
-      h = {
-        redirect: vi.fn(() => h),
-        view: vi.fn(() => responseStub)
-      }
-
-      // Mock yar.set for session
-      request.yar = {
-        set: vi.fn(),
-        get: vi.fn().mockReturnValue(getMockData())
-      }
-
       request.payload = {
         address1: 'New address 1',
         address2: '',
+        address3: '',
         city: 'Sandford',
         county: '',
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       }
+
+      fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessAddress: request.payload })
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessAddressEnter.method).toBe('POST')
+        expect(postBusinessAddressEnter.path).toBe('/business-address-enter')
+        expect(postBusinessAddressEnter.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
       describe('and the validation passes', () => {
-        test('it redirects to the /business-address-check page', async () => {
-          await postBusinessAddressEnter.options.handler(request, h)
-
-          expect(h.redirect).toHaveBeenCalledWith('/business-address-check')
-        })
-
-        test('sets the payload on the yar state', async () => {
+        test('it sets the session data and redirects', async () => {
           await postBusinessAddressEnter.options.handler(request, h)
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessDetails',
+            'businessDetailsUpdate',
             'changeBusinessAddress',
             request.payload
           )
+          expect(h.redirect).toHaveBeenCalledWith('/business-address-check')
         })
       })
 
       describe('and the validation fails', () => {
+        let err
+
         beforeEach(() => {
           err = {
             details: [
@@ -126,15 +127,23 @@ describe('business address enter', () => {
           }
         })
 
+        test('it fetches the business details', async () => {
+          await postBusinessAddressEnter.options.validate.failAction(request, h, err)
+
+          expect(fetchBusinessChangeService).toHaveBeenCalledWith(
+            request.yar,
+            request.auth.credentials,
+            'changeBusinessAddress'
+          )
+        })
+
         test('it returns the page successfully with the error summary banner', async () => {
-          // Calling the fail action handler
           await postBusinessAddressEnter.options.validate.failAction(request, h, err)
 
           expect(h.view).toHaveBeenCalledWith('business/business-address-enter', getPageDataError())
         })
 
         test('it should handle undefined errors', async () => {
-          // Calling the fail action handler
           await postBusinessAddressEnter.options.validate.failAction(request, h, [])
 
           const pageData = getPageDataError()
@@ -150,12 +159,15 @@ describe('business address enter', () => {
 const getMockData = () => {
   return {
     address: {
+      lookup: {},
       manual: {
         line1: '10 Skirbeck Way',
         line2: '',
+        line3: '',
         line4: 'Maidstone',
         line5: ''
       },
+      city: 'Maidstone',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
@@ -164,19 +176,20 @@ const getMockData = () => {
       businessName: 'Agile Farm Ltd'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     }
   }
 }
 
 const getPageData = () => {
   return {
-    backLink: { href: '/business-details' },
+    backLink: { href: '/business-address-change' },
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
     address: {
       address1: '10 Skirbeck Way',
       address2: '',
+      address3: '',
       city: 'Maidstone',
       county: '',
       postcode: 'SK22 1DL',
@@ -190,12 +203,13 @@ const getPageData = () => {
 
 const getPageDataError = () => {
   return {
-    backLink: { href: '/business-details' },
+    backLink: { href: '/business-address-change' },
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
     address: {
       address1: 'New address 1',
       address2: '',
+      address3: '',
       city: 'Sandford',
       county: '',
       postcode: 'SK22 1DL',

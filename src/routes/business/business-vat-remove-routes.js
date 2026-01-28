@@ -4,40 +4,41 @@ import { businessVatRemovePresenter } from '../../presenters/business/business-v
 import { businessVatRemoveSchema } from '../../schemas/business/business-vat-remove-schema.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessVatRemove = {
   method: 'GET',
-  path: '/business-vat-remove',
+  path: '/business-vat-registration-remove',
+  options: {
+    auth: { scope: FULL_PERMISSIONS }
+  },
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.yar, request.auth.credentials)
+    const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
-    return h.view('business/business-vat-remove', pageData)
+
+    return h.view('business/business-vat-registration-remove', pageData)
   }
 }
 
 const postBusinessVatRemove = {
   method: 'POST',
-  path: '/business-vat-remove',
+  path: '/business-vat-registration-remove',
   options: {
+    auth: { scope: FULL_PERMISSIONS },
     validate: {
       payload: businessVatRemoveSchema,
-      options: {
-        abortEarly: false
-      },
+      options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const errors = formatValidationErrors(err.details || [])
-        const businessDetailsData = request.yar.get('businessDetails')
-        const pageData = businessVatRemovePresenter(businessDetailsData)
+        const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
+        const pageData = businessVatRemovePresenter(businessDetails)
 
-        return h.view('business/business-vat-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-vat-registration-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {
-      const { confirmRemove } = request.payload
-
-      if (confirmRemove === 'yes') {
+      if (request.payload.confirmRemove === 'yes') {
         await updateBusinessVatRemoveService(request.yar, request.auth.credentials)
-        return h.redirect('/business-details')
       }
 
       return h.redirect('/business-details')

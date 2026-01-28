@@ -7,15 +7,30 @@
  */
 
 export const mapPersonalDetails = (value) => {
+  const [year, month, day] = value.customer.info.dateOfBirth ? value.customer.info.dateOfBirth.split('-') : []
+
   return {
     crn: value.customer.crn,
     info: {
-      dateOfBirth: value.customer.info.dateOfBirth,
+      userName: [
+        value.customer.info.name.first,
+        value.customer.info.name.last
+      ].filter(Boolean).join(' '),
       fullName: {
-        title: value.customer.info.name.title,
         first: value.customer.info.name.first,
         last: value.customer.info.name.last,
         middle: value.customer.info.name.middle ?? null
+      },
+      fullNameJoined: [
+        value.customer.info.name.first,
+        value.customer.info.name.middle,
+        value.customer.info.name.last
+      ].filter(Boolean).join(' '),
+      dateOfBirth: {
+        full: value.customer.info.dateOfBirth ?? null,
+        day: day ?? null,
+        month: month ?? null,
+        year: year ?? null
       }
     },
     address: {
@@ -25,7 +40,8 @@ export const mapPersonalDetails = (value) => {
         buildingName: value.customer.info.address.buildingName,
         street: value.customer.info.address.street,
         city: value.customer.info.address.city,
-        county: value.customer.info.address.county
+        county: value.customer.info.address.county,
+        uprn: value.customer.info.address.uprn
       },
       manual: {
         line1: value.customer.info.address.line1,
@@ -41,6 +57,11 @@ export const mapPersonalDetails = (value) => {
       email: value.customer.info.email.address,
       telephone: value.customer.info.phone.landline,
       mobile: value.customer.info.phone.mobile
+    },
+    business: {
+      info: {
+        name: value.business.info.name ?? null
+      }
     }
   }
 }

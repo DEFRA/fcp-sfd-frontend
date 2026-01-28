@@ -92,7 +92,22 @@
       }
     },
     {
-      "label": "🧹 Clean Frontend",
+      "label": "🧹 Lint Fix",
+      "detail": "Automatically fix linting issues in the codebase",
+      "type": "shell",
+      "command": "npm run lint:fix; echo \"Code cleaned! ✨\"",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "🛠️ Clean Frontend",
       "detail": "Will drop the containers, remove related images and volumes",
       "type": "shell",
       "command": "docker compose down --rmi local -v; echo \"All done! 🎉\"",
@@ -111,6 +126,41 @@
       "detail": "Restart the frontend app",
       "type": "shell",
       "command": "docker compose restart",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "🥸 DefraID: Enable stub",
+      "detail": "Switch frontend to use DefraID stub and recreate containers",
+      "type": "shell",
+      "command": "docker compose up -d --force-recreate && echo \"DefraID stub enabled – containers restarted 🎉\"",
+      "options": {
+        "env": {
+          "DEFRA_ID_WELL_KNOWN_URL": "http://host.docker.internal:3007/idphub/b2c/b2c_1a_cui_cpdev_signupsigninsfi/.well-known/openid-configuration"
+        }
+      },
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "🤡 DefraID: Disable stub",
+      "detail": "Switch frontend back to real DefraID and restart containers",
+      "type": "shell",
+      "command": "docker compose up -d --force-recreate && echo \"DefraID stub disabled – containers restarted 🎉\"",
       "group": "test",
       "presentation": {
         "echo": true,

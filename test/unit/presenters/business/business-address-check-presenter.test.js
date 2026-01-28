@@ -14,7 +14,7 @@ describe('businessAddressCheckPresenter', () => {
         sbi: '123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
+        userName: 'Alfred Waldron'
       },
       address: {
         address1: '10 Skirbeck Way',
@@ -82,7 +82,7 @@ describe('businessAddressCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {
@@ -94,9 +94,10 @@ describe('businessAddressCheckPresenter', () => {
   })
 
   describe('the "address" property', () => {
-    describe('when provided with a changeBusinessAddress', () => {
+    describe('when provided with a changeBusinessAddress thats entered manually', () => {
       beforeEach(() => {
         data.changeBusinessAddress = {
+          postcodeLookup: false,
           address1: 'A different address',
           city: 'Maidstone',
           county: 'A new county',
@@ -115,6 +116,93 @@ describe('businessAddressCheckPresenter', () => {
           'BA123 ABC',
           'United Kingdom'
         ])
+      })
+    })
+
+    describe('when provided with a changeBusinessAddress thats entered from the postcode lookup', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          postcodeLookup: true,
+          uprn: '100000111111',
+          displayAddress: 'Flat 3, Fake Court, 18, Maple Road, Westfield, Bristol, BS1 4AB',
+          address1: 'A newer address',
+          city: 'Maidstone nowhere',
+          county: 'A new county',
+          postcode: 'BA12 CBA',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should return the changed address as the address', () => {
+        const result = businessAddressCheckPresenter(data)
+
+        expect(result.address).toEqual([
+          'A newer address',
+          'Maidstone nowhere',
+          'A new county',
+          'BA12 CBA',
+          'United Kingdom'
+        ])
+      })
+    })
+  })
+
+  describe('the "backLink" property', () => {
+    describe('when postcode lookup is true', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          postcodeLookup: true
+        }
+      })
+
+      test('it should return backLink as "/business-address-select"', () => {
+        const result = businessAddressCheckPresenter(data)
+
+        expect(result.backLink).toEqual({ href: '/business-address-select' })
+      })
+    })
+
+    describe('when postcode lookup is false', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          postcodeLookup: false
+        }
+      })
+
+      test('it should return backLink as "/business-address-enter"', () => {
+        const result = businessAddressCheckPresenter(data)
+
+        expect(result.backLink).toEqual({ href: '/business-address-enter' })
+      })
+    })
+  })
+
+  describe('the "changeLink" property', () => {
+    describe('when postcode lookup is true', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          postcodeLookup: true
+        }
+      })
+
+      test('it should return changeLink as "/business-address-change"', () => {
+        const result = businessAddressCheckPresenter(data)
+
+        expect(result.changeLink).toEqual('/business-address-change')
+      })
+    })
+
+    describe('when postcode lookup is false', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          postcodeLookup: false
+        }
+      })
+
+      test('it should return changeLink as "/business-address-enter"', () => {
+        const result = businessAddressCheckPresenter(data)
+
+        expect(result.changeLink).toEqual('/business-address-enter')
       })
     })
   })

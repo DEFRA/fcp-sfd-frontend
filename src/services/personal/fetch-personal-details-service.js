@@ -12,24 +12,18 @@ import { mapPersonalDetails } from '../../mappers/personal-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-personal-details.js'
 
-const fetchPersonalDetailsService = async (yar, credentials) => {
-  const personalDetails = yar.get('personalDetails')
-
-  if (personalDetails) {
-    return personalDetails
+const fetchPersonalDetailsService = async (credentials) => {
+  if (!config.get('featureToggle.dalConnection')) {
+    return mappedData
   }
 
-  const personalDetailsData = config.get('featureToggle.dalConnection') ? await getFromDal(credentials) : mappedData
-
-  yar.set('personalDetails', personalDetailsData)
-
-  return personalDetailsData
+  return getFromDal(credentials)
 }
 
 const getFromDal = async (credentials) => {
-  const { sbi, crn } = credentials
+  const { crn, sbi } = credentials
 
-  const dalResponse = await dalConnector(personalDetailsQuery, { sbi, crn })
+  const dalResponse = await dalConnector(personalDetailsQuery, { crn, sbi })
 
   if (dalResponse.data) {
     const mappedResponse = mapPersonalDetails(dalResponse.data)

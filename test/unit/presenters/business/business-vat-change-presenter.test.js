@@ -16,7 +16,7 @@ describe('businessVatChangePresenter', () => {
         vat: 'GB123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
+        userName: 'Alfred Waldron'
       },
       contact: {
         email: 'test@test.com'
@@ -71,7 +71,7 @@ describe('businessVatChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {
@@ -85,7 +85,7 @@ describe('businessVatChangePresenter', () => {
   describe('the "vat number" property', () => {
     describe('when provided with a changed vat number', () => {
       beforeEach(() => {
-        data.vatNumber = 'GB987654321'
+        data.changeBusinessVat = 'GB987654321'
       })
 
       test('it should return the changed vatNumber as the vatNumber', () => {
@@ -104,20 +104,6 @@ describe('businessVatChangePresenter', () => {
         const result = businessVatChangePresenter(data, payload)
 
         expect(result.vatNumber).toEqual('GB876543219')
-      })
-    })
-
-    describe('when all vat sources are missing', () => {
-      beforeEach(() => {
-        delete data.info.vat
-        delete data.vatNumber
-        payload = undefined
-      })
-
-      test('it should return vatNumber as null', () => {
-        const result = businessVatChangePresenter(data, payload)
-
-        expect(result.vatNumber).toEqual(null)
       })
     })
   })

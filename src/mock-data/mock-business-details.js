@@ -35,8 +35,7 @@ const dalData = {
     info: {
       name: {
         first: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese',
-        last: 'Cook',
-        title: 'Mrs.'
+        last: 'Cook'
       }
     }
   }
@@ -60,7 +59,8 @@ const mappedData = {
       buildingName: 'STOCKWELL HALL',
       street: 'HAREWOOD AVENUE',
       city: 'DARLINGTON',
-      county: 'Dorset'
+      county: 'Dorset',
+      uprn: '12345'
     },
     manual: {
       line1: '76 Robinswood Road',
@@ -78,11 +78,21 @@ const mappedData = {
     mobile: null
   },
   customer: {
-    fullName: 'Mrs. Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
+    fullName: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook',
+    userName: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
+  }
+}
+
+const mappedDataWithoutCph = {
+  ...mappedData,
+  info: {
+    ...mappedData.info,
+    countyParishHoldingNumbers: []
   }
 }
 
 export {
   dalData,
-  mappedData
+  mappedData,
+  mappedDataWithoutCph
 }

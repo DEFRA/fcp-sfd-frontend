@@ -19,10 +19,10 @@ export const context = async (request) => {
     try {
       webpackManifest = JSON.parse(readFileSync(manifestPath, 'utf-8'))
     } catch (error) {
-      logger.error(`Webpack ${path.basename(manifestPath)} not found`)
+      logger.error(`Webpack ${path.basename(manifestPath)} not found: ${error.message}`, error)
     }
   }
-  const ctx = request.response.source.context || {}
+  const ctx = request.response.source?.context || {}
   const serverAuth = request.auth?.isAuthenticated ? await request.server.app.cache.get(request.auth.credentials.sessionId) : null
   return {
     ...ctx,

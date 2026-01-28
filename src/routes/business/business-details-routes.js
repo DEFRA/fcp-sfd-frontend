@@ -1,16 +1,19 @@
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { businessDetailsPresenter } from '../../presenters/business/business-details-presenter.js'
+import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessDetails = {
   method: 'GET',
   path: '/business-details',
   options: {
-    auth: { scope: ['BUSINESS_DETAILS:FULL_PERMISSION'] }
+    auth: { scope: VIEW_PERMISSIONS }
   },
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessDetailsService(yar, auth.credentials)
-    const pageData = businessDetailsPresenter(businessDetails, yar)
+    yar.clear('businessDetailsUpdate')
+
+    const businessDetails = await fetchBusinessDetailsService(auth.credentials)
+    const pageData = businessDetailsPresenter(businessDetails, yar, request.auth.credentials.scope)
 
     return h.view('business/business-details.njk', pageData)
   }

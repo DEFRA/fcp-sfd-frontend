@@ -1,9 +1,11 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
-// Things we need to mock
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service'
+// Mocks
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
+import { updateBusinessVATMutation } from '../../../../src/dal/mutations/business/update-business-vat.js'
 
 // Test helpers
 import { mappedData } from '../../../mocks/mock-business-details.js'
@@ -12,12 +14,16 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 import { updateBusinessVatChangeService } from '../../../../src/services/business/update-business-vat-change-service'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
-  fetchBusinessDetailsService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
   flashNotification: vi.fn()
+}))
+
+vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
+  updateDalService: vi.fn().mockResolvedValue({})
 }))
 
 describe('updateBusinessVatChangeService', () => {
@@ -28,27 +34,43 @@ describe('updateBusinessVatChangeService', () => {
     vi.clearAllMocks()
 
     mappedData.changeBusinessVat = 'GB123456789'
-    fetchBusinessDetailsService.mockReturnValue(mappedData)
+    fetchBusinessChangeService.mockReturnValue(mappedData)
 
     yar = {
-      set: vi.fn().mockReturnValue()
+      clear: vi.fn()
     }
-    credentials = { sbi: '123456789', crn: '987654321', email: 'test@example.com' }
+
+    credentials = { sbi: '123456789', crn: '987654321' }
   })
 
   describe('when called', () => {
-    test('it correctly saves the data to the session', async () => {
+    test('it fetches the business details with credentials', async () => {
       await updateBusinessVatChangeService(yar, credentials)
 
-      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(yar, credentials)
-      expect(mappedData.info.vat).toBe('GB123456789')
-      expect(yar.set).toHaveBeenCalledWith('businessDetails', mappedData)
+      expect(fetchBusinessChangeService).toHaveBeenCalledWith(yar, credentials, 'changeBusinessVat')
     })
 
-    test('adds a flash notification confirming the VAT change', async () => {
+    test('it calls updateDalService with correct mutation and variables', async () => {
       await updateBusinessVatChangeService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business VAT number')
+      expect(updateDalService).toHaveBeenCalledWith(updateBusinessVATMutation, {
+        input: {
+          vat: 'GB123456789',
+          sbi: '107183280'
+        }
+      })
+    })
+
+    test('it clears the businessDetails from session', async () => {
+      await updateBusinessVatChangeService(yar, credentials)
+
+      expect(yar.clear).toHaveBeenCalledWith('businessDetailsUpdate')
+    })
+
+    test('adds a flash notification confirming the change in data', async () => {
+      await updateBusinessVatChangeService(yar, credentials)
+
+      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your VAT registration number')
     })
   })
 })

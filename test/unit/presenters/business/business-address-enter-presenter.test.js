@@ -15,15 +15,18 @@ describe('businessAddressEnterPresenter', () => {
         sbi: '123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
+        userName: 'Alfred Waldron'
       },
       address: {
+        lookup: {},
         manual: {
           line1: '10 Skirbeck Way',
           line2: 'Lonely Lane',
+          line3: 'Child Okeford',
           line4: 'Maidstone',
           line5: 'Somerset'
         },
+        city: 'Maidstone',
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       }
@@ -35,12 +38,13 @@ describe('businessAddressEnterPresenter', () => {
       const result = businessAddressEnterPresenter(data)
 
       expect(result).toEqual({
-        backLink: { href: '/business-details' },
+        backLink: { href: '/business-address-change' },
         pageTitle: 'Enter your business address',
         metaDescription: 'Enter the address for your business.',
         address: {
           address1: '10 Skirbeck Way',
           address2: 'Lonely Lane',
+          address3: 'Child Okeford',
           city: 'Maidstone',
           country: 'United Kingdom',
           county: 'Somerset',
@@ -84,7 +88,7 @@ describe('businessAddressEnterPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {
@@ -96,24 +100,6 @@ describe('businessAddressEnterPresenter', () => {
   })
 
   describe('the "address" property', () => {
-    describe('when provided with a changed business address', () => {
-      beforeEach(() => {
-        data.changeBusinessAddress = {
-          address1: 'A different address',
-          city: 'Maidstone',
-          county: 'A new county',
-          postcode: 'BA123 ABC',
-          country: 'United Kingdom'
-        }
-      })
-
-      test('it should return the changed address as the address', () => {
-        const result = businessAddressEnterPresenter(data)
-
-        expect(result.address).toEqual(data.changeBusinessAddress)
-      })
-    })
-
     describe('when provided with a payload', () => {
       beforeEach(() => {
         payload = {
@@ -132,10 +118,171 @@ describe('businessAddressEnterPresenter', () => {
       })
     })
 
+    describe('when provided with a changed business address without UPRN', () => {
+      beforeEach(() => {
+        data.changeBusinessAddress = {
+          address1: 'A different address',
+          city: 'Maidstone',
+          county: 'A new county',
+          postcode: 'BA123 ABC',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should return the changed address as-is', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual(data.changeBusinessAddress)
+      })
+    })
+
+    describe('when provided with a changed business address with UPRN', () => {
+      describe('and there are values missing', () => {
+        beforeEach(() => {
+          data.changeBusinessAddress = {
+            uprn: '123456',
+            flatName: null,
+            buildingName: null,
+            buildingNumberRange: null,
+            street: null,
+            city: null,
+            county: null,
+            postcode: null,
+            country: null
+          }
+        })
+
+        test('it should format the changed address correctly', () => {
+          const result = businessAddressEnterPresenter(data)
+
+          expect(result.address).toEqual({
+            address1: null,
+            address2: null,
+            address3: null,
+            city: null,
+            county: null,
+            country: null,
+            postcode: null
+          })
+        })
+      })
+
+      describe('and there are no values missing', () => {
+        beforeEach(() => {
+          data.changeBusinessAddress = {
+            uprn: '123456',
+            flatName: 'Flat 1A',
+            buildingName: 'Rosewood Court',
+            buildingNumberRange: '120-124',
+            street: 'High Street',
+            city: 'Bristol',
+            county: 'Somerset',
+            postcode: 'BS1 2AB',
+            country: 'United Kingdom'
+          }
+        })
+
+        test('it should format the changed address correctly', () => {
+          const result = businessAddressEnterPresenter(data)
+
+          expect(result.address).toEqual({
+            address1: 'Flat 1A, Rosewood Court, 120-124',
+            address2: 'High Street',
+            address3: null,
+            city: 'Bristol',
+            county: 'Somerset',
+            country: 'United Kingdom',
+            postcode: 'BS1 2AB'
+          })
+        })
+      })
+    })
+
+    describe('when provided with an original business address with UPRN', () => {
+      describe('and there are no values missing', () => {
+        beforeEach(() => {
+          delete data.changeBusinessAddress
+        })
+
+        test('it should format the original address correctly', () => {
+          const result = businessAddressEnterPresenter(data)
+
+          expect(result.address).toEqual({
+            address1: '10 Skirbeck Way',
+            address2: 'Lonely Lane',
+            address3: 'Child Okeford',
+            city: 'Maidstone',
+            country: 'United Kingdom',
+            county: 'Somerset',
+            postcode: 'SK22 1DL'
+          })
+        })
+      })
+
+      describe('and there are values missing', () => {
+        beforeEach(() => {
+          data.address = {
+            lookup: {
+              uprn: '123456'
+            },
+            manual: {},
+            postcode: null,
+            country: null
+          }
+        })
+
+        test('it should format the original address correctly', () => {
+          const result = businessAddressEnterPresenter(data)
+
+          expect(result.address).toEqual({
+            address1: null,
+            address2: null,
+            address3: null,
+            city: null,
+            country: null,
+            county: null,
+            postcode: null
+          })
+        })
+      })
+    })
+
+    describe('when provided with an original business address without UPRN', () => {
+      beforeEach(() => {
+        data.address = {
+          lookup: {
+            uprn: '123456',
+            flatName: 'Flat 1A',
+            buildingName: 'Rosewood Court',
+            buildingNumberRange: '120-124',
+            street: 'High Street',
+            city: 'Bristol'
+          },
+          postcode: 'BS1 2AB',
+          country: 'United Kingdom'
+        }
+      })
+
+      test('it should format the original address correctly', () => {
+        const result = businessAddressEnterPresenter(data)
+
+        expect(result.address).toEqual({
+          address1: 'Flat 1A, Rosewood Court, 120-124',
+          address2: 'High Street',
+          address3: null,
+          city: 'Bristol',
+          county: null,
+          country: 'United Kingdom',
+          postcode: 'BS1 2AB'
+        })
+      })
+    })
+
     describe('when no existing address is provided', () => {
       beforeEach(() => {
         delete data.address.manual.line1
         delete data.address.manual.line2
+        delete data.address.manual.line3
         delete data.address.manual.line4
         delete data.address.manual.line5
         delete data.address.postcode
@@ -148,6 +295,7 @@ describe('businessAddressEnterPresenter', () => {
         expect(result.address).toEqual({
           address1: null,
           address2: null,
+          address3: null,
           city: null,
           county: null,
           country: null,

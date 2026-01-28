@@ -4,24 +4,49 @@
  */
 
 const businessAddressCheckPresenter = (businessDetails) => {
+  const { changeBusinessAddress, address, info, customer } = businessDetails
+
   return {
-    backLink: { href: '/business-address-enter' },
-    changeLink: '/business-address-enter',
+    backLink: backLink(changeBusinessAddress?.postcodeLookup),
+    changeLink: changeLink(changeBusinessAddress?.postcodeLookup),
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
-    address: formatAddress(businessDetails.changeBusinessAddress ?? businessDetails.address),
-    businessName: businessDetails.info.businessName ?? null,
-    sbi: businessDetails.info.sbi ?? null,
-    userName: businessDetails.customer.fullName ?? null
+    userName: customer.userName ?? null,
+    address: formatAddress(changeBusinessAddress ?? address),
+    businessName: info.businessName ?? null,
+    sbi: info.sbi ?? null
   }
 }
 
 /**
- * Formats the business address by removing any falsy values (e.g. empty strings, null, undefined)
- * @private
+ * Formats the business address into an array of address parts.
+ * - Removes falsy values (null, undefined, empty strings)
+ * - When from postcode lookup, excludes `uprn`, `displayAddress` and `postcodeLookup` keys
  */
 const formatAddress = (businessAddress) => {
-  return Object.values(businessAddress).filter(Boolean)
+  if (businessAddress.postcodeLookup) {
+    const { uprn, displayAddress, postcodeLookup, ...addressParts } = businessAddress
+
+    return Object.values(addressParts).filter(Boolean)
+  } else {
+    return Object.values(businessAddress).filter(Boolean)
+  }
+}
+
+const backLink = (postcodeLookup) => {
+  if (postcodeLookup) {
+    return { href: '/business-address-select' }
+  } else {
+    return { href: '/business-address-enter' }
+  }
+}
+
+const changeLink = (postcodeLookup) => {
+  if (postcodeLookup) {
+    return '/business-address-change'
+  } else {
+    return '/business-address-enter'
+  }
 }
 
 export {

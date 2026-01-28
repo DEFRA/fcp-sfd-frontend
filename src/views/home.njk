@@ -1,5 +1,4 @@
 {% extends 'common/layout.njk' %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block beforeContent %}
   <div class="govuk-grid-row sub-header-container govuk-!-padding-top-3">
@@ -12,14 +11,17 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">
-        <span class="govuk-caption-l">{{ auth.name }}</span>
-        You have signed in
-      </h1>
+      <span class="govuk-caption-xl text-wrap-no-hyphen">{{ userName }}</span>
+      <h1 class="govuk-heading-xl govuk-!-margin-bottom-2 text-wrap-no-hyphen">{{ businessName }}</h1>
+      <p class="govuk-caption-m">Single business identifier (SBI): {{ sbi }}</p>
 
+      <h3 class="govuk-heading-m"> Schemes and grants</h3>
+      <p>
+        <a href={{iahwLink}}>Funding to improve animal health and welfare</a>
+      </p>
       <h3 class="govuk-heading-m"> Business details</h3>
       <p>
-        <a href="/business-details">View and update your business details</a>
+        <a href={{businessDetails.link}}>{{businessDetails.text}}</a>
       </p>
       <h3 class="govuk-heading-m"> Personal details</h3>
       <p>

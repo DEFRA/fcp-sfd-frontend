@@ -2,16 +2,19 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessNameChangeService } from '../../../../src/services/business/fetch-business-name-change-service.js'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service.js'
+
+// Test helpers
+import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessNameCheckRoutes } from '../../../../src/routes/business/business-name-check-routes.js'
 const [getBusinessNameCheck, postBusinessNameCheck] = businessNameCheckRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-name-change-service.js', () => ({
-  fetchBusinessNameChangeService: vi.fn()
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
+  fetchBusinessChangeService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/business/update-business-name-change-service.js', () => ({
@@ -29,6 +32,7 @@ describe('business name check', () => {
       }
     }
   }
+
   let h
 
   beforeEach(() => {
@@ -42,18 +46,19 @@ describe('business name check', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        fetchBusinessNameChangeService.mockReturnValue(getMockData())
+        fetchBusinessChangeService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessNameCheck.method).toBe('GET')
         expect(getBusinessNameCheck.path).toBe('/business-name-check')
+        expect(getBusinessNameCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
       test('it fetches the data from the session', async () => {
         await getBusinessNameCheck.handler(request, h)
 
-        expect(fetchBusinessNameChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials, 'changeBusinessName')
       })
 
       test('should render business-name-check view with page data', async () => {
@@ -72,13 +77,19 @@ describe('business name check', () => {
     })
 
     describe('when a request succeeds', () => {
+      test('should have the correct method, path and auth scope configured', () => {
+        expect(postBusinessNameCheck.method).toBe('POST')
+        expect(postBusinessNameCheck.path).toBe('/business-name-check')
+        expect(postBusinessNameCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+      })
+
       test('it redirects to the /business-details page', async () => {
         await postBusinessNameCheck.handler(request, h)
 
         expect(h.redirect).toHaveBeenCalledWith('/business-details')
       })
 
-      test('sets the payload on the yar state', async () => {
+      test('calls updateBusinessNameChangeService with yar and credentials', async () => {
         await postBusinessNameCheck.handler(request, h)
 
         expect(updateBusinessNameChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
@@ -94,7 +105,7 @@ const getMockData = () => {
       businessName: 'Agile Farm Ltd'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     },
     changeBusinessName: 'New Business Name Ltd'
   }

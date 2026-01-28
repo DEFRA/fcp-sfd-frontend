@@ -5,6 +5,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
 
+// Test helpers
+import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessDetailsRoutes } from '../../../../src/routes/business/business-details-routes.js'
 const [getBusinessDetails] = businessDetailsRoutes
@@ -21,7 +24,6 @@ vi.mock('../../../../src/presenters/business/business-details-presenter.js', () 
 describe('business details', () => {
   let h
   let request
-  let mockData
   let pageData
 
   beforeEach(() => {
@@ -35,12 +37,11 @@ describe('business details', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        mockData = getMockData()
-        pageData = getPageData()
         request = {
-          yar: { get: vi.fn(), set: vi.fn() },
+          yar: { clear: vi.fn() },
           auth: {
             credentials: {
+              scope: ['BUSINESS_DETAILS:FULL_PERMISSION'],
               sbi: '123456789',
               crn: '987654321',
               email: 'test@example.com'
@@ -48,14 +49,27 @@ describe('business details', () => {
           }
         }
 
-        fetchBusinessDetailsService.mockResolvedValue(mockData)
+        pageData = getPageData()
+        fetchBusinessDetailsService.mockResolvedValue(getMockData())
         businessDetailsPresenter.mockReturnValue(pageData)
+      })
+
+      test('it has the correct path and auth scope configured', () => {
+        expect(getBusinessDetails.path).toBe('/business-details')
+        expect(getBusinessDetails.options.auth.scope).toBe(VIEW_PERMISSIONS)
+      })
+
+      test('it clears the businessDetails key from session', async () => {
+        await getBusinessDetails.handler(request, h)
+
+        expect(request.yar.clear).toHaveBeenCalledWith('businessDetailsUpdate')
       })
 
       test('it calls the fetch business details service', async () => {
         await getBusinessDetails.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
+        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, request.auth.credentials.scope)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
     })

@@ -23,12 +23,12 @@
       {% endif %}
 
     <h1 class="govuk-heading-l">
-      View and update your business details
+      {{ pageTitle }}
     </h1>
 
-    <h2 class="govuk-heading-m">
-      Business contact details
-    </h2>
+    <p class="govuk-body">
+      {{permissionsText}}
+    </p>
 
     {% set formattedAddress %}
       {% for addressLine in address %}
@@ -42,12 +42,36 @@
       {% endfor %}
     {% endset %}
 
-    {% set displayBusinessPhone %}
-      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint display-inline">{{businessMobile}}</div></div>
+    {% set displayBusinessTelephone %}
+      <div>
+        Telephone:
+        {% if businessTelephone.telephone === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ businessTelephone.telephone }}</span>
+        {% else %}
+          <span>{{ businessTelephone.telephone }}</span>
+        {% endif %}
+      </div>
+      <div>
+        Mobile:
+        {% if businessTelephone.mobile === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ businessTelephone.mobile }}</span>
+        {% else %}
+          <span>{{ businessTelephone.mobile }}</span>
+        {% endif %}
+      </div>
     {% endset %}
 
-    {% set vatDisplayValue = vatNumber or "No number added" %}
+    {% set displayVatNumber %}
+      {% if vatNumber === 'No number added' %}
+        <span class="govuk-hint display-inline">{{ vatNumber }}</span>
+      {% else %}
+        <span>{{ vatNumber }}</span>
+      {% endif %}
+    {% endset %}
+
+    <h2 class="govuk-heading-m">
+      Business contact details
+    </h2>
 
     {{ govukSummaryList({
       rows: [
@@ -58,15 +82,7 @@
           value: {
             text: businessName
           },
-          actions: {
-            items: [
-              {
-                href: "/business-name-change",
-                text: "Change",
-                visuallyHiddenText: "business name"
-              }
-            ]
-          }
+          actions: changeLinks.businessName
         },
         {
           key: {
@@ -75,32 +91,16 @@
           value: {
             html: formattedAddress
           },
-          actions: {
-            items: [
-              {
-                href: "/business-address-enter",
-                text: "Change",
-                visuallyHiddenText: "business address"
-              }
-            ]
-          }
+          actions: changeLinks.businessAddress
         },
         {
           key: {
             text: "Business phone numbers"
           },
           value: {
-            html: displayBusinessPhone
+            html: displayBusinessTelephone
           },
-          actions: {
-            items: [
-              {
-                href: "/business-phone-numbers-change",
-                text: "Change",
-                visuallyHiddenText: "business phone numbers"
-              }
-            ]
-          }
+          actions: changeLinks.businessTelephone
         },
         {
           key: {
@@ -109,15 +109,7 @@
           value: {
             text: businessEmail
           },
-          actions: {
-            items: [
-              {
-                href: "/business-email-change",
-                text: "Change",
-                visuallyHiddenText: "business email address"
-              }
-            ]
-          }
+          actions: changeLinks.businessEmail
         }
       ]
     }) }}
@@ -126,69 +118,48 @@
       Reference numbers
     </h2>
 
-      <dl class="govuk-summary-list">
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Single business identifier (SBI)
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ sbi }}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            VAT registration number
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ vatDisplayValue }}
-          </dd>
-          <dd class="govuk-summary-list__actions">
-            {# Logic to display the correct link actions for the VAT number #}
-            {% if vatNumber %}
-              <ul class="govuk-summary-list__actions-list">
-                <li class="govuk-summary-list__actions-list-item">
-                  <a class="govuk-link" href="/business-vat-remove">
-                    Remove<span class="govuk-visually-hidden"> VAT registration number</span>
-                  </a>
-                </li>
-                <li class="govuk-summary-list__actions-list-item">
-                  <a class="govuk-link" href="/business-vat-change">
-                    Change<span class="govuk-visually-hidden"> VAT registration number</span>
-                  </a>
-                </li>
-              </ul>
-            {% else %}
-              <a class="govuk-link" href="/business-vat-change">
-                Add<span class="govuk-visually-hidden"> VAT registration number</span>
-              </a>
-            {% endif %}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Trader number
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ tradeNumber }}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            Vendor registration number
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ vendorRegistrationNumber }}
-          </dd>
-        </div>
-        <div class="govuk-summary-list__row">
-          <dt class="govuk-summary-list__key">
-            County Parish Holding (CPH) numbers
-          </dt>
-          <dd class="govuk-summary-list__value">
-            {{ formattedCph | safe }}
-          </dd>
-        </div>
-      </dl>
+    {# For styling reasons the first row in the summary list (SBI) needs to have the actions and items property
+    initialised. This allows the VAT actions to format correctly. Without it the remove and change link wrap onto new
+    lines #}
+
+      {% set referenceRows = [
+        {
+          key: { text: "Single business identifier (SBI)" },
+          value: { text: sbi },
+          actions: { items: [] }
+        },
+        {
+          key: { text: "VAT registration number" },
+          value: { html: displayVatNumber },
+          actions: changeLinks.businessVatNumber
+        }
+      ]%}
+
+      {% if tradeNumber and tradeNumber | length %}
+        {% set _ = referenceRows.push({
+            key: { text: "Trader number"},
+            value: { html: tradeNumber }
+          })
+        %}
+      {% endif %}
+
+      {% if vendorRegistrationNumber and vendorRegistrationNumber | length %}
+        {% set _ = referenceRows.push({
+            key: { text: "Vendor registration number" },
+            value: { html: vendorRegistrationNumber }
+          })
+        %}
+      {% endif %}
+
+      {% if countyParishHoldingNumbers and countyParishHoldingNumbers | length %}
+        {% set _ = referenceRows.push({
+            key: { text: countyParishHoldingNumbersText },
+            value: { html: formattedCph }
+          })
+        %}
+      {% endif %}
+
+    {{ govukSummaryList({ rows: referenceRows }) }}
 
     <h2 class="govuk-heading-m">
       Additional details
@@ -203,15 +174,7 @@
           value: {
             text: businessLegalStatus
           },
-          actions: {
-            items: [
-              {
-                href: "/business-legal-status-change",
-                text: "Change",
-                visuallyHiddenText: "business legal status"
-              }
-            ]
-          }
+          actions: changeLinks.businessLegal
         },
         {
           key: {
@@ -220,19 +183,10 @@
           value: {
             text: businessType
           },
-          actions: {
-            items: [
-              {
-                href: "/business-type-change",
-                text: "Change",
-                visuallyHiddenText: "business type"
-              }
-            ]
-          }
+          actions: changeLinks.businessType
         }
       ]
     }) }}
-
   </div>
 </div>
 {% endblock %}

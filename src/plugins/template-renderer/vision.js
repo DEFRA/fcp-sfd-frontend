@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url'
-import path from 'path'
+import path from 'node:path'
 import nunjucks from 'nunjucks'
 import hapiVision from '@hapi/vision'
 
@@ -23,6 +23,8 @@ export const nunjucksEnvironment = nunjucks.configure(
     noCache: config.get('nunjucks.noCache')
   }
 )
+
+nunjucksEnvironment.addGlobal('govukRebrand', true)
 
 Object.entries(filters).forEach(([name, filter]) => {
   nunjucksEnvironment.addFilter(name, filter)

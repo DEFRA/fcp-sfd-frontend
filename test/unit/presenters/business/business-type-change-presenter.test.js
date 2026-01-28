@@ -6,7 +6,6 @@ import { businessTypeChangePresenter } from '../../../../src/presenters/business
 
 describe('businessTypeChangePresenter', () => {
   let data
-  let payload
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -18,7 +17,7 @@ describe('businessTypeChangePresenter', () => {
         sbi: '123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
+        userName: 'Alfred Waldron'
       }
     }
   })
@@ -70,7 +69,7 @@ describe('businessTypeChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {
@@ -91,30 +90,6 @@ describe('businessTypeChangePresenter', () => {
         const result = businessTypeChangePresenter(data)
 
         expect(result.businessType).toEqual(null)
-      })
-    })
-
-    describe('when provided with a changed businessType', () => {
-      beforeEach(() => {
-        data.changeBusinessType = 'Limited Company'
-      })
-
-      test('it should return the changed businessType as the businessType', () => {
-        const result = businessTypeChangePresenter(data)
-
-        expect(result.businessType).toEqual('Limited Company')
-      })
-    })
-
-    describe('when provided with a payload', () => {
-      beforeEach(() => {
-        payload = 'Partnership'
-      })
-
-      test('it should return the payload as the businessType', () => {
-        const result = businessTypeChangePresenter(data, payload)
-
-        expect(result.businessType).toEqual('Partnership')
       })
     })
   })

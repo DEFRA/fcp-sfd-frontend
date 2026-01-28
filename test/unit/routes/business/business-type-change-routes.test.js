@@ -3,40 +3,36 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
-import { businessTypeChangePresenter } from '../../../../src/presenters/business/business-type-change-presenter.js'
+
+// Test helpers
+import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessTypeRoutes } from '../../../../src/routes/business/business-type-change-routes.js'
 const [getBusinessTypeChange] = businessTypeRoutes
 
 // Mocks
-vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
-  setSessionData: vi.fn()
-}))
-
 vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
   fetchBusinessDetailsService: vi.fn()
 }))
 
-vi.mock('../../../../src/presenters/business/business-type-change-presenter.js', () => ({
-  businessTypeChangePresenter: vi.fn()
-}))
-
 describe('business type change', () => {
-  const request = {
-    yar: {},
-    auth: {
-      credentials: {
-        sbi: '123456789',
-        crn: '987654321',
-        email: 'test@example.com'
-      }
-    }
-  }
+  let request
   let h
+
+  const credentials = {
+    sbi: '123456789',
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
+    request = {
+      auth: { credentials },
+      payload: {}
+    }
+
     h = {
       view: vi.fn().mockReturnValue({})
     }
@@ -48,23 +44,21 @@ describe('business type change', () => {
         fetchBusinessDetailsService.mockReturnValue(getMockData())
       })
 
-      test('should have the correct method and path', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessTypeChange.method).toBe('GET')
         expect(getBusinessTypeChange.path).toBe('/business-type-change')
+        expect(getBusinessTypeChange.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
-      test('it fetches the data from the session', async () => {
+      test('it fetches the data from the fetchBusinessDetailsService', async () => {
         await getBusinessTypeChange.handler(request, h)
 
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
+        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
       })
 
       test('should render business-type-change view with page data', async () => {
-        businessTypeChangePresenter.mockReturnValue(getPageData())
-
         await getBusinessTypeChange.handler(request, h)
 
-        expect(businessTypeChangePresenter).toHaveBeenCalledWith(getMockData())
         expect(h.view).toHaveBeenCalledWith('business/business-type-change', getPageData())
       })
     })
@@ -79,7 +73,7 @@ const getMockData = () => {
       type: 'Farmer'
     },
     customer: {
-      fullName: 'Alfred Waldron'
+      userName: 'Alfred Waldron'
     }
   }
 }

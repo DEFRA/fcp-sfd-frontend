@@ -35,17 +35,14 @@
           },
           id: "business-name",
           name: "businessName",
-          value: changeBusinessName or businessName,
+          value: changeBusinessName,
           errorMessage: errors.businessName and {
             text: errors.businessName.text
           }
         }) }}
       </div>
 
-      {{ govukButton({
-        text: "Continue",
-        preventDoubleClick: true
-      }) }}
+      {{ govukButton({ text: "Continue", preventDoubleClick: true }) }}
     </form>
   </div>
 </div>

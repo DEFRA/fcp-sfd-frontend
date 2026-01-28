@@ -4,7 +4,6 @@ const dalData = {
     info: {
       dateOfBirth: '1990-01-01',
       name: {
-        title: 'Mr',
         first: 'John',
         middle: 'M',
         last: 'Doe'
@@ -29,8 +28,14 @@ const dalData = {
         line4: null,
         line5: null,
         postalCode: 'CO9 3LS',
-        country: 'United Kingdom'
+        country: 'United Kingdom',
+        uprn: '12345'
       }
+    }
+  },
+  business: {
+    info: {
+      name: 'Acme Farms Ltd'
     }
   }
 }
@@ -38,12 +43,18 @@ const dalData = {
 const mappedData = {
   crn: '123456890',
   info: {
-    dateOfBirth: '1990-01-01',
+    userName: 'John Doe',
     fullName: {
-      title: 'Mr',
       first: 'John',
       last: 'Doe',
       middle: 'M'
+    },
+    fullNameJoined: 'John M Doe',
+    dateOfBirth: {
+      full: '1990-01-01',
+      day: '01',
+      month: '01',
+      year: '1990'
     }
   },
   address: {
@@ -53,7 +64,8 @@ const mappedData = {
       buildingNumberRange: '7',
       street: 'HAREWOOD AVENUE',
       city: 'DARLINGTON',
-      county: 'Dorset'
+      county: 'Dorset',
+      uprn: '12345'
     },
     manual: {
       line1: '76 Robinswood Road',
@@ -69,6 +81,11 @@ const mappedData = {
     email: 'test@example.com',
     telephone: '01234567890',
     mobile: null
+  },
+  business: {
+    info: {
+      name: 'Acme Farms Ltd'
+    }
   }
 }
 

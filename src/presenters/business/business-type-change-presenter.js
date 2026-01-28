@@ -3,15 +3,15 @@
  * @module businessTypeChangePresenter
  */
 
-const businessTypeChangePresenter = (data, payload) => {
+const businessTypeChangePresenter = (data) => {
   return {
     backLink: { href: '/business-details' },
     pageTitle: 'Change your business type',
     metaDescription: 'Update the type of your business.',
+    userName: data.customer.userName ?? null,
     businessName: data.info.businessName ?? null,
-    businessType: payload ?? data.changeBusinessType ?? data.info.type ?? null,
-    sbi: data.info.sbi ?? null,
-    userName: data.customer.fullName ?? null
+    businessType: data.info.type ?? null,
+    sbi: data.info.sbi ?? null
   }
 }
 

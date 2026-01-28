@@ -1,13 +1,17 @@
 import { businessAddressCheckPresenter } from '../../presenters/business/business-address-check-presenter.js'
-import { fetchBusinessAddressChangeService } from '../../services/business/fetch-business-address-change-service.js'
+import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { updateBusinessAddressChangeService } from '../../services/business/update-business-address-change-service.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessAddressCheck = {
   method: 'GET',
   path: '/business-address-check',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
-    const businessDetails = await fetchBusinessAddressChangeService(yar, auth.credentials)
+    const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessAddress')
     const pageData = businessAddressCheckPresenter(businessDetails)
 
     return h.view('business/business-address-check', pageData)
@@ -17,6 +21,9 @@ const getBusinessAddressCheck = {
 const postBusinessAddressCheck = {
   method: 'POST',
   path: '/business-address-check',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS }
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     await updateBusinessAddressChangeService(yar, auth.credentials)

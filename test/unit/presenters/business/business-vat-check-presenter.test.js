@@ -15,8 +15,7 @@ describe('businessVatCheckPresenter', () => {
         vat: 'GB123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
-
+        userName: 'Alfred Waldron'
       }
     }
   })
@@ -26,8 +25,8 @@ describe('businessVatCheckPresenter', () => {
       const result = businessVatCheckPresenter(data)
 
       expect(result).toEqual({
-        backLink: { href: '/business-vat-change' },
-        changeLink: '/business-vat-change',
+        backLink: { href: '/business-vat-registration-number-change' },
+        changeLink: '/business-vat-registration-number-change',
         pageTitle: 'Check your VAT registration number is correct before submitting',
         metaDescription: 'Check the VAT registration number for your business is correct.',
         businessName: 'Agile Farm Ltd',
@@ -69,7 +68,7 @@ describe('businessVatCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {
@@ -83,26 +82,13 @@ describe('businessVatCheckPresenter', () => {
   describe('the "vatNumber" property', () => {
     describe('when provided with a changed vat number', () => {
       beforeEach(() => {
-        data.vatNumber = 'GB987654321'
+        data.changeBusinessVat = 'GB987654321'
       })
 
       test('it should return the changed vat number as the vatNumber', () => {
         const result = businessVatCheckPresenter(data)
 
         expect(result.vatNumber).toEqual('GB987654321')
-      })
-    })
-
-    describe('when all vat sources are missing', () => {
-      beforeEach(() => {
-        delete data.info.vat
-        delete data.vatNumber
-      })
-
-      test('it should return vatNumber as null', () => {
-        const result = businessVatCheckPresenter(data)
-
-        expect(result.vatNumber).toEqual(null)
       })
     })
   })

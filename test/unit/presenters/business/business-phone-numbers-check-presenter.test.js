@@ -14,14 +14,16 @@ describe('businessPhoneNumbersCheckPresenter', () => {
         sbi: '123456789'
       },
       customer: {
-        fullName: 'Alfred Waldron'
+        userName: 'Alfred Waldron'
       },
       contact: {
         landline: '01234 567891',
         mobile: '01111 111111'
       },
-      changeBusinessMobile: null,
-      changeBusinessTelephone: null
+      changeBusinessPhoneNumbers: {
+        businessMobile: null,
+        businessTelephone: null
+      }
     }
   })
 
@@ -74,7 +76,7 @@ describe('businessPhoneNumbersCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.customer.fullName
+        delete data.customer.userName
       })
 
       test('it should return userName as null', () => {

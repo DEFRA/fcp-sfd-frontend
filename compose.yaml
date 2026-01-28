@@ -29,9 +29,14 @@ services:
       DEFRA_ID_SIGN_OUT_REDIRECT_URL: http://localhost:3000/auth/sign-out-oidc
       DAL_EMAIL_HEADER: ${DAL_EMAIL_HEADER}
       QUIET_LOGS: ${QUIET_LOGS}
+      OS_PLACES_CLIENT_ID: ${OS_PLACES_CLIENT_ID}
+      OS_PLACES_STUB: ${OS_PLACES_STUB:-false}
+      IAHW_ENDPOINT: ${IAHW_ENDPOINT}
+      PERSONAL_DETAILS_INTERRUPTER_ENABLED: ${PERSONAL_DETAILS_INTERRUPTER_ENABLED:-false}
+      CPH_ENABLED: ${CPH_ENABLED:-false}
 
   kits-mock:
-    image: defradigital/fcp-dal-upstream-mock
+    image: defradigital/fcp-dal-upstream-mock:0.38.0
     environment:
       MOCK_LOG_LEVEL: info
       MOCK_SERVER_COLLECTION: all
@@ -59,7 +64,6 @@ services:
 
   redis:
     image: redis:7.2.3-alpine3.18
-    restart: always
 
   fcp-defra-id-stub:
     image: defradigital/fcp-defra-id-stub

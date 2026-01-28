@@ -64,27 +64,99 @@ describe('formatValidationErrors', () => {
   })
 
   describe('when the error is not "object.missing"', () => {
+    describe('and there are multiple input fields', () => {
+      beforeEach(() => {
+        errorDetails = [
+          {
+            path: ['businessName'],
+            message: 'Enter business name',
+            type: 'string.empty'
+          },
+          {
+            path: ['address1'],
+            message: 'Enter address line 1',
+            type: 'string.max'
+          }
+        ]
+      })
+
+      test('should format validation errors correctly', () => {
+        const result = formatValidationErrors(errorDetails)
+
+        expect(result).toEqual({
+          businessName: { text: 'Enter business name' },
+          address1: { text: 'Enter address line 1' }
+        })
+      })
+    })
+
+    describe('and there are multiple errors on one input field', () => {
+      beforeEach(() => {
+        errorDetails = [
+          {
+            path: ['businessName'],
+            message: 'Enter business name',
+            type: 'string.empty'
+          },
+          {
+            path: ['businessName'],
+            message: 'Business name must be at least 1 character long',
+            type: 'string.min'
+          }
+        ]
+      })
+
+      test('should only return back the first error formatted', () => {
+        const result = formatValidationErrors(errorDetails)
+
+        expect(result).toEqual({
+          businessName: { text: 'Enter business name' }
+        })
+      })
+    })
+  })
+
+  describe('and the error applies to multiple related fields (e.g day, month, year)', () => {
     beforeEach(() => {
       errorDetails = [
         {
-          path: ['businessName'],
-          message: 'Enter business name',
-          type: 'string.empty'
-        },
-        {
-          path: ['address1'],
-          message: 'Enter address line 1',
-          type: 'string.max'
+          path: ['day', 'month', 'year'],
+          message: 'Enter a valid date of birth',
+          type: 'dob.invalid'
         }
       ]
     })
 
-    test('should format validation errors correctly', () => {
+    test('should apply the same error message to each related field', () => {
       const result = formatValidationErrors(errorDetails)
 
       expect(result).toEqual({
-        businessName: { text: 'Enter business name' },
-        address1: { text: 'Enter address line 1' }
+        day: { text: 'Enter a valid date of birth' },
+        month: { text: 'Enter a valid date of birth' },
+        year: { text: 'Enter a valid date of birth' }
+      })
+    })
+
+    test('should not overwrite existing field errors', () => {
+      const preExistingErrors = [
+        {
+          path: ['day'],
+          message: 'Day is missing',
+          type: 'dob.missingDay'
+        },
+        {
+          path: ['day', 'month', 'year'],
+          message: 'Enter a valid date of birth',
+          type: 'dob.invalid'
+        }
+      ]
+
+      const result = formatValidationErrors(preExistingErrors)
+
+      expect(result).toEqual({
+        day: { text: 'Day is missing' },
+        month: { text: 'Enter a valid date of birth' },
+        year: { text: 'Enter a valid date of birth' }
       })
     })
   })

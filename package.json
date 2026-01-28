@@ -1,6 +1,6 @@
 {
   "name": "fcp-sfd-frontend",
-  "version": "0.60.0",
+  "version": "0.129.0",
   "description": "SFD Frontend",
   "sideEffects": false,
   "main": "src/index.js",
@@ -67,7 +67,7 @@
     "cssnano-preset-default": "7.0.6",
     "date-fns": "4.1.0",
     "global-agent": "3.0.0",
-    "govuk-frontend": "5.7.1",
+    "govuk-frontend": "5.13.0",
     "graphql": "16.11.0",
     "hapi-pino": "12.1.0",
     "hapi-pulse": "3.0.1",
@@ -75,7 +75,9 @@
     "https-proxy-agent": "7.0.6",
     "ioredis": "5.4.1",
     "jwk-to-pem": "2.0.7",
+    "moment": "2.30.1",
     "nunjucks": "3.2.4",
+    "osdatahub": "0.2.2",
     "pino": "9.5.0",
     "pino-pretty": "13.0.0",
     "undici": "6.21.3"

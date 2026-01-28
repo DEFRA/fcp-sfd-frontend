@@ -6,7 +6,6 @@ import { defraIdConfig } from './defra-id.js'
 import { dalConfig } from './dal.js'
 import { featureToggleConfig } from './feature-toggle.js'
 import { osPlacesConfig } from './os-places.js'
-import { servicesConfig } from './services.js'
 
 const config = convict({
   ...serverConfig,
@@ -15,8 +14,7 @@ const config = convict({
   ...defraIdConfig,
   ...dalConfig,
   ...osPlacesConfig,
-  ...featureToggleConfig,
-  ...servicesConfig
+  ...featureToggleConfig
 })
 
 config.validate({ allowed: 'strict' })

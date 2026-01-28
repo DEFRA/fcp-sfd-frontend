@@ -1,5 +1,15 @@
 /**
- * Validates personal details against the personal details schema.
+ * Validates personal details against the personal details schemas.
+ *
+ * Personal details are first mapped into a flat structure that mirrors the
+ * validation schemas. Each section-specific Joi schema (e.g. name, date of birth,
+ * phone, email, and optionally address) is then validated individually rather
+ * than being combined into a single schema.
+ *
+ * Schemas are validated separately to ensure all custom validation logic runs
+ * correctly. In particular, the date of birth schema includes custom validation
+ * to check for real and valid dates, which may not run reliably when schemas
+ * are combined using `Joi.concat`.
  *
  * If validation passes:
  * - `hasValidPersonalDetails` is `true`
@@ -8,7 +18,9 @@
  * If validation fails:
  * - `hasValidPersonalDetails` is `false`
  * - `sectionsNeedingUpdate` contains the personal detail sections
- *   that need to be updated (e.g. `name`, `address`, `phone`)
+ *   that need to be updated (e.g. `name`, `dob`, `address`, `phone`)
+ *
+ * Address validation is only performed when no UPRN is present.
  *
  * This service only performs validation.
  * It does not read from or write to session state.
@@ -20,28 +32,51 @@
  */
 
 import { personalDetailsSchema } from '../../schemas/personal/personal-details-schema.js'
-import Joi from 'joi'
 
 const validatePersonalDetailsService = (personalDetails) => {
   const hasUprn = Boolean(personalDetails.address?.lookup?.uprn)
-  const schema = getPersonalDetailsSchema(hasUprn)
-
   const mappedPersonalDetails = mapPersonalDetails(personalDetails, hasUprn)
-  const { error } = schema.validate(mappedPersonalDetails, { abortEarly: false })
 
-  if (!error) {
+  const schemasToValidate = getSchemasToValidate(hasUprn)
+  const errors = []
+
+  for (const { schema } of schemasToValidate) {
+    const result = schema.validate(mappedPersonalDetails, {
+      abortEarly: false,
+      allowUnknown: true
+    })
+
+    if (result.error) {
+      errors.push(...result.error.details)
+    }
+  }
+
+  if (errors.length === 0) {
     return {
       hasValidPersonalDetails: true,
       sectionsNeedingUpdate: []
     }
   }
 
-  const sectionsNeedingUpdate = mapValidationErrorsToSections(error.details)
-
   return {
     hasValidPersonalDetails: false,
-    sectionsNeedingUpdate
+    sectionsNeedingUpdate: mapValidationErrorsToSections(errors)
   }
+}
+
+const getSchemasToValidate = (hasUprn) => {
+  const schemas = [
+    { section: 'name', schema: personalDetailsSchema.name },
+    { section: 'dob', schema: personalDetailsSchema.dob },
+    { section: 'phone', schema: personalDetailsSchema.phone },
+    { section: 'email', schema: personalDetailsSchema.email }
+  ]
+
+  if (!hasUprn) {
+    schemas.push({ section: 'address', schema: personalDetailsSchema.address })
+  }
+
+  return schemas
 }
 
 /**
@@ -74,20 +109,6 @@ const mapPersonalDetails = (personalDetails, hasUprn) => {
   }
 
   return flatPersonalDetails
-}
-
-const getPersonalDetailsSchema = (hasUprn) => {
-  let schema = Joi.object()
-    .concat(personalDetailsSchema.name)
-    .concat(personalDetailsSchema.dob)
-    .concat(personalDetailsSchema.phone)
-    .concat(personalDetailsSchema.email)
-
-  if (!hasUprn) {
-    schema = schema.concat(personalDetailsSchema.address)
-  }
-
-  return schema
 }
 
 /**

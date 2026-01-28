@@ -35,7 +35,7 @@ const personalFixCheckPresenter = (personalDetails) => {
 const formatDob = (dob) => {
   if (dob) {
     const { day, month, year } = dob
-    const personalDob = new Date([`${month}/${day}/${year}`])
+    const personalDob = new Date(`${month}/${day}/${year}`)
 
     return moment(personalDob).format('D MMMM YYYY')
   }

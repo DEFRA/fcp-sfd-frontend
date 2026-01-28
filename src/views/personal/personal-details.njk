@@ -16,8 +16,8 @@
         {{ govukNotificationBanner({
           type: "success",
           titleText: notification.title,
-          text: notification.text
-        }) }}
+          html: notification.html or notification.text
+        })}}
       {% endif %}
 
     <span class="govuk-caption-l text-wrap-no-hyphen">{{userName}}</span>

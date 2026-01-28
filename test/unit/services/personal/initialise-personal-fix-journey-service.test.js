@@ -10,7 +10,13 @@ describe('initialisePersonalFixJourneyService', () => {
 
   beforeEach(() => {
     sessionData = {
-      sectionsNeedingUpdate: ['email', 'name', 'phone']
+      sectionsNeedingUpdate: ['email', 'name', 'phone'],
+      personalFixUpdates: {
+        name: {
+          first: 'John',
+          last: 'Doe'
+        }
+      }
     }
 
     yar = {
@@ -41,6 +47,12 @@ describe('initialisePersonalFixJourneyService', () => {
     initialisePersonalFixJourneyService(yar)
 
     expect(sessionData.sectionsNeedingUpdate).toBeUndefined()
+  })
+
+  test('removes personalFixUpdates from session data', () => {
+    initialisePersonalFixJourneyService(yar)
+
+    expect(sessionData.personalFixUpdates).toBeUndefined()
   })
 
   test('stores the source when provided', () => {

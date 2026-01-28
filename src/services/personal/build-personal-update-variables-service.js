@@ -36,8 +36,8 @@ const buildPhoneInput = (crn, personalDetails) => {
   const baseContact = personalDetails.contact
   const changedPhone = personalDetails.changePersonalPhoneNumbers
 
-  let landline = baseContact.telephone ?? null
-  let mobile = baseContact.mobile ?? null
+  let landline = baseContact?.telephone ?? null
+  let mobile = baseContact?.mobile ?? null
 
   if (changedPhone) {
     landline = changedPhone.personalTelephone ?? null
@@ -54,7 +54,7 @@ const buildPhoneInput = (crn, personalDetails) => {
 }
 
 const buildEmailInput = (crn, personalDetails) => {
-  let emailAddress = personalDetails.contact.email
+  let emailAddress = personalDetails.contact?.email
 
   if (personalDetails.changePersonalEmail) {
     emailAddress = personalDetails.changePersonalEmail.personalEmail

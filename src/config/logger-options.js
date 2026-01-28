@@ -5,6 +5,7 @@ import { config } from './index.js'
 const logConfig = config.get('server.log')
 const serviceName = config.get('server.serviceName')
 const serviceVersion = config.get('server.serviceVersion')
+const isLocal = config.get('server.isDevelopment')
 
 const formatters = {
   ecs: {
@@ -18,12 +19,24 @@ const formatters = {
 
 export const loggerOptions = {
   enabled: logConfig.enabled,
-  ignorePaths: ['/health'],
+  ignorePaths: isLocal ? ['/health', '/public', '/favicon.ico'] : ['/health'],
   redact: {
     paths: logConfig.redact,
     remove: true
   },
   level: logConfig.level,
+    // Local development logger settings
+  ...(isLocal && {
+    serializers: {
+      req: req => ({
+        method: req.method,
+        url: req.url
+      }),
+      res: res => ({
+        statusCode: res.statusCode
+      })
+    }
+  }),
   ...formatters[logConfig.format],
   nesting: true,
   mixin: () => {

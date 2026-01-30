@@ -73,6 +73,8 @@ services:
       retries: 5
       start_period: 3s
     environment:
-      AUTH_OVERRIDE_FILE: defra-id.data.json
+      AUTH_MODE: ${AUTH_MODE}
+      AUTH_OVERRIDE: ${AUTH_OVERRIDE}
+      AUTH_OVERRIDE_FILE: ${AUTH_OVERRIDE_FILE}
     volumes:
       - ./defra-id.data.json:/data/defra-id.data.json

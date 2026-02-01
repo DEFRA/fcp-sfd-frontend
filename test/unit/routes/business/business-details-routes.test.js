@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
+import { checkBusinessPermissionGroupService } from '../../../../src/services/business/check-business-permission-group-service.js'
 
 // Test helpers
 import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
@@ -19,6 +20,10 @@ vi.mock('../../../../src/services/business/fetch-business-details-service.js', (
 
 vi.mock('../../../../src/presenters/business/business-details-presenter.js', () => ({
   businessDetailsPresenter: vi.fn()
+}))
+
+vi.mock('../../../../src/services/business/check-business-permission-group-service.js', () => ({
+  checkBusinessPermissionGroupService: vi.fn()
 }))
 
 describe('business details', () => {
@@ -52,6 +57,7 @@ describe('business details', () => {
         pageData = getPageData()
         fetchBusinessDetailsService.mockResolvedValue(getMockData())
         businessDetailsPresenter.mockReturnValue(pageData)
+        checkBusinessPermissionGroupService.mockReturnValue({ fullPermission: true, amendPermission: false, viewPermission: false })
       })
 
       test('it has the correct path and auth scope configured', () => {
@@ -69,7 +75,8 @@ describe('business details', () => {
         await getBusinessDetails.handler(request, h)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, request.auth.credentials.scope)
+        expect(checkBusinessPermissionGroupService).toHaveBeenCalledWith(request.auth.credentials.scope)
+        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, { fullPermission: true, amendPermission: false, viewPermission: false })
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
     })

@@ -14,28 +14,28 @@ import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/busin
 
 const checkBusinessPermissionGroupService = (permissionLevels) => {
   const fullPermission = permissionLevels.some(permission => FULL_PERMISSIONS.includes(permission))
-    if (fullPermission) {
-      return {
-        fullPermission,
-        viewPermission: false,
-        amendPermission: false
-      }
-    }
-
-    const amendPermission = permissionLevels.some(permission => AMEND_PERMISSIONS.includes(permission))
-    if (amendPermission) {
-      return {
-        fullPermission: false,
-        viewPermission: false,
-        amendPermission
-      }
-    }
-
+  if (fullPermission) {
     return {
-      amendPermission,
       fullPermission,
-      viewPermission: true
+      viewPermission: false,
+      amendPermission: false
     }
+  }
+
+  const amendPermission = permissionLevels.some(permission => AMEND_PERMISSIONS.includes(permission))
+  if (amendPermission) {
+    return {
+      fullPermission: false,
+      viewPermission: false,
+      amendPermission
+    }
+  }
+
+  return {
+    amendPermission,
+    fullPermission,
+    viewPermission: true
+  }
 }
 
 export {

@@ -10,7 +10,25 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 describe('businessDetailsPresenter', () => {
   let yar
   let data
-  let permission = ['view']
+  let permissionGroup
+
+  const amendPermissionGroup = {
+    fullPermission: false,
+    amendPermission: true,
+    viewPermission: false
+  }
+
+  const viewPermissionGroup = {
+    fullPermission: false,
+    amendPermission: false,
+    viewPermission: true
+  }
+
+  const fullPermissionGroup = {
+    fullPermission: true,
+    amendPermission: false,
+    viewPermission: false
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -22,12 +40,13 @@ describe('businessDetailsPresenter', () => {
     yar = {
       flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }])
     }
+
+    permissionGroup = viewPermissionGroup
   })
 
   describe('when provided with business details data', () => {
     test('it correctly presents the data', () => {
-      const result = businessDetailsPresenter(data, yar, permission)
-
+      const result = businessDetailsPresenter(data, yar, permissionGroup)
       expect(result).toEqual({
         backLink: {
           text: `Back to ${data.info.businessName}`,
@@ -67,40 +86,66 @@ describe('businessDetailsPresenter', () => {
   })
 
   describe('the "pageTitle" property', () => {
-    test('returns "View and update your business details" when user has amend or full permission', () => {
-      const result = businessDetailsPresenter(data, yar, ['BUSINESS_DETAILS:AMEND'])
+    describe('when the permission group is view only', () => {
+      test('returns "View business details" when user has only view permission', () => {
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
-      expect(result.pageTitle).toEqual('View and update your business details')
+        expect(result.pageTitle).toEqual('View business details')
+      })
     })
 
-    test('returns "View business details" when user has only view permission', () => {
-      const result = businessDetailsPresenter(data, yar, ['view'])
+    describe('when the permission group includes amend or full permission', () => {
+      beforeEach(() => {
+        permissionGroup = amendPermissionGroup
+      })
 
-      expect(result.pageTitle).toEqual('View business details')
+      test('returns "View and update your business details" when user has amend or full permission', () => {
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
+
+        expect(result.pageTitle).toEqual('View and update your business details')
+      })
     })
   })
 
   describe('the "permissionsText" property', () => {
-    test('returns amend-level permissions text when user has amend permission', () => {
-      const result = businessDetailsPresenter(data, yar, ['BUSINESS_DETAILS:AMEND'])
+    describe('when the user has amend permission', () => {
+      beforeEach(() => {
+        permissionGroup = amendPermissionGroup
+      })
 
-      expect(result.permissionsText).toEqual(
-        'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
-      )
+      test('returns amend-level permissions text', () => {
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
+
+        expect(result.permissionsText).toEqual(
+          'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
+        )
+      })
     })
 
-    test('returns view-level permissions text when user has only view permission', () => {
-      const result = businessDetailsPresenter(data, yar, ['view'])
+    describe('when the user has view-only permission', () => {
+      beforeEach(() => {
+        permissionGroup = viewPermissionGroup
+      })
 
-      expect(result.permissionsText).toEqual(
-        'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
-      )
+      test('returns view-level permissions text', () => {
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
+
+        expect(result.permissionsText).toEqual(
+          'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
+        )
+      })
     })
 
-    test('returns null when user has full permission', () => {
-      const result = businessDetailsPresenter(data, yar, ['BUSINESS_DETAILS:FULL_PERMISSION'])
+    describe('when the user has full permission', () => {
+      beforeEach(() => {
+        permissionGroup = fullPermissionGroup
+      })
 
-      expect(result.permissionsText).toBeNull()
+      test('returns null', () => {
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
+
+        expect(result.permissionsText).toBeNull()
+      })
     })
   })
 
@@ -108,7 +153,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the businessName property is missing', () => {
       test('it should return the text "Back"', () => {
         data.info.businessName = null
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.backLink.text).toEqual('Back')
       })
@@ -120,7 +165,7 @@ describe('businessDetailsPresenter', () => {
       test('it should return the actual values', () => {
         data.contact.landline = '01234567890'
         data.contact.mobile = '07123456789'
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.businessTelephone.telephone).toEqual('01234567890')
         expect(result.businessTelephone.mobile).toEqual('07123456789')
@@ -130,7 +175,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the telephone property is missing', () => {
       test('it should return the text "Not added"', () => {
         data.contact.landline = null
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.businessTelephone.telephone).toEqual('Not added')
       })
@@ -138,7 +183,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the businessMobile property is missing', () => {
       test('it should return the text "Not added"', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.businessTelephone.mobile).toEqual('Not added')
       })
@@ -149,7 +194,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.vatNumber).toEqual('No number added')
       })
@@ -166,7 +211,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return an array of CPH numbers', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.countyParishHoldingNumbers).toEqual(['12/123/1234', '45/678/9012'])
       })
@@ -178,7 +223,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return an array of CPH numbers', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.countyParishHoldingNumbers).toEqual([])
       })
@@ -194,7 +239,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should filter out incorrect values', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.countyParishHoldingNumbers).toEqual(['123/456/7890'])
       })
@@ -208,7 +253,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) number"', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
       })
@@ -220,7 +265,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) number"', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
       })
@@ -235,7 +280,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) numbers"', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) numbers')
       })
@@ -246,7 +291,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.traderNumber = null
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.tradeNumber).toEqual(null)
       })
@@ -257,7 +302,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vendorNumber = null
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.vendorRegistrationNumber).toEqual(null)
       })
@@ -268,7 +313,7 @@ describe('businessDetailsPresenter', () => {
     describe('when yar is falsey', () => {
       test('it should return null', () => {
         yar = null
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.notification).toEqual(null)
       })
@@ -282,7 +327,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return userName as null', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.userName).toEqual(null)
       })
@@ -291,8 +336,12 @@ describe('businessDetailsPresenter', () => {
 
   describe('the "changeLinks" property', () => {
     describe('when the permission level is less than full and amend', () => {
+      beforeEach(() => {
+        permissionGroup = viewPermissionGroup
+      })
+
       test('it returns an empty object', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.changeLinks).toEqual({})
       })
@@ -300,11 +349,11 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the permission level is amend', () => {
       beforeEach(() => {
-        permission = ['BUSINESS_DETAILS:AMEND']
+        permissionGroup = amendPermissionGroup
       })
 
       test('returns the correct change links', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.changeLinks).toEqual({
           businessAddress: {
@@ -339,14 +388,14 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('sets the amend permission property to true', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.changeLinks.amendPermission).toEqual(true)
       })
 
       test('returns the correct text if there is no landline of mobile', () => {
         delete data.contact.landline
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.changeLinks.businessTelephone.items[0].text).toEqual('Add')
       })
@@ -354,12 +403,12 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the permission level is full', () => {
       beforeEach(() => {
-        permission = ['BUSINESS_DETAILS:FULL_PERMISSION']
+        permissionGroup = fullPermissionGroup
       })
 
       describe('and a vat number is present', () => {
         test('returns the correct change links', () => {
-          const result = businessDetailsPresenter(data, yar, permission)
+          const result = businessDetailsPresenter(data, yar, permissionGroup)
 
           expect(result.changeLinks).toEqual({
             businessName: {
@@ -438,7 +487,7 @@ describe('businessDetailsPresenter', () => {
       describe('and a vat number is not present', () => {
         test('returns the correct change links', () => {
           delete data.info.vat
-          const result = businessDetailsPresenter(data, yar, permission)
+          const result = businessDetailsPresenter(data, yar, permissionGroup)
 
           expect(result.changeLinks.businessVatNumber).toEqual({
             items: [
@@ -453,7 +502,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('sets the amend permission property to true', () => {
-        const result = businessDetailsPresenter(data, yar, permission)
+        const result = businessDetailsPresenter(data, yar, permissionGroup)
 
         expect(result.changeLinks.fullPermission).toEqual(true)
       })

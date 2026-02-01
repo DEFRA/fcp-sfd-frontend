@@ -50,7 +50,7 @@ describe('validateBusinessDetailsService', () => {
     beforeEach(() => {
       businessDetails.address.lookup.uprn = null
       businessDetails.address.manual.line1 = ''
-      businessDetails.address.postcode= ''
+      businessDetails.address.postcode = ''
     })
 
     test('only returns the section once', () => {

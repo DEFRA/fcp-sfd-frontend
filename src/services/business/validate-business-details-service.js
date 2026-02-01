@@ -70,7 +70,7 @@ const getSchemasToValidate = (hasUprn, hasVat) => {
     { schema: businessDetailsSchema.email }
   ]
 
-  if(hasVat) {
+  if (hasVat) {
     schemas.push({ schema: businessDetailsSchema.vat })
   }
 
@@ -92,7 +92,7 @@ const mapBusinessDetails = (businessDetails, hasUprn) => {
     businessName: businessDetails.info?.businessName ?? '',
     businessEmail: businessDetails.contact?.email ?? '',
     businessTelephone: businessDetails.contact?.landline ?? '',
-    businessMobile: businessDetails.contact?.mobile ?? '',
+    businessMobile: businessDetails.contact?.mobile ?? ''
   }
 
   // Only include VAT if provided

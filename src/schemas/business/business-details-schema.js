@@ -21,5 +21,5 @@ export const businessDetailsSchema = {
   address: addressSchema,
   phone: businessPhoneSchema,
   email: businessEmailSchema,
-  vat: businessVatSchema,
+  vat: businessVatSchema
 }

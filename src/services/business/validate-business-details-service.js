@@ -31,51 +31,35 @@
  */
 
 import { businessDetailsSchema } from '../../schemas/business/business-details-schema.js'
+import { validateDetailsService } from '../validate-details-service.js'
 
 const validateBusinessDetailsService = (businessDetails) => {
   const hasUprn = Boolean(businessDetails.address?.lookup?.uprn)
   const mappedBusinessDetails = mapBusinessDetails(businessDetails, hasUprn)
 
   const schemasToValidate = getSchemasToValidate(hasUprn, businessDetails.info?.vat)
-  const errors = []
 
-  for (const { schema } of schemasToValidate) {
-    const result = schema.validate(mappedBusinessDetails, {
-      abortEarly: false,
-      allowUnknown: true
-    })
-
-    if (result.error) {
-      errors.push(...result.error.details)
-    }
-  }
-
-  if (errors.length === 0) {
-    return {
-      hasValidBusinessDetails: true,
-      sectionsNeedingUpdate: []
-    }
-  }
+  const { isValid: hasValidBusinessDetails, sectionsNeedingUpdate } = validateDetailsService(schemasToValidate, mappedBusinessDetails)
 
   return {
-    hasValidBusinessDetails: false,
-    sectionsNeedingUpdate: mapValidationErrorsToSections(errors)
+    hasValidBusinessDetails,
+    sectionsNeedingUpdate
   }
 }
 
 const getSchemasToValidate = (hasUprn, hasVat) => {
   const schemas = [
-    { schema: businessDetailsSchema.name },
-    { schema: businessDetailsSchema.phone },
-    { schema: businessDetailsSchema.email }
+    businessDetailsSchema.name,
+    businessDetailsSchema.phone,
+    businessDetailsSchema.email
   ]
 
   if (hasVat) {
-    schemas.push({ schema: businessDetailsSchema.vat })
+    schemas.push(businessDetailsSchema.vat)
   }
 
   if (!hasUprn) {
-    schemas.push({ schema: businessDetailsSchema.address })
+    schemas.push(businessDetailsSchema.address)
   }
 
   return schemas
@@ -111,48 +95,6 @@ const mapBusinessDetails = (businessDetails, hasUprn) => {
   }
 
   return flatBusinessDetails
-}
-
-/**
- * Turns validation errors into a list of form sections with problems.
- *
- * If multiple errors relate to the same field, the field is only
- * returned once.
- */
-const mapValidationErrorsToSections = (errorDetails) => {
-  const errorFieldToSectionMap = {
-    vatNumber: 'vat',
-    businessName: 'name',
-    businessEmail: 'email',
-    businessTelephone: 'phone',
-    businessMobile: 'phone',
-    address1: 'address',
-    address2: 'address',
-    address3: 'address',
-    city: 'address',
-    county: 'address',
-    postcode: 'address',
-    country: 'address'
-  }
-
-  // Create a set to store unique error paths
-  const sections = new Set()
-
-  for (const { path, type } of errorDetails) {
-    const fieldName = path[0]
-
-    if (errorFieldToSectionMap[fieldName]) {
-      sections.add(errorFieldToSectionMap[fieldName])
-    }
-
-    // Flat-schema phone rule: neither telephone nor mobile provided
-    if (path.length === 0 && type === 'object.missing') {
-      sections.add('phone')
-    }
-  }
-
-  // Convert the set of unique fields into an array
-  return Array.from(sections)
 }
 
 export {

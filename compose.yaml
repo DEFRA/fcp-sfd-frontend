@@ -75,6 +75,6 @@ services:
     environment:
       AUTH_MODE: ${AUTH_MODE}
       AUTH_OVERRIDE: ${AUTH_OVERRIDE:-}
-      AUTH_OVERRIDE_FILE: ${AUTH_OVERRIDE_FILE}
+      AUTH_OVERRIDE_FILE: ${AUTH_OVERRIDE_FILE:-defra-id.data.json}
     volumes:
       - ./defra-id.data.json:/data/defra-id.data.json

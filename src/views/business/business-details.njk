@@ -18,8 +18,8 @@
         {{ govukNotificationBanner({
           type: "success",
           titleText: notification.title,
-          text: notification.text
-        }) }}
+          html: notification.html or notification.text
+        })}}
       {% endif %}
 
     <h1 class="govuk-heading-l">

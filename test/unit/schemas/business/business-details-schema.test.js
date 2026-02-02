@@ -11,6 +11,5 @@ describe('business details schema', () => {
     expect(businessDetailsSchema).toHaveProperty('phone')
     expect(businessDetailsSchema).toHaveProperty('email')
     expect(businessDetailsSchema).toHaveProperty('vat')
-    expect(businessDetailsSchema).toHaveProperty('vatRemove')
   })
 })

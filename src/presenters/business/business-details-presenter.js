@@ -4,10 +4,8 @@
  */
 
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
-import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
-const businessDetailsPresenter = (data, yar, permissionLevels) => {
-  const permissionGroup = checkPermissionType(permissionLevels)
+const businessDetailsPresenter = (data, yar, permissionGroup) => {
   const countyParishHoldingNumbers = formatCph(data.info.countyParishHoldingNumbers)
 
   return {
@@ -36,32 +34,6 @@ const businessDetailsPresenter = (data, yar, permissionLevels) => {
     businessType: data.info.type,
     changeLinks: setChangeLinks(data, permissionGroup),
     permissionsText: setPermissionsText(permissionGroup)
-  }
-}
-
-const checkPermissionType = (permissionLevels) => {
-  const fullPermission = permissionLevels.some(permission => FULL_PERMISSIONS.includes(permission))
-  if (fullPermission) {
-    return {
-      fullPermission,
-      viewPermission: false,
-      amendPermission: false
-    }
-  }
-
-  const amendPermission = permissionLevels.some(permission => AMEND_PERMISSIONS.includes(permission))
-  if (amendPermission) {
-    return {
-      fullPermission: false,
-      viewPermission: false,
-      amendPermission
-    }
-  }
-
-  return {
-    amendPermission,
-    fullPermission,
-    viewPermission: true
   }
 }
 

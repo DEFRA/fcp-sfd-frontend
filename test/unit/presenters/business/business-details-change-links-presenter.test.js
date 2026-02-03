@@ -34,10 +34,12 @@ describe('businessDetailsChangeLinksPresenter', () => {
   })
 
   describe('when the user has view permission', () => {
-    test('it returns an empty object', () => {
+    test('it returns no change links and vat is null', () => {
       const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-      expect(result).toEqual({})
+      expect(result).toEqual({
+        vat: null
+      })
     })
   })
 
@@ -57,7 +59,8 @@ describe('businessDetailsChangeLinksPresenter', () => {
         expect(result).toEqual({
           businessAddress: BUSINESS_CHANGE_LINKS.businessAddress,
           businessTelephone: BUSINESS_CHANGE_LINKS.businessTelephone,
-          businessEmail: BUSINESS_CHANGE_LINKS.businessEmail
+          businessEmail: BUSINESS_CHANGE_LINKS.businessEmail,
+          vat: null
         })
       })
     })
@@ -73,7 +76,8 @@ describe('businessDetailsChangeLinksPresenter', () => {
         expect(result).toEqual({
           businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
           businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
-          businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission
+          businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+          vat: null
         })
       })
     })
@@ -90,7 +94,8 @@ describe('businessDetailsChangeLinksPresenter', () => {
         expect(result).toEqual({
           businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
           businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
-          businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission
+          businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+          vat: null
         })
       })
     })
@@ -107,37 +112,58 @@ describe('businessDetailsChangeLinksPresenter', () => {
         sectionsNeedingUpdate = []
       })
 
-      test('it returns change links for address, phone, email, and business name', () => {
+      test('it returns normal links and vat is normal', () => {
         const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result).toEqual({
           businessAddress: BUSINESS_CHANGE_LINKS.businessAddress,
           businessTelephone: BUSINESS_CHANGE_LINKS.businessTelephone,
           businessEmail: BUSINESS_CHANGE_LINKS.businessEmail,
-          businessName: BUSINESS_CHANGE_LINKS.businessName
+          businessName: BUSINESS_CHANGE_LINKS.businessName,
+          vat: 'normal'
         })
       })
     })
 
     describe('and the interrupter feature toggle is ON', () => {
       describe('when a single section needs fixing', () => {
-        beforeEach(() => {
-          hasValidBusinessDetails = false
-          sectionsNeedingUpdate = ['phone']
+        describe('when VAT is the single invalid section', () => {
+          beforeEach(() => {
+            hasValidBusinessDetails = false
+            sectionsNeedingUpdate = ['vat']
+          })
+
+          test('vat remains normal', () => {
+            const result = businessDetailsChangeLinksPresenter(
+              permissionLevel,
+              hasValidBusinessDetails,
+              sectionsNeedingUpdate
+            )
+
+            expect(result.vat).toBe('normal')
+          })
         })
 
-        test('the single invalid section link points to the normal change page', () => {
-          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+        describe('when a non-VAT section is the single invalid section', () => {
+          beforeEach(() => {
+            hasValidBusinessDetails = false
+            sectionsNeedingUpdate = ['phone']
+          })
 
-          expect(result.businessTelephone).toEqual(BUSINESS_CHANGE_LINKS.businessTelephone)
-        })
+          test('the single invalid section link points to the normal change page', () => {
+            const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        test('all other sections point to the business-fix page', () => {
-          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+            expect(result.businessTelephone).toEqual(BUSINESS_CHANGE_LINKS.businessTelephone)
+          })
 
-          expect(result.businessAddress).toEqual('/business-fix?source=address')
-          expect(result.businessEmail).toEqual('/business-fix?source=email')
-          expect(result.businessName).toEqual('/business-fix?source=name')
+          test('all other sections point to the business-fix page', () => {
+            const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+            expect(result.businessAddress).toEqual('/business-fix?source=address')
+            expect(result.businessEmail).toEqual('/business-fix?source=email')
+            expect(result.businessName).toEqual('/business-fix?source=name')
+            expect(result.vat).toEqual('interrupter')
+          })
         })
       })
 
@@ -154,6 +180,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
           expect(result.businessTelephone).toEqual('/business-fix?source=phone')
           expect(result.businessEmail).toEqual('/business-fix?source=email')
           expect(result.businessName).toEqual('/business-fix?source=name')
+          expect(result.vat).toEqual('interrupter')
         })
       })
 
@@ -165,10 +192,12 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
         test('the name link points to normal change page, others point to business-fix', () => {
           const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
           expect(result.businessAddress).toBe('/business-fix?source=address')
           expect(result.businessTelephone).toBe('/business-fix?source=phone')
           expect(result.businessEmail).toBe('/business-fix?source=email')
+          expect(result.vat).toEqual('interrupter')
         })
       })
     })
@@ -192,6 +221,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
           expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)
           expect(result.businessEmail).toBe(BUSINESS_CHANGE_LINKS.businessEmail)
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
+          expect(result.vat).toBe('normal')
         })
       })
 
@@ -208,6 +238,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
           expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)
           expect(result.businessEmail).toBe(BUSINESS_CHANGE_LINKS.businessEmail)
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
+          expect(result.vat).toBe('normal')
         })
       })
     })

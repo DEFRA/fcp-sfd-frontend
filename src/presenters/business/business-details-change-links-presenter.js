@@ -15,8 +15,12 @@
  *   forcing the user to fix that specific section before they’re allowed to
  *   change anything else.
  *
- * Note: VAT is not included here because its logic is more complex and handled separately
- * in the businessDetailsPresenter due to add/change/remove options.
+ * VAT handling:
+ * - VAT does not return a direct link.
+ * - Instead, this presenter returns an instruction describing how VAT can
+ *   be changed (`normal`, `interrupter`, or `null`).
+ * - The businessDetailsPresenter uses this instruction to build the final
+ *   VAT display and change links (due to complexity of the VAT display).
  *
  * @module businessDetailsChangeLinksPresenter
  */
@@ -28,21 +32,25 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
   const interrupter = getInterrupterState(hasValidBusinessDetails, sectionsNeedingUpdate)
 
   if (permissionLevel === 'view') {
-    return {}
+    return {
+      vat: null
+    }
   }
 
   if (hasBlockedSections(permissionLevel, sectionsNeedingUpdate)) {
     return {
       businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
       businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
-      businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission
+      businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+      vat: null
     }
   }
 
   const links = {
     businessAddress: resolveChangeLink(interrupter, 'address', BUSINESS_CHANGE_LINKS.businessAddress),
     businessTelephone: resolveChangeLink(interrupter, 'phone', BUSINESS_CHANGE_LINKS.businessTelephone),
-    businessEmail: resolveChangeLink(interrupter, 'email', BUSINESS_CHANGE_LINKS.businessEmail)
+    businessEmail: resolveChangeLink(interrupter, 'email', BUSINESS_CHANGE_LINKS.businessEmail),
+    vat: resolveVatLink(permissionLevel, interrupter)
   }
 
   if (permissionLevel === 'full') {
@@ -50,6 +58,24 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
   }
 
   return links
+}
+
+/**
+ * Determines whether VAT change links should be:
+ * - null - user cannot change VAT
+ * - 'normal' - direct add/change/remove links
+ * - 'interrupter' - forced via business-fix
+ */
+const resolveVatLink = (permissionLevel, interrupter) => {
+  if (permissionLevel !== 'full') {
+    return null
+  }
+
+  if (!interrupter.active) {
+    return 'normal'
+  }
+
+  return interrupter.singleSection === 'vat' ? 'normal' : 'interrupter'
 }
 
 /**
@@ -72,9 +98,8 @@ const resolveChangeLink = (interrupter, section, normalLink) => {
 }
 
 /**
- * Checks if the user has blocked sections based on their permission level
- * If a user has a lower permission level of amend and the invalid data is for name (which require full
- * permissions to update) then they are blocked from making any changes
+ * Users with amend permission are blocked if invalid sections include ones
+ * they are not allowed to update.
  */
 const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
   if (permissionLevel === 'amend') {
@@ -85,7 +110,9 @@ const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
 }
 
 /**
- * The business details interrupter is a feature toggle that forces users to fix
+ * Determines whether the business details interrupter is active.
+ *
+ * The business details interrupter is on a feature toggle that forces users to fix
  * invalid business details before they can proceed to change other details.
  *
  * The object returned by this function has two properties:

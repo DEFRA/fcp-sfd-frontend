@@ -31,7 +31,7 @@
     </p>
 
     {% set formattedAddress %}
-      {% for addressLine in address %}
+      {% for addressLine in businessAddress.value %}
         <div>{{addressLine}}</div>
       {% endfor %}
     {% endset %}
@@ -62,10 +62,10 @@
     {% endset %}
 
     {% set displayVatNumber %}
-      {% if vatNumber === 'No number added' %}
-        <span class="govuk-hint display-inline">{{ vatNumber }}</span>
+      {% if vatNumber.value === 'No number added' %}
+        <span class="govuk-hint display-inline">{{ vatNumber.value }}</span>
       {% else %}
-        <span>{{ vatNumber }}</span>
+        <span>{{ vatNumber.value }}</span>
       {% endif %}
     {% endset %}
 
@@ -80,9 +80,17 @@
             text: "Business name"
           },
           value: {
-            text: businessName
+            text: businessName.value
           },
-          actions: changeLinks.businessName
+          actions: {
+            items: [
+              {
+                href: businessName.changeLink,
+                text: businessName.action,
+                visuallyHiddenText: "Business name"
+              }
+            ]
+          }
         },
         {
           key: {
@@ -91,7 +99,15 @@
           value: {
             html: formattedAddress
           },
-          actions: changeLinks.businessAddress
+          actions: {
+            items: [
+              {
+                href: businessAddress.changeLink,
+                text: businessAddress.action,
+                visuallyHiddenText: "Business address"
+              }
+            ]
+          }
         },
         {
           key: {
@@ -100,16 +116,32 @@
           value: {
             html: displayBusinessTelephone
           },
-          actions: changeLinks.businessTelephone
+          actions: {
+            items: [
+              {
+                href: businessTelephone.changeLink,
+                text: businessTelephone.action,
+                visuallyHiddenText: "Business phone numbers"
+              }
+            ]
+          }
         },
         {
           key: {
             text: "Business email address"
           },
           value: {
-            text: businessEmail
+            text: businessEmail.value
           },
-          actions: changeLinks.businessEmail
+          actions: {
+            items: [
+              {
+                href: businessEmail.changeLink,
+                text: businessEmail.action,
+                visuallyHiddenText: "Business email address"
+              }
+            ]
+          }
         }
       ]
     }) }}
@@ -131,7 +163,15 @@
         {
           key: { text: "VAT registration number" },
           value: { html: displayVatNumber },
-          actions: changeLinks.businessVatNumber
+          actions: {
+            items: [
+              {
+                href: vatNumber.changeLink,
+                text: vatNumber.action,
+                visuallyHiddenText: "VAT registration number"
+              }
+            ]
+          }
         }
       ]%}
 
@@ -172,18 +212,34 @@
             text: "Business legal status"
           },
           value: {
-            text: businessLegalStatus
+            text: businessLegalStatus.value
           },
-          actions: changeLinks.businessLegal
+          actions: {
+            items: [
+              {
+                href: businessLegalStatus.changeLink,
+                text: businessLegalStatus.action,
+                visuallyHiddenText: "Business legal status"
+              }
+            ]
+          }
         },
         {
           key: {
             text: "Business type"
           },
           value: {
-            text: businessType
+            text: businessType.value
           },
-          actions: changeLinks.businessType
+          actions: {
+            items: [
+              {
+                href: businessType.changeLink,
+                text: businessType.action,
+                visuallyHiddenText: "Business type"
+              }
+            ]
+          }
         }
       ]
     }) }}

@@ -23,7 +23,7 @@ const getBusinessDetails = {
     }
 
     const permissionGroup = checkBusinessPermissionGroupService(request.auth.credentials.scope)
-    const pageData = businessDetailsPresenter(businessDetails, yar, permissionGroup)
+    const pageData = businessDetailsPresenter(businessDetails, yar, permissionGroup, hasValidBusinessDetails, sectionsNeedingUpdate)
 
     return h.view('business/business-details.njk', pageData)
   }

@@ -36,7 +36,7 @@ describe('businessDetailsPresenter', () => {
     permissionLevel = 'view'
     hasValidBusinessDetails = true
     sectionsNeedingUpdate = []
-    businessDetailsChangeLinksPresenter.mockReturnValue({vat: null})
+    businessDetailsChangeLinksPresenter.mockReturnValue({ vat: null })
   })
 
   describe('when provided with business details data and view permission level', () => {
@@ -54,13 +54,13 @@ describe('businessDetailsPresenter', () => {
         userName: data.customer.userName,
         businessAddress: {
           value: [
-          'THE COACH HOUSE',
-          'STOCKWELL HALL',
-          '7 HAREWOOD AVENUE',
-          'DARLINGTON',
-          'Dorset',
-          'CO9 3LS',
-          'United Kingdom'
+            'THE COACH HOUSE',
+            'STOCKWELL HALL',
+            '7 HAREWOOD AVENUE',
+            'DARLINGTON',
+            'Dorset',
+            'CO9 3LS',
+            'United Kingdom'
           ],
           changeLink: undefined,
           action: 'Change'
@@ -85,7 +85,7 @@ describe('businessDetailsPresenter', () => {
         vatNumber: {
           action: null,
           changeLink: null,
-          value: "GB123456789",
+          value: 'GB123456789'
         },
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
@@ -262,7 +262,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the property is null for view full permission', () => {
       beforeEach(() => {
-        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'normal'})
+        businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
 
       test('it should return "No number added" for value', () => {
@@ -292,7 +292,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the property has a value for full permissions', () => {
       beforeEach(() => {
-        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'normal'})
+        businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
 
       test('it should return the vat number', () => {
@@ -314,7 +314,7 @@ describe('businessDetailsPresenter', () => {
               text: 'Change',
               visuallyHiddenText: 'VAT registration number'
             },
-                        {
+            {
               href: '/business-vat-registration-remove',
               text: 'Remove',
               visuallyHiddenText: 'VAT registration number'
@@ -327,7 +327,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property has a value for full permissions with interrupter', () => {
       beforeEach(() => {
         data.info.vat = 'GB987654321'
-        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'interrupter'})
+        businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
       })
 
       test('it should return the vat number', () => {
@@ -360,7 +360,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null for full permissions with interrupter', () => {
       beforeEach(() => {
         data.info.vat = null
-        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'interrupter'})
+        businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
       })
 
       test('it should return "No number added" for value', () => {
@@ -581,14 +581,14 @@ describe('businessDetailsPresenter', () => {
         expect(result.vatNumber.changeLink).toEqual({
           items: [
             {
-              href: "/business-vat-registration-number-change",
-              text: "Change",
-              visuallyHiddenText: "VAT registration number",
+              href: '/business-vat-registration-number-change',
+              text: 'Change',
+              visuallyHiddenText: 'VAT registration number'
             },
             {
-              href: "/business-vat-registration-remove",
-              text: "Remove",
-              visuallyHiddenText: "VAT registration number",
+              href: '/business-vat-registration-remove',
+              text: 'Remove',
+              visuallyHiddenText: 'VAT registration number'
             }
           ]
         })

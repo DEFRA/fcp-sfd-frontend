@@ -7,7 +7,6 @@ import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { BUSINESS_CHANGE_LINKS } from '../../constants/change-links.js'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 
-
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
   const countyParishHoldingNumbers = formatCph(data.info.countyParishHoldingNumbers)

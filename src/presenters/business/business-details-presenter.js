@@ -4,8 +4,12 @@
  */
 
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
+import { BUSINESS_CHANGE_LINKS } from '../../constants/change-links.js'
+import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 
-const businessDetailsPresenter = (data, yar, permissionGroup) => {
+
+const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
+  const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
   const countyParishHoldingNumbers = formatCph(data.info.countyParishHoldingNumbers)
 
   return {
@@ -14,151 +18,135 @@ const businessDetailsPresenter = (data, yar, permissionGroup) => {
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,
-    pageTitle: permissionGroup.viewPermission ? 'View business details' : 'View and update your business details',
+    pageTitle: permissionLevel === 'view' ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
-    address: formatDisplayAddress(data.address),
-    businessName: data.info.businessName,
+    permissionsText: setPermissionsText(permissionLevel),
+    businessAddress: {
+      value: formatDisplayAddress(data.address),
+      changeLink: changeLinks.businessAddress,
+      action: getActionText(data.address)
+    },
+    businessName: {
+      value: data.info.businessName ?? 'Not added',
+      changeLink: changeLinks.businessName,
+      action: getActionText(data.info.businessName)
+    },
     businessTelephone: {
       telephone: data.contact.landline ?? 'Not added',
-      mobile: data.contact.mobile ?? 'Not added'
+      mobile: data.contact.mobile ?? 'Not added',
+      action: getActionText(data.contact.landline || data.contact.mobile),
+      changeLink: changeLinks.businessTelephone
     },
-    businessEmail: data.contact.email,
+    businessEmail: {
+      value: data.contact.email ?? 'Not added',
+      action: getActionText(data.contact.email),
+      changeLink: changeLinks.businessEmail
+    },
     sbi: data.info.sbi,
-    vatNumber: data.info.vat ?? 'No number added',
+    vatNumber: buildVatDisplay(data.info.vat, changeLinks.vat),
     tradeNumber: data.info.traderNumber ?? null,
     vendorRegistrationNumber: data.info.vendorNumber ?? null,
     countyParishHoldingNumbers,
     countyParishHoldingNumbersText: `County Parish Holding (CPH) number${countyParishHoldingNumbers.length > 1 ? 's' : ''}`,
-    businessLegalStatus: data.info.legalStatus,
-    businessType: data.info.type,
-    changeLinks: setChangeLinks(data, permissionGroup),
-    permissionsText: setPermissionsText(permissionGroup)
+    businessLegalStatus: {
+      value: data.info.legalStatus ?? 'Not added',
+      action: getActionText(data.info.legalStatus),
+      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegal : null
+    },
+    businessType: {
+      value: data.info.type ?? 'Not added',
+      action: getActionText(data.info.type),
+      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessType : null
+    }
   }
 }
 
-const setPermissionsText = (permissionGroup) => {
-  if (permissionGroup.amendPermission) {
+/**
+ * Builds VAT display based on change-link intent.
+ */
+const buildVatDisplay = (vatNumber, vatChangeState) => {
+  const value = vatNumber || 'No number added'
+
+  if (!vatChangeState) {
+    return {
+      value,
+      action: null,
+      changeLink: null
+    }
+  }
+
+  if (vatChangeState === 'interrupter') {
+    if (!vatNumber) {
+      return {
+        value,
+        action: 'Add',
+        changeLink: '/business-fix?source=vat-add'
+      }
+    }
+
+    return {
+      value: vatNumber,
+      action: 'Change',
+      changeLink: {
+        items: [
+          {
+            href: '/business-fix?source=vat-change',
+            text: 'Change',
+            visuallyHiddenText: 'VAT registration number'
+          },
+          {
+            href: '/business-fix?source=vat-remove',
+            text: 'Remove',
+            visuallyHiddenText: 'VAT registration number'
+          }
+        ]
+      }
+    }
+  }
+
+  if (!vatNumber) {
+    return {
+      value,
+      action: 'Add',
+      changeLink: BUSINESS_CHANGE_LINKS.vatNumberAdd
+    }
+  }
+
+  return {
+    value,
+    action: 'Change',
+    changeLink: {
+      items: [
+        {
+          href: BUSINESS_CHANGE_LINKS.vatNumberChange,
+          text: 'Change',
+          visuallyHiddenText: 'VAT registration number'
+        },
+        {
+          href: BUSINESS_CHANGE_LINKS.vatNumberRemove,
+          text: 'Remove',
+          visuallyHiddenText: 'VAT registration number'
+        }
+      ]
+    }
+  }
+}
+
+const getActionText = (value) => {
+  return value ? 'Change' : 'Add'
+}
+
+const setPermissionsText = (permissionLevel) => {
+  if (permissionLevel === 'amend') {
     return 'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
   }
 
-  if (permissionGroup.viewPermission) {
+  if (permissionLevel === 'view') {
     return 'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
   }
 
   return null
-}
-
-const getAmendLinks = (data) => {
-  return {
-    businessAddress: {
-      items: [
-        {
-          href: '/business-address-change',
-          text: 'Change',
-          visuallyHiddenText: 'business address'
-        }
-      ]
-    },
-    businessTelephone: {
-      items: [
-        {
-          href: '/business-phone-numbers-change',
-          text: data.contact.landline || data.contact.mobile ? 'Change' : 'Add',
-          visuallyHiddenText: 'business phone numbers'
-        }
-      ]
-    },
-    businessEmail: {
-      items: [
-        {
-          href: '/business-email-change',
-          text: 'Change',
-          visuallyHiddenText: 'business email address'
-        }
-      ]
-    }
-  }
-}
-
-const getFullPermissionLinks = (data) => {
-  const fullPermissionLinks = {
-    businessName: {
-      items: [
-        {
-          href: '/business-name-change',
-          text: 'Change',
-          visuallyHiddenText: 'business name'
-        }
-      ]
-    },
-    businessLegal: {
-      items: [
-        {
-          href: '/business-legal-status-change',
-          text: 'Change',
-          visuallyHiddenText: 'business legal status'
-        }
-      ]
-    },
-    businessType: {
-      items: [
-        {
-          href: '/business-type-change',
-          text: 'Change',
-          visuallyHiddenText: 'business type'
-        }
-      ]
-    }
-  }
-
-  if (data.info.vat) {
-    fullPermissionLinks.businessVatNumber = {
-      items: [
-        {
-          href: '/business-vat-registration-remove',
-          text: 'Remove',
-          visuallyHiddenText: 'VAT registration number'
-        },
-        {
-          href: '/business-vat-registration-number-change',
-          text: 'Change',
-          visuallyHiddenText: 'VAT registration number'
-        }
-      ]
-    }
-  } else {
-    fullPermissionLinks.businessVatNumber = {
-      items: [
-        {
-          href: '/business-vat-registration-number-change',
-          text: 'Add',
-          visuallyHiddenText: 'VAT registration number'
-        }
-      ]
-    }
-  }
-
-  return fullPermissionLinks
-}
-
-const setChangeLinks = (data, permissionGroup) => {
-  if (permissionGroup.fullPermission) {
-    return {
-      ...getAmendLinks(data),
-      ...getFullPermissionLinks(data),
-      fullPermission: true
-    }
-  }
-
-  if (permissionGroup.amendPermission) {
-    return {
-      ...getAmendLinks(data),
-      amendPermission: true
-    }
-  }
-
-  return {}
 }
 
 const formatCph = (countyParishHoldings) => {

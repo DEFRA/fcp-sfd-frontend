@@ -7,28 +7,20 @@ import { businessDetailsPresenter } from '../../../../src/presenters/business/bu
 // Mock data
 import { mappedData } from '../../../mocks/mock-business-details.js'
 
+// Mock dependencies
+import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/business/business-details-change-links-presenter.js'
+
+// Mock imports
+vi.mock('../../../../src/presenters/business/business-details-change-links-presenter.js', () => ({
+  businessDetailsChangeLinksPresenter: vi.fn()
+}))
+
 describe('businessDetailsPresenter', () => {
   let yar
   let data
-  let permissionGroup
-
-  const amendPermissionGroup = {
-    fullPermission: false,
-    amendPermission: true,
-    viewPermission: false
-  }
-
-  const viewPermissionGroup = {
-    fullPermission: false,
-    amendPermission: false,
-    viewPermission: true
-  }
-
-  const fullPermissionGroup = {
-    fullPermission: true,
-    amendPermission: false,
-    viewPermission: false
-  }
+  let permissionLevel
+  let hasValidBusinessDetails
+  let sectionsNeedingUpdate
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -41,12 +33,16 @@ describe('businessDetailsPresenter', () => {
       flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }])
     }
 
-    permissionGroup = viewPermissionGroup
+    permissionLevel = 'view'
+    hasValidBusinessDetails = true
+    sectionsNeedingUpdate = []
+    businessDetailsChangeLinksPresenter.mockReturnValue({vat: null})
   })
 
-  describe('when provided with business details data', () => {
+  describe('when provided with business details data and view permission level', () => {
     test('it correctly presents the data', () => {
-      const result = businessDetailsPresenter(data, yar, permissionGroup)
+      const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
       expect(result).toEqual({
         backLink: {
           text: `Back to ${data.info.businessName}`,
@@ -56,7 +52,8 @@ describe('businessDetailsPresenter', () => {
         pageTitle: 'View business details',
         metaDescription: 'View and update your business details.',
         userName: data.customer.userName,
-        address: [
+        businessAddress: {
+          value: [
           'THE COACH HOUSE',
           'STOCKWELL HALL',
           '7 HAREWOOD AVENUE',
@@ -64,43 +61,79 @@ describe('businessDetailsPresenter', () => {
           'Dorset',
           'CO9 3LS',
           'United Kingdom'
-        ],
-        businessName: data.info.businessName,
+          ],
+          changeLink: undefined,
+          action: 'Change'
+        },
+        businessName: {
+          value: data.info.businessName,
+          changeLink: undefined,
+          action: 'Change'
+        },
         businessTelephone: {
+          changeLink: undefined,
+          action: 'Change',
           telephone: data.contact.landline,
           mobile: 'Not added'
         },
-        businessEmail: data.contact.email,
+        businessEmail: {
+          value: data.contact.email,
+          changeLink: undefined,
+          action: 'Change'
+        },
         sbi: data.info.sbi,
-        vatNumber: data.info.vat,
+        vatNumber: {
+          action: null,
+          changeLink: null,
+          value: "GB123456789",
+        },
         tradeNumber: data.info.traderNumber,
         vendorRegistrationNumber: data.info.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
         countyParishHoldingNumbersText: 'County Parish Holding (CPH) number',
-        businessLegalStatus: data.info.legalStatus,
-        businessType: data.info.type,
-        changeLinks: {},
+        businessLegalStatus: {
+          value: data.info.legalStatus,
+          action: 'Change',
+          changeLink: null
+        },
+        businessType: {
+          value: data.info.type,
+          action: 'Change',
+          changeLink: null
+        },
         permissionsText: 'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
       })
     })
   })
 
   describe('the "pageTitle" property', () => {
-    describe('when the permission group is view only', () => {
+    describe('when the permissionLevel is view', () => {
       test('returns "View business details" when user has only view permission', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.pageTitle).toEqual('View business details')
       })
     })
 
-    describe('when the permission group includes amend or full permission', () => {
+    describe('when the permission level is amend', () => {
       beforeEach(() => {
-        permissionGroup = amendPermissionGroup
+        permissionLevel = 'amend'
       })
 
       test('returns "View and update your business details" when user has amend or full permission', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.pageTitle).toEqual('View and update your business details')
+      })
+    })
+
+    describe('when the permission level is full', () => {
+      beforeEach(() => {
+        permissionLevel = 'full'
+      })
+
+      test('returns "View and update your business details" when user has amend or full permission', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.pageTitle).toEqual('View and update your business details')
       })
@@ -110,11 +143,11 @@ describe('businessDetailsPresenter', () => {
   describe('the "permissionsText" property', () => {
     describe('when the user has amend permission', () => {
       beforeEach(() => {
-        permissionGroup = amendPermissionGroup
+        permissionLevel = 'amend'
       })
 
       test('returns amend-level permissions text', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.permissionsText).toEqual(
           'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
@@ -122,13 +155,13 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the user has view-only permission', () => {
+    describe('when the user has view permission', () => {
       beforeEach(() => {
-        permissionGroup = viewPermissionGroup
+        permissionLevel = 'view'
       })
 
       test('returns view-level permissions text', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.permissionsText).toEqual(
           'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
@@ -138,11 +171,11 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the user has full permission', () => {
       beforeEach(() => {
-        permissionGroup = fullPermissionGroup
+        permissionLevel = 'full'
       })
 
       test('returns null', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.permissionsText).toBeNull()
       })
@@ -153,7 +186,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the businessName property is missing', () => {
       test('it should return the text "Back"', () => {
         data.info.businessName = null
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.backLink.text).toEqual('Back')
       })
@@ -162,20 +195,29 @@ describe('businessDetailsPresenter', () => {
 
   describe('the "businessTelephone" property', () => {
     describe('when both business telephone and mobile properties have values', () => {
-      test('it should return the actual values', () => {
+      beforeEach(() => {
         data.contact.landline = '01234567890'
         data.contact.mobile = '07123456789'
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+      })
+
+      test('it should return the actual values', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.businessTelephone.telephone).toEqual('01234567890')
         expect(result.businessTelephone.mobile).toEqual('07123456789')
+      })
+
+      test('the action text should be "Change"', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.businessTelephone.action).toEqual('Change')
       })
     })
 
     describe('when the telephone property is missing', () => {
       test('it should return the text "Not added"', () => {
         data.contact.landline = null
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.businessTelephone.telephone).toEqual('Not added')
       })
@@ -183,20 +225,155 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the businessMobile property is missing', () => {
       test('it should return the text "Not added"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.businessTelephone.mobile).toEqual('Not added')
+      })
+    })
+
+    describe('when both telephone and mobile properties are missing', () => {
+      test('the action text should be "Add"', () => {
+        data.contact.landline = null
+        data.contact.mobile = null
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.businessTelephone.action).toEqual('Add')
       })
     })
   })
 
   describe('the "vatNumber" property', () => {
-    describe('when the property is null', () => {
-      test('it should return null', () => {
+    describe('when the property is null for view only permission', () => {
+      test('it should return "No number added" for value', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
-        expect(result.vatNumber).toEqual('No number added')
+        expect(result.vatNumber.value).toEqual('No number added')
+      })
+
+      test('it should return null for action and change link', () => {
+        data.info.vat = null
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.action).toEqual(null)
+        expect(result.vatNumber.changeLink).toEqual(null)
+      })
+    })
+
+    describe('when the property is null for view full permission', () => {
+      beforeEach(() => {
+        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'normal'})
+      })
+
+      test('it should return "No number added" for value', () => {
+        data.info.vat = null
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.value).toEqual('No number added')
+      })
+
+      test('it should return "Add" for action and the change link', () => {
+        data.info.vat = null
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.action).toEqual('Add')
+        expect(result.vatNumber.changeLink).toEqual('/business-vat-registration-number-change')
+      })
+    })
+
+    describe('when the property has a value for view permissions', () => {
+      test('it should return the vat number', () => {
+        data.info.vat = 'GB987654321'
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.value).toEqual('GB987654321')
+      })
+    })
+
+    describe('when the property has a value for full permissions', () => {
+      beforeEach(() => {
+        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'normal'})
+      })
+
+      test('it should return the vat number', () => {
+        data.info.vat = 'GB987654321'
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.value).toEqual('GB987654321')
+      })
+
+      test('it should return the "Change and Remove links"', () => {
+        data.info.vat = 'GB987654321'
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.action).toEqual('Change')
+        expect(result.vatNumber.changeLink).toEqual({
+          items: [
+            {
+              href: '/business-vat-registration-number-change',
+              text: 'Change',
+              visuallyHiddenText: 'VAT registration number'
+            },
+                        {
+              href: '/business-vat-registration-remove',
+              text: 'Remove',
+              visuallyHiddenText: 'VAT registration number'
+            }
+          ]
+        })
+      })
+    })
+
+    describe('when the property has a value for full permissions with interrupter', () => {
+      beforeEach(() => {
+        data.info.vat = 'GB987654321'
+        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'interrupter'})
+      })
+
+      test('it should return the vat number', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.value).toEqual('GB987654321')
+      })
+
+      test('it should return the "Change and Remove links" via business-fix', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.action).toEqual('Change')
+        expect(result.vatNumber.changeLink).toEqual({
+          items: [
+            {
+              href: '/business-fix?source=vat-change',
+              text: 'Change',
+              visuallyHiddenText: 'VAT registration number'
+            },
+            {
+              href: '/business-fix?source=vat-remove',
+              text: 'Remove',
+              visuallyHiddenText: 'VAT registration number'
+            }
+          ]
+        })
+      })
+    })
+
+    describe('when the property is null for full permissions with interrupter', () => {
+      beforeEach(() => {
+        data.info.vat = null
+        businessDetailsChangeLinksPresenter.mockReturnValue({vat: 'interrupter'})
+      })
+
+      test('it should return "No number added" for value', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.value).toEqual('No number added')
+      })
+
+      test('it should return "Add" for action and the change link via business-fix', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
+
+        expect(result.vatNumber.action).toEqual('Add')
+        expect(result.vatNumber.changeLink).toEqual('/business-fix?source=vat-add')
       })
     })
   })
@@ -211,7 +388,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return an array of CPH numbers', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.countyParishHoldingNumbers).toEqual(['12/123/1234', '45/678/9012'])
       })
@@ -223,7 +400,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return an array of CPH numbers', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.countyParishHoldingNumbers).toEqual([])
       })
@@ -239,7 +416,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should filter out incorrect values', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.countyParishHoldingNumbers).toEqual(['123/456/7890'])
       })
@@ -253,7 +430,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) number"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
       })
@@ -265,7 +442,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) number"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
       })
@@ -280,18 +457,18 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) numbers"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) numbers')
       })
     })
   })
 
-  describe('the "traderNumber" property', () => {
+  describe('the "tradeNumber" property', () => {
     describe('when the property is null', () => {
-      test('it should return null', () => {
+      test('it should return "null', () => {
         data.info.traderNumber = null
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.tradeNumber).toEqual(null)
       })
@@ -302,7 +479,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vendorNumber = null
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.vendorRegistrationNumber).toEqual(null)
       })
@@ -313,7 +490,7 @@ describe('businessDetailsPresenter', () => {
     describe('when yar is falsey', () => {
       test('it should return null', () => {
         yar = null
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.notification).toEqual(null)
       })
@@ -327,7 +504,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return userName as null', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
         expect(result.userName).toEqual(null)
       })
@@ -335,176 +512,86 @@ describe('businessDetailsPresenter', () => {
   })
 
   describe('the "changeLinks" property', () => {
-    describe('when the permission level is less than full and amend', () => {
+    describe('when the permission level is less than amend', () => {
       beforeEach(() => {
-        permissionGroup = viewPermissionGroup
+        permissionLevel = 'view'
+        businessDetailsChangeLinksPresenter.mockReturnValue({})
       })
 
       test('it returns an empty object', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
-        expect(result.changeLinks).toEqual({})
+        expect(result.vatNumber.changeLink).toEqual(null)
+        expect(result.businessName.changeLink).toBeUndefined()
+        expect(result.businessAddress.changeLink).toBeUndefined()
+        expect(result.businessTelephone.changeLink).toBeUndefined()
+        expect(result.businessEmail.changeLink).toBeUndefined()
+        expect(result.businessType.changeLink).toEqual(null)
+        expect(result.businessLegalStatus.changeLink).toEqual(null)
       })
     })
 
-    describe('when the permission level is amend', () => {
+    describe('when the permission level is amend and there are no blockers', () => {
       beforeEach(() => {
-        permissionGroup = amendPermissionGroup
-      })
+        permissionLevel = 'amend'
 
-      test('returns the correct change links', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
-
-        expect(result.changeLinks).toEqual({
-          businessAddress: {
-            items: [
-              {
-                href: '/business-address-change',
-                text: 'Change',
-                visuallyHiddenText: 'business address'
-              }
-            ]
-          },
-          businessTelephone: {
-            items: [
-              {
-                href: '/business-phone-numbers-change',
-                text: 'Change',
-                visuallyHiddenText: 'business phone numbers'
-              }
-            ]
-          },
-          businessEmail: {
-            items: [
-              {
-                href: '/business-email-change',
-                text: 'Change',
-                visuallyHiddenText: 'business email address'
-              }
-            ]
-          },
-          amendPermission: true
+        businessDetailsChangeLinksPresenter.mockReturnValue({
+          businessAddress: '/business-address-change',
+          businessTelephone: '/business-phone-numbers-change',
+          businessEmail: '/business-email-change',
+          vat: null
         })
       })
 
-      test('sets the amend permission property to true', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
+      test('returns the correct change links', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
-        expect(result.changeLinks.amendPermission).toEqual(true)
-      })
-
-      test('returns the correct text if there is no landline of mobile', () => {
-        delete data.contact.landline
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
-
-        expect(result.changeLinks.businessTelephone.items[0].text).toEqual('Add')
+        expect(result.businessAddress.changeLink).toEqual('/business-address-change')
+        expect(result.businessTelephone.changeLink).toEqual('/business-phone-numbers-change')
+        expect(result.businessEmail.changeLink).toEqual('/business-email-change')
+        expect(result.vatNumber.changeLink).toEqual(null)
+        expect(result.businessName.changeLink).toBeUndefined()
+        expect(result.businessType.changeLink).toEqual(null)
+        expect(result.businessLegalStatus.changeLink).toEqual(null)
       })
     })
 
     describe('when the permission level is full', () => {
       beforeEach(() => {
-        permissionGroup = fullPermissionGroup
-      })
+        permissionLevel = 'full'
 
-      describe('and a vat number is present', () => {
-        test('returns the correct change links', () => {
-          const result = businessDetailsPresenter(data, yar, permissionGroup)
-
-          expect(result.changeLinks).toEqual({
-            businessName: {
-              items: [
-                {
-                  href: '/business-name-change',
-                  text: 'Change',
-                  visuallyHiddenText: 'business name'
-                }
-              ]
-            },
-            businessLegal: {
-              items: [
-                {
-                  href: '/business-legal-status-change',
-                  text: 'Change',
-                  visuallyHiddenText: 'business legal status'
-                }
-              ]
-            },
-            businessType: {
-              items: [
-                {
-                  href: '/business-type-change',
-                  text: 'Change',
-                  visuallyHiddenText: 'business type'
-                }
-              ]
-            },
-            businessAddress: {
-              items: [
-                {
-                  href: '/business-address-change',
-                  text: 'Change',
-                  visuallyHiddenText: 'business address'
-                }
-              ]
-            },
-            businessTelephone: {
-              items: [
-                {
-                  href: '/business-phone-numbers-change',
-                  text: 'Change',
-                  visuallyHiddenText: 'business phone numbers'
-                }
-              ]
-            },
-            businessEmail: {
-              items: [
-                {
-                  href: '/business-email-change',
-                  text: 'Change',
-                  visuallyHiddenText: 'business email address'
-                }
-              ]
-            },
-            businessVatNumber: {
-              items: [
-                {
-                  href: '/business-vat-registration-remove',
-                  text: 'Remove',
-                  visuallyHiddenText: 'VAT registration number'
-                },
-                {
-                  href: '/business-vat-registration-number-change',
-                  text: 'Change',
-                  visuallyHiddenText: 'VAT registration number'
-                }
-              ]
-            },
-            fullPermission: true
-          })
+        businessDetailsChangeLinksPresenter.mockReturnValue({
+          businessAddress: '/business-address-change',
+          businessTelephone: '/business-phone-numbers-change',
+          businessEmail: '/business-email-change',
+          businessName: '/business-name-change',
+          vat: 'normal'
         })
       })
 
-      describe('and a vat number is not present', () => {
-        test('returns the correct change links', () => {
-          delete data.info.vat
-          const result = businessDetailsPresenter(data, yar, permissionGroup)
+      test('returns the correct change links', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel)
 
-          expect(result.changeLinks.businessVatNumber).toEqual({
-            items: [
-              {
-                href: '/business-vat-registration-number-change',
-                text: 'Add',
-                visuallyHiddenText: 'VAT registration number'
-              }
-            ]
-          })
+        expect(result.businessAddress.changeLink).toEqual('/business-address-change')
+        expect(result.businessTelephone.changeLink).toEqual('/business-phone-numbers-change')
+        expect(result.businessEmail.changeLink).toEqual('/business-email-change')
+        expect(result.businessName.changeLink).toEqual('/business-name-change')
+        expect(result.businessType.changeLink).toEqual('/business-type-change')
+        expect(result.businessLegalStatus.changeLink).toEqual('/business-legal-status-change')
+        expect(result.vatNumber.changeLink).toEqual({
+          items: [
+            {
+              href: "/business-vat-registration-number-change",
+              text: "Change",
+              visuallyHiddenText: "VAT registration number",
+            },
+            {
+              href: "/business-vat-registration-remove",
+              text: "Remove",
+              visuallyHiddenText: "VAT registration number",
+            }
+          ]
         })
-      })
-
-      test('sets the amend permission property to true', () => {
-        const result = businessDetailsPresenter(data, yar, permissionGroup)
-
-        expect(result.changeLinks.fullPermission).toEqual(true)
       })
     })
   })

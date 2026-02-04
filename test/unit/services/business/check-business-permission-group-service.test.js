@@ -15,33 +15,22 @@ describe('checkBusinessPermissionGroupService', () => {
       permissionLevels = [FULL_PERMISSIONS[0]]
     })
 
-    test('it returns fullPermission true and others false', () => {
+    test('it returns "full"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toEqual({
-        fullPermission: true,
-        viewPermission: false,
-        amendPermission: false
-      })
+      expect(result).toBe('full')
     })
   })
 
   describe('when the user has both full and amend permission', () => {
     beforeEach(() => {
-      permissionLevels = [
-        FULL_PERMISSIONS[0],
-        AMEND_PERMISSIONS[0]
-      ]
+      permissionLevels = [FULL_PERMISSIONS[0], AMEND_PERMISSIONS[0]]
     })
 
-    test('it prioritises full permission', () => {
+    test('it prioritises full permission and returns "full"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toEqual({
-        fullPermission: true,
-        viewPermission: false,
-        amendPermission: false
-      })
+      expect(result).toBe('full')
     })
   })
 
@@ -50,14 +39,10 @@ describe('checkBusinessPermissionGroupService', () => {
       permissionLevels = [AMEND_PERMISSIONS[0]]
     })
 
-    test('it returns amendPermission true and others false', () => {
+    test('it returns "amend"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toEqual({
-        fullPermission: false,
-        viewPermission: false,
-        amendPermission: true
-      })
+      expect(result).toBe('amend')
     })
   })
 
@@ -66,14 +51,10 @@ describe('checkBusinessPermissionGroupService', () => {
       permissionLevels = ['view']
     })
 
-    test('it returns viewPermission true and others false', () => {
+    test('it returns "view"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toEqual({
-        fullPermission: false,
-        amendPermission: false,
-        viewPermission: true
-      })
+      expect(result).toBe('view')
     })
   })
 
@@ -82,14 +63,10 @@ describe('checkBusinessPermissionGroupService', () => {
       permissionLevels = []
     })
 
-    test('it defaults to view permission', () => {
+    test('it defaults to "view"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toEqual({
-        fullPermission: false,
-        amendPermission: false,
-        viewPermission: true
-      })
+      expect(result).toBe('view')
     })
   })
 })

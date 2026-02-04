@@ -109,7 +109,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "pageTitle" property', () => {
     describe('when the permissionLevel is view', () => {
       test('returns "View business details" when user has only view permission', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.pageTitle).toEqual('View business details')
       })
@@ -121,7 +121,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('returns "View and update your business details" when user has amend or full permission', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.pageTitle).toEqual('View and update your business details')
       })
@@ -133,7 +133,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('returns "View and update your business details" when user has amend or full permission', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.pageTitle).toEqual('View and update your business details')
       })
@@ -147,7 +147,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('returns amend-level permissions text', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.permissionsText).toEqual(
           'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
@@ -161,7 +161,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('returns view-level permissions text', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.permissionsText).toEqual(
           'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
@@ -175,7 +175,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('returns null', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.permissionsText).toBeNull()
       })
@@ -186,7 +186,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the businessName property is missing', () => {
       test('it should return the text "Back"', () => {
         data.info.businessName = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.backLink.text).toEqual('Back')
       })
@@ -201,14 +201,14 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return the actual values', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessTelephone.telephone).toEqual('01234567890')
         expect(result.businessTelephone.mobile).toEqual('07123456789')
       })
 
       test('the action text should be "Change"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessTelephone.action).toEqual('Change')
       })
@@ -217,7 +217,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the telephone property is missing', () => {
       test('it should return the text "Not added"', () => {
         data.contact.landline = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessTelephone.telephone).toEqual('Not added')
       })
@@ -225,7 +225,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the businessMobile property is missing', () => {
       test('it should return the text "Not added"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessTelephone.mobile).toEqual('Not added')
       })
@@ -235,7 +235,7 @@ describe('businessDetailsPresenter', () => {
       test('the action text should be "Add"', () => {
         data.contact.landline = null
         data.contact.mobile = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessTelephone.action).toEqual('Add')
       })
@@ -246,14 +246,14 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null for view only permission', () => {
       test('it should return "No number added" for value', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('No number added')
       })
 
       test('it should return null for action and change link', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual(null)
         expect(result.vatNumber.changeLink).toEqual(null)
@@ -267,14 +267,14 @@ describe('businessDetailsPresenter', () => {
 
       test('it should return "No number added" for value', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('No number added')
       })
 
       test('it should return "Add" for action and the change link', () => {
         data.info.vat = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual('Add')
         expect(result.vatNumber.changeLink).toEqual('/business-vat-registration-number-change')
@@ -284,7 +284,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property has a value for view permissions', () => {
       test('it should return the vat number', () => {
         data.info.vat = 'GB987654321'
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('GB987654321')
       })
@@ -297,14 +297,14 @@ describe('businessDetailsPresenter', () => {
 
       test('it should return the vat number', () => {
         data.info.vat = 'GB987654321'
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('GB987654321')
       })
 
       test('it should return the "Change and Remove links"', () => {
         data.info.vat = 'GB987654321'
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual('Change')
         expect(result.vatNumber.changeLink).toEqual({
@@ -331,13 +331,13 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return the vat number', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('GB987654321')
       })
 
       test('it should return the "Change and Remove links" via business-fix', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual('Change')
         expect(result.vatNumber.changeLink).toEqual({
@@ -364,13 +364,13 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "No number added" for value', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('No number added')
       })
 
       test('it should return "Add" for action and the change link via business-fix', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual('Add')
         expect(result.vatNumber.changeLink).toEqual('/business-fix?source=vat-add')
@@ -388,7 +388,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return an array of CPH numbers', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.countyParishHoldingNumbers).toEqual(['12/123/1234', '45/678/9012'])
       })
@@ -400,7 +400,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return an array of CPH numbers', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.countyParishHoldingNumbers).toEqual([])
       })
@@ -416,7 +416,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should filter out incorrect values', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.countyParishHoldingNumbers).toEqual(['123/456/7890'])
       })
@@ -430,7 +430,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) number"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
       })
@@ -442,7 +442,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) number"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
       })
@@ -457,7 +457,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "County Parish Holding (CPH) numbers"', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) numbers')
       })
@@ -466,9 +466,9 @@ describe('businessDetailsPresenter', () => {
 
   describe('the "tradeNumber" property', () => {
     describe('when the property is null', () => {
-      test('it should return "null', () => {
+      test('it should return "null"', () => {
         data.info.traderNumber = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.tradeNumber).toEqual(null)
       })
@@ -479,7 +479,7 @@ describe('businessDetailsPresenter', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.info.vendorNumber = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vendorRegistrationNumber).toEqual(null)
       })
@@ -490,7 +490,7 @@ describe('businessDetailsPresenter', () => {
     describe('when yar is falsey', () => {
       test('it should return null', () => {
         yar = null
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.notification).toEqual(null)
       })
@@ -504,7 +504,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return userName as null', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.userName).toEqual(null)
       })
@@ -519,7 +519,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it returns an empty object', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.changeLink).toEqual(null)
         expect(result.businessName.changeLink).toBeUndefined()
@@ -544,7 +544,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('returns the correct change links', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessAddress.changeLink).toEqual('/business-address-change')
         expect(result.businessTelephone.changeLink).toEqual('/business-phone-numbers-change')
@@ -570,7 +570,7 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('returns the correct change links', () => {
-        const result = businessDetailsPresenter(data, yar, permissionLevel)
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessAddress.changeLink).toEqual('/business-address-change')
         expect(result.businessTelephone.changeLink).toEqual('/business-phone-numbers-change')

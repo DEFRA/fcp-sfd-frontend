@@ -62,11 +62,33 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
 }
 
 /**
- * Builds VAT display based on change-link intent.
+ * Builds the VAT row data for the business details page.
+ *
+ * VAT is more complex than other fields because:
+ * - Users may or may not have permission to change VAT details
+ * - VAT supports multiple actions (add, change, remove)
+ * - During the business details interrupter flow, VAT actions may need
+ *   to route via the business-fix journey instead of the normal pages
+ *
+ * This function does not return direct URLs in all cases.
+ * Instead, it returns the data needed by the view to render:
+ * - the displayed VAT value
+ * - the action text (Add / Change)
+ * - either a single change link, multiple links (Change / Remove),
+ *   or no links at all
+ *
+ * Behaviour summary:
+ * - If `vatChangeState` is null, the user does not have permission to
+ *   change VAT and no actions are shown.
+ * - If `vatChangeState` is `'interrupter'`, links are routed via the
+ *   business-fix pages to force the user through the interrupter journey.
+ * - Otherwise, normal add/change/remove links are returned.
  */
 const buildVatDisplay = (vatNumber, vatChangeState) => {
+  const hasVat = Boolean(vatNumber)
   const value = vatNumber || 'No number added'
 
+  // If no vatChangeState it means the user does not have permission to change VAT details
   if (!vatChangeState) {
     return {
       value,
@@ -75,8 +97,10 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
     }
   }
 
+  // Interrupter flow: invalid data, user has permission, must go via business-fix
   if (vatChangeState === 'interrupter') {
-    if (!vatNumber) {
+    // Links still need to display the same as normal, but if no VAT number, link goes to interrupter add page
+    if (!hasVat) {
       return {
         value,
         action: 'Add',
@@ -84,6 +108,7 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
       }
     }
 
+    // If VAT number exists, show normal change/remove links but via interrupter pages
     return {
       value: vatNumber,
       action: 'Change',
@@ -104,7 +129,8 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
     }
   }
 
-  if (!vatNumber) {
+  // Normal flow: user has permission and no interrupter
+  if (!hasVat) {
     return {
       value,
       action: 'Add',

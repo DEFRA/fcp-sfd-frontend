@@ -259,6 +259,34 @@
       {% endif %}
     {% endset %}
 
+    {% if businessLegalStatus.changeLink %}
+      {% set businessLegalStatusActions = {
+        items: [
+          {
+            href: businessLegalStatus.changeLink,
+            text: businessLegalStatus.action,
+            visuallyHiddenText: "Business legal status"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessLegalStatusActions = null %}
+    {% endif %}
+
+    {% if businessType.changeLink %}
+      {% set businessTypeActions = {
+        items: [
+          {
+            href: businessType.changeLink,
+            text: businessType.action,
+            visuallyHiddenText: "Business type"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessTypeActions = null %}
+    {% endif %}
+
     {{ govukSummaryList({
       rows: [
         {
@@ -268,15 +296,7 @@
           value: {
             html: businessLegalStatus
           },
-          actions: {
-            items: [
-              {
-                href: businessLegalStatus.changeLink,
-                text: businessLegalStatus.action,
-                visuallyHiddenText: "Business legal status"
-              }
-            ]
-          }
+          actions: businessLegalStatusActions
         },
         {
           key: {
@@ -285,15 +305,7 @@
           value: {
             html: businessType
           },
-          actions: {
-            items: [
-              {
-                href: businessType.changeLink,
-                text: businessType.action,
-                visuallyHiddenText: "Business type"
-              }
-            ]
-          }
+          actions: businessTypeActions
         }
       ]
     }) }}

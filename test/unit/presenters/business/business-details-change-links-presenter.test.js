@@ -200,6 +200,27 @@ describe('businessDetailsChangeLinksPresenter', () => {
           expect(result.vat).toEqual('interrupter')
         })
       })
+
+      describe('when business details are invalid but no sections are flagged', () => {
+        beforeEach(() => {
+          hasValidBusinessDetails = false
+          sectionsNeedingUpdate = []
+        })
+
+        test('the interrupter is not active and all links are normal', () => {
+          const result = businessDetailsChangeLinksPresenter(
+            permissionLevel,
+            hasValidBusinessDetails,
+            sectionsNeedingUpdate
+          )
+
+          expect(result.businessAddress).toBe(BUSINESS_CHANGE_LINKS.businessAddress)
+          expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)
+          expect(result.businessEmail).toBe(BUSINESS_CHANGE_LINKS.businessEmail)
+          expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
+          expect(result.vat).toBe('normal')
+        })
+      })
     })
 
     describe('and the interrupter feature toggle is OFF', () => {

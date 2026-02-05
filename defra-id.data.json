@@ -121,6 +121,21 @@
       ]
     },
     {
+      "crn": 3009000000,
+      "firstName": "Business",
+      "lastName": "Details Test",
+      "organisations": [
+        { "organisationId": "3009000", "sbi": 300900001, "name": "Clean Business Ltd" },
+        { "organisationId": "3009001", "sbi": 300900002, "name": "Business name - we can't test this without breaking dal" },
+        { "organisationId": "3009002", "sbi": 300900003, "name": "No Email" },
+        { "organisationId": "3009003", "sbi": 300900004, "name": "No Phone" },
+        { "organisationId": "3009004", "sbi": 300900005, "name": "Missing Address" },
+        { "organisationId": "3009005", "sbi": 300900006, "name": "No Postcode" },
+        { "organisationId": "3009006", "sbi": 300900007, "name": "Short Phone" },
+        { "organisationId": "3009007", "sbi": 300900008, "name": "Long Phone" }
+      ]
+    },
+    {
       "crn": 3001000000,
       "firstName": "Test",
       "lastName": "User",

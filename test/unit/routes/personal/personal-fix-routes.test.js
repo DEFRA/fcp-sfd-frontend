@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { personalFixPresenter } from '../../../../src/presenters/personal/personal-fix-presenter.js'
-import { initialisePersonalFixJourneyService } from '../../../../src/services/personal/initialise-personal-fix-journey-service.js'
+import { initialiseFixJourneyService } from '../../../../src/services/initialise-fix-journey-service.js'
 
 // Thing under test
 import { personalFixRoutes } from '../../../../src/routes/personal/personal-fix-routes.js'
@@ -14,8 +14,8 @@ vi.mock('../../../../src/presenters/personal/personal-fix-presenter.js', () => (
   personalFixPresenter: vi.fn()
 }))
 
-vi.mock('../../../../src/services/personal/initialise-personal-fix-journey-service.js', () => ({
-  initialisePersonalFixJourneyService: vi.fn()
+vi.mock('../../../../src/services/initialise-fix-journey-service.js', () => ({
+  initialiseFixJourneyService: vi.fn()
 }))
 
 describe('personal fix routes', () => {
@@ -40,7 +40,7 @@ describe('personal fix routes', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        initialisePersonalFixJourneyService.mockReturnValue(getMockSessionData())
+        initialiseFixJourneyService.mockReturnValue(getMockSessionData())
         personalFixPresenter.mockReturnValue(getPageData())
       })
 
@@ -52,7 +52,7 @@ describe('personal fix routes', () => {
       test('it initialises the personal fix journey using the session and source', async () => {
         await getPersonalFix.handler(request, h)
 
-        expect(initialisePersonalFixJourneyService).toHaveBeenCalledWith(request.yar, request.query.source)
+        expect(initialiseFixJourneyService).toHaveBeenCalledWith(request.yar, request.query.source, 'personal')
       })
 
       test('it presents the session data using the personalFixPresenter', async () => {

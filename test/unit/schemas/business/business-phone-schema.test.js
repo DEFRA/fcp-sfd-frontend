@@ -118,5 +118,22 @@ describe('business phone schema', () => {
         expect(value).toEqual(payload)
       })
     })
+
+    describe('because "businessTelephone" has invalid characters', () => {
+      beforeEach(() => {
+        payload.businessTelephone = 'abcdef'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business telephone number must be 50 characters or less',
+          path: ['businessTelephone'],
+          type: 'string.max'
+        }))
+        expect(value).toEqual(payload)
+      })
+    })
   })
 })

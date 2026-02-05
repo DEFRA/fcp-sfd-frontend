@@ -77,6 +77,21 @@
       }
     },
     {
+      "label": "Watch Test Frontend",
+      "detail": "Run the test watcher for frontend",
+      "type": "shell",
+      "command" : "docker compose down -v && docker compose -f compose.yaml -f compose.test.watch.yaml run --build --rm 'fcp-sfd-frontend'",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
       "label": "🔍 Lint Frontend",
       "detail": "Run linting on the frontend",
       "type": "shell",

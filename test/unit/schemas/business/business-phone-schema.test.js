@@ -130,7 +130,7 @@ describe('business phone schema', () => {
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Business telephone number must be numeric',
           path: ['businessTelephone'],
-          type: 'string.max'
+          type: 'number.base'
         }))
         expect(value).toEqual(payload)
       })

@@ -5,13 +5,14 @@ import {
 } from '../../constants/validation-fields.js'
 
 export const businessPhoneSchema = Joi.object({
-  businessTelephone: Joi.string()
+  businessTelephone: Joi.number()
     .empty('')
     .min(PHONE_NUMBER_MIN)
     .max(PHONE_NUMBER_MAX)
     .messages({
-      'string.min': `Business telephone number must be ${PHONE_NUMBER_MIN} characters or more`,
-      'string.max': `Business telephone number must be ${PHONE_NUMBER_MAX} characters or less`
+      'number.min': `Business telephone number must be ${PHONE_NUMBER_MIN} characters or more`,
+      'number.max': `Business telephone number must be ${PHONE_NUMBER_MAX} characters or less`,
+      'number.base': 'Business telephone number must be numeric'
     }),
   businessMobile: Joi.string()
     .empty('')

@@ -48,6 +48,7 @@ describe('businessDetailsPresenter', () => {
           text: `Back to ${data.info.businessName}`,
           href: '/home'
         },
+        businessNameHeader: data.info.businessName,
         notification: { title: 'Update', text: 'Business details updated successfully' },
         pageTitle: 'View business details',
         metaDescription: 'View and update your business details.',
@@ -507,6 +508,20 @@ describe('businessDetailsPresenter', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.userName).toEqual(null)
+      })
+    })
+  })
+
+  describe('the "businessNameHeader" property', () => {
+    describe('when the business name property is missing', () => {
+      beforeEach(() => {
+        delete data.info.businessName
+      })
+
+      test('it should return businessNameHeader as null', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessNameHeader).toEqual(null)
       })
     })
   })

@@ -2,83 +2,165 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Thing under test
-import { initialisePersonalFixJourneyService } from '../../../../src/services/personal/initialise-personal-fix-journey-service.js'
+import { initialiseFixJourneyService } from '../../../../src/services/initialise-fix-journey-service.js'
 
-describe('initialisePersonalFixJourneyService', () => {
+describe('initialiseFixJourneyService', () => {
   let yar
   let sessionData
 
   beforeEach(() => {
-    sessionData = {
-      sectionsNeedingUpdate: ['email', 'name', 'phone'],
-      personalFixUpdates: {
-        name: {
-          first: 'John',
-          last: 'Doe'
+    vi.resetAllMocks()
+  })
+
+  describe('when journeyType is personal', () => {
+    beforeEach(() => {
+      sessionData = {
+        sectionsNeedingUpdate: ['email', 'name', 'phone'],
+        personalFixUpdates: {
+          name: {
+            first: 'John',
+            last: 'Doe'
+          }
         }
       }
-    }
 
-    yar = {
-      get: vi.fn().mockReturnValue(sessionData),
-      set: vi.fn()
-    }
+      yar = {
+        get: vi.fn().mockReturnValue(sessionData),
+        set: vi.fn()
+      }
+    })
+
+    test('orders sections according to display order', () => {
+      const result = initialiseFixJourneyService(yar, undefined, 'personal')
+
+      expect(result.orderedSectionsToFix).toEqual(['name', 'phone', 'email'])
+    })
+
+    test('moves source section to the top when provided', () => {
+      const result = initialiseFixJourneyService(yar, 'email', 'personal')
+
+      expect(result.orderedSectionsToFix).toEqual(['email', 'name', 'phone'])
+    })
+
+    test('does not duplicate the source section', () => {
+      const result = initialiseFixJourneyService(yar, 'phone', 'personal')
+
+      expect(result.orderedSectionsToFix).toEqual(['phone', 'name', 'email'])
+    })
+
+    test('removes sectionsNeedingUpdate from session data', () => {
+      initialiseFixJourneyService(yar, undefined, 'personal')
+
+      expect(sessionData.sectionsNeedingUpdate).toBeUndefined()
+    })
+
+    test('removes personalFixUpdates from session data', () => {
+      initialiseFixJourneyService(yar, undefined, 'personal')
+
+      expect(sessionData.personalFixUpdates).toBeUndefined()
+    })
+
+    test('stores the source when provided', () => {
+      const result = initialiseFixJourneyService(yar, 'address', 'personal')
+
+      expect(result.source).toBe('address')
+    })
+
+    test('does not set source when none is provided', () => {
+      const result = initialiseFixJourneyService(yar, undefined, 'personal')
+
+      expect(result.source).toBeUndefined()
+    })
+
+    test('updates the session using yar.set', () => {
+      const result = initialiseFixJourneyService(yar, 'name', 'personal')
+
+      expect(yar.set).toHaveBeenCalledWith('personalDetailsValidation', result)
+    })
+
+    test('returns early if session data is missing or invalid', () => {
+      yar.get.mockReturnValue(undefined)
+
+      const result = initialiseFixJourneyService(yar, undefined, 'personal')
+
+      expect(result).toBeUndefined()
+      expect(yar.set).not.toHaveBeenCalled()
+    })
   })
 
-  test('orders sections according to display order', () => {
-    const result = initialisePersonalFixJourneyService(yar)
+  describe('when journeyType is business', () => {
+    beforeEach(() => {
+      sessionData = {
+        sectionsNeedingUpdate: ['email', 'name', 'phone', 'address'],
+        personalFixUpdates: {
+          name: {
+            first: 'John',
+            last: 'Doe'
+          }
+        }
+      }
 
-    expect(result.orderedSectionsToFix).toEqual(['name', 'phone', 'email'])
-  })
+      yar = {
+        get: vi.fn().mockReturnValue(sessionData),
+        set: vi.fn()
+      }
+    })
 
-  test('moves source section to the top when provided', () => {
-    const result = initialisePersonalFixJourneyService(yar, 'email')
+    test('orders sections according to display order', () => {
+      const result = initialiseFixJourneyService(yar, undefined, 'business')
 
-    expect(result.orderedSectionsToFix).toEqual(['email', 'name', 'phone'])
-  })
+      expect(result.orderedSectionsToFix).toEqual(['name', 'address', 'phone', 'email'])
+    })
 
-  test('does not duplicate the source section', () => {
-    const result = initialisePersonalFixJourneyService(yar, 'phone')
+    test('moves source section to the top when provided', () => {
+      const result = initialiseFixJourneyService(yar, 'vat-add', 'business')
 
-    expect(result.orderedSectionsToFix).toEqual(['phone', 'name', 'email'])
-  })
+      expect(result.orderedSectionsToFix).toEqual(['vat-add', 'name', 'address', 'phone', 'email'])
+    })
 
-  test('removes sectionsNeedingUpdate from session data', () => {
-    initialisePersonalFixJourneyService(yar)
+    test('does not duplicate the source section', () => {
+      const result = initialiseFixJourneyService(yar, 'phone', 'business')
 
-    expect(sessionData.sectionsNeedingUpdate).toBeUndefined()
-  })
+      expect(result.orderedSectionsToFix).toEqual(['phone', 'name', 'address', 'email'])
+    })
 
-  test('removes personalFixUpdates from session data', () => {
-    initialisePersonalFixJourneyService(yar)
+    test('removes sectionsNeedingUpdate from session data', () => {
+      initialiseFixJourneyService(yar, undefined, 'business')
 
-    expect(sessionData.personalFixUpdates).toBeUndefined()
-  })
+      expect(sessionData.sectionsNeedingUpdate).toBeUndefined()
+    })
 
-  test('stores the source when provided', () => {
-    const result = initialisePersonalFixJourneyService(yar, 'address')
+    test('removes businessFixUpdates from session data', () => {
+      initialiseFixJourneyService(yar, undefined, 'business')
 
-    expect(result.source).toBe('address')
-  })
+      expect(sessionData.businessFixUpdates).toBeUndefined()
+    })
 
-  test('does not set source when none is provided', () => {
-    const result = initialisePersonalFixJourneyService(yar)
+    test('stores the source when provided', () => {
+      const result = initialiseFixJourneyService(yar, 'address', 'business')
 
-    expect(result.source).toBeUndefined()
-  })
+      expect(result.source).toBe('address')
+    })
 
-  test('updates the session using yar.set', () => {
-    const result = initialisePersonalFixJourneyService(yar, 'name')
+    test('does not set source when none is provided', () => {
+      const result = initialiseFixJourneyService(yar, undefined, 'business')
 
-    expect(yar.set).toHaveBeenCalledWith('personalDetailsValidation', result)
-  })
+      expect(result.source).toBeUndefined()
+    })
 
-  test('returns early if session data is missing or invalid', () => {
-    yar.get.mockReturnValue(undefined)
+    test('updates the session using yar.set', () => {
+      const result = initialiseFixJourneyService(yar, 'name', 'business')
 
-    const result = initialisePersonalFixJourneyService(yar)
+      expect(yar.set).toHaveBeenCalledWith('businessDetailsValidation', result)
+    })
 
-    expect(result).toBeUndefined()
-    expect(yar.set).not.toHaveBeenCalled()
+    test('returns early if session data is missing or invalid', () => {
+      yar.get.mockReturnValue(undefined)
+
+      const result = initialiseFixJourneyService(yar, undefined, 'business')
+
+      expect(result).toBeUndefined()
+      expect(yar.set).not.toHaveBeenCalled()
+    })
   })
 })

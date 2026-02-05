@@ -121,14 +121,14 @@ describe('business phone schema', () => {
 
     describe('because "businessTelephone" has invalid characters', () => {
       beforeEach(() => {
-        payload.businessTelephone = 'abcdef'
+        payload.businessTelephone = 'abcdefabcdefabcdefabcdef%///--__'
       })
 
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business telephone number must be 50 characters or less',
+          message: 'Business telephone number must be numeric',
           path: ['businessTelephone'],
           type: 'string.max'
         }))

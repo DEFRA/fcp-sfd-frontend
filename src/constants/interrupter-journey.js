@@ -30,7 +30,9 @@ export const BUSINESS_SECTION_LABELS = {
   address: 'business address',
   phone: 'at least one business phone number',
   email: 'business email address',
-  vat: 'business VAT number'
+  'vat-add': 'business VAT number',
+  'vat-change': 'business VAT number',
+  'vat-remove': 'business VAT number'
 }
 
 export const PERSONAL_UPDATE_TEXT_LABELS = {
@@ -46,5 +48,7 @@ export const BUSINESS_UPDATE_TEXT_LABELS = {
   address: 'your business address',
   phone: 'at least one business phone number',
   email: 'your business email address',
-  vat: 'your business VAT number'
+  'vat-add': 'your business VAT number',
+  'vat-change': 'your business VAT number',
+  'vat-remove': 'your business VAT number'
 }

@@ -25,14 +25,16 @@ export const PERSONAL_SECTION_LABELS = {
   email: 'personal email address'
 }
 
+const VAT_LABEL= 'business VAT number'
+
 export const BUSINESS_SECTION_LABELS = {
   name: 'business name',
   address: 'business address',
   phone: 'at least one business phone number',
   email: 'business email address',
-  'vat-add': 'business VAT number',
-  'vat-change': 'business VAT number',
-  'vat-remove': 'business VAT number'
+  'vat-add': VAT_LABEL,
+  'vat-change': VAT_LABEL,
+  'vat-remove': VAT_LABEL
 }
 
 export const PERSONAL_UPDATE_TEXT_LABELS = {
@@ -43,12 +45,14 @@ export const PERSONAL_UPDATE_TEXT_LABELS = {
   email: 'your personal email address'
 }
 
+const VAT_UPDATE_TEXT_LABELS = 'your business VAT number'
+
 export const BUSINESS_UPDATE_TEXT_LABELS = {
   name: 'your business name',
   address: 'your business address',
   phone: 'at least one business phone number',
   email: 'your business email address',
-  'vat-add': 'your business VAT number',
-  'vat-change': 'your business VAT number',
-  'vat-remove': 'your business VAT number'
+  'vat-add': VAT_UPDATE_TEXT_LABELS,
+  'vat-change': VAT_UPDATE_TEXT_LABELS,
+  'vat-remove': VAT_UPDATE_TEXT_LABELS
 }

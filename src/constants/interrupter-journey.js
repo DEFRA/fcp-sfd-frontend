@@ -25,7 +25,7 @@ export const PERSONAL_SECTION_LABELS = {
   email: 'personal email address'
 }
 
-const VAT_LABEL= 'business VAT number'
+const VAT_LABEL = 'business VAT number'
 
 export const BUSINESS_SECTION_LABELS = {
   name: 'business name',

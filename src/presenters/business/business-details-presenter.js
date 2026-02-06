@@ -16,6 +16,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       text: data.info.businessName ? formatBackLink(data.info.businessName) : 'Back',
       href: '/home'
     },
+    businessNameHeader: data.info.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: permissionLevel === 'view' ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',

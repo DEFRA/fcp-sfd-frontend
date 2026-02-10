@@ -3784,6 +3784,206 @@
           "organisationId": "3012209",
           "sbi": 300903210,
           "name": "Email invalid format - example 10"
+        },
+        {
+          "organisationId": "3012300",
+          "sbi": 300903301,
+          "name": "Address + phone invalid - example 1"
+        },
+        {
+          "organisationId": "3012301",
+          "sbi": 300903302,
+          "name": "Address + phone invalid - example 2"
+        },
+        {
+          "organisationId": "3012302",
+          "sbi": 300903303,
+          "name": "Address + phone invalid - example 3"
+        },
+        {
+          "organisationId": "3012303",
+          "sbi": 300903304,
+          "name": "Address + phone invalid - example 4"
+        },
+        {
+          "organisationId": "3012304",
+          "sbi": 300903305,
+          "name": "Address + phone invalid - example 5"
+        },
+        {
+          "organisationId": "3012305",
+          "sbi": 300903306,
+          "name": "Address + phone invalid - example 6"
+        },
+        {
+          "organisationId": "3012306",
+          "sbi": 300903307,
+          "name": "Address + phone invalid - example 7"
+        },
+        {
+          "organisationId": "3012307",
+          "sbi": 300903308,
+          "name": "Address + phone invalid - example 8"
+        },
+        {
+          "organisationId": "3012308",
+          "sbi": 300903309,
+          "name": "Address + phone invalid - example 9"
+        },
+        {
+          "organisationId": "3012309",
+          "sbi": 300903310,
+          "name": "Address + phone invalid - example 10"
+        },
+        {
+          "organisationId": "3012400",
+          "sbi": 300903401,
+          "name": "Address + email invalid - example 1"
+        },
+        {
+          "organisationId": "3012401",
+          "sbi": 300903402,
+          "name": "Address + email invalid - example 2"
+        },
+        {
+          "organisationId": "3012402",
+          "sbi": 300903403,
+          "name": "Address + email invalid - example 3"
+        },
+        {
+          "organisationId": "3012403",
+          "sbi": 300903404,
+          "name": "Address + email invalid - example 4"
+        },
+        {
+          "organisationId": "3012404",
+          "sbi": 300903405,
+          "name": "Address + email invalid - example 5"
+        },
+        {
+          "organisationId": "3012405",
+          "sbi": 300903406,
+          "name": "Address + email invalid - example 6"
+        },
+        {
+          "organisationId": "3012406",
+          "sbi": 300903407,
+          "name": "Address + email invalid - example 7"
+        },
+        {
+          "organisationId": "3012407",
+          "sbi": 300903408,
+          "name": "Address + email invalid - example 8"
+        },
+        {
+          "organisationId": "3012408",
+          "sbi": 300903409,
+          "name": "Address + email invalid - example 9"
+        },
+        {
+          "organisationId": "3012409",
+          "sbi": 300903410,
+          "name": "Address + email invalid - example 10"
+        },
+        {
+          "organisationId": "3012500",
+          "sbi": 300903501,
+          "name": "Phone + email invalid - example 1"
+        },
+        {
+          "organisationId": "3012501",
+          "sbi": 300903502,
+          "name": "Phone + email invalid - example 2"
+        },
+        {
+          "organisationId": "3012502",
+          "sbi": 300903503,
+          "name": "Phone + email invalid - example 3"
+        },
+        {
+          "organisationId": "3012503",
+          "sbi": 300903504,
+          "name": "Phone + email invalid - example 4"
+        },
+        {
+          "organisationId": "3012504",
+          "sbi": 300903505,
+          "name": "Phone + email invalid - example 5"
+        },
+        {
+          "organisationId": "3012505",
+          "sbi": 300903506,
+          "name": "Phone + email invalid - example 6"
+        },
+        {
+          "organisationId": "3012506",
+          "sbi": 300903507,
+          "name": "Phone + email invalid - example 7"
+        },
+        {
+          "organisationId": "3012507",
+          "sbi": 300903508,
+          "name": "Phone + email invalid - example 8"
+        },
+        {
+          "organisationId": "3012508",
+          "sbi": 300903509,
+          "name": "Phone + email invalid - example 9"
+        },
+        {
+          "organisationId": "3012509",
+          "sbi": 300903510,
+          "name": "Phone + email invalid - example 10"
+        },
+        {
+          "organisationId": "3012600",
+          "sbi": 300903601,
+          "name": "All three invalid - example 1"
+        },
+        {
+          "organisationId": "3012601",
+          "sbi": 300903602,
+          "name": "All three invalid - example 2"
+        },
+        {
+          "organisationId": "3012602",
+          "sbi": 300903603,
+          "name": "All three invalid - example 3"
+        },
+        {
+          "organisationId": "3012603",
+          "sbi": 300903604,
+          "name": "All three invalid - example 4"
+        },
+        {
+          "organisationId": "3012604",
+          "sbi": 300903605,
+          "name": "All three invalid - example 5"
+        },
+        {
+          "organisationId": "3012605",
+          "sbi": 300903606,
+          "name": "All three invalid - example 6"
+        },
+        {
+          "organisationId": "3012606",
+          "sbi": 300903607,
+          "name": "All three invalid - example 7"
+        },
+        {
+          "organisationId": "3012607",
+          "sbi": 300903608,
+          "name": "All three invalid - example 8"
+        },
+        {
+          "organisationId": "3012608",
+          "sbi": 300903609,
+          "name": "All three invalid - example 9"
+        },
+        {
+          "organisationId": "3012609",
+          "sbi": 300903610,
+          "name": "All three invalid - example 10"
         }
       ]
     }

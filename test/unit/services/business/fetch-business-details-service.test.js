@@ -24,6 +24,14 @@ vi.mock('../../../../src/config/index.js', () => ({
   }
 }))
 
+vi.mock('../../../../src/utils/logger.js', () => ({
+  createLogger: vi.fn().mockReturnValue({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn()
+  })
+}))
+
 // Test helpers
 const { mappedData, mappedDataWithoutCph, dalData } = await import('../../../../src/mock-data/mock-business-details.js')
 

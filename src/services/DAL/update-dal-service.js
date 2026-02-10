@@ -11,14 +11,26 @@
  */
 
 import { dalConnector } from '../../dal/connector.js'
+import { createLogger } from '../../utils/logger.js'
+
+const logger = createLogger()
 
 const updateDalService = async (mutation, variables) => {
-  const response = await dalConnector(mutation, variables)
+  logger.info('Executing DAL mutation')
+  let response
+  try {
+    response = await dalConnector(mutation, variables)
+  } catch (error) {
+    logger.error(error, 'DAL mutation failed with exception')
+    throw error
+  }
 
   if (response.errors) {
+    logger.error({ errors: response.errors }, 'DAL mutation returned errors')
     throw new Error('DAL error from mutation')
   }
 
+  logger.info('DAL mutation completed successfully')
   return response
 }
 

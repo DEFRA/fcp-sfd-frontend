@@ -156,6 +156,45 @@ describe('buildPersonalUpdateVariables', () => {
         })
       })
     })
+
+    describe('when manual address fields are undefined', () => {
+      beforeEach(() => {
+        personalDetails = basePersonalDetails()
+        personalDetails.address = {
+          lookup: { uprn: null },
+          manual: {
+            line1: 'Line 1'
+          },
+          postcode: 'BA1 1AA',
+          country: 'UK'
+        }
+      })
+
+      test('it defaults missing manual address fields to null', () => {
+        const result = buildPersonalUpdateVariables(personalDetails)
+
+        expect(result.updateCustomerAddressInput.address).toMatchObject({
+          line2: null,
+          line4: null,
+          line5: null
+        })
+      })
+    })
+
+    describe('when contact exists but telephone and mobile is undefined', () => {
+      beforeEach(() => {
+        personalDetails = basePersonalDetails()
+        delete personalDetails.contact.telephone
+        delete personalDetails.contact.mobile
+      })
+
+      test('it defaults phone to null', () => {
+        const result = buildPersonalUpdateVariables(personalDetails)
+
+        expect(result.updateCustomerPhoneInput.phone.landline).toBeNull()
+        expect(result.updateCustomerPhoneInput.phone.mobile).toBeNull()
+      })
+    })
   })
 
   describe('when there are changes to personal name', () => {
@@ -299,6 +338,39 @@ describe('buildPersonalUpdateVariables', () => {
           line5: 'Avon',
           uprn: null
         }
+      })
+    })
+  })
+
+  describe('when changed personal address has optional fields missing', () => {
+    beforeEach(() => {
+      personalDetails = basePersonalDetails()
+      personalDetails.changePersonalAddress = {
+        address1: '1 New Road',
+        city: 'Bristol',
+        postcode: 'BS1 1AA',
+        country: 'UK'
+      }
+    })
+
+    test('it defaults missing changed address fields to null', () => {
+      const result = buildPersonalUpdateVariables(personalDetails)
+
+      expect(result.updateCustomerAddressInput.address).toEqual({
+        buildingNumberRange: null,
+        buildingName: null,
+        flatName: null,
+        street: null,
+        city: 'Bristol',
+        county: null,
+        postalCode: 'BS1 1AA',
+        country: 'UK',
+        line1: '1 New Road',
+        line2: null,
+        line3: null,
+        line4: 'Bristol',
+        line5: null,
+        uprn: null
       })
     })
   })

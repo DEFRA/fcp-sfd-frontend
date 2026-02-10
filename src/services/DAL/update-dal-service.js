@@ -26,7 +26,10 @@ const updateDalService = async (mutation, variables) => {
   }
 
   if (response.errors) {
-    logger.error({ errors: response.errors }, 'DAL mutation returned errors')
+    logger.error(
+      { statusCode: response.statusCode, errors: JSON.stringify(response.errors) },
+      'DAL mutation returned errors'
+    )
     throw new Error('DAL error from mutation')
   }
 

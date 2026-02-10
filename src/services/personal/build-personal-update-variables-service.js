@@ -105,28 +105,47 @@ const buildDobInput = (crn, personalDetails) => {
 }
 
 const formatExistingAddress = (address) => {
-  if (address.uprn) {
+  if (address.lookup?.uprn) {
+    const { lookup } = address
+
     return {
-      buildingNumberRange: address.buildingNumberRange ?? null,
-      buildingName: address.buildingName ?? null,
-      flatName: address.flatName ?? null,
-      street: address.street ?? null,
-      city: address.city ?? null,
-      county: address.county ?? null,
+      buildingNumberRange: lookup.buildingNumberRange ?? null,
+      buildingName: lookup.buildingName ?? null,
+      flatName: lookup.flatName ?? null,
+      street: lookup.street ?? null,
+      city: lookup.city ?? null,
+      county: lookup.county ?? null,
       postalCode: address.postcode ?? null,
       country: address.country ?? null,
-      dependentLocality: address.dependentLocality ?? null,
-      doubleDependentLocality: address.doubleDependentLocality ?? null,
+      dependentLocality: lookup.dependentLocality ?? null,
+      doubleDependentLocality: lookup.doubleDependentLocality ?? null,
       line1: null,
       line2: null,
       line3: null,
       line4: null,
       line5: null,
-      uprn: address.uprn
+      uprn: lookup.uprn
     }
   }
 
-  return formatManualAddressInput(address)
+  return {
+    buildingNumberRange: null,
+    buildingName: null,
+    flatName: null,
+    street: null,
+    doubleDependentLocality: null,
+    dependentLocality: null,
+    city: address.manual.line4,
+    county: address.manual.line5 ?? null,
+    postalCode: address.postcode,
+    country: address.country,
+    line1: address.manual.line1,
+    line2: address.manual.line2 ?? null,
+    line3: address.manual.line3 ?? null,
+    line4: address.manual.line4 ?? null,
+    line5: address.manual.line5 ?? null,
+    uprn: null
+  }
 }
 
 const formatManualAddressInput = (address) => {

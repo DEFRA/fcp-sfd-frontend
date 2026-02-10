@@ -11,8 +11,11 @@ const getPersonalDetails = {
     yar.clear('personalDetailsValidation')
 
     const personalDetails = await fetchPersonalDetailsService(auth.credentials)
-    const { hasValidPersonalDetails, sectionsNeedingUpdate } = validatePersonalDetailsService(personalDetails)
+    console.log('🚀 ~ personalDetails:', personalDetails)
+    // const { hasValidPersonalDetails, sectionsNeedingUpdate } = validatePersonalDetailsService(personalDetails)
 
+    const hasValidPersonalDetails = false
+    const sectionsNeedingUpdate = ['name']
     if (!hasValidPersonalDetails) {
       yar.set('personalDetailsValidation', { personalDetailsValid: false, sectionsNeedingUpdate })
     }

@@ -16,7 +16,10 @@ const getBusinessDetails = {
     yar.clear('businessDetailsValidation')
 
     const businessDetails = await fetchBusinessDetailsService(auth.credentials)
-    const { hasValidBusinessDetails, sectionsNeedingUpdate } = validateBusinessDetailsService(businessDetails)
+    // const { hasValidBusinessDetails, sectionsNeedingUpdate } = validateBusinessDetailsService(businessDetails)
+
+    const hasValidBusinessDetails = false
+    const sectionsNeedingUpdate = ['address', 'email']
 
     if (!hasValidBusinessDetails) {
       yar.set('businessDetailsValidation', { businessDetailsValid: false, sectionsNeedingUpdate })

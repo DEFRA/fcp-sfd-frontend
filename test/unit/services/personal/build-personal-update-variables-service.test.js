@@ -80,7 +80,9 @@ describe('buildPersonalUpdateVariables', () => {
       beforeEach(() => {
         personalDetails = basePersonalDetails()
         personalDetails.address = {
-          uprn: '1234567890'
+          lookup: {
+            uprn: '1234567890'
+          }
         }
       })
 
@@ -104,6 +106,53 @@ describe('buildPersonalUpdateVariables', () => {
           line4: null,
           line5: null,
           uprn: '1234567890'
+        })
+      })
+    })
+
+    describe('when the address is a manual input', () => {
+      beforeEach(() => {
+        personalDetails = basePersonalDetails()
+        personalDetails.address = {
+          lookup: {
+            buildingNumberRange: null,
+            street: null,
+            city: null,
+            county: null,
+            uprn: null
+          },
+          manual: {
+            line1: '1 New Road',
+            line2: 'Flat 2',
+            line3: null,
+            line4: 'Somerset',
+            line5: 'Bristol'
+          },
+          postcode: 'BA1 1AA',
+          country: 'UK'
+        }
+      })
+
+      test('it builds mutation variables using manual address fields', () => {
+        const result = buildPersonalUpdateVariables(personalDetails)
+
+        expect(result.updateCustomerAddressInput.address).toEqual({
+          buildingNumberRange: null,
+          buildingName: null,
+          flatName: null,
+          street: null,
+          city: 'Somerset',
+          county: 'Bristol',
+          postalCode: 'BA1 1AA',
+          country: 'UK',
+          dependentLocality: null,
+          doubleDependentLocality: null,
+          line1: '1 New Road',
+          line2: 'Flat 2',
+          line3: null,
+          line4: 'Somerset',
+          line5: 'Bristol',
+          uprn: null
         })
       })
     })
@@ -272,11 +321,20 @@ const basePersonalDetails = () => {
       mobile: null
     },
     address: {
-      uprn: '1234567890',
-      buildingNumberRange: '10',
-      street: 'High Street',
-      city: 'Bath',
-      county: 'Somerset',
+      lookup: {
+        buildingNumberRange: '10',
+        street: 'High Street',
+        city: 'Bath',
+        county: 'Somerset',
+        uprn: '1234567890'
+      },
+      manual: {
+        line1: null,
+        line2: null,
+        line3: null,
+        line4: null,
+        line5: null
+      },
       postcode: 'BA1 1AA',
       country: 'UK'
     }

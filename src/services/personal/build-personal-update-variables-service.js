@@ -21,7 +21,6 @@ const buildPersonalUpdateVariables = (personalDetails) => {
 
 const buildAddressInput = (crn, personalDetails) => {
   let address = formatExistingAddress(personalDetails.address)
-  console.log('🚀 ~ address:', address)
 
   if (personalDetails.changePersonalAddress) {
     address = formatManualAddressInput(personalDetails.changePersonalAddress)
@@ -106,8 +105,7 @@ const buildDobInput = (crn, personalDetails) => {
 }
 
 const formatExistingAddress = (address) => {
-  console.log('🚀 ~ address:', address)
-  if (address.lookup.uprn) {
+  if (address.lookup?.uprn) {
     const { lookup } = address
 
     return {
@@ -135,6 +133,8 @@ const formatExistingAddress = (address) => {
     buildingName: null,
     flatName: null,
     street: null,
+    doubleDependentLocality: null,
+    dependentLocality: null,
     city: address.manual.line4,
     county: address.manual.line5 ?? null,
     postalCode: address.postcode,

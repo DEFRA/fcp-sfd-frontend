@@ -344,12 +344,12 @@ describe('businessDetailsPresenter', () => {
         expect(result.vatNumber.changeLink).toEqual({
           items: [
             {
-              href: '/business-fix?source=vat-change',
+              href: '/business-fix?source=vat',
               text: 'Change',
               visuallyHiddenText: 'VAT registration number'
             },
             {
-              href: '/business-fix?source=vat-remove',
+              href: '/business-fix?source=vat',
               text: 'Remove',
               visuallyHiddenText: 'VAT registration number'
             }
@@ -374,7 +374,7 @@ describe('businessDetailsPresenter', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual('Add')
-        expect(result.vatNumber.changeLink).toEqual('/business-fix?source=vat-add')
+        expect(result.vatNumber.changeLink).toEqual('/business-fix?source=vat')
       })
     })
   })

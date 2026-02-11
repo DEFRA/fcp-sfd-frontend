@@ -113,9 +113,9 @@ describe('initialiseFixJourneyService', () => {
     })
 
     test('moves source section to the top when provided', () => {
-      const result = initialiseFixJourneyService(yar, 'vat-add', 'business')
+      const result = initialiseFixJourneyService(yar, 'vat', 'business')
 
-      expect(result.orderedSectionsToFix).toEqual(['vat-add', 'name', 'address', 'phone', 'email'])
+      expect(result.orderedSectionsToFix).toEqual(['vat', 'name', 'address', 'phone', 'email'])
     })
 
     test('does not duplicate the source section', () => {

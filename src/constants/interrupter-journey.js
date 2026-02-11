@@ -15,7 +15,7 @@ export const BUSINESS_SECTION_FIELD_ORDER = {
 }
 
 export const PERSONAL_SECTION_ORDER = ['name', 'dob', 'address', 'phone', 'email']
-export const BUSINESS_SECTION_ORDER = ['name', 'address', 'phone', 'email', 'vat-add', 'vat-change', 'vat-remove']
+export const BUSINESS_SECTION_ORDER = ['name', 'address', 'phone', 'email', 'vat']
 
 export const PERSONAL_SECTION_LABELS = {
   name: 'personal name',
@@ -25,16 +25,12 @@ export const PERSONAL_SECTION_LABELS = {
   email: 'personal email address'
 }
 
-const VAT_LABEL = 'business VAT number'
-
 export const BUSINESS_SECTION_LABELS = {
   name: 'business name',
   address: 'business address',
   phone: 'at least one business phone number',
   email: 'business email address',
-  'vat-add': VAT_LABEL,
-  'vat-change': VAT_LABEL,
-  'vat-remove': VAT_LABEL
+  vat: 'business VAT number'
 }
 
 export const PERSONAL_UPDATE_TEXT_LABELS = {
@@ -45,14 +41,10 @@ export const PERSONAL_UPDATE_TEXT_LABELS = {
   email: 'your personal email address'
 }
 
-const VAT_UPDATE_TEXT_LABELS = 'your business VAT number'
-
 export const BUSINESS_UPDATE_TEXT_LABELS = {
   name: 'your business name',
   address: 'your business address',
   phone: 'at least one business phone number',
   email: 'your business email address',
-  'vat-add': VAT_UPDATE_TEXT_LABELS,
-  'vat-change': VAT_UPDATE_TEXT_LABELS,
-  'vat-remove': VAT_UPDATE_TEXT_LABELS
+  vat: 'your business VAT number'
 }

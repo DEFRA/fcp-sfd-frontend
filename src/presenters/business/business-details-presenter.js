@@ -105,7 +105,7 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
       return {
         value,
         action: 'Add',
-        changeLink: '/business-fix?source=vat-add'
+        changeLink: '/business-fix?source=vat'
       }
     }
 
@@ -116,12 +116,12 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
       changeLink: {
         items: [
           {
-            href: '/business-fix?source=vat-change',
+            href: '/business-fix?source=vat',
             text: 'Change',
             visuallyHiddenText: 'VAT registration number'
           },
           {
-            href: '/business-fix?source=vat-remove',
+            href: '/business-fix?source=vat',
             text: 'Remove',
             visuallyHiddenText: 'VAT registration number'
           }

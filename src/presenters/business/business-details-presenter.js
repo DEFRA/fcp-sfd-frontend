@@ -100,12 +100,13 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
 
   // Interrupter flow: invalid data, user has permission, must go via business-fix
   if (vatChangeState === 'interrupter') {
+    const changeLink = '/business-fix?source=vat'
     // Links still need to display the same as normal, but if no VAT number, link goes to interrupter add page
     if (!hasVat) {
       return {
         value,
         action: 'Add',
-        changeLink: '/business-fix?source=vat-add'
+        changeLink
       }
     }
 
@@ -116,12 +117,12 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
       changeLink: {
         items: [
           {
-            href: '/business-fix?source=vat-change',
+            href: changeLink,
             text: 'Change',
             visuallyHiddenText: 'VAT registration number'
           },
           {
-            href: '/business-fix?source=vat-remove',
+            href: changeLink,
             text: 'Remove',
             visuallyHiddenText: 'VAT registration number'
           }

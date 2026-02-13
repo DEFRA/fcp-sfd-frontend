@@ -53,7 +53,7 @@ const mapErrorsToSections = (errorDetails) => {
     personalMobile: 'phone',
     // Business details fields
     vatNumber: 'vat',
-    businessName: 'name',
+    businessName: 'businessName',
     businessEmail: 'email',
     businessTelephone: 'phone',
     businessMobile: 'phone',

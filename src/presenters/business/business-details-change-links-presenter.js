@@ -54,7 +54,7 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
   }
 
   if (permissionLevel === 'full') {
-    links.businessName = resolveChangeLink(interrupter, 'name', BUSINESS_CHANGE_LINKS.businessName)
+    links.businessName = resolveChangeLink(interrupter, 'businessName', BUSINESS_CHANGE_LINKS.businessName)
   }
 
   return links
@@ -103,7 +103,7 @@ const resolveChangeLink = (interrupter, section, normalLink) => {
  */
 const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
   if (permissionLevel === 'amend') {
-    return sectionsNeedingUpdate.includes('name')
+    return sectionsNeedingUpdate.includes('businessName')
   }
 
   return false

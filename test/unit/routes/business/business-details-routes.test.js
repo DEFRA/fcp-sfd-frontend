@@ -92,12 +92,12 @@ describe('business details', () => {
       })
 
       test('stores validation summary when business details are invalid', async () => {
-        validateBusinessDetailsService.mockReturnValue({ hasValidBusinessDetails: false, sectionsNeedingUpdate: ['name'] })
+        validateBusinessDetailsService.mockReturnValue({ hasValidBusinessDetails: false, sectionsNeedingUpdate: ['businessName'] })
 
         await getBusinessDetails.handler(request, h)
         expect(request.yar.set).toHaveBeenCalledWith('businessDetailsValidation', {
           businessDetailsValid: false,
-          sectionsNeedingUpdate: ['name']
+          sectionsNeedingUpdate: ['businessName']
         })
       })
     })

@@ -11,8 +11,8 @@ describe('businessFixPresenter', () => {
   describe('when provided with business fix data', () => {
     beforeEach(() => {
       sessionData = {
-        source: 'name',
-        orderedSectionsToFix: ['name']
+        source: 'businessName',
+        orderedSectionsToFix: ['businessName']
       }
 
       businessDetails = {
@@ -46,8 +46,8 @@ describe('businessFixPresenter', () => {
     describe('when two sections need fixing', () => {
       beforeEach(() => {
         sessionData = {
-          source: 'name',
-          orderedSectionsToFix: ['name', 'email']
+          source: 'businessName',
+          orderedSectionsToFix: ['businessName', 'email']
         }
       })
 
@@ -76,7 +76,7 @@ describe('businessFixPresenter', () => {
     describe('when no source is provided', () => {
       beforeEach(() => {
         sessionData = {
-          orderedSectionsToFix: ['name', 'vat', 'email']
+          orderedSectionsToFix: ['businessName', 'vat', 'email']
         }
       })
 
@@ -92,8 +92,8 @@ describe('businessFixPresenter', () => {
     describe('when two sections need fixing', () => {
       beforeEach(() => {
         sessionData = {
-          source: 'name',
-          orderedSectionsToFix: ['name', 'vat']
+          source: 'businessName',
+          orderedSectionsToFix: ['businessName  ', 'vat']
         }
       })
 
@@ -108,7 +108,7 @@ describe('businessFixPresenter', () => {
       beforeEach(() => {
         sessionData = {
           source: 'phone',
-          orderedSectionsToFix: ['email', 'phone', 'name', 'vat']
+          orderedSectionsToFix: ['email', 'phone', 'businessName', 'vat']
         }
       })
 

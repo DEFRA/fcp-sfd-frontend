@@ -10,6 +10,9 @@ import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 import { initTokenCache } from './utils/caching/token-cache.js'
 
+let serverInstance = null
+export const getServerInstance = () => serverInstance
+
 moment.locale('en-gb') // Set moment locale globally
 
 export const createServer = async () => {
@@ -67,6 +70,7 @@ export const createServer = async () => {
   await server.register(plugins)
 
   server.ext('onPreResponse', catchAll)
+  serverInstance = server
 
   return server
 }

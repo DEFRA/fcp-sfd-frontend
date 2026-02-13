@@ -21,9 +21,91 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
 
   await updateDalService(updateBusinessAddressMutation, variables, credentials.sessionId)
 
-  yar.clear('businessDetails')
+  yar.clear('businessDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your business address')
+}
+
+/**
+ * Normalizes a value to null if it is undefined.
+ * @param {*} value - The value to normalize
+ * @returns {*|null} The value if defined, otherwise null
+ * @private
+ */
+const nullIfUndefined = (value) => {
+  return value ?? null
+}
+
+/**
+ * Builds address variables for an address chosen via postcode lookup (with UPRN).
+ * When a UPRN is present, it is the only required field. The rest of the address
+ * data is included but the DAL/v1 does not apply further validation.
+ *
+ * Optional fields are normalized using nullIfUndefined to ensure they are
+ * explicitly set to `null` rather than being left `undefined`.
+ *
+ * @param {Object} change - The address change object containing UPRN and address fields
+ * @returns {Object} Address object formatted for DAL/v1 with UPRN
+ * @private
+ */
+const buildUprnAddress = (change) => {
+  return {
+    buildingNumberRange: nullIfUndefined(change.buildingNumberRange),
+    buildingName: nullIfUndefined(change.buildingName),
+    flatName: nullIfUndefined(change.flatName),
+    street: nullIfUndefined(change.street),
+    city: nullIfUndefined(change.city),
+    county: nullIfUndefined(change.county),
+    postalCode: nullIfUndefined(change.postcode),
+    country: nullIfUndefined(change.country),
+    dependentLocality: nullIfUndefined(change.dependentLocality),
+    doubleDependentLocality: nullIfUndefined(change.doubleDependentLocality),
+    line1: null,
+    line2: null,
+    line3: null,
+    line4: null,
+    line5: null,
+    uprn: change.uprn // required for DAL/v1
+  }
+}
+
+/**
+ * Builds address variables for a manually entered address (without UPRN).
+ * When there is no UPRN, the DAL/v1 enforces validation and requires the following
+ * fields to be present:
+ * - `postcode`
+ * - `line1`
+ * - `city`
+ * - `country`
+ *
+ * When a user enters the address manually, the `city` is always captured
+ * but stored as `line5`. We explicitly map `line4` into the `city` field
+ * so that the DAL's validation rules are satisfied.
+ *
+ * Optional fields are normalized using nullIfUndefined to ensure they are
+ * explicitly set to `null` rather than being left `undefined`.
+ *
+ * @param {Object} change - The address change object containing manually entered address fields
+ * @returns {Object} Address object formatted for DAL/v1 without UPRN
+ * @private
+ */
+const buildManualAddress = (change) => {
+  return {
+    buildingNumberRange: null,
+    buildingName: null,
+    flatName: null,
+    street: null,
+    city: change.city, // required for DAL/v1
+    county: nullIfUndefined(change.county),
+    postalCode: change.postcode, // required for DAL/v1
+    country: change.country, // required for DAL/v1
+    line1: change.address1, // required for DAL/v1
+    line2: nullIfUndefined(change.address2),
+    line3: nullIfUndefined(change.address3),
+    line4: nullIfUndefined(change.city), // manual city mapped for validation
+    line5: nullIfUndefined(change.county),
+    uprn: null
+  }
 }
 
 /**
@@ -45,66 +127,36 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
  *
  * When a user enters the address manually, the `city` is always captured
  * but stored as `line5`. We explicitly map `line4` into the `city` field
- * so that the DAL’s validation rules are satisfied.
+ * so that the DAL's validation rules are satisfied.
  *
- * Any optional fields are written with the nullish coalescing operator. This ensures
- * that if the user does not provide a value, the field is explicitly set
- * to `null` rather than being left `undefined`.
+ * Optional fields are normalized to ensure they are explicitly set to `null`
+ * rather than being left `undefined`.
  *
+ * @param {Object} businessDetails - The business details object containing the address change
+ * @returns {Object} Variables object formatted for DAL mutation
  * @private
  */
 const businessAddressVariables = (businessDetails) => {
   const { sbi } = businessDetails.info
   const change = businessDetails.changeBusinessAddress
 
-  const variables = {
+  // Base structure for the GraphQL mutation: includes the SBI (required for the mutation)
+  // and sets up an empty address object that will be populated by the builder functions
+  const baseVariables = {
     input: {
       sbi,
       address: {}
     }
   }
 
+  // Business addresses use withUprn/withoutUprn structure (unlike personal addresses)
   if (change.uprn) {
-    // Address chosen via postcode lookup
-    variables.input.address.withUprn = {
-      buildingNumberRange: change.buildingNumberRange ?? null,
-      buildingName: change.buildingName ?? null,
-      flatName: change.flatName ?? null,
-      street: change.street ?? null,
-      city: change.city ?? null,
-      county: change.county ?? null,
-      postalCode: change.postcode ?? null,
-      country: change.country ?? null,
-      dependentLocality: change.dependentLocality ?? null,
-      doubleDependentLocality: change.doubleDependentLocality ?? null,
-      line1: null,
-      line2: null,
-      line3: null,
-      line4: null,
-      line5: null,
-      uprn: change.uprn // required for DAL/v1
-    }
+    baseVariables.input.address.withUprn = buildUprnAddress(change)
   } else {
-    // Address entered manually
-    variables.input.address.withoutUprn = {
-      buildingNumberRange: null,
-      buildingName: null,
-      flatName: null,
-      street: null,
-      city: change.city, // required for DAL/v1
-      county: change.county ?? null,
-      postalCode: change.postcode, // required for DAL/v1
-      country: change.country, // required for DAL/v1
-      line1: change.address1, // required for DAL/v1
-      line2: change.address2 ?? null,
-      line3: change.address3 ?? null,
-      line4: change.city ?? null, // manual city mapped for validation
-      line5: change.county ?? null,
-      uprn: null
-    }
+    baseVariables.input.address.withoutUprn = buildManualAddress(change)
   }
 
-  return variables
+  return baseVariables
 }
 
 export {

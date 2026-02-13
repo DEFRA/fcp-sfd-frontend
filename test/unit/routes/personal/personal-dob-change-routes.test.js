@@ -91,7 +91,7 @@ describe('personal date of birth change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'personalDetails',
+            'personalDetailsUpdate',
             'changePersonalDob',
             request.payload
           )
@@ -146,7 +146,12 @@ describe('personal date of birth change', () => {
 const getMockData = () => {
   return {
     info: {
-      dateOfBirth: '1982-07-05',
+      dateOfBirth: {
+        full: '1982-07-05',
+        day: '5',
+        month: '7',
+        year: '1982'
+      },
       userName: 'John Doe',
       fullName: {
         first: 'John',

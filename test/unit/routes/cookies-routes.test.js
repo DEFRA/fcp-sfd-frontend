@@ -1,14 +1,11 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { cookies } from '../../../src/routes/cookies-routes.js'
 
-const mockView = vi.fn()
-
-const mockH = {
-  view: vi.fn().mockReturnValue(mockView)
-}
-
 describe('Cookies endpoint', () => {
+  let viewMock
+
   beforeEach(() => {
+    viewMock = vi.fn().mockReturnValue('mock view return')
     vi.clearAllMocks()
   })
 
@@ -18,13 +15,22 @@ describe('Cookies endpoint', () => {
   })
 
   test('should render the cookies view with correct data', () => {
-    const result = cookies.handler(null, mockH)
+    const mockRequest = {
+      headers: {
+        referer: '/some-previous-page'
+      }
+    }
 
-    expect(mockH.view).toHaveBeenCalledWith('cookies', {
+    const h = { view: viewMock }
+
+    const result = cookies.handler(mockRequest, h)
+
+    expect(viewMock).toHaveBeenCalledWith('cookies', {
       pageTitle: 'Cookies',
-      heading: 'How we use cookies to store information about how you use this service.'
+      heading: 'How we use cookies to store information about how you use this service.',
+      backLink: '/some-previous-page'
     })
 
-    expect(result).toBe(mockView)
+    expect(result).toBe('mock view return')
   })
 })

@@ -4,6 +4,8 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
+import { checkBusinessPermissionGroupService } from '../../../../src/services/business/check-business-permission-group-service.js'
+import { validateBusinessDetailsService } from '../../../../src/services/business/validate-business-details-service.js'
 
 // Test helpers
 import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
@@ -19,6 +21,14 @@ vi.mock('../../../../src/services/business/fetch-business-details-service.js', (
 
 vi.mock('../../../../src/presenters/business/business-details-presenter.js', () => ({
   businessDetailsPresenter: vi.fn()
+}))
+
+vi.mock('../../../../src/services/business/check-business-permission-group-service.js', () => ({
+  checkBusinessPermissionGroupService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/business/validate-business-details-service.js', () => ({
+  validateBusinessDetailsService: vi.fn()
 }))
 
 describe('business details', () => {
@@ -38,7 +48,10 @@ describe('business details', () => {
         }
 
         request = {
-          yar: { clear: vi.fn() },
+          yar: {
+            clear: vi.fn(),
+            set: vi.fn()
+          },
           auth: {
             credentials: {
               scope: ['BUSINESS_DETAILS:FULL_PERMISSION'],
@@ -52,6 +65,8 @@ describe('business details', () => {
         pageData = getPageData()
         fetchBusinessDetailsService.mockResolvedValue(getMockData())
         businessDetailsPresenter.mockReturnValue(pageData)
+        validateBusinessDetailsService.mockReturnValue({ hasValidBusinessDetails: true, sectionsNeedingUpdate: [] })
+        checkBusinessPermissionGroupService.mockReturnValue('full')
       })
 
       test('it has the correct path and auth scope configured', () => {
@@ -59,18 +74,31 @@ describe('business details', () => {
         expect(getBusinessDetails.options.auth.scope).toBe(VIEW_PERMISSIONS)
       })
 
-      test('it clears the businessDetails key from session', async () => {
+      test('it clears the businessDetails journey state from session', async () => {
         await getBusinessDetails.handler(request, h)
 
-        expect(request.yar.clear).toHaveBeenCalledWith('businessDetails')
+        expect(request.yar.clear).toHaveBeenCalledWith('businessDetailsUpdate')
+        expect(request.yar.clear).toHaveBeenCalledWith('businessDetailsValidation')
       })
 
       test('it calls the fetch business details service', async () => {
         await getBusinessDetails.handler(request, h)
 
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, request.auth.credentials.scope)
+        expect(validateBusinessDetailsService).toHaveBeenCalledWith(getMockData())
+        expect(checkBusinessPermissionGroupService).toHaveBeenCalledWith(request.auth.credentials.scope)
+        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, 'full', true, [])
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
+      })
+
+      test('stores validation summary when business details are invalid', async () => {
+        validateBusinessDetailsService.mockReturnValue({ hasValidBusinessDetails: false, sectionsNeedingUpdate: ['name'] })
+
+        await getBusinessDetails.handler(request, h)
+        expect(request.yar.set).toHaveBeenCalledWith('businessDetailsValidation', {
+          businessDetailsValid: false,
+          sectionsNeedingUpdate: ['name']
+        })
       })
     })
   })

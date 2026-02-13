@@ -27,7 +27,7 @@ const updatePersonalEmailChangeService = async (yar, credentials) => {
 
   await updateDalService(updatePersonalEmailMutation, variables, credentials.sessionId)
 
-  yar.clear('personalDetails')
+  yar.clear('personalDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your personal email address')
 }

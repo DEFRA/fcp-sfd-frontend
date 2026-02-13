@@ -92,10 +92,10 @@ describe('updatePersonalAddressChangeService', () => {
       )
     })
 
-    test('it clears personalDetails from session', async () => {
+    test('it clears personalDetailsUpdate from session', async () => {
       await updatePersonalAddressChangeService(yar, credentials)
 
-      expect(yar.clear).toHaveBeenCalledWith('personalDetails')
+      expect(yar.clear).toHaveBeenCalledWith('personalDetailsUpdate')
     })
   })
 

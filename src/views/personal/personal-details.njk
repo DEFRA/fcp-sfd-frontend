@@ -16,8 +16,8 @@
         {{ govukNotificationBanner({
           type: "success",
           titleText: notification.title,
-          text: notification.text
-        }) }}
+          html: notification.html or notification.text
+        })}}
       {% endif %}
 
     <span class="govuk-caption-l text-wrap-no-hyphen">{{userName}}</span>
@@ -26,15 +26,37 @@
       View and update your personal details
     </h1>
 
+    {% set displayDOB %}
+      {% if dob.fullDateOfBirth === 'Not added' %}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        <div>{{ dob.fullDateOfBirth }}</div>
+      {% endif %}
+    {% endset %}
+
     {% set formattedAddress %}
-      {% for addressLine in address %}
+      {% for addressLine in personalAddress.address %}
         <div>{{addressLine}}</div>
       {% endfor %}
     {% endset %}
 
     {% set displayPersonalTelephone %}
-      <div>Telephone: <span class="govuk-hint display-inline">{{personalTelephone.telephone}}</span></div>
-      <div>Mobile: <span class="govuk-hint display-inline">{{personalTelephone.mobile}}</span></div>
+      <div>
+        Telephone:
+        {% if personalTelephone.telephone === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ personalTelephone.telephone }}</span>
+        {% else %}
+          <span>{{ personalTelephone.telephone }}</span>
+        {% endif %}
+      </div>
+      <div>
+        Mobile:
+        {% if personalTelephone.mobile === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ personalTelephone.mobile }}</span>
+        {% else %}
+          <span>{{ personalTelephone.mobile }}</span>
+        {% endif %}
+      </div>
     {% endset %}
 
     {{ govukSummaryList({
@@ -44,13 +66,13 @@
             text: "Full name"
           },
           value: {
-            text: fullName
+            text: personalName.fullName
           },
           actions: {
             items: [
               {
-                href: "/account-name-change",
-                text: "Change",
+                href: personalName.changeLink,
+                text: personalName.action,
                 visuallyHiddenText: "Full name"
               }
             ]
@@ -61,13 +83,13 @@
             text: "Date of birth"
           },
           value: {
-            text: dateOfBirth
+            html: displayDOB
           },
           actions: {
             items: [
               {
-                href: dobChangeLink,
-                text: "Change",
+                href: dob.changeLink,
+                text: dob.action,
                 visuallyHiddenText: "date of birth"
               }
             ]
@@ -91,8 +113,8 @@
           actions: {
             items: [
               {
-                href: "/account-address-change",
-                text: "Change",
+                href: personalAddress.changeLink,
+                text: personalAddress.action,
                 visuallyHiddenText: "personal address"
               }
             ]
@@ -108,7 +130,7 @@
           actions: {
             items: [
               {
-                href: personalTelephone.link,
+                href: personalTelephone.changeLink,
                 text: personalTelephone.action,
                 visuallyHiddenText: "personal phone numbers"
               }
@@ -125,7 +147,7 @@
           actions: {
             items: [
               {
-                href: personalEmail.link,
+                href: personalEmail.changeLink,
                 text: personalEmail.action,
                 visuallyHiddenText: "personal email address"
               }

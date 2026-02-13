@@ -35,7 +35,7 @@ const postPersonalEmailChange = {
       }
     },
     handler: async (request, h) => {
-      setSessionData(request.yar, 'personalDetails', 'changePersonalEmail', request.payload.personalEmail)
+      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalEmail', request.payload.personalEmail)
 
       return h.redirect('/account-email-check')
     }

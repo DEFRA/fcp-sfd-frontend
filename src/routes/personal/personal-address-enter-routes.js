@@ -35,7 +35,7 @@ const postPersonalAddressEnter = {
       }
     },
     handler: (request, h) => {
-      setSessionData(request.yar, 'personalDetails', 'changePersonalAddress', request.payload)
+      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalAddress', request.payload)
 
       return h.redirect('/account-address-check')
     }

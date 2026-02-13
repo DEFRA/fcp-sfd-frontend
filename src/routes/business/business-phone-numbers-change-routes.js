@@ -46,7 +46,7 @@ const postBusinessPhoneNumbersChange = {
         businessMobile: request.payload.businessMobile ?? null
       }
 
-      setSessionData(request.yar, 'businessDetails', 'changeBusinessPhoneNumbers', request.payload)
+      setSessionData(request.yar, 'businessDetailsUpdate', 'changeBusinessPhoneNumbers', request.payload)
 
       return h.redirect('/business-phone-numbers-check')
     }

@@ -13,7 +13,7 @@ import { fetchPersonalDetailsService } from './fetch-personal-details-service.js
  */
 const fetchPersonalChangeService = async (yar, credentials, fields) => {
   const personalDetails = await fetchPersonalDetailsService(credentials)
-  const sessionData = yar.get('personalDetails') || {}
+  const sessionData = yar.get('personalDetailsUpdate') || {}
 
   // Normalise to array
   const fieldsToCheck = Array.isArray(fields) ? fields : [fields]

@@ -122,7 +122,7 @@ const getPageData = () => {
     userName: 'John Doe',
     personalTelephone: {
       telephone: '01234567890',
-      mobile: 'Not added'
+      mobile: null
     }
   }
 }

@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Mocks
 import { fetchPersonalDetailsService } from '../../../../src/services/personal/fetch-personal-details-service.js'
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
+import { validatePersonalDetailsService } from '../../../../src/services/personal/validate-personal-details-service.js'
 
 // Thing under test
 import { personalDetailsRoutes } from '../../../../src/routes/personal/personal-details-routes.js'
@@ -18,10 +19,18 @@ vi.mock('../../../../src/presenters/personal/personal-details-presenter.js', () 
   personalDetailsPresenter: vi.fn()
 }))
 
+vi.mock(
+  '../../../../src/services/personal/validate-personal-details-service.js',
+  () => ({
+    validatePersonalDetailsService: vi.fn()
+  })
+)
+
 describe('personal details', () => {
   let h
   let request
   let pageData
+  let personalDetails
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -35,7 +44,10 @@ describe('personal details', () => {
         }
 
         request = {
-          yar: { clear: vi.fn() },
+          yar: {
+            clear: vi.fn(),
+            set: vi.fn()
+          },
           auth: {
             credentials: {
               sbi: '123456789',
@@ -45,8 +57,11 @@ describe('personal details', () => {
           }
         }
 
+        personalDetails = getMockData()
         pageData = getPageData()
-        fetchPersonalDetailsService.mockResolvedValue(getMockData())
+
+        fetchPersonalDetailsService.mockResolvedValue(personalDetails)
+        validatePersonalDetailsService.mockReturnValue({ hasValidPersonalDetails: true, sectionsNeedingUpdate: [] })
         personalDetailsPresenter.mockReturnValue(pageData)
       })
 
@@ -54,18 +69,35 @@ describe('personal details', () => {
         expect(getPersonalDetails.path).toBe('/personal-details')
       })
 
-      test('it clears the personalDetails key from session', async () => {
+      test('clears personal details journey state from the session', async () => {
         await getPersonalDetails.handler(request, h)
 
-        expect(request.yar.clear).toHaveBeenCalledWith('personalDetails')
+        expect(request.yar.clear).toHaveBeenCalledWith('personalDetailsUpdate')
+        expect(request.yar.clear).toHaveBeenCalledWith('personalDetailsValidation')
       })
 
       test('it calls the fetch personal details service and renders view', async () => {
         await getPersonalDetails.handler(request, h)
 
         expect(fetchPersonalDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(personalDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar)
+        expect(validatePersonalDetailsService).toHaveBeenCalledWith(personalDetails)
+        expect(personalDetailsPresenter).toHaveBeenCalledWith(personalDetails, request.yar, true, [])
         expect(h.view).toHaveBeenCalledWith('personal/personal-details.njk', pageData)
+      })
+
+      test('stores validation summary when personal details are invalid', async () => {
+        validatePersonalDetailsService.mockReturnValue({
+          hasValidPersonalDetails: false,
+          sectionsNeedingUpdate: ['name']
+        })
+
+        await getPersonalDetails.handler(request, h)
+
+        expect(request.yar.set).toHaveBeenCalledWith('personalDetailsValidation', {
+          personalDetailsValid: false,
+          sectionsNeedingUpdate: ['name']
+        }
+        )
       })
     })
   })

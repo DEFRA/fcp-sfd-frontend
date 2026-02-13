@@ -43,7 +43,7 @@ const postPersonalAddressSelect = {
 
       selectedAddress.postcodeLookup = true
 
-      setSessionData(request.yar, 'personalDetails', 'changePersonalAddress', selectedAddress)
+      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalAddress', selectedAddress)
 
       return h.redirect('/account-address-check')
     }

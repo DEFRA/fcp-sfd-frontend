@@ -6,7 +6,7 @@
 {% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
 
 {% block beforeContent %}
-  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
+  {{ subHeader(businessName=businessNameHeader, sbi=sbi, userName=userName) }}
   {{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
@@ -18,8 +18,8 @@
         {{ govukNotificationBanner({
           type: "success",
           titleText: notification.title,
-          text: notification.text
-        }) }}
+          html: notification.html or notification.text
+        })}}
       {% endif %}
 
     <h1 class="govuk-heading-l">
@@ -31,7 +31,7 @@
     </p>
 
     {% set formattedAddress %}
-      {% for addressLine in address %}
+      {% for addressLine in businessAddress.value %}
         <div>{{addressLine}}</div>
       {% endfor %}
     {% endset %}
@@ -43,13 +43,113 @@
     {% endset %}
 
     {% set displayBusinessTelephone %}
-      <div>Telephone: <div class="govuk-hint display-inline">{{businessTelephone.telephone}}</div></div>
-      <div>Mobile: <div class="govuk-hint display-inline">{{businessTelephone.mobile}}</div></div>
+      <div>
+        Telephone:
+        {% if businessTelephone.telephone === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ businessTelephone.telephone }}</span>
+        {% else %}
+          <span>{{ businessTelephone.telephone }}</span>
+        {% endif %}
+      </div>
+      <div>
+        Mobile:
+        {% if businessTelephone.mobile === 'Not added' %}
+          <span class="govuk-hint display-inline">{{ businessTelephone.mobile }}</span>
+        {% else %}
+          <span>{{ businessTelephone.mobile }}</span>
+        {% endif %}
+      </div>
     {% endset %}
+
+    {% set displayVatNumber %}
+      {% if vatNumber.value === 'No number added' %}
+        <span class="govuk-hint display-inline">{{ vatNumber.value }}</span>
+      {% else %}
+        <span>{{ vatNumber.value }}</span>
+      {% endif %}
+    {% endset %}
+
 
     <h2 class="govuk-heading-m">
       Business contact details
     </h2>
+
+    {# Set change links #}
+    {% if businessName.changeLink %}
+      {% set businessNameActions = {
+        items: [
+          {
+            href: businessName.changeLink,
+            text: businessName.action,
+            visuallyHiddenText: "Business name"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessNameActions = null %}
+    {% endif %}
+
+    {% if businessAddress.changeLink %}
+      {% set businessAddressActions = {
+        items: [
+          {
+            href: businessAddress.changeLink,
+            text: businessAddress.action,
+            visuallyHiddenText: "Business address"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessAddressActions = null %}
+    {% endif %}
+
+    {% if businessTelephone.changeLink %}
+      {% set businessTelephoneActions = {
+        items: [
+          {
+            href: businessTelephone.changeLink,
+            text: businessTelephone.action,
+            visuallyHiddenText: "Business telephone numbers"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessTelephoneActions = null %}
+    {% endif %}
+
+    {% if businessEmail.changeLink %}
+      {% set businessEmailActions = {
+        items: [
+          {
+            href: businessEmail.changeLink,
+            text: businessEmail.action,
+            visuallyHiddenText: "Business email address"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessEmailActions = null %}
+    {% endif %}
+
+    {% if vatNumber.changeLink %}
+      {% if vatNumber.changeLink.items %}
+        {# Already an items array (Change + Remove) #}
+        {% set vatNumberActions = vatNumber.changeLink %}
+      {% else %}
+        {# Single link #}
+        {% set vatNumberActions = {
+          items: [
+            {
+              href: vatNumber.changeLink,
+              text: vatNumber.action,
+              visuallyHiddenText: "VAT registration number"
+            }
+          ]
+        } %}
+      {% endif %}
+    {% else %}
+      {% set vatNumberActions = null %}
+    {% endif %}
 
     {{ govukSummaryList({
       rows: [
@@ -58,9 +158,9 @@
             text: "Business name"
           },
           value: {
-            text: businessName
+            text: businessName.value
           },
-          actions: changeLinks.businessName
+          actions: businessNameActions
         },
         {
           key: {
@@ -69,7 +169,7 @@
           value: {
             html: formattedAddress
           },
-          actions: changeLinks.businessAddress
+          actions: businessAddressActions
         },
         {
           key: {
@@ -78,16 +178,16 @@
           value: {
             html: displayBusinessTelephone
           },
-          actions: changeLinks.businessTelephone
+          actions: businessTelephoneActions
         },
         {
           key: {
             text: "Business email address"
           },
           value: {
-            text: businessEmail
+            text: businessEmail.value
           },
-          actions: changeLinks.businessEmail
+          actions: businessEmailActions
         }
       ]
     }) }}
@@ -108,8 +208,8 @@
         },
         {
           key: { text: "VAT registration number" },
-          value: { text: vatNumber },
-          actions: changeLinks.businessVatNumber
+          value: { html: displayVatNumber },
+          actions: vatNumberActions
         }
       ]%}
 
@@ -143,6 +243,50 @@
       Additional details
     </h2>
 
+    {% set businessLegalStatusDisplay %}
+      {% if businessLegalStatus.value === 'Not added' %}
+        <span class="govuk-hint display-inline">{{ businessLegalStatus.value }}</span>
+      {% else %}
+        <span>{{ businessLegalStatus.value }}</span>
+      {% endif %}
+    {% endset %}
+
+    {% set businessTypeDisplay %}
+      {% if businessType.value === 'Not added' %}
+        <span class="govuk-hint display-inline">{{ businessType.value }}</span>
+      {% else %}
+        <span>{{ businessType.value }}</span>
+      {% endif %}
+    {% endset %}
+
+    {% if businessLegalStatus.changeLink %}
+      {% set businessLegalStatusActions = {
+        items: [
+          {
+            href: businessLegalStatus.changeLink,
+            text: businessLegalStatus.action,
+            visuallyHiddenText: "Business legal status"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessLegalStatusActions = null %}
+    {% endif %}
+
+    {% if businessType.changeLink %}
+      {% set businessTypeActions = {
+        items: [
+          {
+            href: businessType.changeLink,
+            text: businessType.action,
+            visuallyHiddenText: "Business type"
+          }
+        ]
+      } %}
+    {% else %}
+      {% set businessTypeActions = null %}
+    {% endif %}
+
     {{ govukSummaryList({
       rows: [
         {
@@ -150,18 +294,18 @@
             text: "Business legal status"
           },
           value: {
-            text: businessLegalStatus
+            html: businessLegalStatusDisplay
           },
-          actions: changeLinks.businessLegal
+          actions: businessLegalStatusActions
         },
         {
           key: {
             text: "Business type"
           },
           value: {
-            text: businessType
+            html: businessTypeDisplay
           },
-          actions: changeLinks.businessType
+          actions: businessTypeActions
         }
       ]
     }) }}

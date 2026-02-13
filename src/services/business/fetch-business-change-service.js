@@ -13,7 +13,7 @@ import { fetchBusinessDetailsService } from './fetch-business-details-service.js
  */
 const fetchBusinessChangeService = async (yar, credentials, fields) => {
   const businessDetails = await fetchBusinessDetailsService(credentials)
-  const sessionData = yar.get('businessDetails') || {}
+  const sessionData = yar.get('businessDetailsUpdate') || {}
 
   // Normalize to array
   const fieldsToCheck = Array.isArray(fields) ? fields : [fields]

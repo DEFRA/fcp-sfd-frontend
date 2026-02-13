@@ -28,7 +28,7 @@ const updatePersonalPhoneNumbersChangeService = async (yar, credentials) => {
 
   await updateDalService(updatePersonalPhoneNumbersMutation, variables, credentials.sessionId)
 
-  yar.clear('personalDetails')
+  yar.clear('personalDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your personal phone numbers')
 }

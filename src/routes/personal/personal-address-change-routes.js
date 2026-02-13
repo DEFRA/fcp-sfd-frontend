@@ -36,7 +36,7 @@ const postPersonalAddressChange = {
   handler: async (request, h) => {
     const { yar, auth, payload } = request
 
-    setSessionData(yar, 'personalDetails', 'changePersonalPostcode', payload)
+    setSessionData(yar, 'personalDetailsUpdate', 'changePersonalPostcode', payload)
     const addresses = await addressLookupService(payload.postcode, yar, 'personal')
 
     if (addresses.error) {

@@ -102,7 +102,7 @@ describe('business address select change', () => {
 
           expect(setSessionData).toHaveBeenCalledWith(
             request.yar,
-            'businessDetails',
+            'businessDetailsUpdate',
             'changeBusinessAddress',
             {
               displayAddress: '123 Test Street, LONDON, E1 6AN',

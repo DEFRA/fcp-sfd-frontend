@@ -28,7 +28,7 @@ const updatePersonalNameChangeService = async (yar, credentials) => {
 
   await updateDalService(updatePersonalNameMutation, variables, credentials.sessionId)
 
-  yar.clear('personalDetails')
+  yar.clear('personalDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your full name')
 }

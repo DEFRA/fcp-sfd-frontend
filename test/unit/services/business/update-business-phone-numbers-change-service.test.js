@@ -71,7 +71,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
     test('it clears the businessDetails from session', async () => {
       await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
-      expect(yar.clear).toHaveBeenCalledWith('businessDetails')
+      expect(yar.clear).toHaveBeenCalledWith('businessDetailsUpdate')
     })
 
     test('adds a flash notification confirming the change in data', async () => {

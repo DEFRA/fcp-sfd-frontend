@@ -1,4 +1,3 @@
-import crypto from 'node:crypto'
 import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
@@ -38,9 +37,7 @@ const signInOidc = {
     // However, when signing in with RPA credentials, the roles only include the role name and not the permissions
     // Therefore, we need to make additional API calls to get the permissions from Siti Agri
     // These calls are authenticated using the token returned from Defra Identity
-    // sessionId may come from the Defra ID token payload; if not, generate one so we can store session in cache and pass it to the DAL
-    const { sbi, crn } = profile
-    const sessionId = profile.sessionId ?? crypto.randomUUID()
+    const { sbi, crn, sessionId } = profile
     const { privileges, businessName } = await getPermissions(sbi, crn, token)
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(sessionId, {

@@ -39,7 +39,7 @@ describe('business fix routes', () => {
     request = {
       yar: {},
       query: {
-        source: 'name'
+        source: 'business-name'
       },
       auth: { credentials }
     }
@@ -110,8 +110,8 @@ describe('business fix routes', () => {
 
 const getMockSessionData = () => {
   return {
-    source: 'name',
-    orderedSectionsToFix: ['name', 'email']
+    source: 'business-name',
+    orderedSectionsToFix: ['businessName', 'email']
   }
 }
 

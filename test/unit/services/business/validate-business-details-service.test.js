@@ -42,7 +42,7 @@ describe('validateBusinessDetailsService', () => {
     test('returns the sections needing update', () => {
       const result = validateBusinessDetailsService(businessDetails)
 
-      expect(result.sectionsNeedingUpdate).toEqual(['name'])
+      expect(result.sectionsNeedingUpdate).toEqual(['businessName'])
     })
   })
 
@@ -69,7 +69,7 @@ describe('validateBusinessDetailsService', () => {
     test('returns all affected sections', () => {
       const result = validateBusinessDetailsService(businessDetails)
 
-      expect(result.sectionsNeedingUpdate).toEqual(['name', 'email'])
+      expect(result.sectionsNeedingUpdate).toEqual(['businessName', 'email'])
     })
   })
 

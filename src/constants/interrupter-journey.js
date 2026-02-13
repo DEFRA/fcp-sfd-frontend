@@ -7,7 +7,7 @@ export const PERSONAL_SECTION_FIELD_ORDER = {
 }
 
 export const BUSINESS_SECTION_FIELD_ORDER = {
-  name: ['businessName'],
+  businessName: ['businessName'],
   address: ['address1', 'address2', 'address3', 'city', 'county', 'postcode', 'country'],
   phone: ['businessTelephone', 'businessMobile'],
   email: ['businessEmail'],
@@ -15,7 +15,7 @@ export const BUSINESS_SECTION_FIELD_ORDER = {
 }
 
 export const PERSONAL_SECTION_ORDER = ['name', 'dob', 'address', 'phone', 'email']
-export const BUSINESS_SECTION_ORDER = ['name', 'address', 'phone', 'email', 'vat']
+export const BUSINESS_SECTION_ORDER = ['businessName', 'address', 'phone', 'email', 'vat']
 
 export const PERSONAL_SECTION_LABELS = {
   name: 'personal name',
@@ -26,7 +26,7 @@ export const PERSONAL_SECTION_LABELS = {
 }
 
 export const BUSINESS_SECTION_LABELS = {
-  name: 'business name',
+  businessName: 'business name',
   address: 'business address',
   phone: 'at least one business phone number',
   email: 'business email address',
@@ -42,7 +42,7 @@ export const PERSONAL_UPDATE_TEXT_LABELS = {
 }
 
 export const BUSINESS_UPDATE_TEXT_LABELS = {
-  name: 'your business name',
+  businessName: 'your business name',
   address: 'your business address',
   phone: 'at least one business phone number',
   email: 'your business email address',

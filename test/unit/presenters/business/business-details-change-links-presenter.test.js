@@ -67,7 +67,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
     describe('and the user has blocked sections', () => {
       beforeEach(() => {
-        sectionsNeedingUpdate = ['name'] // Amend cannot update 'name'
+        sectionsNeedingUpdate = ['businessName'] // Amend cannot update 'businessName'
       })
 
       test('it returns the no permission placeholder links', () => {
@@ -85,7 +85,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
     describe('when the interrupter feature toggle is ON', () => {
       beforeEach(() => {
         config.get.mockReturnValue(true)
-        sectionsNeedingUpdate = ['name']
+        sectionsNeedingUpdate = ['businessName']
       })
 
       test('blocked sections still return placeholder links', () => {
@@ -161,7 +161,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
             expect(result.businessAddress).toEqual('/business-fix?source=address')
             expect(result.businessEmail).toEqual('/business-fix?source=email')
-            expect(result.businessName).toEqual('/business-fix?source=name')
+            expect(result.businessName).toEqual('/business-fix?source=businessName')
             expect(result.vat).toEqual('interrupter')
           })
         })
@@ -179,18 +179,18 @@ describe('businessDetailsChangeLinksPresenter', () => {
           expect(result.businessAddress).toEqual('/business-fix?source=address')
           expect(result.businessTelephone).toEqual('/business-fix?source=phone')
           expect(result.businessEmail).toEqual('/business-fix?source=email')
-          expect(result.businessName).toEqual('/business-fix?source=name')
+          expect(result.businessName).toEqual('/business-fix?source=businessName')
           expect(result.vat).toEqual('interrupter')
         })
       })
 
-      describe('when the single invalid section is name', () => {
+      describe('when the single invalid section is business name', () => {
         beforeEach(() => {
           hasValidBusinessDetails = false
-          sectionsNeedingUpdate = ['name']
+          sectionsNeedingUpdate = ['businessName']
         })
 
-        test('the name link points to normal change page, others point to business-fix', () => {
+        test('the businessName link points to normal change page, others point to business-fix', () => {
           const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
@@ -249,7 +249,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
       describe('some sections invalid', () => {
         beforeEach(() => {
           hasValidBusinessDetails = false
-          sectionsNeedingUpdate = ['phone', 'name']
+          sectionsNeedingUpdate = ['phone', 'businessName']
         })
 
         test('all links still point to their normal change pages', () => {

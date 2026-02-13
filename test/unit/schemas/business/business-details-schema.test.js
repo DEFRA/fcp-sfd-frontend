@@ -6,7 +6,7 @@ import { businessDetailsSchema } from '../../../../src/schemas/business/business
 
 describe('business details schema', () => {
   test('exposes all business detail schemas', () => {
-    expect(businessDetailsSchema).toHaveProperty('name')
+    expect(businessDetailsSchema).toHaveProperty('businessName')
     expect(businessDetailsSchema).toHaveProperty('address')
     expect(businessDetailsSchema).toHaveProperty('phone')
     expect(businessDetailsSchema).toHaveProperty('email')

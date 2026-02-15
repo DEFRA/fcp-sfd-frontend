@@ -3,12 +3,12 @@
  * @module personalFixListPresenter
  */
 
-import { formatNumber, formatChangedAddress } from '../base-presenter.js'
+import { formatNumber, formatChangedAddress, sortErrorsBySectionOrder } from '../base-presenter.js'
 import { PERSONAL_SECTION_FIELD_ORDER } from '../../constants/interrupter-journey.js'
 
 const personalFixListPresenter = (personalDetails, payload, errors = null) => {
   const { day, month, year } = formatDateOfBirth(personalDetails, payload)
-  const sortedErrors = errors ? sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix) : null
+  const sortedErrors = errors ? sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER) : null
 
   return {
     backLink: { href: '/personal-fix' },
@@ -44,39 +44,6 @@ const formatName = (payload, personalDetails) => {
       personalDetails.changePersonalName?.last ??
       personalDetails.info.fullName.last
   }
-}
-
-/**
- * Sorts validation errors so they appear in the same order as the sections
- * and fields displayed on the Personal Fix List page.
- *
- * Because the page is dynamically built based on which sections need fixing
- * and which field the user clicked on (source), the validation errors must be
- * ordered to match the displayed section order and the logical field order
- * within each section.
- *
- * This function takes the list of validation errors and the ordered list of
- * sections, and returns the errors sorted to match the UI layout.
- */
-const sortErrorsBySectionOrder = (errors, orderedSectionsToFix) => {
-  const sortedErrors = []
-
-  for (const section of orderedSectionsToFix) {
-    // A section (i.e 'name') can have multiple fields (i.e 'first', 'middle', 'last')
-    const fieldsInSection = PERSONAL_SECTION_FIELD_ORDER[section] || []
-
-    for (const field of fieldsInSection) {
-      // If there's an error for this field, add it to the sorted list with the error details
-      if (errors[field]) {
-        sortedErrors.push({
-          field,
-          ...errors[field]
-        })
-      }
-    }
-  }
-
-  return sortedErrors
 }
 
 const formatAddress = (payload, changePersonalAddress) => {

@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setPersonalFixSessionDataService } from '../../../../src/services/personal/set-personal-fix-session-data-service.js'
-import { validatePersonalFixService } from '../../../../src/services/personal/validate-personal-fix-service.js'
+import { validateFixDetailsService } from '../../../../src/services/validate-fix-details-service.js'
 import { formatValidationErrors } from '../../../../src/utils/format-validation-errors.js'
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 import { personalFixListPresenter } from '../../../../src/presenters/personal/personal-fix-list-presenter.js'
@@ -17,8 +17,8 @@ vi.mock('../../../../src/services/personal/set-personal-fix-session-data-service
   setPersonalFixSessionDataService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/personal/validate-personal-fix-service.js', () => ({
-  validatePersonalFixService: vi.fn()
+vi.mock('../../../../src/services/validate-fix-details-service.js', () => ({
+  validateFixDetailsService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/format-validation-errors.js', () => ({
@@ -103,7 +103,7 @@ describe('personal fix list routes', () => {
           personalEmail: 'john@example.com'
         }
 
-        validatePersonalFixService.mockReturnValue({})
+        validateFixDetailsService.mockReturnValue({})
       })
 
       test('should have the correct method and path configured', () => {
@@ -138,7 +138,7 @@ describe('personal fix list routes', () => {
             { field: 'first', message: 'Enter your first name' }
           ]
 
-          validatePersonalFixService.mockReturnValue({ error: validationError })
+          validateFixDetailsService.mockReturnValue({ error: validationError })
           formatValidationErrors.mockReturnValue(errors)
           fetchPersonalFixService.mockResolvedValue({ some: 'data' })
           personalFixListPresenter.mockReturnValue({ page: 'data', errors })

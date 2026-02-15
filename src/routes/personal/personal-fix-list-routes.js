@@ -1,8 +1,9 @@
 import { setPersonalFixSessionDataService } from '../../services/personal/set-personal-fix-session-data-service.js'
 import { personalFixListPresenter } from '../../presenters/personal/personal-fix-list-presenter.js'
-import { validatePersonalFixService } from '../../services/personal/validate-personal-fix-service.js'
+import { validateFixDetailsService } from '../../services/validate-fix-details-service.js'
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
+import { personalDetailsSchema } from '../../schemas/personal/personal-details-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getPersonalFixList = {
@@ -26,7 +27,7 @@ const postPersonalFixList = {
     const { yar, auth, payload } = request
 
     const sessionData = yar.get('personalDetailsValidation')
-    const validation = validatePersonalFixService(payload, sessionData.orderedSectionsToFix)
+    const validation = validateFixDetailsService(payload, sessionData.orderedSectionsToFix, personalDetailsSchema)
 
     if (validation.error) {
       const errors = formatValidationErrors(validation.error.details || [])

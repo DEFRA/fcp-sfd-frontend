@@ -66,7 +66,7 @@ describe('fetchBusinessFixService', () => {
   describe('when vat fixes exist in session', () => {
     beforeEach(() => {
       sessionData.businessFixUpdates = {
-        vat: { vatNumber: '123456789'}
+        vat: { vatNumber: '123456789' }
       }
     })
 

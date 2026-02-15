@@ -443,7 +443,6 @@ describe('basePresenter', () => {
       const result = sortErrorsBySectionOrder(errors, orderedSectionsToFix, SECTION_FIELD_ORDER)
 
       expect(result).not.toContainEqual({ field: 'line2', message: 'Enter address line 2' })
-
     })
 
     test('it should return an empty array when no errors are provided', () => {

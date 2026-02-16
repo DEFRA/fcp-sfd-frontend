@@ -100,10 +100,11 @@ const formatDob = (dob) => {
   let action = 'Add'
   if (dob && moment(dob).isValid()) {
     const dobMoment = moment(dob)
-    formattedDob = dobMoment.format('D MMMM YYYY')
     if (!dobMoment.isAfter(moment(), 'day')) {
+      formattedDob = dobMoment.format('D MMMM YYYY')
       action = 'Change'
     }
+    // If DOB is in the future, keep 'Not added' and 'Add'
   }
   return { formattedDob, action }
 }

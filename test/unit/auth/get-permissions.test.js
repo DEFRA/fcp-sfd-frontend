@@ -46,7 +46,7 @@ describe('getPermissions', () => {
     })
     test('should call dalConnector with getPermission parameters', async () => {
       await getPermissions(sbi, crn)
-      expect(dalConnector).toHaveBeenCalledWith(permissionsQuery, { sbi, crn })
+      expect(dalConnector).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, null, undefined)
     })
     test('should call mapPermissions when dalConnector response has data', async () => {
       await getPermissions(sbi, crn)

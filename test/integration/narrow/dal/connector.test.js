@@ -44,7 +44,9 @@ describe('Data access layer (DAL) connector integration', () => {
       {
         sbi: '107183280',
         crn: '9477368292'
-      }
+      },
+      null,
+      'mock-defra-token'
     )
 
     expect(result.data).toBeDefined()

@@ -1,9 +1,9 @@
 /**
- * Initialises the personal details fix journey in the user's session.
+ * Initialises the fix journey in the user's session.
  *
  * This service is the single place where the fix journey order is defined.
- * It calculates and stores the ordered list of personal detail sections
- * that the user needs to fix.
+ * It calculates and stores the ordered list of either personal or business
+ * detail sections that the user needs to fix.
  *
  * This sets:
  * - orderedSectionsToFix: the ordered list of sections to fix
@@ -15,33 +15,51 @@
  * Downstream routes and presenters read this data from the session and
  * don't reorder it.
  *
- * @module initialisePersonalFixJourneyService
+ * @module initialiseFixJourneyService
  */
 
-const SECTION_ORDER = ['name', 'dob', 'address', 'phone', 'email']
+import { PERSONAL_SECTION_ORDER, BUSINESS_SECTION_ORDER } from '../constants/interrupter-journey.js'
 
-const initialisePersonalFixJourneyService = (yar, source) => {
-  const sessionData = yar.get('personalDetailsValidation')
+const initialiseFixJourneyService = (yar, source, journeyType) => {
+  // Determined by journeyType
+  let sessionKey
+  let sectionOrder = []
+
+  if (journeyType === 'business') {
+    sessionKey = 'businessDetailsValidation'
+    sectionOrder = BUSINESS_SECTION_ORDER
+  }
+
+  if (journeyType === 'personal') {
+    sessionKey = 'personalDetailsValidation'
+    sectionOrder = PERSONAL_SECTION_ORDER
+  }
+
+  const sessionData = yar.get(sessionKey)
 
   if (!sessionData?.sectionsNeedingUpdate) {
     return sessionData
   }
 
-  const orderedSectionsToFix = orderSectionsToFix(sessionData.sectionsNeedingUpdate, source)
+  const orderedSectionsToFix = orderSectionsToFix(sessionData.sectionsNeedingUpdate, source, sectionOrder)
 
-  // Replace validation sections with the ordered fix list
-  sessionData.orderedSectionsToFix = orderedSectionsToFix
-  delete sessionData.sectionsNeedingUpdate
-  delete sessionData.personalFixUpdates
+  updateSessionData(sessionData, source, orderedSectionsToFix)
 
-  if (source) {
-    // Source is only set when coming from the personal details page
-    sessionData.source = source
-  }
-
-  yar.set('personalDetailsValidation', sessionData)
+  yar.set(sessionKey, sessionData)
 
   return sessionData
+}
+
+const updateSessionData = (sessionData, source, orderedSectionsToFix) => {
+  sessionData.orderedSectionsToFix = orderedSectionsToFix
+
+  delete sessionData.sectionsNeedingUpdate
+  delete sessionData.personalFixUpdates
+  delete sessionData.businessFixUpdates
+
+  if (source) {
+    sessionData.source = source
+  }
 }
 
 /**
@@ -53,7 +71,7 @@ const initialisePersonalFixJourneyService = (yar, source) => {
  * If a source is provided, that section is moved to the top of the list. Source
  * indicates which link the user clicked to get to the fix list page.
  */
-const orderSectionsToFix = (sectionsNeedingUpdate, source) => {
+const orderSectionsToFix = (sectionsNeedingUpdate, source, SECTION_ORDER) => {
   const sections = SECTION_ORDER.filter((section) => {
     return sectionsNeedingUpdate.includes(section)
   })
@@ -69,5 +87,5 @@ const orderSectionsToFix = (sectionsNeedingUpdate, source) => {
 }
 
 export {
-  initialisePersonalFixJourneyService
+  initialiseFixJourneyService
 }

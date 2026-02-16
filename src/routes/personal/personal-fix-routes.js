@@ -1,5 +1,5 @@
 import { personalFixPresenter } from '../../presenters/personal/personal-fix-presenter.js'
-import { initialisePersonalFixJourneyService } from '../../services/personal/initialise-personal-fix-journey-service.js'
+import { initialiseFixJourneyService } from '../../services/initialise-fix-journey-service.js'
 
 const getPersonalFix = {
   method: 'GET',
@@ -7,7 +7,7 @@ const getPersonalFix = {
   handler: async (request, h) => {
     const { yar, query } = request
 
-    const sessionData = initialisePersonalFixJourneyService(yar, query.source)
+    const sessionData = initialiseFixJourneyService(yar, query.source, 'personal')
     const pageData = personalFixPresenter(sessionData)
 
     return h.view('personal/personal-fix.njk', pageData)

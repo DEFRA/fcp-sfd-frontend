@@ -13,7 +13,6 @@
 import { dalConnector } from '../../dal/connector.js'
 
 const updateDalService = async (mutation, variables, sessionId) => {
-  console.log('🚀 ~ variables:', variables)
   const response = await dalConnector(mutation, variables, sessionId)
 
   if (response.errors) {

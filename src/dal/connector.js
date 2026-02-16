@@ -18,9 +18,6 @@ export const dalConnector = async (query, variables, sessionId, defraIdToken = n
       defraIdToken = await getDefraIdToken(sessionId)
     }
 
-    console.log('🚀 ~ defraIdToken:', defraIdToken)
-    console.log('🚀 ~ bearerToken:', bearerToken)
-
     const response = await fetch(config.get('dalConfig.endpoint'), {
       method: 'POST',
       headers: {
@@ -33,12 +30,8 @@ export const dalConnector = async (query, variables, sessionId, defraIdToken = n
     })
 
     const responseBody = await response.json()
-    console.log('🚀 ~ responseBody:', responseBody)
-    console.log('🚀 ~ responseBody:', responseBody.data)
 
     if (responseBody.errors) {
-      console.log('🚀 ~ responseBody:', responseBody.errors)
-      console.log('🚀 ~ responseBody:', responseBody.errors[0])
       const extendedErrors = mapDalErrors(responseBody.errors)
 
       return formatDalResponse({

@@ -40,7 +40,7 @@ describe('updateBusinessNameChangeService', () => {
       clear: vi.fn()
     }
 
-    credentials = { sbi: '123456789', crn: '987654321' }
+    credentials = { sbi: '123456789', crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called', () => {
@@ -58,7 +58,7 @@ describe('updateBusinessNameChangeService', () => {
           name: 'New business ltd',
           sbi: mappedData.info.sbi
         }
-      })
+      }, credentials.sessionId)
     })
 
     test('it clears the businessDetails from session', async () => {

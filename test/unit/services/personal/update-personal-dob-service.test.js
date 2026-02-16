@@ -45,7 +45,7 @@ describe('updatePersonalDobChangeService', () => {
       clear: vi.fn()
     }
 
-    credentials = { crn: '987654321' }
+    credentials = { crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called', () => {
@@ -63,7 +63,7 @@ describe('updatePersonalDobChangeService', () => {
           dateOfBirth: '1964-07-23',
           crn: mappedData.crn
         }
-      })
+      }, credentials.sessionId)
     })
 
     test('it clears the personalDetailsUpdate from session', async () => {

@@ -40,7 +40,7 @@ describe('updateBusinessVatChangeService', () => {
       clear: vi.fn()
     }
 
-    credentials = { sbi: '123456789', crn: '987654321' }
+    credentials = { sbi: '123456789', crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called', () => {
@@ -58,7 +58,7 @@ describe('updateBusinessVatChangeService', () => {
           vat: 'GB123456789',
           sbi: '107183280'
         }
-      })
+      }, credentials.sessionId)
     })
 
     test('it clears the businessDetails from session', async () => {

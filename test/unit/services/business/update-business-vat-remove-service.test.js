@@ -35,7 +35,7 @@ describe('updateBusinessVatRemoveService', () => {
 
     fetchBusinessDetailsService.mockReturnValue(mappedData)
 
-    credentials = { sbi: '123456789', crn: '987654321' }
+    credentials = { sbi: '123456789', crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called', () => {
@@ -53,7 +53,7 @@ describe('updateBusinessVatRemoveService', () => {
           vat: '',
           sbi: '107183280'
         }
-      })
+      }, credentials.sessionId)
     })
 
     test('adds a flash notification confirming the VAT removal', async () => {

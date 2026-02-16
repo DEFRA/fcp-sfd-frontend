@@ -37,7 +37,7 @@ describe('updateDalService', () => {
     test('it calls dalConnector with the correct arguments', async () => {
       await updateDalService(mutation, variables)
 
-      expect(dalConnector).toHaveBeenCalledWith(mutation, variables)
+      expect(dalConnector).toHaveBeenCalledWith(mutation, variables, undefined)
     })
 
     test('it returns the DAL response', async () => {

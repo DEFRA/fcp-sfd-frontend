@@ -45,7 +45,7 @@ describe('updatePersonalNameChangeService', () => {
       clear: vi.fn()
     }
 
-    credentials = { crn: '987654321' }
+    credentials = { crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called', () => {
@@ -65,7 +65,7 @@ describe('updatePersonalNameChangeService', () => {
           middle: 'M',
           crn: mappedData.crn
         }
-      })
+      }, credentials.sessionId)
     })
 
     describe('when middle names are null', () => {
@@ -83,7 +83,7 @@ describe('updatePersonalNameChangeService', () => {
             middle: null,
             crn: mappedData.crn
           }
-        })
+        }, credentials.sessionId)
       })
     })
 

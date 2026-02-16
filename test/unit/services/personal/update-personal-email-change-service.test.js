@@ -40,7 +40,7 @@ describe('updatePersonalEmailChangeService', () => {
       clear: vi.fn()
     }
 
-    credentials = { crn: '987654321' }
+    credentials = { crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called', () => {
@@ -60,7 +60,7 @@ describe('updatePersonalEmailChangeService', () => {
           },
           crn: mappedData.crn
         }
-      })
+      }, credentials.sessionId)
     })
 
     test('it clears the personalDetailsUpdate from session', async () => {

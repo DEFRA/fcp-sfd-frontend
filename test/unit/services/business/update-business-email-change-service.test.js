@@ -40,7 +40,7 @@ describe('updateBusinessEmailChangeService', () => {
       clear: vi.fn()
     }
 
-    credentials = { sbi: '123456789', crn: '987654321' }
+    credentials = { sbi: '123456789', crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called', () => {
@@ -55,7 +55,7 @@ describe('updateBusinessEmailChangeService', () => {
 
       expect(updateDalService).toHaveBeenCalledWith(updateBusinessEmailMutation, {
         input: { email: { address: 'new-email@test.com' }, sbi: '107183280' }
-      })
+      }, credentials.sessionId)
     })
 
     test('it clears the businessDetails from session', async () => {

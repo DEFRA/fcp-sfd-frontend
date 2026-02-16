@@ -44,7 +44,8 @@ describe('fetchBusinessDetailsService', () => {
     credentials = {
       sbi: '132432422',
       crn: '64363553663',
-      email: 'test.farmer@test.farm.com'
+      email: 'test.farmer@test.farm.com',
+      sessionId: 'test-session-id'
     }
   })
 
@@ -63,7 +64,8 @@ describe('fetchBusinessDetailsService', () => {
 
       expect(dalConnector).toHaveBeenCalledWith(
         businessDetailsQuery,
-        { sbi: credentials.sbi, crn: credentials.crn }
+        { sbi: credentials.sbi, crn: credentials.crn },
+        credentials.sessionId
       )
     })
 
@@ -101,7 +103,8 @@ describe('fetchBusinessDetailsService', () => {
 
       expect(dalConnector).toHaveBeenCalledWith(
         businessDetailsQueryWithoutCph,
-        { sbi: credentials.sbi, crn: credentials.crn }
+        { sbi: credentials.sbi, crn: credentials.crn },
+        credentials.sessionId
       )
     })
 

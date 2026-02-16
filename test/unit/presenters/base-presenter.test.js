@@ -8,7 +8,8 @@ import {
   formatNumber,
   formatOriginalAddress,
   formatChangedAddress,
-  formatDisplayAddresses
+  formatDisplayAddresses,
+  sortErrorsBySectionOrder
 } from '../../../src/presenters/base-presenter.js'
 
 describe('basePresenter', () => {
@@ -405,6 +406,57 @@ describe('basePresenter', () => {
       expect(result[0].selected).toBe(true)
       expect(result[1].selected).toBe(false)
       expect(result[2].selected).toBe(false)
+    })
+  })
+
+  describe('#sortErrorsBySectionOrder', () => {
+    let errors
+    let orderedSectionsToFix
+    let SECTION_FIELD_ORDER
+
+    beforeEach(() => {
+      errors = {
+        lastName: { message: 'Enter last name' },
+        line1: { message: 'Enter address line 1' },
+        firstName: { message: 'Enter first name' }
+      }
+
+      orderedSectionsToFix = ['name', 'address']
+
+      SECTION_FIELD_ORDER = {
+        name: ['firstName', 'lastName'],
+        address: ['line1', 'line2']
+      }
+    })
+
+    test('it should return errors sorted by section order and field order', () => {
+      const result = sortErrorsBySectionOrder(errors, orderedSectionsToFix, SECTION_FIELD_ORDER)
+
+      expect(result).toEqual([
+        { field: 'firstName', message: 'Enter first name' },
+        { field: 'lastName', message: 'Enter last name' },
+        { field: 'line1', message: 'Enter address line 1' }
+      ])
+    })
+
+    test('it should ignore fields that are not present in errors', () => {
+      const result = sortErrorsBySectionOrder(errors, orderedSectionsToFix, SECTION_FIELD_ORDER)
+
+      expect(result).not.toContainEqual({ field: 'line2', message: 'Enter address line 2' })
+    })
+
+    test('it should return an empty array when no errors are provided', () => {
+      const result = sortErrorsBySectionOrder({}, orderedSectionsToFix, SECTION_FIELD_ORDER)
+
+      expect(result).toEqual([])
+    })
+
+    test('it should handle sections that do not exist in SECTION_FIELD_ORDER', () => {
+      orderedSectionsToFix = ['unknownSection']
+
+      const result = sortErrorsBySectionOrder(errors, orderedSectionsToFix, SECTION_FIELD_ORDER)
+
+      expect(result).toEqual([])
     })
   })
 })

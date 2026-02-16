@@ -15,6 +15,7 @@ import { businessVatChangeRoutes } from './business-vat-change-routes.js'
 import { businessVatCheckRoutes } from './business-vat-check-routes.js'
 import { businessVatRemoveRoutes } from './business-vat-remove-routes.js'
 import { businessFixRoutes } from './business-fix-routes.js'
+import { businessFixListRoutes } from './business-fix-list-routes.js'
 
 export const businessRoutes = [
   ...businessAddressChangeRoutes,
@@ -33,5 +34,6 @@ export const businessRoutes = [
   ...businessVatChangeRoutes,
   ...businessVatCheckRoutes,
   ...businessVatRemoveRoutes,
-  ...businessFixRoutes
+  ...businessFixRoutes,
+  ...businessFixListRoutes
 ]

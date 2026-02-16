@@ -96,19 +96,16 @@ const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) 
 const formatDob = (dob) => {
   // We check if dob exists because moment will default to the current date if
   // passed undefined
-  const formattedDob = dob && moment(dob).isValid() ? moment(dob).format('D MMMM YYYY') : null
-
-  if (formattedDob) {
-    return {
-      formattedDob,
-      action: 'Change'
+  let formattedDob = 'Not added'
+  let action = 'Add'
+  if (dob && moment(dob).isValid()) {
+    const dobMoment = moment(dob)
+    formattedDob = dobMoment.format('D MMMM YYYY')
+    if (!dobMoment.isAfter(moment(), 'day')) {
+      action = 'Change'
     }
   }
-
-  return {
-    formattedDob: 'Not added',
-    action: 'Add'
-  }
+  return { formattedDob, action }
 }
 
 export {

@@ -119,12 +119,14 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
           {
             href: changeLink,
             text: 'Change',
-            visuallyHiddenText: 'VAT registration number'
+            visuallyHiddenText: 'VAT registration number',
+            classes: 'govuk-link--no-visited-state'
           },
           {
             href: changeLink,
             text: 'Remove',
-            visuallyHiddenText: 'VAT registration number'
+            visuallyHiddenText: 'VAT registration number',
+            classes: 'govuk-link--no-visited-state'
           }
         ]
       }
@@ -148,12 +150,14 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
         {
           href: BUSINESS_CHANGE_LINKS.vatNumberChange,
           text: 'Change',
-          visuallyHiddenText: 'VAT registration number'
+          visuallyHiddenText: 'VAT registration number',
+          classes: 'govuk-link--no-visited-state'
         },
         {
           href: BUSINESS_CHANGE_LINKS.vatNumberRemove,
           text: 'Remove',
-          visuallyHiddenText: 'VAT registration number'
+          visuallyHiddenText: 'VAT registration number',
+          classes: 'govuk-link--no-visited-state'
         }
       ]
     }

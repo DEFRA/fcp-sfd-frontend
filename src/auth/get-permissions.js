@@ -1,7 +1,7 @@
 import { dalConnector } from '../dal/connector.js'
 import { permissionsQuery } from '../dal/queries/permissions-query.js'
 import { mapPermissions } from '../mappers/permissions-mapper.js'
-import { config } from '../../src/config/index.js'
+import { config } from '../config/index.js'
 import { mappedData } from '../mock-data/mock-permissions.js'
 
 async function getPermissions (sbi, crn, defraIdToken) {

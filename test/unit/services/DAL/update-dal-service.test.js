@@ -15,6 +15,7 @@ vi.mock('../../../../src/dal/connector.js', () => ({
 describe('updateDalService', () => {
   const mutation = 'updateBusinessName'
   const variables = { input: { name: 'Amazing Business Ltd', sbi: '123456789' } }
+  const sessionId = 'test-session-123'
   let responseData
 
   beforeEach(() => {
@@ -35,13 +36,21 @@ describe('updateDalService', () => {
     })
 
     test('it calls dalConnector with the correct arguments', async () => {
+      await updateDalService(mutation, variables, sessionId)
+
+      expect(dalConnector).toHaveBeenCalledTimes(1)
+      expect(dalConnector).toHaveBeenCalledWith(mutation, variables, sessionId)
+    })
+
+    test('it calls dalConnector with undefined sessionId when sessionId is not provided', async () => {
       await updateDalService(mutation, variables)
 
+      expect(dalConnector).toHaveBeenCalledTimes(1)
       expect(dalConnector).toHaveBeenCalledWith(mutation, variables, undefined)
     })
 
     test('it returns the DAL response', async () => {
-      const result = await updateDalService(mutation, variables)
+      const result = await updateDalService(mutation, variables, sessionId)
 
       expect(result).toEqual(responseData)
     })
@@ -53,7 +62,7 @@ describe('updateDalService', () => {
     })
 
     test('it throws an error', async () => {
-      await expect(updateDalService(mutation, variables)).rejects.toThrow('DAL error from mutation')
+      await expect(updateDalService(mutation, variables, sessionId)).rejects.toThrow('DAL error from mutation')
     })
   })
 })

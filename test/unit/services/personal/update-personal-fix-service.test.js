@@ -53,7 +53,8 @@ describe('updatePersonalFixService', () => {
 
     credentials = {
       crn: '123456789',
-      email: 'test@example.com'
+      email: 'test@example.com',
+      sessionId: 'test-session-123'
     }
 
     personalDetails = {
@@ -89,7 +90,7 @@ describe('updatePersonalFixService', () => {
     test('it calls the DAL update service with the correct mutation and variables', async () => {
       await updatePersonalFixService(sessionData, yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updatePersonalDetailsMutation, updateVariables, undefined)
+      expect(updateDalService).toHaveBeenCalledWith(updatePersonalDetailsMutation, updateVariables, credentials.sessionId)
     })
 
     test('it clears personalDetails from the session', async () => {

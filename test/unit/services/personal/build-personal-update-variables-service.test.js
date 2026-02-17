@@ -385,7 +385,7 @@ const basePersonalDetails = () => {
         middle: 'Alice',
         last: 'Doe'
       },
-      dateOfBirth: new Date('1990-05-20')
+      dateOfBirth: { full: '1990-05-20' }
     },
     contact: {
       email: 'jane.doe@example.com',

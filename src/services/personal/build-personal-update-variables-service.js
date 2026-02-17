@@ -5,8 +5,6 @@
  * @module buildPersonalUpdateVariablesService
  */
 
-import moment from 'moment'
-
 const buildPersonalUpdateVariables = (personalDetails) => {
   const { crn } = personalDetails
 
@@ -91,16 +89,16 @@ const buildNameInput = (crn, personalDetails) => {
 }
 
 const buildDobInput = (crn, personalDetails) => {
-  let dob = personalDetails.info.dateOfBirth
+  let dob = personalDetails.info.dateOfBirth.full
 
   if (personalDetails.changePersonalDob) {
     const { day, month, year } = personalDetails.changePersonalDob
-    dob = new Date(`${month}/${day}/${year}`)
+    dob = `${year}-${month}-${day}`
   }
 
   return {
     crn,
-    dateOfBirth: moment(dob).locale('en-ca').format('L')
+    dateOfBirth: dob
   }
 }
 

@@ -22,7 +22,7 @@ describe('flashNotification', () => {
     const [flashType, notification] = yar.flash.mock.calls[0]
 
     expect(flashType).toEqual('notification')
-    expect(notification).toEqual({ title: 'Updated', text: 'Changes made', html: null })
+    expect(notification).toEqual({ title: 'Updated', text: 'Changes made', html: '<h3 class="govuk-notification-banner__content">Changes made</h3>' })
   })
 
   test('returns the overridden notification { title: "Fancy new title", text: "better text" }', () => {
@@ -31,7 +31,7 @@ describe('flashNotification', () => {
     const [flashType, notification] = yar.flash.mock.calls[0]
 
     expect(flashType).toEqual('notification')
-    expect(notification).toEqual({ title: 'Fancy new title', text: 'better text', html: null })
+    expect(notification).toEqual({ title: 'Fancy new title', text: 'better text', html: '<h3 class="govuk-notification-banner__content">better text</h3>' })
   })
 
   test('returns a notification with html content when provided', () => {

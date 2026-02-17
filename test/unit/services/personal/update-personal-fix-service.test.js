@@ -89,7 +89,7 @@ describe('updatePersonalFixService', () => {
     test('it calls the DAL update service with the correct mutation and variables', async () => {
       await updatePersonalFixService(sessionData, yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updatePersonalDetailsMutation, updateVariables)
+      expect(updateDalService).toHaveBeenCalledWith(updatePersonalDetailsMutation, updateVariables, undefined)
     })
 
     test('it clears personalDetails from the session', async () => {

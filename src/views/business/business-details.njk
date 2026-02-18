@@ -15,11 +15,19 @@
   <div class="govuk-grid-column-two-thirds">
       {# Notification banner #}
       {% if notification %}
-        {{ govukNotificationBanner({
-          type: "success",
-          titleText: notification.title,
-          html: notification.html or notification.text
-        })}}
+        {% if notification.html %}
+          {{ govukNotificationBanner({
+            type: "success",
+            titleText: notification.title,
+            html: notification.html
+          })}}
+        {% else %}
+          {{ govukNotificationBanner({
+            type: "success",
+            titleText: notification.title,
+            text: notification.text
+          })}}
+        {% endif %}
       {% endif %}
 
     <h1 class="govuk-heading-l">

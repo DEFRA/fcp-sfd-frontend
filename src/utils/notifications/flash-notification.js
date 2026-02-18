@@ -14,12 +14,10 @@
  * @param {string|null} [html=null] - Optional HTML content for the notification, otherwise by default wrap in H3
  */
 const flashNotification = (yar, title = 'Updated', text = 'Changes made', html = null) => {
-  const notificationHtml = html ?? `<h3 class="govuk-heading-m">${text}</h3>`
-
   yar.flash('notification', {
     title,
     text,
-    html: notificationHtml
+    html
   })
 }
 

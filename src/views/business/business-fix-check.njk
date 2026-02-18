@@ -29,14 +29,14 @@
           {% for section in sections %}
             {% if section === 'name' %}
               {% set rowItem = {
-                key: { text: "Full name" },
-                value: { text: fullName },
+                key: { text: "Business name" },
+                value: { text: businessName },
                 actions: {
                   items: [
                     {
                       href: changeLink,
                       text: "Change",
-                      visuallyHiddenText: "full name",
+                      visuallyHiddenText: "business name",
                       classes: "govuk-link--no-visited-state"
                     }
                   ]
@@ -54,14 +54,14 @@
               {% endset %}
 
               {% set rowItem = {
-                key: { text: "Personal address" },
+                key: { text: "Business address" },
                 value: { html: formattedAddress },
                 actions: {
                   items: [
                     {
                       href: changeLink,
                       text: "Change",
-                      visuallyHiddenText: "personal address",
+                      visuallyHiddenText: "business address",
                       classes: "govuk-link--no-visited-state"
                     }
                   ]
@@ -75,8 +75,8 @@
               {% set phoneHtml %}
                 <p class="govuk-body">
                   Telephone:
-                  {% if personalTelephone.telephone %}
-                    {{ personalTelephone.telephone }}
+                  {% if businessTelephone.telephone %}
+                    {{ businessTelephone.telephone }}
                   {% else %}
                     <span class="govuk-hint">
                       Not added
@@ -84,8 +84,8 @@
                   {% endif %}
                   <br>
                   Mobile:
-                  {% if personalTelephone.mobile %}
-                    {{ personalTelephone.mobile }}
+                  {% if businessTelephone.mobile %}
+                    {{ businessTelephone.mobile }}
                   {% else %}
                     <span class="govuk-hint">
                       Not added
@@ -95,14 +95,14 @@
               {% endset %}
 
               {% set rowItem = {
-                key: { text: "Personal phone numbers" },
+                key: { text: "Business phone numbers" },
                 value: { html: phoneHtml },
                 actions: {
                   items: [
                     {
                       href: changeLink,
                       text: "Change",
-                      visuallyHiddenText: "personal phone numbers",
+                      visuallyHiddenText: "business phone numbers",
                       classes: "govuk-link--no-visited-state"
                     }
                   ]
@@ -115,14 +115,14 @@
 
             {% if section === 'email' %}
               {% set rowItem = {
-                key: { text: "Personal email address" },
-                value: { text: personalEmail },
+                key: { text: "Business email address" },
+                value: { text: businessEmail },
                 actions: {
                   items: [
                     {
                       href: changeLink,
                       text: "Change",
-                      visuallyHiddenText: "personal email",
+                      visuallyHiddenText: "business email",
                       classes: "govuk-link--no-visited-state"
                     }
                   ]
@@ -132,16 +132,16 @@
               {% set rows = (rows.push(rowItem), rows) %}
             {% endif %}
 
-            {% if section === 'dob' %}
+            {% if section === 'vat' %}
               {% set rowItem = {
-                key: { text: "Date of birth" },
-                value: { text: dateOfBirth },
+                key: { text: "Vat number" },
+                value: { text: vatNumber },
                 actions: {
                   items: [
                     {
                       href: changeLink,
                       text: "Change",
-                      visuallyHiddenText: "change date of birth",
+                      visuallyHiddenText: "change vat number",
                       classes: "govuk-link--no-visited-state"
                     }
                   ]

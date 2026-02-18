@@ -313,12 +313,14 @@ describe('businessDetailsPresenter', () => {
             {
               href: '/business-vat-registration-number-change',
               text: 'Change',
-              visuallyHiddenText: 'VAT registration number'
+              visuallyHiddenText: 'VAT registration number',
+              classes: 'govuk-link--no-visited-state'
             },
             {
               href: '/business-vat-registration-remove',
               text: 'Remove',
-              visuallyHiddenText: 'VAT registration number'
+              visuallyHiddenText: 'VAT registration number',
+              classes: 'govuk-link--no-visited-state'
             }
           ]
         })
@@ -346,12 +348,14 @@ describe('businessDetailsPresenter', () => {
             {
               href: '/business-fix?source=vat',
               text: 'Change',
-              visuallyHiddenText: 'VAT registration number'
+              visuallyHiddenText: 'VAT registration number',
+              classes: 'govuk-link--no-visited-state'
             },
             {
               href: '/business-fix?source=vat',
               text: 'Remove',
-              visuallyHiddenText: 'VAT registration number'
+              visuallyHiddenText: 'VAT registration number',
+              classes: 'govuk-link--no-visited-state'
             }
           ]
         })
@@ -598,12 +602,14 @@ describe('businessDetailsPresenter', () => {
             {
               href: '/business-vat-registration-number-change',
               text: 'Change',
-              visuallyHiddenText: 'VAT registration number'
+              visuallyHiddenText: 'VAT registration number',
+              classes: 'govuk-link--no-visited-state'
             },
             {
               href: '/business-vat-registration-remove',
               text: 'Remove',
-              visuallyHiddenText: 'VAT registration number'
+              visuallyHiddenText: 'VAT registration number',
+              classes: 'govuk-link--no-visited-state'
             }
           ]
         })

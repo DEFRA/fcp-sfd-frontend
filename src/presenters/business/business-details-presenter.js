@@ -88,6 +88,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
 const buildVatDisplay = (vatNumber, vatChangeState) => {
   const hasVat = Boolean(vatNumber)
   const value = vatNumber || 'No number added'
+  const linkStyling = 'govuk-link--no-visited-state'
 
   // If no vatChangeState it means the user does not have permission to change VAT details
   if (!vatChangeState) {
@@ -119,12 +120,14 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
           {
             href: changeLink,
             text: 'Change',
-            visuallyHiddenText: 'VAT registration number'
+            visuallyHiddenText: 'VAT registration number',
+            classes: linkStyling
           },
           {
             href: changeLink,
             text: 'Remove',
-            visuallyHiddenText: 'VAT registration number'
+            visuallyHiddenText: 'VAT registration number',
+            classes: linkStyling
           }
         ]
       }
@@ -148,12 +151,14 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
         {
           href: BUSINESS_CHANGE_LINKS.vatNumberChange,
           text: 'Change',
-          visuallyHiddenText: 'VAT registration number'
+          visuallyHiddenText: 'VAT registration number',
+          classes: linkStyling
         },
         {
           href: BUSINESS_CHANGE_LINKS.vatNumberRemove,
           text: 'Remove',
-          visuallyHiddenText: 'VAT registration number'
+          visuallyHiddenText: 'VAT registration number',
+          classes: linkStyling
         }
       ]
     }

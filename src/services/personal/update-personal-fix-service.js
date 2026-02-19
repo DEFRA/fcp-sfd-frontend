@@ -14,7 +14,7 @@ const updatePersonalFixService = async (sessionData, yar, credentials) => {
   const personalDetails = await fetchPersonalFixService(credentials, sessionData)
   const variables = buildPersonalUpdateVariables(personalDetails)
 
-  await updateDalService(updatePersonalDetailsMutation, variables)
+  await updateDalService(updatePersonalDetailsMutation, variables, credentials.sessionId)
 
   yar.clear('personalDetails')
 

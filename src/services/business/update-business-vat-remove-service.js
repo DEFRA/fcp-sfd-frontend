@@ -20,7 +20,7 @@ const updateBusinessVatRemoveService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(credentials)
   const variables = { input: { vat: '', sbi: businessDetails.info.sbi } }
 
-  await updateDalService(updateBusinessVATMutation, variables)
+  await updateDalService(updateBusinessVATMutation, variables, credentials.sessionId)
 
   flashNotification(yar, 'Success', 'You have removed your VAT registration number')
 }

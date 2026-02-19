@@ -28,7 +28,7 @@ const updatePersonalDobChangeService = async (yar, credentials) => {
     }
   }
 
-  await updateDalService(updatePersonalDobMutation, variables)
+  await updateDalService(updatePersonalDobMutation, variables, credentials.sessionId)
 
   yar.clear('personalDetailsUpdate')
 

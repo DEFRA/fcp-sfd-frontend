@@ -12,8 +12,8 @@
 
 import { dalConnector } from '../../dal/connector.js'
 
-const updateDalService = async (mutation, variables) => {
-  const response = await dalConnector(mutation, variables)
+const updateDalService = async (mutation, variables, sessionId) => {
+  const response = await dalConnector(mutation, variables, sessionId)
 
   if (response.errors) {
     throw new Error('DAL error from mutation')

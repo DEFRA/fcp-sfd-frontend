@@ -46,7 +46,7 @@ describe('updateBusinessAddressChangeService', () => {
       clear: vi.fn()
     }
 
-    credentials = { sbi: '123456789', crn: '987654321' }
+    credentials = { sbi: '123456789', crn: '987654321', sessionId: 'test-session-id' }
   })
 
   describe('when called with a manually entered address', () => {
@@ -81,7 +81,7 @@ describe('updateBusinessAddressChangeService', () => {
             }
           }
         }
-      })
+      }, credentials.sessionId)
     })
 
     test('adds a flash notification confirming the change in data', async () => {
@@ -139,7 +139,7 @@ describe('updateBusinessAddressChangeService', () => {
             }
           }
         }
-      })
+      }, credentials.sessionId)
     })
   })
 })

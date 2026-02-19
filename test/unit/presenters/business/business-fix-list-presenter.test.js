@@ -203,4 +203,72 @@ describe('businessFixListPresenter', () => {
       ])
     })
   })
+
+  describe('the "userName" property', () => {
+    describe('when customer exists with a userName', () => {
+      test('it should return the customer userName', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.userName).toEqual('Jane Doe')
+      })
+    })
+
+    describe('when customer is undefined', () => {
+      beforeEach(() => {
+        delete businessDetails.customer
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.userName).toBeNull()
+      })
+    })
+
+    describe('when customer exists but userName is undefined', () => {
+      beforeEach(() => {
+        businessDetails.customer = {}
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.userName).toBeNull()
+      })
+    })
+  })
+
+  describe('the "sbi" property', () => {
+    describe('when sbi exists on businessDetails.info', () => {
+      test('it should return the sbi value', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.sbi).toEqual('123456789')
+      })
+    })
+
+    describe('when info exists but sbi is undefined', () => {
+      beforeEach(() => {
+        delete businessDetails.info.sbi
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.sbi).toBeNull()
+      })
+    })
+
+    describe('when info is undefined', () => {
+      beforeEach(() => {
+        delete businessDetails.info.sbi
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.sbi).toBeNull()
+      })
+    })
+  })
 })

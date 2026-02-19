@@ -125,6 +125,22 @@ describe('buildBusinessUpdateVariables', () => {
     })
   })
 
+  describe('when the VAT number is null', () => {
+    beforeEach(() => {
+      businessDetails = baseBusinessDetails()
+      businessDetails.info.vat = null
+    })
+
+    test('it sets VAT to an empty string', () => {
+      const result = buildBusinessUpdateVariables(businessDetails)
+
+      expect(result.updateBusinessVATInput).toEqual({
+        sbi: '106705779',
+        vat: ''
+      })
+    })
+  })
+
   describe('when there are changes to business name', () => {
     beforeEach(() => {
       businessDetails = baseBusinessDetails()

@@ -69,6 +69,10 @@ const buildVatInput = (sbi, businessDetails) => {
     vatNumber = businessDetails.changeBusinessVat.vatNumber
   }
 
+  if (vatNumber === null) {
+    vatNumber = ''
+  }
+
   return {
     sbi,
     vat: vatNumber

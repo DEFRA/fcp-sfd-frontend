@@ -34,6 +34,7 @@ describe('businessFixListPresenter', () => {
         pageTitle: 'Your business details to update',
         metaDescription: 'Your business details to update.',
         sections: ['name', 'vat', 'address', 'phone', 'email'],
+        userName: null,
         businessName: 'Test Business',
         businessTelephone: '0123456789',
         vatNumber: '123456789',

@@ -16,6 +16,7 @@ const businessFixListPresenter = (businessDetails, payload, errors = null) => {
     sections: businessDetails.orderedSectionsToFix,
     userName: businessDetails.customer?.userName ?? null,
     businessName: payload?.businessName ?? businessDetails.changeBusinessName?.businessName ?? businessDetails.info.businessName,
+    sbi: businessDetails.info?.sbi ?? null,
     businessTelephone: formatNumber(payload?.businessTelephone, businessDetails.changeBusinessPhoneNumbers?.businessTelephone, businessDetails.contact.landline),
     businessMobile: formatNumber(payload?.businessMobile, businessDetails.changeBusinessPhoneNumbers?.businessMobile, businessDetails.contact.mobile),
     businessEmail: payload?.businessEmail ?? businessDetails.changeBusinessEmail?.businessEmail ?? businessDetails.contact.email,

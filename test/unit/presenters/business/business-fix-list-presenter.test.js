@@ -13,12 +13,16 @@ describe('businessFixListPresenter', () => {
       orderedSectionsToFix: ['name', 'vat', 'address', 'phone', 'email'],
       info: {
         vat: '123456789',
-        businessName: 'Test Business'
+        businessName: 'Test Business',
+        sbi: '123456789'
       },
       contact: {
         landline: '0123456789',
         mobile: '07123456789',
         email: 'test@test.com'
+      },
+      customer: {
+        userName: 'Jane Doe'
       }
     }
 
@@ -34,8 +38,9 @@ describe('businessFixListPresenter', () => {
         pageTitle: 'Your business details to update',
         metaDescription: 'Your business details to update.',
         sections: ['name', 'vat', 'address', 'phone', 'email'],
-        userName: null,
+        userName: 'Jane Doe',
         businessName: 'Test Business',
+        sbi: '123456789',
         businessTelephone: '0123456789',
         vatNumber: '123456789',
         businessMobile: '07123456789',

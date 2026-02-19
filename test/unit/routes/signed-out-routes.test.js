@@ -2,7 +2,7 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
 // Thing under test
-import { signedOut } from '../../../src/routes/signed-out-routes'
+import { signedOut } from '../../../src/routes/signed-out-routes.js'
 
 // Mocks
 import { signedOutPresenter } from '../../../src/presenters/signed-out-presenter'

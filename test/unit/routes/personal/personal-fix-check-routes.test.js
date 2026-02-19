@@ -107,6 +107,7 @@ describe('personal fix check routes', () => {
 
 const getPageData = () => {
   return {
+    userName: null,
     backLink: { href: '/personal-fix-list' },
     pageTitle: 'Check your details are correct before submitting',
     metaDescription: 'Check your details are correct before submitting',

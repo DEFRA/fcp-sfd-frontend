@@ -16,6 +16,7 @@ const personalFixCheckPresenter = (personalDetails) => {
   } = personalDetails
 
   return {
+    userName: personalDetails.info?.userName ?? null,
     backLink: { href: '/personal-fix-list' },
     pageTitle: 'Check your details are correct before submitting',
     metaDescription: 'Check your details are correct before submitting',

@@ -1,3 +1,12 @@
+/**
+ * Stub personal details returned when the DAL connection is disabled
+ * (e.g. local development or feature flag off). Matches the shape produced by
+ * mapPersonalDetails from the DAL response.
+ *
+ * @module mockPersonalDetails
+ */
+
+/** Raw personal details shape as returned by the DAL API (used by tests and mapper). */
 const dalData = {
   customer: {
     crn: '123456890',
@@ -35,6 +44,7 @@ const dalData = {
   }
 }
 
+/** Personal details in app-friendly shape (mapPersonalDetails output); returned when DAL is disabled. */
 const mappedData = {
   crn: '123456890',
   info: {

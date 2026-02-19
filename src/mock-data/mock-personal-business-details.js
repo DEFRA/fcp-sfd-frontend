@@ -1,3 +1,11 @@
+/**
+ * Stub personal-business details returned when the DAL connection is disabled
+ * (e.g. local development or feature flag off). Matches the shape produced by
+ * mapPersonalBusinessDetails from the DAL response.
+ *
+ * @module mockPersonalBusinessDetails
+ */
+
 const mappedData = {
   info: {
     userName: 'John Doe'

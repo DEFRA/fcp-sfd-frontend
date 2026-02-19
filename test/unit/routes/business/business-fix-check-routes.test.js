@@ -53,7 +53,9 @@ describe('business fix check routes', () => {
         fetchBusinessFixService.mockResolvedValue({
           changeBusinessName: { businessName: 'New Business Name' },
           changeBusinessEmail: { businessEmail: 'newemail@new.com' },
-          orderedSectionsToFix: ['name', 'email']
+          orderedSectionsToFix: ['name', 'email'],
+          customer: { userName: 'Jane Doe' },
+          info: { sbi: '123456789' }
         })
       })
 
@@ -113,6 +115,8 @@ const getPageData = () => {
     changeLink: '/business-fix-list',
     sections: ['name', 'email'],
     businessName: 'New Business Name',
+    sbi: '123456789',
+    userName: 'Jane Doe',
     vatNumber: null,
     businessEmail: 'newemail@new.com',
     address: null,

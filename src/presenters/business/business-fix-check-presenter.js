@@ -20,6 +20,8 @@ const businessFixCheckPresenter = (businessDetails) => {
     changeLink: '/business-fix-list',
     sections: orderedSectionsToFix,
     businessName: changeBusinessName?.businessName ?? null,
+    sbi: businessDetails.info?.sbi ?? null,
+    userName: businessDetails.customer?.userName ?? null,
     businessEmail: changeBusinessEmail?.businessEmail ?? null,
     address: formatAddress(changeBusinessAddress),
     vatNumber: changeBusinessVat?.vatNumber ?? null,

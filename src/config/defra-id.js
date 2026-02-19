@@ -36,14 +36,14 @@ export const defraIdConfig = {
       env: 'DEFRA_ID_POLICY'
     },
     redirectUrl: {
-      doc: 'The Defra Identity redirect URl',
+      doc: 'The Defra Identity redirect URL',
       format: String,
       nullable: true,
       default: null,
       env: 'DEFRA_ID_REDIRECT_URL'
     },
     signOutRedirectUrl: {
-      doc: 'The Defra Identity sign out redirect URl',
+      doc: 'The Defra Identity sign out redirect URL',
       format: String,
       nullable: true,
       default: null,

@@ -14,7 +14,7 @@ const updateBusinessFixService = async (sessionData, yar, credentials) => {
   const businessDetails = await fetchBusinessFixService(credentials, sessionData)
   const variables = buildBusinessUpdateVariables(businessDetails)
 
-  await updateDalService(updateBusinessDetailsMutation, variables)
+  await updateDalService(updateBusinessDetailsMutation, variables, credentials.sessionId)
 
   yar.clear('businessDetails')
 

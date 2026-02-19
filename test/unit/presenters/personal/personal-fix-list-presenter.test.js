@@ -38,6 +38,7 @@ describe('personalFixListPresenter', () => {
       const result = personalFixListPresenter(personalDetails, payload)
 
       expect(result).toEqual({
+        userName: null,
         backLink: { href: '/personal-fix' },
         pageTitle: 'Your personal details to update',
         metaDescription: 'Your personal details to update.',

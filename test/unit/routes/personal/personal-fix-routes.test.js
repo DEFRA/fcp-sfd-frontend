@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { personalFixPresenter } from '../../../../src/presenters/personal/personal-fix-presenter.js'
 import { initialiseFixJourneyService } from '../../../../src/services/initialise-fix-journey-service.js'
+import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 
 // Thing under test
 import { personalFixRoutes } from '../../../../src/routes/personal/personal-fix-routes.js'
@@ -18,9 +19,19 @@ vi.mock('../../../../src/services/initialise-fix-journey-service.js', () => ({
   initialiseFixJourneyService: vi.fn()
 }))
 
+vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
+  fetchPersonalFixService: vi.fn()
+}))
+
 describe('personal fix routes', () => {
   let request
   let h
+
+  const credentials = {
+    sbi: '123456789',
+    crn: '987654321',
+    email: 'test@example.com'
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -29,7 +40,8 @@ describe('personal fix routes', () => {
       yar: {},
       query: {
         source: 'name'
-      }
+      },
+      auth: { credentials }
     }
   })
 
@@ -41,12 +53,19 @@ describe('personal fix routes', () => {
         }
 
         initialiseFixJourneyService.mockReturnValue(getMockSessionData())
+        fetchPersonalFixService.mockReturnValue('personal details')
         personalFixPresenter.mockReturnValue(getPageData())
       })
 
       test('should have the correct method and path configured', () => {
         expect(getPersonalFix.method).toBe('GET')
         expect(getPersonalFix.path).toBe('/personal-fix')
+      })
+
+      test('it calls fetchPersonalFixService', async () => {
+        await getPersonalFix.handler(request, h)
+
+        expect(fetchPersonalFixService).toHaveBeenCalledWith(request.auth.credentials, getMockSessionData())
       })
 
       test('it initialises the personal fix journey using the session and source', async () => {
@@ -58,7 +77,7 @@ describe('personal fix routes', () => {
       test('it presents the session data using the personalFixPresenter', async () => {
         await getPersonalFix.handler(request, h)
 
-        expect(personalFixPresenter).toHaveBeenCalledWith(getMockSessionData())
+        expect(personalFixPresenter).toHaveBeenCalledWith('personal details')
       })
 
       test('it renders the personal-fix view with page data', async () => {

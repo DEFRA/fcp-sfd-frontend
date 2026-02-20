@@ -75,10 +75,11 @@ describe('businessFixListPresenter', () => {
         }
       })
 
-      test('it should return the changed business name as the "businessName" property', () => {
+      test('it should retain the stored business name as "businessName" and use the changed value as "changeBusinessName"', () => {
         const result = businessFixListPresenter(businessDetails, payload)
 
-        expect(result.businessName).toEqual('Changed Business Name')
+        expect(result.businessName).toEqual('Test Business')
+        expect(result.changeBusinessName).toEqual('Changed Business Name')
       })
     })
   })

@@ -1,17 +1,18 @@
 import { describe, test, expect } from 'vitest'
-import { dalData, mappedData } from '../../mocks/mock-personal-details.js'
+import { getDalData, getMappedData } from '../../mocks/mock-personal-details.js'
 
 const { mapPersonalDetails } = await import('../../../src/mappers/personal-details-mapper.js')
 
 describe('personalDetailsMapper', () => {
   describe('when given valid raw DAL data ', () => {
     test('it should map the values to the correct format ', () => {
-      const result = mapPersonalDetails(dalData)
+      const result = mapPersonalDetails(getDalData())
 
-      expect(result).toEqual(mappedData)
+      expect(result).toEqual(getMappedData())
     })
 
     test('it should build the userName correctly ', () => {
+      const dalData = getDalData()
       const userNameCheckData = {
         ...dalData,
         customer: {
@@ -33,6 +34,7 @@ describe('personalDetailsMapper', () => {
     })
 
     test('it should build the fullName object correctly ', () => {
+      const dalData = getDalData()
       const fullNameCheckData = {
         ...dalData,
         customer: {
@@ -58,6 +60,7 @@ describe('personalDetailsMapper', () => {
     })
 
     test('it should build the fullNameJoined string correctly ', () => {
+      const dalData = getDalData()
       const fullNameCheckData = {
         ...dalData,
         customer: {
@@ -79,6 +82,7 @@ describe('personalDetailsMapper', () => {
     })
 
     test('it should build the date of birth correctly when it exists', () => {
+      const dalData = getDalData()
       const fullNameCheckData = {
         ...dalData,
         customer: {
@@ -101,6 +105,7 @@ describe('personalDetailsMapper', () => {
     })
 
     test('it should build the date of birth correctly when it does not exist', () => {
+      const dalData = getDalData()
       const fullNameCheckData = {
         ...dalData,
         customer: {

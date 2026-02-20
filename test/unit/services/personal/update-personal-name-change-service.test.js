@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updatePersonalNameMutation } from '../../../../src/dal/mutations/personal/update-personal-name.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Thing under test
 import { updatePersonalNameChangeService } from '../../../../src/services/personal/update-personal-name-change-service.js'
@@ -29,17 +29,19 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updatePersonalNameChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changePersonalName = {
+    data = getMappedData()
+    data.changePersonalName = {
       first: 'John',
       last: 'Doe',
       middle: 'M'
     }
 
-    fetchPersonalChangeService.mockReturnValue(mappedData)
+    fetchPersonalChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -63,14 +65,14 @@ describe('updatePersonalNameChangeService', () => {
           first: 'John',
           last: 'Doe',
           middle: 'M',
-          crn: mappedData.crn
+          crn: data.crn
         }
       }, credentials.sessionId)
     })
 
     describe('when middle names are null', () => {
       beforeEach(() => {
-        mappedData.changePersonalName.middle = null
+        data.changePersonalName.middle = null
       })
 
       test('it calls updateDalService with null values', async () => {
@@ -81,7 +83,7 @@ describe('updatePersonalNameChangeService', () => {
             first: 'John',
             last: 'Doe',
             middle: null,
-            crn: mappedData.crn
+            crn: data.crn
           }
         }, credentials.sessionId)
       })

@@ -21,7 +21,7 @@ vi.mock('../../../../src/config/index.js', () => ({
 }))
 
 // Test helpers
-const { mappedData, dalData } = await import('../../../mocks/mock-personal-details.js')
+const { getMappedData, getDalData } = await import('../../../mocks/mock-personal-details.js')
 
 // Thing under test
 const { fetchPersonalDetailsService } = await import('../../../../src/services/personal/fetch-personal-details-service.js')
@@ -35,8 +35,8 @@ describe('fetchPersonalDetailsService', () => {
     vi.clearAllMocks()
     vi.resetModules()
 
-    data = { data: dalData }
-    mappedDalData = mappedData
+    data = { data: getDalData() }
+    mappedDalData = getMappedData()
 
     credentials = {
       crn: '64363553663',
@@ -86,7 +86,7 @@ describe('fetchPersonalDetailsService', () => {
     test('it correctly returns data static data source', async () => {
       const result = await fetchPersonalDetailsService(credentials)
 
-      expect(result).toMatchObject(mappedData)
+      expect(result).toMatchObject(getMappedData())
     })
   })
 })

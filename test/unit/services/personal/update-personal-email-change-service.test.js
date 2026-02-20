@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updatePersonalEmailMutation } from '../../../../src/dal/mutations/personal/update-personal-email.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Thing under test
 import { updatePersonalEmailChangeService } from '../../../../src/services/personal/update-personal-email-change-service.js'
@@ -29,12 +29,14 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updatePersonalEmailChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changePersonalEmail = 'new-email@test.com'
-    fetchPersonalChangeService.mockReturnValue(mappedData)
+    data = getMappedData()
+    data.changePersonalEmail = 'new-email@test.com'
+    fetchPersonalChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -58,7 +60,7 @@ describe('updatePersonalEmailChangeService', () => {
           email: {
             address: 'new-email@test.com'
           },
-          crn: mappedData.crn
+          crn: data.crn
         }
       }, credentials.sessionId)
     })

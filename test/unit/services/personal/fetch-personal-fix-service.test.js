@@ -8,7 +8,7 @@ import { fetchPersonalDetailsService } from '../../../../src/services/personal/f
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Mocks
 vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', () => ({
@@ -18,7 +18,7 @@ vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', (
 describe('fetchPersonalFixService', () => {
   let credentials
   let sessionData
-  const personalDetails = { ...mappedData }
+  const personalDetails = getMappedData()
 
   beforeEach(() => {
     vi.clearAllMocks()

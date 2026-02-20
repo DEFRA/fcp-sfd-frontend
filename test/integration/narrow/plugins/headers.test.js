@@ -103,7 +103,7 @@ describe('headers', () => {
 
   test('should not override cache headers for assets', async () => {
     const response = await server.inject({
-      url: '/assets/gov.uk-frontend.min.css'
+      url: 'public/assets/gov.uk-frontend.min.css'
     })
     expect(response.headers[CACHE_CONTROL_HEADER]).toBe('no-cache')
     expect(response.headers.pragma).toBeUndefined()

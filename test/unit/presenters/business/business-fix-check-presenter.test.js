@@ -63,7 +63,8 @@ describe('businessFixCheckPresenter', () => {
           'phone',
           'vat'
         ],
-        businessName: 'Test Business Ltd',
+        businessName: null,
+        changeBusinessName: 'Test Business Ltd',
         sbi: '123456789',
         userName: 'Jane Doe',
         businessEmail: 'info@testbusiness.com',

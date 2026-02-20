@@ -40,6 +40,7 @@ describe('businessFixListPresenter', () => {
         sections: ['name', 'vat', 'address', 'phone', 'email'],
         userName: 'Jane Doe',
         businessName: 'Test Business',
+        changeBusinessName: 'Test Business',
         sbi: '123456789',
         businessTelephone: '0123456789',
         vatNumber: '123456789',
@@ -59,10 +60,10 @@ describe('businessFixListPresenter', () => {
         }
       })
 
-      test('it should return the payload as the "businessName" property', () => {
+      test('it should return the stored or original business name as the "businessName" property', () => {
         const result = businessFixListPresenter(businessDetails, payload)
 
-        expect(result.businessName).toEqual('New Business Name')
+        expect(result.businessName).toEqual('Test Business')
       })
     })
 

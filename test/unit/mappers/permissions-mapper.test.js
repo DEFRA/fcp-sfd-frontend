@@ -12,7 +12,7 @@ const { mapPermissions } = await import('../../../src/mappers/permissions-mapper
 
 const mockLogger = createLogger()
 
-describe('permissionMapper', () => {
+describe('permissionsMapper', () => {
   describe('when given valid raw DAL data ', () => {
     test('it should map the values to the correct format ', () => {
       const result = mapPermissions(dalData)

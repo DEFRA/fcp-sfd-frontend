@@ -64,6 +64,7 @@ describe('businessFixListPresenter', () => {
         const result = businessFixListPresenter(businessDetails, payload)
 
         expect(result.businessName).toEqual('Test Business')
+        expect(result.changeBusinessName).toEqual('New Business Name')
       })
     })
 

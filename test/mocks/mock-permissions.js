@@ -1,3 +1,10 @@
+/**
+ * Test-only stub for permissions (dalData, mappedData). Same shape as
+ * mapPermissions from the DAL response; used by unit tests and auth.
+ *
+ * @module mockPermissions
+ */
+
 const dalData = {
   business: {
     customer: {

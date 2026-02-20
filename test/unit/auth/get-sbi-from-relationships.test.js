@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { getSbiFromRelationships } from '../../../src/auth/get-sbi-from-relationships'
+import { getSbiFromRelationships } from '../../../src/auth/get-sbi-from-relationships.js'
 
 describe('getSbiFromRelationships', () => {
   test('when items of relationships are split by : should return second component of items where first component equal orgId ', async () => {

@@ -1,3 +1,10 @@
+/**
+ * Test-only stub for personal-business details (dalData, mappedData). Same shape as
+ * mapPersonalBusinessDetails from the DAL response; used by unit tests.
+ *
+ * @module mockPersonalBusinessDetails
+ */
+
 const dalData = {
   customer: {
     info: {

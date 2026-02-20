@@ -1,3 +1,12 @@
+/**
+ * Stub business details returned when the DAL connection is disabled
+ * (e.g. local development or feature flag off). Matches the shape produced by
+ * mapBusinessDetails from the DAL response.
+ *
+ * @module mockBusinessDetails
+ */
+
+/** Raw business details shape as returned by the DAL API (used by tests and mapper). */
 const dalData = {
   business: {
     organisationId: '5565448',
@@ -41,6 +50,7 @@ const dalData = {
   }
 }
 
+/** Business details in app-friendly shape (mapBusinessDetails output); returned when DAL is disabled. */
 const mappedData = {
   info: {
     sbi: '107183280',
@@ -83,6 +93,7 @@ const mappedData = {
   }
 }
 
+/** Same as mappedData but with no County Parish Holding (CPH) data; used when CPH feature is off. */
 const mappedDataWithoutCph = {
   ...mappedData,
   info: {

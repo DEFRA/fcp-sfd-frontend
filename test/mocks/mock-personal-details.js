@@ -1,3 +1,10 @@
+/**
+ * Test-only stub for personal details (dalData, mappedData). Same shape as
+ * mapPersonalDetails from the DAL response; used by unit tests and mappers.
+ *
+ * @module mockPersonalDetails
+ */
+
 const dalData = {
   customer: {
     crn: '123456890',

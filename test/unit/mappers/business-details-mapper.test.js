@@ -1,19 +1,19 @@
 import { describe, test, expect } from 'vitest'
-import { dalData, mappedData } from '../../mocks/mock-business-details.js'
+import { getDalData, getMappedData } from '../../mocks/mock-business-details.js'
 
 const { mapBusinessDetails } = await import('../../../src/mappers/business-details-mapper.js')
 
 describe('businessDetailsMapper', () => {
   describe('when given valid raw DAL data ', () => {
     test('it should map the values to the correct format ', () => {
-      const result = mapBusinessDetails(dalData)
+      const result = mapBusinessDetails(getDalData())
 
-      expect(result).toEqual(mappedData)
+      expect(result).toEqual(getMappedData())
     })
 
     test('it should build the userName correctly ', () => {
       const userNameCheckData = {
-        ...dalData,
+        ...getDalData(),
         customer: {
           info: {
             name: {

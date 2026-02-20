@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updateBusinessVATMutation } from '../../../../src/dal/mutations/business/update-business-vat.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-business-details.js'
+import { getMappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessVatRemoveService } from '../../../../src/services/business/update-business-vat-remove-service'
@@ -33,7 +33,7 @@ describe('updateBusinessVatRemoveService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    fetchBusinessDetailsService.mockReturnValue(mappedData)
+    fetchBusinessDetailsService.mockReturnValue(getMappedData())
 
     credentials = { sbi: '123456789', crn: '987654321', sessionId: 'test-session-id' }
   })

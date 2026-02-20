@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updateBusinessAddressMutation } from '../../../../src/dal/mutations/business/update-business-address.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-business-details.js'
+import { getMappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
@@ -29,18 +29,20 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updateBusinessAddressChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessAddress = {
+    data = getMappedData()
+    data.changeBusinessAddress = {
       address1: 'A different address',
       city: 'Maidstone',
       postcode: 'BA123 ABC',
       country: 'United Kingdom'
     }
 
-    fetchBusinessChangeService.mockReturnValue(mappedData)
+    fetchBusinessChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -103,7 +105,7 @@ describe('updateBusinessAddressChangeService', () => {
 
   describe('when called with a lookup (UPRN) address', () => {
     beforeEach(() => {
-      mappedData.changeBusinessAddress = {
+      data.changeBusinessAddress = {
         uprn: '1234567890',
         buildingName: 'Test House',
         city: 'London',

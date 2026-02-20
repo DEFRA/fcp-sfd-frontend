@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updateBusinessEmailMutation } from '../../../../src/dal/mutations/business/update-business-email.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-business-details.js'
+import { getMappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessEmailChangeService } from '../../../../src/services/business/update-business-email-change-service'
@@ -33,8 +33,9 @@ describe('updateBusinessEmailChangeService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessEmail = 'new-email@test.com'
-    fetchBusinessChangeService.mockReturnValue(mappedData)
+    const data = getMappedData()
+    data.changeBusinessEmail = 'new-email@test.com'
+    fetchBusinessChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()

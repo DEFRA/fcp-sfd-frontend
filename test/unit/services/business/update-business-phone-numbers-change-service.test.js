@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updateBusinessPhoneNumbersMutation } from '../../../../src/dal/mutations/business/update-business-phone-numbers.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-business-details.js'
+import { getMappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessPhoneNumbersChangeService } from '../../../../src/services/business/update-business-phone-numbers-change-service'
@@ -29,16 +29,18 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessPhoneNumbers = {
+    data = getMappedData()
+    data.changeBusinessPhoneNumbers = {
       businessTelephone: null,
       businessMobile: null
     }
 
-    fetchBusinessChangeService.mockReturnValue(mappedData)
+    fetchBusinessChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -63,7 +65,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
             landline: null,
             mobile: null
           },
-          sbi: mappedData.info.sbi
+          sbi: data.info.sbi
         }
       }, credentials.sessionId)
     })

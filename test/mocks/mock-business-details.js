@@ -1,4 +1,4 @@
-const dalData = {
+const getDalData = () => ({
   business: {
     organisationId: '5565448',
     sbi: '107183280',
@@ -40,9 +40,9 @@ const dalData = {
       }
     }
   }
-}
+})
 
-const mappedData = {
+const getMappedData = () => ({
   info: {
     sbi: '107183280',
     businessName: 'HENLEY, RE',
@@ -81,9 +81,9 @@ const mappedData = {
   customer: {
     userName: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
   }
-}
+})
 
-const presentedData = {
+const getPresentedData = () => ({
   info: {
     sbi: '107183280',
     businessName: 'HENLEY, RE',
@@ -121,10 +121,10 @@ const presentedData = {
   customer: {
     userName: 'Ingrid Jerimire Klaufichious Limouhetta Mortimious Neuekind Orpheus Perimillian Quixillotrio Reviticlese Cook'
   }
-}
+})
 
 export {
-  dalData,
-  mappedData,
-  presentedData
+  getDalData,
+  getMappedData,
+  getPresentedData
 }

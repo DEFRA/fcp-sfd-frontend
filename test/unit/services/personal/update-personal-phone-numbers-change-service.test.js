@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updatePersonalPhoneNumbersMutation } from '../../../../src/dal/mutations/personal/update-personal-phone-numbers.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Thing under test
 import { updatePersonalPhoneNumbersChangeService } from '../../../../src/services/personal/update-personal-phone-numbers-change-service.js'
@@ -29,16 +29,18 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updatePersonalPhoneNumbersChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changePersonalPhoneNumbers = {
+    data = getMappedData()
+    data.changePersonalPhoneNumbers = {
       personalTelephone: '09876543210',
       personalMobile: '01234567890'
     }
 
-    fetchPersonalChangeService.mockReturnValue(mappedData)
+    fetchPersonalChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -63,7 +65,7 @@ describe('updatePersonalPhoneNumbersChangeService', () => {
             landline: '09876543210',
             mobile: '01234567890'
           },
-          crn: mappedData.crn
+          crn: data.crn
         }
       }, credentials.sessionId)
     })
@@ -83,7 +85,7 @@ describe('updatePersonalPhoneNumbersChangeService', () => {
 
   describe('when the personal telephone number is null', () => {
     beforeEach(() => {
-      mappedData.changePersonalPhoneNumbers.personalTelephone = null
+      data.changePersonalPhoneNumbers.personalTelephone = null
     })
 
     test('it calls updateDalService with null values', async () => {
@@ -95,7 +97,7 @@ describe('updatePersonalPhoneNumbersChangeService', () => {
             landline: null,
             mobile: '01234567890'
           },
-          crn: mappedData.crn
+          crn: data.crn
         }
       }, credentials.sessionId)
     })

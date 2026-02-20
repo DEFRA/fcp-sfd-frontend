@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchPersonalDetailsService } from '../../../../src/services/personal/fetch-personal-details-service.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Thing under test
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
@@ -16,7 +16,7 @@ vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', (
 }))
 
 describe('fetchPersonalChangeService', () => {
-  const data = { ...mappedData } // clone to avoid mutation
+  const data = getMappedData()
   let yar
   let credentials
 

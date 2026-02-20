@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
 
 // Mock data
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Mock dependencies
 import { config } from '../../../../src/config/index.js'
@@ -29,8 +29,7 @@ describe('personalDetailsPresenter', () => {
     // Default: interrupter OFF
     config.get.mockReturnValue(true)
 
-    // Deep clone the data to avoid mutation across tests
-    data = JSON.parse(JSON.stringify(mappedData))
+    data = getMappedData()
 
     // Mock yar session manager
     yar = {

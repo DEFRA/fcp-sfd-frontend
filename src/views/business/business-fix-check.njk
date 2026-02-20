@@ -5,8 +5,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "common/sub-header/macro.njk" import subHeader %}
 
 {% block beforeContent %}
+  {{ subHeader(businessName=businessName, sbi=sbi, userName=userName) }}
   {{ appBackSignOutLink(backLink) }}
 {% endblock %}
 
@@ -30,7 +32,7 @@
             {% if section === 'name' %}
               {% set rowItem = {
                 key: { text: "Business name" },
-                value: { text: businessName },
+                value: { text: changeBusinessName },
                 actions: {
                   items: [
                     {

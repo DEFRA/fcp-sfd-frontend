@@ -37,6 +37,12 @@ describe('businessFixCheckPresenter', () => {
       },
       changeBusinessVat: {
         vatNumber: '123456789'
+      },
+      customer: {
+        userName: 'Jane Doe'
+      },
+      info: {
+        sbi: '123456789'
       }
     }
   })
@@ -57,7 +63,10 @@ describe('businessFixCheckPresenter', () => {
           'phone',
           'vat'
         ],
-        businessName: 'Test Business Ltd',
+        businessName: null,
+        changeBusinessName: 'Test Business Ltd',
+        sbi: '123456789',
+        userName: 'Jane Doe',
         businessEmail: 'info@testbusiness.com',
         address: [
           '1 Business Street',
@@ -150,6 +159,58 @@ describe('businessFixCheckPresenter', () => {
           telephone: null,
           mobile: null
         })
+      })
+    })
+  })
+
+  describe('the "sbi" property', () => {
+    describe('when info is missing', () => {
+      beforeEach(() => {
+        delete businessDetails.info
+      })
+
+      test('it should return null', () => {
+        const result = businessFixCheckPresenter(businessDetails)
+
+        expect(result.sbi).toBeNull()
+      })
+    })
+
+    describe('when sbi is missing from info', () => {
+      beforeEach(() => {
+        delete businessDetails.info.sbi
+      })
+
+      test('it should return null', () => {
+        const result = businessFixCheckPresenter(businessDetails)
+
+        expect(result.sbi).toBeNull()
+      })
+    })
+  })
+
+  describe('the "userName" property', () => {
+    describe('when customer is missing', () => {
+      beforeEach(() => {
+        delete businessDetails.customer
+      })
+
+      test('it should return null', () => {
+        const result = businessFixCheckPresenter(businessDetails)
+
+        expect(result.userName).toBeNull()
+      })
+    })
+
+    describe('when userName is missing from customer', () => {
+      beforeEach(() => {
+        businessDetails.customer = {}
+      })
+
+      test('it should return null', () => {
+        const result = businessFixCheckPresenter(businessDetails)
+
+        expect(result.userName).toBeNull()
       })
     })
   })

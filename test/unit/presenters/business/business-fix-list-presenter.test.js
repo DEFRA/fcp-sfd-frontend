@@ -13,12 +13,16 @@ describe('businessFixListPresenter', () => {
       orderedSectionsToFix: ['name', 'vat', 'address', 'phone', 'email'],
       info: {
         vat: '123456789',
-        businessName: 'Test Business'
+        businessName: 'Test Business',
+        sbi: '123456789'
       },
       contact: {
         landline: '0123456789',
         mobile: '07123456789',
         email: 'test@test.com'
+      },
+      customer: {
+        userName: 'Jane Doe'
       }
     }
 
@@ -34,7 +38,10 @@ describe('businessFixListPresenter', () => {
         pageTitle: 'Your business details to update',
         metaDescription: 'Your business details to update.',
         sections: ['name', 'vat', 'address', 'phone', 'email'],
+        userName: 'Jane Doe',
         businessName: 'Test Business',
+        changeBusinessName: 'Test Business',
+        sbi: '123456789',
         businessTelephone: '0123456789',
         vatNumber: '123456789',
         businessMobile: '07123456789',
@@ -53,10 +60,11 @@ describe('businessFixListPresenter', () => {
         }
       })
 
-      test('it should return the payload as the "businessName" property', () => {
+      test('it should return the stored or original business name as the "businessName" property', () => {
         const result = businessFixListPresenter(businessDetails, payload)
 
-        expect(result.businessName).toEqual('New Business Name')
+        expect(result.businessName).toEqual('Test Business')
+        expect(result.changeBusinessName).toEqual('New Business Name')
       })
     })
 
@@ -67,10 +75,11 @@ describe('businessFixListPresenter', () => {
         }
       })
 
-      test('it should return the changed business name as the "businessName" property', () => {
+      test('it should retain the stored business name as "businessName" and use the changed value as "changeBusinessName"', () => {
         const result = businessFixListPresenter(businessDetails, payload)
 
-        expect(result.businessName).toEqual('Changed Business Name')
+        expect(result.businessName).toEqual('Test Business')
+        expect(result.changeBusinessName).toEqual('Changed Business Name')
       })
     })
   })
@@ -195,6 +204,74 @@ describe('businessFixListPresenter', () => {
         { field: 'postcode', message: 'Enter a postcode' },
         { field: 'businessEmail', message: 'Enter an email address' }
       ])
+    })
+  })
+
+  describe('the "userName" property', () => {
+    describe('when customer exists with a userName', () => {
+      test('it should return the customer userName', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.userName).toEqual('Jane Doe')
+      })
+    })
+
+    describe('when customer is undefined', () => {
+      beforeEach(() => {
+        delete businessDetails.customer
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.userName).toBeNull()
+      })
+    })
+
+    describe('when customer exists but userName is undefined', () => {
+      beforeEach(() => {
+        businessDetails.customer = {}
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.userName).toBeNull()
+      })
+    })
+  })
+
+  describe('the "sbi" property', () => {
+    describe('when sbi exists on businessDetails.info', () => {
+      test('it should return the sbi value', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.sbi).toEqual('123456789')
+      })
+    })
+
+    describe('when info exists but sbi is undefined', () => {
+      beforeEach(() => {
+        delete businessDetails.info.sbi
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.sbi).toBeNull()
+      })
+    })
+
+    describe('when info is undefined', () => {
+      beforeEach(() => {
+        delete businessDetails.info.sbi
+      })
+
+      test('it should return null', () => {
+        const result = businessFixListPresenter(businessDetails, payload)
+
+        expect(result.sbi).toBeNull()
+      })
     })
   })
 })

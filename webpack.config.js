@@ -149,6 +149,14 @@ export default {
         {
           from: path.join(govukFrontendPath, 'dist/govuk/assets/fonts'),
           to: 'assets/fonts'
+        },
+        {
+          from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand/images'),
+          to: 'assets/images'
+        },
+        {
+          from: path.join(govukFrontendPath, 'dist/govuk/assets/rebrand/manifest.json'),
+          to: 'assets/manifest.json'
         }
       ]
     })

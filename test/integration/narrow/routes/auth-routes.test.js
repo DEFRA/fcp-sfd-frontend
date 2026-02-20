@@ -5,7 +5,7 @@ import { mockOidcConfig } from '../../../mocks/setup-server-mocks.js'
 const { HTTP_STATUS_FOUND } = constants
 
 const mockVerifyToken = vi.fn()
-vi.mock('../../../../src/auth/verify-token', async () => ({
+vi.mock('../../../../src/auth/verify-token.js', async () => ({
   verifyToken: mockVerifyToken
 }))
 

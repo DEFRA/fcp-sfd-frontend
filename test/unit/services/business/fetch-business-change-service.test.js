@@ -11,7 +11,7 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-details-service', () => ({
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
   fetchBusinessDetailsService: vi.fn()
 }))
 

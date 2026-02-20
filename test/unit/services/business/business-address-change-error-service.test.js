@@ -9,11 +9,11 @@ import { formatValidationErrors } from '../../../../src/utils/format-validation-
 import { businessAddressChangeErrorService } from '../../../../src/services/business/business-address-change-error-service.js'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
   fetchBusinessChangeService: vi.fn()
 }))
 
-vi.mock('../../../../src/utils/format-validation-errors', () => ({
+vi.mock('../../../../src/utils/format-validation-errors.js', () => ({
   formatValidationErrors: vi.fn()
 }))
 

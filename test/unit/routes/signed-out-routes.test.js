@@ -5,8 +5,8 @@ import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { signedOut } from '../../../src/routes/signed-out-routes.js'
 
 // Mocks
-import { signedOutPresenter } from '../../../src/presenters/signed-out-presenter'
-vi.mock('../../../src/presenters/signed-out-presenter', () => ({
+import { signedOutPresenter } from '../../../src/presenters/signed-out-presenter.js'
+vi.mock('../../../src/presenters/signed-out-presenter.js', () => ({
   signedOutPresenter: vi.fn()
 }))
 

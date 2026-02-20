@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service'
+import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { updateBusinessNameMutation } from '../../../../src/dal/mutations/business/update-business-name.js'
@@ -11,10 +11,10 @@ import { updateBusinessNameMutation } from '../../../../src/dal/mutations/busine
 import { mappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
-import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service'
+import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service.js'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
   fetchBusinessChangeService: vi.fn()
 }))
 

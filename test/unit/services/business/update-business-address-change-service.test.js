@@ -14,7 +14,7 @@ import { mappedData } from '../../../mocks/mock-business-details.js'
 import { updateBusinessAddressChangeService } from '../../../../src/services/business/update-business-address-change-service.js'
 
 // Mocks
-vi.mock('../../../../src/services/business/fetch-business-change-service', () => ({
+vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
   fetchBusinessChangeService: vi.fn()
 }))
 

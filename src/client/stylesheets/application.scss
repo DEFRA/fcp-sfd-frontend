@@ -4,6 +4,7 @@
 @use "core";
 @use "heading";
 @use "navigation";
+@use "helpers";
 
 .text-wrap-no-hyphen {
   overflow-wrap: anywhere;

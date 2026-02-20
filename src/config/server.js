@@ -44,7 +44,7 @@ export const serverConfig = {
       env: 'STATIC_CACHE_TIMEOUT'
     },
     serviceName: {
-      doc: 'Applications Service Name',
+      doc: 'Application Service Name',
       format: String,
       default: 'Farm and Land Service'
     },

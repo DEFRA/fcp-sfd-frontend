@@ -3,8 +3,7 @@ import {
   PHONE_NUMBER_MIN,
   PHONE_NUMBER_MAX
 } from '../../constants/validation-fields.js'
-
-const PHONE_NUMBER_PATTERN = /^[0-9 ()+-]+$/
+import { PHONE_NUMBER_PATTERN } from '../../constants/patterns.js'
 
 export const businessPhoneSchema = Joi.object({
   businessTelephone: Joi.string()

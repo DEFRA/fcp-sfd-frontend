@@ -43,9 +43,13 @@
     {% endset %}
 
     {% set formattedAddress %}
-      {% for addressLine in personalAddress.address %}
-        <div>{{addressLine}}</div>
-      {% endfor %}
+      {% if personalAddress.address === 'Not added'%}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        {% for addressLine in personalAddress.address %}
+          <div>{{addressLine}}</div>
+        {% endfor %}
+      {% endif %}
     {% endset %}
 
     {% set displayPersonalTelephone %}
@@ -65,6 +69,14 @@
           <span>{{ personalTelephone.mobile }}</span>
         {% endif %}
       </div>
+    {% endset %}
+
+    {% set displayPersonalEmail %}
+      {% if personalEmail.email === 'Not added' %}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        <div>{{ personalEmail.email }}</div>
+      {% endif %}
     {% endset %}
 
     {{ govukSummaryList({
@@ -154,7 +166,7 @@
             text: "Personal email address"
           },
           value: {
-            text: personalEmail.email
+            html: displayPersonalEmail
           },
           actions: {
             items: [

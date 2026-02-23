@@ -10,6 +10,29 @@
 const buildPersonalSuccessMessage = (personalDetails) => {
   const { orderedSectionsToFix } = personalDetails
 
+  const changes = loopThroughSections(orderedSectionsToFix, personalDetails)
+
+  if (changes.length === 1) {
+    return {
+      type: 'text',
+      value: `You have updated your ${changes[0]}`
+    }
+  }
+
+  return {
+    type: 'html',
+    value: `
+      <h3 class="govuk-notification-banner__heading">
+        You have updated your:
+      </h3>
+      <ul class="govuk-list govuk-list--bullet">
+        ${changes.map(change => `<li>${change}</li>`).join('')}
+      </ul>
+    `
+  }
+}
+
+const loopThroughSections = (orderedSectionsToFix, personalDetails) => {
   const changes = []
 
   for (const section of orderedSectionsToFix) {
@@ -34,24 +57,7 @@ const buildPersonalSuccessMessage = (personalDetails) => {
     }
   }
 
-  if (changes.length === 1) {
-    return {
-      type: 'text',
-      value: `You have updated your ${changes[0]}`
-    }
-  }
-
-  return {
-    type: 'html',
-    value: `
-      <h3 class="govuk-notification-banner__heading">
-        You have updated your:
-      </h3>
-      <ul class="govuk-list govuk-list--bullet">
-        ${changes.map(change => `<li>${change}</li>`).join('')}
-      </ul>
-    `
-  }
+  return changes
 }
 
 export {

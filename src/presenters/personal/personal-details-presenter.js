@@ -51,11 +51,13 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
 }
 
 const formatAddress = (personalAddress) => {
-  if (!personalAddress.lookup?.uprn && !personalAddress.manual?.line1) {
-    return 'Not added'
+  let addressText = 'Not added'
+
+  if (personalAddress.lookup?.uprn || personalAddress.manual?.line1) {
+    addressText = formatDisplayAddress(personalAddress)
   }
 
-  return formatDisplayAddress(personalAddress)
+  return addressText
 }
 
 const getActionText = (value) => {

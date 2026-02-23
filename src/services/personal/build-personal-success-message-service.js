@@ -8,26 +8,30 @@
  */
 
 const buildPersonalSuccessMessage = (personalDetails) => {
+  const { orderedSectionsToFix } = personalDetails
+
   const changes = []
 
-  if (personalDetails.changePersonalName) {
-    changes.push('full name')
-  }
+  for (const section of orderedSectionsToFix) {
+    if (section === 'name' && personalDetails.changePersonalName) {
+      changes.push('full name')
+    }
 
-  if (personalDetails.changePersonalEmail) {
-    changes.push('personal email address')
-  }
+    if (section === 'email' && personalDetails.changePersonalEmail) {
+      changes.push('personal email address')
+    }
 
-  if (personalDetails.changePersonalPhoneNumbers) {
-    changes.push('personal phone numbers')
-  }
+    if (section === 'phone' && personalDetails.changePersonalPhoneNumbers) {
+      changes.push('personal phone numbers')
+    }
 
-  if (personalDetails.changePersonalDob) {
-    changes.push('date of birth')
-  }
+    if (section === 'dob' && personalDetails.changePersonalDob) {
+      changes.push('date of birth')
+    }
 
-  if (personalDetails.changePersonalAddress) {
-    changes.push('personal address')
+    if (section === 'address' && personalDetails.changePersonalAddress) {
+      changes.push('personal address')
+    }
   }
 
   if (changes.length === 1) {

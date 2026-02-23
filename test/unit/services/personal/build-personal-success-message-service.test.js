@@ -8,13 +8,15 @@ describe('buildPersonalSuccessMessage', () => {
   let personalDetails
 
   beforeEach(() => {
-    personalDetails = {}
+    personalDetails = {
+      orderedSectionsToFix: []
+    }
   })
 
   describe('when only one personal detail has changed', () => {
     test('returns a text message for name change', () => {
+      personalDetails.orderedSectionsToFix = ['name']
       personalDetails.changePersonalName = { first: 'John', last: 'Doe' }
-
       const result = buildPersonalSuccessMessage(personalDetails)
 
       expect(result).toEqual({
@@ -24,6 +26,7 @@ describe('buildPersonalSuccessMessage', () => {
     })
 
     test('returns a text message for email change', () => {
+      personalDetails.orderedSectionsToFix = ['email']
       personalDetails.changePersonalEmail = { personalEmail: 'test@email.com' }
 
       const result = buildPersonalSuccessMessage(personalDetails)
@@ -35,6 +38,7 @@ describe('buildPersonalSuccessMessage', () => {
     })
 
     test('returns a text message for date of birth change', () => {
+      personalDetails.orderedSectionsToFix = ['dob']
       personalDetails.changePersonalDob = { day: '01', month: '01', year: '2000' }
 
       const result = buildPersonalSuccessMessage(personalDetails)
@@ -46,6 +50,7 @@ describe('buildPersonalSuccessMessage', () => {
     })
 
     test('returns a text message for address change', () => {
+      personalDetails.orderedSectionsToFix = ['address']
       personalDetails.changePersonalAddress = { postcode: 'AB12 3CD' }
 
       const result = buildPersonalSuccessMessage(personalDetails)
@@ -59,6 +64,8 @@ describe('buildPersonalSuccessMessage', () => {
 
   describe('when multiple personal details have changed', () => {
     beforeEach(() => {
+      personalDetails.orderedSectionsToFix = ['email', 'address', 'phone']
+
       personalDetails.changePersonalEmail = { personalEmail: 'test@email.com' }
       personalDetails.changePersonalPhoneNumbers = { personalPhoneNumbers: '0123456789' }
       personalDetails.changePersonalAddress = { postcode: 'AB12 3CD' }
@@ -79,13 +86,14 @@ describe('buildPersonalSuccessMessage', () => {
       expect(result.value).toContain('You have updated your:')
     })
 
-    test('renders a bullet list with all changed fields', () => {
+    test('renders a bullet list with all changed fields in the ordered list', () => {
       const result = buildPersonalSuccessMessage(personalDetails)
 
       expect(result.value).toContain('<ul class="govuk-list govuk-list--bullet">')
       expect(result.value).toContain('<li>personal email address</li>')
       expect(result.value).toContain('<li>personal phone numbers</li>')
       expect(result.value).toContain('<li>personal address</li>')
+      expect(result.value).toContain('<li>personal email address</li><li>personal address</li><li>personal phone numbers</li>')
     })
   })
 

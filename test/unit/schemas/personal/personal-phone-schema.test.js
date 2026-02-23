@@ -25,35 +25,28 @@ describe('personal phone schema', () => {
       expect(value).toEqual(payload)
     })
 
-    describe('when "personalTelephone" contains valid special characters', () => {
-      test.each([
-        { validSpecialCharacter: 'spaces', value: '012 345 67890' },
-        { validSpecialCharacter: 'brackets', value: '(012) 345 67890' },
-        { validSpecialCharacter: 'hyphens', value: '012-345-67890' },
-        { validSpecialCharacter: 'plus sign', value: '+44 1234567890' }
-      ])('it allows $validSpecialCharacter', ({ value }) => {
-        payload.personalTelephone = value
+    const validSpecialCharactersTestCases = [
+      { validSpecialCharacter: 'spaces', value: '012 345 67890' },
+      { validSpecialCharacter: 'brackets', value: '(012) 345 67890' },
+      { validSpecialCharacter: 'hyphens', value: '012-345-67890' },
+      { validSpecialCharacter: 'plus sign', value: '+44 1234567890' }
+    ]
 
-        const { error } = schema.validate(payload, { abortEarly: false })
+    describe.each(['personalTelephone', 'personalMobile'])(
+      'when "%s" contains valid special characters',
+      (fieldName) => {
+        test.each(validSpecialCharactersTestCases)(
+          'it allows $validSpecialCharacter',
+          ({ value }) => {
+            payload[fieldName] = value
 
-        expect(error).toBeUndefined()
-      })
-    })
+            const { error } = schema.validate(payload, { abortEarly: false })
 
-    describe('when "personalMobile" contains valid special characters', () => {
-      test.each([
-        { validSpecialCharacter: 'spaces', value: '012 345 67890' },
-        { validSpecialCharacter: 'brackets', value: '(012) 345 67890' },
-        { validSpecialCharacter: 'hyphens', value: '012-345-67890' },
-        { validSpecialCharacter: 'plus sign', value: '+44 1234567890' }
-      ])('it allows $validSpecialCharacter', ({ value }) => {
-        payload.personalMobile = value
-
-        const { error } = schema.validate(payload, { abortEarly: false })
-
-        expect(error).toBeUndefined()
-      })
-    })
+            expect(error).toBeUndefined()
+          }
+        )
+      }
+    )
   })
 
   describe('when invalid data is provided', () => {
@@ -106,108 +99,73 @@ describe('personal phone schema', () => {
       })
     })
 
-    describe('because "personalMobile" is too short', () => {
-      beforeEach(() => {
-        payload.personalMobile = '012'
-      })
+    describe.each([
+      { field: 'personalMobile', label: 'mobile phone number' },
+      { field: 'personalTelephone', label: 'telephone number' }
+    ])(
+      'because $field is too short', ({ field, label }) => {
+        beforeEach(() => {
+          payload[field] = '012'
+        })
 
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
+        test('it fails validation', () => {
+          const { error, value } = schema.validate(payload, { abortEarly: false })
 
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile phone number must be 10 characters or more',
-          path: ['personalMobile'],
-          type: 'string.min'
-        }))
-        expect(value).toEqual(payload)
-      })
-    })
+          expect(value).toEqual(payload)
 
-    describe('because "personalMobile" is too long', () => {
-      beforeEach(() => {
-        payload.personalMobile = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
-      })
+          expect(error.details[0]).toEqual(expect.objectContaining({
+            message: `Personal ${label} must be 10 characters or more`,
+            path: [field],
+            type: 'string.min'
+          }))
+        })
+      }
+    )
 
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
+    describe.each([
+      { field: 'personalMobile', label: 'mobile phone number' },
+      { field: 'personalTelephone', label: 'telephone number' }
+    ])(
+      'because $field is too long', ({ field, label }) => {
+        beforeEach(() => {
+          payload[field] = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
+        })
 
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile phone number must be 50 characters or less',
-          path: ['personalMobile'],
-          type: 'string.max'
-        }))
-        expect(value).toEqual(payload)
-      })
-    })
+        test('it fails validation', () => {
+          const { error, value } = schema.validate(payload, { abortEarly: false })
 
-    describe('because "personalMobile" contains invalid characters', () => {
-      beforeEach(() => {
-        payload.personalMobile = '0123@#$%^&*abcdef'
-      })
+          expect(value).toEqual(payload)
 
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
+          expect(error.details[0]).toEqual(expect.objectContaining({
+            message: `Personal ${label} must be 50 characters or less`,
+            path: [field],
+            type: 'string.max'
+          }))
+        })
+      }
+    )
 
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
-          path: ['personalMobile'],
-          type: 'string.pattern.base'
-        }))
+    describe.each([
+      { field: 'personalMobile', label: 'mobile number' },
+      { field: 'personalTelephone', label: 'telephone number' }
+    ])(
+      'because $field contains invalid characters', ({ field, label }) => {
+        beforeEach(() => {
+          payload[field] = '0123@#$%^&*abcdef'
+        })
 
-        expect(value).toEqual(payload)
-      })
-    })
+        test('it fails validation', () => {
+          const { error, value } = schema.validate(payload, { abortEarly: false })
 
-    describe('because "personalTelephone" is too short', () => {
-      beforeEach(() => {
-        payload.personalTelephone = '012'
-      })
+          expect(value).toEqual(payload)
 
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal telephone number must be 10 characters or more',
-          path: ['personalTelephone'],
-          type: 'string.min'
-        }))
-        expect(value).toEqual(payload)
-      })
-    })
-
-    describe('because "personalTelephone" is too long', () => {
-      beforeEach(() => {
-        payload.personalTelephone = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
-      })
-
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal telephone number must be 50 characters or less',
-          path: ['personalTelephone'],
-          type: 'string.max'
-        }))
-        expect(value).toEqual(payload)
-      })
-    })
-
-    describe('because "personalTelephone" contains invalid characters', () => {
-      beforeEach(() => {
-        payload.personalTelephone = '0123@#$%^&*abcdef'
-      })
-
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal telephone number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
-          path: ['personalTelephone'],
-          type: 'string.pattern.base'
-        }))
-
-        expect(value).toEqual(payload)
-      })
-    })
+          expect(error.details[0]).toEqual(expect.objectContaining({
+            message: `Personal ${label} must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +`,
+            path: [field],
+            type: 'string.pattern.base'
+          }))
+        })
+      }
+    )
   })
 })

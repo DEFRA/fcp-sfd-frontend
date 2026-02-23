@@ -8,11 +8,14 @@ describe('buildBusinessSuccessMessage', () => {
   let businessDetails
 
   beforeEach(() => {
-    businessDetails = {}
+    businessDetails = {
+      orderedSectionsToFix: []
+    }
   })
 
   describe('when only one business detail has changed', () => {
     test('returns a text message for name change', () => {
+      businessDetails.orderedSectionsToFix = ['name']
       businessDetails.changeBusinessName = { businessName: 'Test Business Ltd' }
 
       const result = buildBusinessSuccessMessage(businessDetails)
@@ -24,6 +27,7 @@ describe('buildBusinessSuccessMessage', () => {
     })
 
     test('returns a text message for email change', () => {
+      businessDetails.orderedSectionsToFix = ['email']
       businessDetails.changeBusinessEmail = { businessEmail: 'info@test.com' }
 
       const result = buildBusinessSuccessMessage(businessDetails)
@@ -35,6 +39,7 @@ describe('buildBusinessSuccessMessage', () => {
     })
 
     test('returns a text message for phone numbers change', () => {
+      businessDetails.orderedSectionsToFix = ['phone']
       businessDetails.changeBusinessPhoneNumbers = {
         businessTelephone: '0123456789',
         businessMobile: '07123456789'
@@ -49,6 +54,7 @@ describe('buildBusinessSuccessMessage', () => {
     })
 
     test('returns a text message for VAT number change', () => {
+      businessDetails.orderedSectionsToFix = ['vat']
       businessDetails.changeBusinessVat = { vatNumber: 'GB123456789' }
 
       const result = buildBusinessSuccessMessage(businessDetails)
@@ -60,6 +66,7 @@ describe('buildBusinessSuccessMessage', () => {
     })
 
     test('returns a text message for address change', () => {
+      businessDetails.orderedSectionsToFix = ['address']
       businessDetails.changeBusinessAddress = { postcode: 'AB12 3CD' }
 
       const result = buildBusinessSuccessMessage(businessDetails)
@@ -73,6 +80,8 @@ describe('buildBusinessSuccessMessage', () => {
 
   describe('when multiple business details have changed', () => {
     beforeEach(() => {
+      businessDetails.orderedSectionsToFix = ['email', 'address', 'phone']
+
       businessDetails.changeBusinessEmail = { businessEmail: 'info@test.com' }
       businessDetails.changeBusinessPhoneNumbers = { businessTelephone: '0123456789' }
       businessDetails.changeBusinessAddress = { postcode: 'AB12 3CD' }
@@ -93,13 +102,14 @@ describe('buildBusinessSuccessMessage', () => {
       expect(result.value).toContain('You have updated your:')
     })
 
-    test('renders a bullet list with all changed fields', () => {
+    test('renders a bullet list with all changed fields in the ordered list', () => {
       const result = buildBusinessSuccessMessage(businessDetails)
 
       expect(result.value).toContain('<ul class="govuk-list govuk-list--bullet">')
       expect(result.value).toContain('<li>business email address</li>')
       expect(result.value).toContain('<li>business phone numbers</li>')
       expect(result.value).toContain('<li>business address</li>')
+      expect(result.value).toContain('<li>business email address</li><li>business address</li><li>business phone numbers</li>')
     })
   })
 

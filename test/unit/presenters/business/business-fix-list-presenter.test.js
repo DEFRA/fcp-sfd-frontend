@@ -10,6 +10,7 @@ describe('businessFixListPresenter', () => {
 
   beforeEach(() => {
     businessDetails = {
+      source: 'name',
       orderedSectionsToFix: ['name', 'vat', 'address', 'phone', 'email'],
       info: {
         vat: '123456789',
@@ -34,7 +35,7 @@ describe('businessFixListPresenter', () => {
       const result = businessFixListPresenter(businessDetails, payload)
 
       expect(result).toEqual({
-        backLink: { href: '/business-fix' },
+        backLink: { href: '/business-fix?source=name' },
         pageTitle: 'Your business details to update',
         metaDescription: 'Your business details to update.',
         sections: ['name', 'vat', 'address', 'phone', 'email'],

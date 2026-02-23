@@ -8,27 +8,9 @@
  */
 
 const buildBusinessSuccessMessage = (businessDetails) => {
-  const changes = []
+  const { orderedSectionsToFix } = businessDetails
 
-  if (businessDetails.changeBusinessName) {
-    changes.push('business name')
-  }
-
-  if (businessDetails.changeBusinessEmail) {
-    changes.push('business email address')
-  }
-
-  if (businessDetails.changeBusinessPhoneNumbers) {
-    changes.push('business phone numbers')
-  }
-
-  if (businessDetails.changeBusinessVat) {
-    changes.push('business vat number')
-  }
-
-  if (businessDetails.changeBusinessAddress) {
-    changes.push('business address')
-  }
+  const changes = loopThroughSections(businessDetails, orderedSectionsToFix)
 
   if (changes.length === 1) {
     return {
@@ -48,6 +30,34 @@ const buildBusinessSuccessMessage = (businessDetails) => {
       </ul>
     `
   }
+}
+
+const loopThroughSections = (businessDetails, orderedSectionsToFix) => {
+  const changes = []
+
+  for (const section of orderedSectionsToFix) {
+    if (section === 'name' && businessDetails.changeBusinessName) {
+      changes.push('business name')
+    }
+
+    if (section === 'email' && businessDetails.changeBusinessEmail) {
+      changes.push('business email address')
+    }
+
+    if (section === 'phone' && businessDetails.changeBusinessPhoneNumbers) {
+      changes.push('business phone numbers')
+    }
+
+    if (section === 'vat' && businessDetails.changeBusinessVat) {
+      changes.push('business vat number')
+    }
+
+    if (section === 'address' && businessDetails.changeBusinessAddress) {
+      changes.push('business address')
+    }
+  }
+
+  return changes
 }
 
 export {

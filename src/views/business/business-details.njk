@@ -38,10 +38,30 @@
       {{permissionsText}}
     </p>
 
+    {% set displayBusinessName %}
+      {% if businessName.value === 'Not added'%}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        <div>{{businessName.value}}</div>
+      {% endif %}
+    {% endset %}
+
+    {% set displayBusinessEmail %}
+      {% if businessEmail.value === 'Not added'%}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        <div>{{businessEmail.value}}</div>
+      {% endif %}
+    {% endset %}
+
     {% set formattedAddress %}
-      {% for addressLine in businessAddress.value %}
-        <div>{{addressLine}}</div>
-      {% endfor %}
+      {% if businessAddress.value === 'Not added'%}
+        <div><span class="govuk-hint display-inline">Not added</span></div>
+      {% else %}
+        {% for addressLine in businessAddress.value %}
+          <div>{{addressLine}}</div>
+        {% endfor %}
+      {% endif %}
     {% endset %}
 
     {% set formattedCph %}
@@ -171,7 +191,7 @@
             text: "Business name"
           },
           value: {
-            text: businessName.value
+            html: displayBusinessName
           },
           actions: businessNameActions
         },
@@ -198,7 +218,7 @@
             text: "Business email address"
           },
           value: {
-            text: businessEmail.value
+            html: displayBusinessEmail
           },
           actions: businessEmailActions
         }

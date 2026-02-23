@@ -12,7 +12,7 @@ const personalFixListPresenter = (personalDetails, payload, errors = null) => {
 
   return {
     userName: personalDetails.info?.userName ?? null,
-    backLink: { href: '/personal-fix' },
+    backLink: { href: `/personal-fix?source=${personalDetails.source}` },
     pageTitle: 'Your personal details to update',
     metaDescription: 'Your personal details to update.',
     sections: personalDetails.orderedSectionsToFix,

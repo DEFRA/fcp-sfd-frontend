@@ -2,7 +2,6 @@
  * Takes the raw data and maps it to a more usable format
  *
  * @param {Object} value - The data from the DAL
- *
  * @returns {Object} Formatted personal details data
  */
 
@@ -55,8 +54,8 @@ export const mapPersonalDetails = (value) => {
     },
     contact: {
       email: value.customer.info.email.address,
-      telephone: value.customer.info.phone.landline,
-      mobile: value.customer.info.phone.mobile
+      telephone: value.customer.info.phone.landline ?? null,
+      mobile: value.customer.info.phone.mobile ?? null
     },
     business: {
       info: {

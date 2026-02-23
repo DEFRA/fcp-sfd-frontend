@@ -32,22 +32,32 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
       changeLink: changeLinks.dob
     },
     personalAddress: {
-      address: formatDisplayAddress(data.address),
-      action: 'Change',
+      address: formatAddress(data.address),
+      action: getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1),
       changeLink: changeLinks.address
     },
     personalTelephone: {
-      telephone: data.contact.telephone ?? 'Not added',
-      mobile: data.contact.mobile ?? 'Not added',
+      telephone: data.contact.telephone || 'Not added',
+      mobile: data.contact.mobile || 'Not added',
       action: getActionText(data.contact.telephone || data.contact.mobile),
       changeLink: changeLinks.phone
     },
     personalEmail: {
-      email: data.contact.email ?? 'Not added',
+      email: data.contact.email || 'Not added',
       action: getActionText(data.contact.email),
       changeLink: changeLinks.email
     }
   }
+}
+
+const formatAddress = (personalAddress) => {
+  let addressText = 'Not added'
+
+  if (personalAddress.lookup?.uprn || personalAddress.manual?.line1) {
+    addressText = formatDisplayAddress(personalAddress)
+  }
+
+  return addressText
 }
 
 const getActionText = (value) => {

@@ -178,6 +178,19 @@ describe('personalDetailsPresenter', () => {
     })
   })
 
+  describe('the "personalAddress.action" property', () => {
+    describe('when the address property is missing', () => {
+      test('it should return the text "Add"', () => {
+        data.address.lookup.uprn = null
+        data.address.manual.line1 = null
+
+        const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+        expect(result.personalAddress.action).toEqual('Add')
+      })
+    })
+  })
+
   describe('the "notification" property', () => {
     test('returns null if yar is falsy', () => {
       const result = personalDetailsPresenter(data, null, hasValidPersonalDetails, sectionsNeedingUpdate)

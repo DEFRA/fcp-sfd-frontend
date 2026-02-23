@@ -243,6 +243,19 @@ describe('businessDetailsPresenter', () => {
     })
   })
 
+  describe('the "businessAddress.action" property', () => {
+    describe('when the address property is missing', () => {
+      test('it should return the text "Add"', () => {
+        data.address.lookup.uprn = null
+        data.address.manual.line1 = null
+
+        const result = businessDetailsPresenter(data, yar, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessAddress.action).toEqual('Add')
+      })
+    })
+  })
+
   describe('the "vatNumber" property', () => {
     describe('when the property is null for view only permission', () => {
       test('it should return "No number added" for value', () => {

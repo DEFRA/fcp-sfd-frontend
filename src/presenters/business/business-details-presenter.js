@@ -23,23 +23,23 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     userName: data.customer.userName ?? null,
     permissionsText: setPermissionsText(permissionLevel),
     businessAddress: {
-      value: formatDisplayAddress(data.address),
+      value: formatAddress(data.address),
       changeLink: changeLinks.businessAddress,
-      action: getActionText(data.address)
+      action: getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
     },
     businessName: {
-      value: data.info.businessName ?? 'Not added',
+      value: data.info.businessName || 'Not added',
       changeLink: changeLinks.businessName,
       action: getActionText(data.info.businessName)
     },
     businessTelephone: {
-      telephone: data.contact.landline ?? 'Not added',
-      mobile: data.contact.mobile ?? 'Not added',
+      telephone: data.contact.landline || 'Not added',
+      mobile: data.contact.mobile || 'Not added',
       action: getActionText(data.contact.landline || data.contact.mobile),
       changeLink: changeLinks.businessTelephone
     },
     businessEmail: {
-      value: data.contact.email ?? 'Not added',
+      value: data.contact.email || 'Not added',
       action: getActionText(data.contact.email),
       changeLink: changeLinks.businessEmail
     },
@@ -60,6 +60,16 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessType : null
     }
   }
+}
+
+const formatAddress = (businessAddress) => {
+  let addressText = 'Not added'
+
+  if (businessAddress.lookup?.uprn || businessAddress.manual?.line1) {
+    addressText = formatDisplayAddress(businessAddress)
+  }
+
+  return addressText
 }
 
 /**

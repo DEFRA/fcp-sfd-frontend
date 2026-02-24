@@ -146,7 +146,7 @@ describe('personal phone schema', () => {
     )
 
     describe.each([
-      { field: 'personalMobile', label: 'mobile number' },
+      { field: 'personalMobile', label: 'mobile phone number' },
       { field: 'personalTelephone', label: 'telephone number' }
     ])(
       'because $field contains invalid characters', ({ field, label }) => {

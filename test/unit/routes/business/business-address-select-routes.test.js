@@ -9,7 +9,7 @@ import { fetchBusinessChangeService } from '../../../../src/services/business/fe
 import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
-import { businessAddressSelectRoutes } from '../../../../src/routes/business/business-address-select.routes.js'
+import { businessAddressSelectRoutes } from '../../../../src/routes/business/business-address-select-routes.js'
 const [getBusinessAddressSelect, postBusinessAddressSelect] = businessAddressSelectRoutes
 
 // Mocks

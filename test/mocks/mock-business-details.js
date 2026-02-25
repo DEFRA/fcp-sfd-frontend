@@ -1,3 +1,10 @@
+/**
+ * Test-only stub for business details (dalData, mappedData, mappedDataWithoutCph).
+ * Same shape as mapBusinessDetails from the DAL response; used by unit tests and mappers.
+ *
+ * @module mockBusinessDetails
+ */
+
 const getDalData = () => ({
   business: {
     organisationId: '5565448',

@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { personalDobCheckPresenter } from '../../../../src/presenters/personal/personal-dob-check-presenter'
+import { personalDobCheckPresenter } from '../../../../src/presenters/personal/personal-dob-check-presenter.js'
 
 describe('personalDobCheckPresenter', () => {
   let data

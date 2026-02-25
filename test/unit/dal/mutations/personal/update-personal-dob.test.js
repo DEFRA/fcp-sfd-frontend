@@ -1,6 +1,6 @@
 import { parse } from 'graphql'
 import { describe, test, expect } from 'vitest'
-import { updatePersonalDobMutation } from '../../../../../src/dal/mutations/personal/update-personal-dob'
+import { updatePersonalDobMutation } from '../../../../../src/dal/mutations/personal/update-personal-dob.js'
 
 describe('When the updatePersonalDobMutation is parsed', () => {
   test('it is valid GraphQL syntax', () => {

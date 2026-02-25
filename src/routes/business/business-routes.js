@@ -1,5 +1,5 @@
 import { businessAddressChangeRoutes } from './business-address-change-routes.js'
-import { businessAddressSelectRoutes } from './business-address-select.routes.js'
+import { businessAddressSelectRoutes } from './business-address-select-routes.js'
 import { businessAddressEnterRoutes } from './business-address-enter-routes.js'
 import { businessAddressCheckRoutes } from './business-address-check-routes.js'
 import { businessDetailsRoutes } from './business-details-routes.js'

@@ -26,13 +26,32 @@ describe('business phone schema', () => {
     })
 
     describe('when "businessTelephone" contains valid special characters', () => {
-      test.each([
-        { desc: 'spaces', value: '012 345 67890' },
-        { desc: 'brackets', value: '(012) 345 67890' },
-        { desc: 'hyphens', value: '012-345-67890' },
-        { desc: 'plus sign', value: '+44 1234567890' }
-      ])('it allows $desc', ({ value }) => {
-        payload.businessTelephone = value
+      test('it allows spaces', () => {
+        payload.businessTelephone = '012 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows brackets', () => {
+        payload.businessTelephone = '(012) 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows hyphens', () => {
+        payload.businessTelephone = '012-345-67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows plus sign', () => {
+        payload.businessTelephone = '+44 1234567890'
 
         const { error } = schema.validate(payload, { abortEarly: false })
 
@@ -41,13 +60,32 @@ describe('business phone schema', () => {
     })
 
     describe('when "businessMobile" contains valid special characters', () => {
-      test.each([
-        { desc: 'spaces', value: '012 345 67890' },
-        { desc: 'brackets', value: '(012) 345 67890' },
-        { desc: 'hyphens', value: '012-345-67890' },
-        { desc: 'plus sign', value: '+44 1234567890' }
-      ])('it allows $desc', ({ value }) => {
-        payload.businessMobile = value
+      test('it allows spaces', () => {
+        payload.businessMobile = '012 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows brackets', () => {
+        payload.businessMobile = '(012) 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows hyphens', () => {
+        payload.businessMobile = '012-345-67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows plus sign', () => {
+        payload.businessMobile = '+44 1234567890'
 
         const { error } = schema.validate(payload, { abortEarly: false })
 
@@ -105,57 +143,6 @@ describe('business phone schema', () => {
       })
     })
 
-    describe('because "businessMobile" is too short', () => {
-      beforeEach(() => {
-        payload.businessMobile = '012'
-      })
-
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business mobile phone number must be 10 characters or more',
-          path: ['businessMobile'],
-          type: 'string.min'
-        }))
-        expect(value).toEqual(payload)
-      })
-    })
-
-    describe('because "businessMobile" is too long', () => {
-      beforeEach(() => {
-        payload.businessMobile = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
-      })
-
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business mobile phone number must be 50 characters or less',
-          path: ['businessMobile'],
-          type: 'string.max'
-        }))
-        expect(value).toEqual(payload)
-      })
-    })
-
-    describe('because "businessMobile" has invalid characters', () => {
-      beforeEach(() => {
-        payload.businessMobile = '0123@#$%^&*abcdef'
-      })
-
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business mobile number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
-          path: ['businessMobile'],
-          type: 'string.pattern.base'
-        }))
-        expect(value).toEqual(payload)
-      })
-    })
-
     describe('because "businessTelephone" is too short', () => {
       beforeEach(() => {
         payload.businessTelephone = '012'
@@ -164,12 +151,13 @@ describe('business phone schema', () => {
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
+        expect(value).toEqual(payload)
+
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Business telephone number must be 10 characters or more',
           path: ['businessTelephone'],
           type: 'string.min'
         }))
-        expect(value).toEqual(payload)
       })
     })
 
@@ -181,16 +169,17 @@ describe('business phone schema', () => {
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
+        expect(value).toEqual(payload)
+
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Business telephone number must be 50 characters or less',
           path: ['businessTelephone'],
           type: 'string.max'
         }))
-        expect(value).toEqual(payload)
       })
     })
 
-    describe('because "businessTelephone" has invalid characters', () => {
+    describe('because "businessTelephone" contains valid special characters', () => {
       beforeEach(() => {
         payload.businessTelephone = '0123@#$%^&*abcdef'
       })
@@ -198,12 +187,67 @@ describe('business phone schema', () => {
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
+        expect(value).toEqual(payload)
+
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Business telephone number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
           path: ['businessTelephone'],
           type: 'string.pattern.base'
         }))
+      })
+    })
+
+    describe('because "businessMobile" is too short', () => {
+      beforeEach(() => {
+        payload.businessMobile = '012'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
         expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business mobile phone number must be 10 characters or more',
+          path: ['businessMobile'],
+          type: 'string.min'
+        }))
+      })
+    })
+
+    describe('because "businessMobile" is too long', () => {
+      beforeEach(() => {
+        payload.businessMobile = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business mobile phone number must be 50 characters or less',
+          path: ['businessMobile'],
+          type: 'string.max'
+        }))
+      })
+    })
+
+    describe('because "businessMobile" contains valid special characters', () => {
+      beforeEach(() => {
+        payload.businessMobile = '0123@#$%^&*abcdef'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business mobile phone number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
+          path: ['businessMobile'],
+          type: 'string.pattern.base'
+        }))
       })
     })
   })

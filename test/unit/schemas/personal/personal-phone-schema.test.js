@@ -24,6 +24,74 @@ describe('personal phone schema', () => {
       expect(error).toBeUndefined()
       expect(value).toEqual(payload)
     })
+
+    describe('when "personalTelephone" contains valid special characters', () => {
+      test('it allows spaces', () => {
+        payload.personalTelephone = '012 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows brackets', () => {
+        payload.personalTelephone = '(012) 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows hyphens', () => {
+        payload.personalTelephone = '012-345-67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows plus sign', () => {
+        payload.personalTelephone = '+44 1234567890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+    })
+
+    describe('when "personalMobile" contains valid special characters', () => {
+      test('it allows spaces', () => {
+        payload.personalMobile = '012 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows brackets', () => {
+        payload.personalMobile = '(012) 345 67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows hyphens', () => {
+        payload.personalMobile = '012-345-67890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+
+      test('it allows plus sign', () => {
+        payload.personalMobile = '+44 1234567890'
+
+        const { error } = schema.validate(payload, { abortEarly: false })
+
+        expect(error).toBeUndefined()
+      })
+    })
   })
 
   describe('when invalid data is provided', () => {
@@ -51,37 +119,28 @@ describe('personal phone schema', () => {
       })
     })
 
-    describe('because "personalMobile" is too short', () => {
+    describe('because both "personalMobile" and "personalTelephone" are empty strings', () => {
       beforeEach(() => {
-        payload.personalMobile = '012'
+        payload.personalMobile = ''
+        payload.personalTelephone = ''
       })
 
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile phone number must be 10 characters or more',
-          path: ['personalMobile'],
-          type: 'string.min'
+          message: 'Enter at least one phone number',
+          path: [],
+          type: 'object.missing',
+          context: {
+            peers: ['personalTelephone', 'personalMobile'],
+            peersWithLabels: ['personalTelephone', 'personalMobile'],
+            label: 'value',
+            value: {}
+          }
         }))
-        expect(value).toEqual(payload)
-      })
-    })
 
-    describe('because "personalMobile" is too long', () => {
-      beforeEach(() => {
-        payload.personalMobile = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
-      })
-
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile phone number must be 50 characters or less',
-          path: ['personalMobile'],
-          type: 'string.max'
-        }))
-        expect(value).toEqual(payload)
+        expect(value).toEqual({})
       })
     })
 
@@ -93,12 +152,13 @@ describe('personal phone schema', () => {
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
+        expect(value).toEqual(payload)
+
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Personal telephone number must be 10 characters or more',
           path: ['personalTelephone'],
           type: 'string.min'
         }))
-        expect(value).toEqual(payload)
       })
     })
 
@@ -110,12 +170,85 @@ describe('personal phone schema', () => {
       test('it fails validation', () => {
         const { error, value } = schema.validate(payload, { abortEarly: false })
 
+        expect(value).toEqual(payload)
+
         expect(error.details[0]).toEqual(expect.objectContaining({
           message: 'Personal telephone number must be 50 characters or less',
           path: ['personalTelephone'],
           type: 'string.max'
         }))
+      })
+    })
+
+    describe('because "personalTelephone" contains valid special characters', () => {
+      beforeEach(() => {
+        payload.personalTelephone = '0123@#$%^&*abcdef'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
         expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Personal telephone number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
+          path: ['personalTelephone'],
+          type: 'string.pattern.base'
+        }))
+      })
+    })
+
+    describe('because "personalMobile" is too short', () => {
+      beforeEach(() => {
+        payload.personalMobile = '012'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Personal mobile phone number must be 10 characters or more',
+          path: ['personalMobile'],
+          type: 'string.min'
+        }))
+      })
+    })
+
+    describe('because "personalMobile" is too long', () => {
+      beforeEach(() => {
+        payload.personalMobile = '01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567891'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Personal mobile phone number must be 50 characters or less',
+          path: ['personalMobile'],
+          type: 'string.max'
+        }))
+      })
+    })
+
+    describe('because "personalMobile" contains valid special characters', () => {
+      beforeEach(() => {
+        payload.personalMobile = '0123@#$%^&*abcdef'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Personal mobile phone number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
+          path: ['personalMobile'],
+          type: 'string.pattern.base'
+        }))
       })
     })
   })

@@ -35,6 +35,9 @@ describe('personalFixCheckPresenter', () => {
       changePersonalPhoneNumbers: {
         personalTelephone: '0123456789',
         personalMobile: '07123456789'
+      },
+      info: {
+        userName: 'Jane Doe'
       }
     }
   })
@@ -44,6 +47,7 @@ describe('personalFixCheckPresenter', () => {
       const result = personalFixCheckPresenter(personalDetails)
 
       expect(result).toEqual({
+        userName: 'Jane Doe',
         backLink: { href: '/personal-fix-list' },
         pageTitle: 'Check your details are correct before submitting',
         metaDescription: 'Check your details are correct before submitting',

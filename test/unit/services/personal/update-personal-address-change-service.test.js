@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updatePersonalAddressMutation } from '../../../../src/dal/mutations/personal/update-personal-address.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Thing under test
 import { updatePersonalAddressChangeService } from '../../../../src/services/personal/update-personal-address-change-service.js'
@@ -29,18 +29,20 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updatePersonalAddressChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changePersonalAddress = {
+    data = getMappedData()
+    data.changePersonalAddress = {
       address1: 'A different address',
       city: 'Maidstone',
       postcode: 'BA123 ABC',
       country: 'United Kingdom'
     }
 
-    fetchPersonalChangeService.mockReturnValue(mappedData)
+    fetchPersonalChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -101,7 +103,7 @@ describe('updatePersonalAddressChangeService', () => {
 
   describe('when called with a lookup (UPRN) address', () => {
     beforeEach(() => {
-      mappedData.changePersonalAddress = {
+      data.changePersonalAddress = {
         uprn: '1234567890',
         buildingName: 'Test House',
         city: 'London',

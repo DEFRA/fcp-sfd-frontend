@@ -40,8 +40,8 @@ export const mapBusinessDetails = (value) => {
     },
     contact: {
       email: value.business.info.email.address,
-      landline: value.business.info.phone.landline,
-      mobile: value.business.info.phone.mobile
+      landline: value.business.info.phone.landline ?? null,
+      mobile: value.business.info.phone.mobile ?? null
     },
     customer: {
       userName: [

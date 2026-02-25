@@ -10,6 +10,7 @@ describe('personalFixListPresenter', () => {
 
   beforeEach(() => {
     personalDetails = {
+      source: 'phone',
       orderedSectionsToFix: ['name', 'dob', 'address', 'phone', 'email'],
       info: {
         fullName: {
@@ -38,7 +39,8 @@ describe('personalFixListPresenter', () => {
       const result = personalFixListPresenter(personalDetails, payload)
 
       expect(result).toEqual({
-        backLink: { href: '/personal-fix' },
+        userName: null,
+        backLink: { href: '/personal-fix?source=phone' },
         pageTitle: 'Your personal details to update',
         metaDescription: 'Your personal details to update.',
         sections: ['name', 'dob', 'address', 'phone', 'email'],

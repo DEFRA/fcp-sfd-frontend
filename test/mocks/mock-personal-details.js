@@ -5,7 +5,7 @@
  * @module mockPersonalDetails
  */
 
-const dalData = {
+const getDalData = () => ({
   customer: {
     crn: '123456890',
     info: {
@@ -45,9 +45,9 @@ const dalData = {
       name: 'Acme Farms Ltd'
     }
   }
-}
+})
 
-const mappedData = {
+const getMappedData = () => ({
   crn: '123456890',
   info: {
     userName: 'John Doe',
@@ -94,9 +94,9 @@ const mappedData = {
       name: 'Acme Farms Ltd'
     }
   }
-}
+})
 
 export {
-  dalData,
-  mappedData
+  getDalData,
+  getMappedData
 }

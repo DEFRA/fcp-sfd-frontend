@@ -5,7 +5,7 @@
  * @module mockPermissions
  */
 
-const dalData = {
+const getDalData = () => ({
   business: {
     customer: {
       permissionGroups: [
@@ -39,9 +39,9 @@ const dalData = {
       name: 'HENLEY, RE'
     }
   }
-}
+})
 
-const mappedData = {
+const getMappedData = () => ({
   privileges: [
     'BASIC_PAYMENT_SCHEME:SUBMIT',
     'BUSINESS_DETAILS:FULL_PERMISSION',
@@ -51,9 +51,9 @@ const mappedData = {
     'LAND_DETAILS:AMEND'
   ],
   businessName: 'HENLEY, RE'
-}
+})
 
 export {
-  dalData,
-  mappedData
+  getDalData,
+  getMappedData
 }

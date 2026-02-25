@@ -11,7 +11,8 @@ const personalFixListPresenter = (personalDetails, payload, errors = null) => {
   const sortedErrors = errors ? sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER) : null
 
   return {
-    backLink: { href: '/personal-fix' },
+    userName: personalDetails.info?.userName ?? null,
+    backLink: { href: `/personal-fix?source=${personalDetails.source}` },
     pageTitle: 'Your personal details to update',
     metaDescription: 'Your personal details to update.',
     sections: personalDetails.orderedSectionsToFix,

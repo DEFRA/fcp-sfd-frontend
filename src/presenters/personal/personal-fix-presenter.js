@@ -10,6 +10,7 @@ const personalFixPresenter = (personalDetails) => {
   const hasMultipleErrors = orderedSectionsToFix.length > 2
 
   return {
+    userName: personalDetails.info?.userName ?? null,
     backLink: { href: '/personal-details' },
     pageTitle: 'Update your personal details',
     metaDescription: 'Update your personal details.',

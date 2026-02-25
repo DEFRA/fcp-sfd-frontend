@@ -1,125 +1,114 @@
-import { describe, test, expect } from 'vitest'
-import { dalData, mappedData } from '../../mocks/mock-personal-details.js'
+// Test framework dependencies
+import { describe, test, expect, beforeEach } from 'vitest'
 
+// Test helpers
+import { getDalData, getMappedData } from '../../mocks/mock-personal-details.js'
+
+// Thing under test
 const { mapPersonalDetails } = await import('../../../src/mappers/personal-details-mapper.js')
 
 describe('personalDetailsMapper', () => {
-  describe('when given valid raw DAL data ', () => {
-    test('it should map the values to the correct format ', () => {
-      const result = mapPersonalDetails(dalData)
+  let dalData
 
-      expect(result).toEqual(mappedData)
-    })
+  beforeEach(() => {
+    dalData = getDalData()
+  })
 
-    test('it should build the userName correctly ', () => {
-      const userNameCheckData = {
-        ...dalData,
-        customer: {
-          ...dalData.customer,
-          info: {
-            ...dalData.customer.info,
-            name: {
-              first: 'Software',
-              last: 'Developer',
-              middle: null
-            }
-          }
-        }
-      }
+  describe('when given valid raw DAL data', () => {
+    describe('full mapping', () => {
+      test('it should map the values to the correct format', () => {
+        const result = mapPersonalDetails(dalData)
 
-      const result = mapPersonalDetails(userNameCheckData)
-
-      expect(result.info.userName).toEqual('Software Developer')
-    })
-
-    test('it should build the fullName object correctly ', () => {
-      const fullNameCheckData = {
-        ...dalData,
-        customer: {
-          ...dalData.customer,
-          info: {
-            ...dalData.customer.info,
-            name: {
-              first: 'Software',
-              last: 'Developer',
-              middle: 'Engineer'
-            }
-          }
-        }
-      }
-
-      const result = mapPersonalDetails(fullNameCheckData)
-
-      expect(result.info.fullName).toEqual({
-        first: 'Software',
-        last: 'Developer',
-        middle: 'Engineer'
+        expect(result).toEqual(getMappedData())
       })
     })
 
-    test('it should build the fullNameJoined string correctly ', () => {
-      const fullNameCheckData = {
-        ...dalData,
-        customer: {
-          ...dalData.customer,
-          info: {
-            ...dalData.customer.info,
-            name: {
-              first: 'Software',
-              last: 'Developer',
-              middle: 'Engineer'
-            }
-          }
-        }
-      }
+    describe('info.userName', () => {
+      test('it should build the userName correctly', () => {
+        const result = mapPersonalDetails(
+          dalWithName(dalData, { first: 'Software', last: 'Developer', middle: null })
+        )
 
-      const result = mapPersonalDetails(fullNameCheckData)
-
-      expect(result.info.fullNameJoined).toEqual('Software Engineer Developer')
-    })
-
-    test('it should build the date of birth correctly when it exists', () => {
-      const fullNameCheckData = {
-        ...dalData,
-        customer: {
-          ...dalData.customer,
-          info: {
-            ...dalData.customer.info,
-            dateOfBirth: '1990-01-01'
-          }
-        }
-      }
-
-      const result = mapPersonalDetails(fullNameCheckData)
-
-      expect(result.info.dateOfBirth).toEqual({
-        full: '1990-01-01',
-        day: '01',
-        month: '01',
-        year: '1990'
+        expect(result.info.userName).toEqual('Software Developer')
       })
     })
 
-    test('it should build the date of birth correctly when it does not exist', () => {
-      const fullNameCheckData = {
-        ...dalData,
-        customer: {
-          ...dalData.customer,
-          info: {
-            ...dalData.customer.info,
-            dateOfBirth: null
-          }
-        }
-      }
+    describe('info.fullName', () => {
+      test('it should build the fullName object correctly', () => {
+        const result = mapPersonalDetails(
+          dalWithName(dalData, { first: 'Software', last: 'Developer', middle: 'Engineer' })
+        )
 
-      const result = mapPersonalDetails(fullNameCheckData)
+        expect(result.info.fullName).toEqual({
+          first: 'Software',
+          last: 'Developer',
+          middle: 'Engineer'
+        })
+      })
+    })
 
-      expect(result.info.dateOfBirth).toEqual({
-        full: null,
-        day: null,
-        month: null,
-        year: null
+    describe('info.fullNameJoined', () => {
+      test('it should build the fullNameJoined string correctly', () => {
+        const result = mapPersonalDetails(
+          dalWithName(dalData, { first: 'Software', last: 'Developer', middle: 'Engineer' })
+        )
+
+        expect(result.info.fullNameJoined).toEqual('Software Engineer Developer')
+      })
+    })
+
+    describe('info.dateOfBirth', () => {
+      test('it should build the date of birth correctly when it exists', () => {
+        const result = mapPersonalDetails(dalWithDateOfBirth(dalData, '1990-01-01'))
+
+        expect(result.info.dateOfBirth).toEqual({
+          full: '1990-01-01',
+          day: '01',
+          month: '01',
+          year: '1990'
+        })
+      })
+
+      test('it should build the date of birth correctly when it does not exist', () => {
+        const result = mapPersonalDetails(dalWithDateOfBirth(dalData, null))
+
+        expect(result.info.dateOfBirth).toEqual({
+          full: null,
+          day: null,
+          month: null,
+          year: null
+        })
       })
     })
   })
 })
+
+const dalWithName = (base, name) => {
+  return {
+    ...base,
+    customer: {
+      ...base.customer,
+      info: {
+        ...base.customer.info,
+        name: {
+          first: name.first,
+          last: name.last,
+          middle: name.middle ?? null
+        }
+      }
+    }
+  }
+}
+
+const dalWithDateOfBirth = (base, value) => {
+  return {
+    ...base,
+    customer: {
+      ...base.customer,
+      info: {
+        ...base.customer.info,
+        dateOfBirth: value
+      }
+    }
+  }
+}

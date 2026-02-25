@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updatePersonalDobMutation } from '../../../../src/dal/mutations/personal/update-personal-dob.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-personal-details.js'
+import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Thing under test
 import { updatePersonalDobChangeService } from '../../../../src/services/personal/update-personal-dob-change-service.js'
@@ -29,17 +29,19 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updatePersonalDobChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changePersonalDob = {
+    data = getMappedData()
+    data.changePersonalDob = {
       day: '23',
       month: '07',
       year: '1964'
     }
 
-    fetchPersonalChangeService.mockReturnValue(mappedData)
+    fetchPersonalChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -61,7 +63,7 @@ describe('updatePersonalDobChangeService', () => {
       expect(updateDalService).toHaveBeenCalledWith(updatePersonalDobMutation, {
         input: {
           dateOfBirth: '1964-07-23',
-          crn: mappedData.crn
+          crn: data.crn
         }
       }, credentials.sessionId)
     })

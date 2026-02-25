@@ -1,5 +1,5 @@
 import { describe, test, expect, vi } from 'vitest'
-import { dalData, mappedData } from '../../mocks/mock-permissions.js'
+import { getDalData, getMappedData } from '../../mocks/mock-permissions.js'
 
 vi.mock('../../../src/utils/logger.js', () => ({
   createLogger: vi.fn().mockReturnValue({
@@ -15,20 +15,20 @@ const mockLogger = createLogger()
 describe('permissionsMapper', () => {
   describe('when given valid raw DAL data ', () => {
     test('it should map the values to the correct format ', () => {
-      const result = mapPermissions(dalData)
-      expect(result).toEqual(mappedData)
+      const result = mapPermissions(getDalData())
+      expect(result).toEqual(getMappedData())
     })
 
     test('it should build the privileges correctly ', () => {
-      const result = mapPermissions(dalData)
+      const result = mapPermissions(getDalData())
 
-      expect(result.privileges).toEqual(mappedData.privileges)
+      expect(result.privileges).toEqual(getMappedData().privileges)
     })
 
     test('it should build the businessName correctly ', () => {
-      const result = mapPermissions(dalData)
+      const result = mapPermissions(getDalData())
 
-      expect(result.businessName).toEqual(mappedData.businessName)
+      expect(result.businessName).toEqual(getMappedData().businessName)
     })
   })
 

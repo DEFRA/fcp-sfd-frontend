@@ -11,7 +11,10 @@ describe('personalFixPresenter', () => {
     beforeEach(() => {
       personalDetails = {
         source: 'name',
-        orderedSectionsToFix: ['name']
+        orderedSectionsToFix: ['name'],
+        info: {
+          userName: 'Jane Doe'
+        }
       }
     })
 
@@ -19,6 +22,7 @@ describe('personalFixPresenter', () => {
       const result = personalFixPresenter(personalDetails)
 
       expect(result).toEqual({
+        userName: 'Jane Doe',
         backLink: { href: '/personal-details' },
         pageTitle: 'Update your personal details',
         metaDescription: 'Update your personal details.',
@@ -33,7 +37,10 @@ describe('personalFixPresenter', () => {
       beforeEach(() => {
         personalDetails = {
           source: 'name',
-          orderedSectionsToFix: ['name', 'email']
+          orderedSectionsToFix: ['name', 'email'],
+          info: {
+            userName: 'Jane Doe'
+          }
         }
       })
 
@@ -49,7 +56,10 @@ describe('personalFixPresenter', () => {
       beforeEach(() => {
         personalDetails = {
           source: 'address',
-          orderedSectionsToFix: ['address', 'dob', 'email']
+          orderedSectionsToFix: ['address', 'dob', 'email'],
+          info: {
+            userName: 'Jane Doe'
+          }
         }
       })
 
@@ -64,7 +74,10 @@ describe('personalFixPresenter', () => {
     describe('when no source is provided', () => {
       beforeEach(() => {
         personalDetails = {
-          orderedSectionsToFix: ['name', 'dob', 'email']
+          orderedSectionsToFix: ['name', 'dob', 'email'],
+          info: {
+            userName: 'Jane Doe'
+          }
         }
       })
 
@@ -82,7 +95,10 @@ describe('personalFixPresenter', () => {
       beforeEach(() => {
         personalDetails = {
           source: 'name',
-          orderedSectionsToFix: ['name', 'email']
+          orderedSectionsToFix: ['name', 'email'],
+          info: {
+            userName: 'Jane Doe'
+          }
         }
       })
 
@@ -97,7 +113,10 @@ describe('personalFixPresenter', () => {
       beforeEach(() => {
         personalDetails = {
           source: 'phone',
-          orderedSectionsToFix: ['email', 'phone', 'name', 'dob']
+          orderedSectionsToFix: ['email', 'phone', 'name', 'dob'],
+          info: {
+            userName: 'Jane Doe'
+          }
         }
       })
 

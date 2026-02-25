@@ -7,6 +7,7 @@ import { staticAssetRoutes } from './static-assets-routes.js'
 import { footerRoutes } from './footer/footer-routes.js'
 import { businessRoutes } from './business/business-routes.js'
 import { personalRoutes } from './personal/personal-routes.js'
+import { catchAllNotFound } from './catch-all-routes.js'
 
 export const routes = [
   health,
@@ -17,5 +18,6 @@ export const routes = [
   ...staticAssetRoutes,
   ...footerRoutes,
   ...businessRoutes,
-  ...personalRoutes
+  ...personalRoutes,
+  catchAllNotFound // This should always be the last route to ensure it only catches unmatched routes
 ]

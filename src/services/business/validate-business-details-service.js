@@ -37,7 +37,7 @@ const validateBusinessDetailsService = (businessDetails) => {
   const hasUprn = Boolean(businessDetails.address?.lookup?.uprn)
   const mappedBusinessDetails = mapBusinessDetails(businessDetails, hasUprn)
 
-  const schemasToValidate = getSchemasToValidate(hasUprn, businessDetails.info?.vat)
+  const schemasToValidate = getSchemasToValidate(hasUprn)
 
   const { isValid: hasValidBusinessDetails, sectionsNeedingUpdate } = validateDetailsService(schemasToValidate, mappedBusinessDetails)
 
@@ -47,16 +47,13 @@ const validateBusinessDetailsService = (businessDetails) => {
   }
 }
 
-const getSchemasToValidate = (hasUprn, hasVat) => {
+const getSchemasToValidate = (hasUprn) => {
   const schemas = [
     businessDetailsSchema.name,
     businessDetailsSchema.phone,
-    businessDetailsSchema.email
+    businessDetailsSchema.email,
+    businessDetailsSchema.vat
   ]
-
-  if (hasVat) {
-    schemas.push(businessDetailsSchema.vat)
-  }
 
   if (!hasUprn) {
     schemas.push(businessDetailsSchema.address)
@@ -76,12 +73,8 @@ const mapBusinessDetails = (businessDetails, hasUprn) => {
     businessName: businessDetails.info?.businessName ?? '',
     businessEmail: businessDetails.contact?.email ?? '',
     businessTelephone: businessDetails.contact?.landline ?? '',
-    businessMobile: businessDetails.contact?.mobile ?? ''
-  }
-
-  // Only include VAT if provided
-  if (businessDetails.info?.vat) {
-    flatBusinessDetails.vatNumber = businessDetails.info.vat
+    businessMobile: businessDetails.contact?.mobile ?? '',
+    vatNumber: businessDetails.info.vat ?? ''
   }
 
   if (!hasUprn) {

@@ -1,5 +1,5 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { dalData, mappedData } from '../../mocks/mock-permissions.js'
+import { getDalData, getMappedData } from '../../mocks/mock-permissions.js'
 import { dalConnector } from '../../../src/dal/connector.js'
 import { mapPermissions } from '../../../src/mappers/permissions-mapper.js'
 import { permissionsQuery } from '../../../src/dal/queries/permissions-query.js'
@@ -36,8 +36,8 @@ describe('getPermissions', () => {
     crn = '987645433252'
 
     mockConfigGet.mockReturnValue(true)
-    mapPermissions.mockReturnValue(mappedData)
-    dalConnector.mockResolvedValue({ data: dalData })
+    mapPermissions.mockReturnValue(getMappedData())
+    dalConnector.mockResolvedValue({ data: getDalData() })
   })
 
   describe('when DAL_CONNECTION is true', () => {
@@ -50,12 +50,12 @@ describe('getPermissions', () => {
     })
     test('should call mapPermissions when dalConnector response has data', async () => {
       await getPermissions(sbi, crn)
-      expect(mapPermissions).toHaveBeenCalledWith(dalData)
+      expect(mapPermissions).toHaveBeenCalledWith(getDalData())
     })
 
     test('should return mapped data  when dalConnector response has data', async () => {
       const result = await getPermissions(sbi, crn)
-      expect(result).toBe(mappedData)
+      expect(result).toEqual(getMappedData())
     })
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
@@ -83,7 +83,7 @@ describe('getPermissions', () => {
 
     test('it correctly returns data static data source', async () => {
       const result = await getPermissions(sbi, crn)
-      expect(result).toMatchObject(mappedData)
+      expect(result).toMatchObject(getMappedData())
     })
   })
 })

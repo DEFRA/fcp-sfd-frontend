@@ -8,7 +8,7 @@ import { updateDalService } from '../../../../src/services/DAL/update-dal-servic
 import { updateBusinessNameMutation } from '../../../../src/dal/mutations/business/update-business-name.js'
 
 // Test helpers
-import { mappedData } from '../../../mocks/mock-business-details.js'
+import { getMappedData } from '../../../mocks/mock-business-details.js'
 
 // Thing under test
 import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service'
@@ -29,12 +29,14 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updateBusinessNameChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mappedData.changeBusinessName = 'New business ltd'
-    fetchBusinessChangeService.mockReturnValue(mappedData)
+    data = getMappedData()
+    data.changeBusinessName = 'New business ltd'
+    fetchBusinessChangeService.mockReturnValue(data)
 
     yar = {
       clear: vi.fn()
@@ -56,7 +58,7 @@ describe('updateBusinessNameChangeService', () => {
       expect(updateDalService).toHaveBeenCalledWith(updateBusinessNameMutation, {
         input: {
           name: 'New business ltd',
-          sbi: mappedData.info.sbi
+          sbi: data.info.sbi
         }
       }, credentials.sessionId)
     })

@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
 
 // Mock data
-import { mappedData } from '../../../mocks/mock-business-details.js'
+import { getMappedData } from '../../../mocks/mock-business-details.js'
 
 // Mock dependencies
 import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/business/business-details-change-links-presenter.js'
@@ -25,8 +25,7 @@ describe('businessDetailsPresenter', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    // Deep clone the data to avoid mutation across tests
-    data = JSON.parse(JSON.stringify(mappedData))
+    data = getMappedData()
 
     // Mock yar session manager
     yar = {

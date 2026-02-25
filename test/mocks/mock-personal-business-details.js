@@ -1,4 +1,4 @@
-const dalData = {
+const getDalData = () => ({
   customer: {
     info: {
       name: {
@@ -15,9 +15,9 @@ const dalData = {
       name: 'Acme Farms Ltd'
     }
   }
-}
+})
 
-const mappedData = {
+const getMappedData = () => ({
   info: {
     userName: 'John Doe'
   },
@@ -28,9 +28,9 @@ const mappedData = {
       sbi: '123456789'
     }
   }
-}
+})
 
 export {
-  dalData,
-  mappedData
+  getDalData,
+  getMappedData
 }

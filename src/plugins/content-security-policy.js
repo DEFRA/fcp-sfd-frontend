@@ -6,7 +6,7 @@ export const csp = {
   name: 'csp',
   plugin: Blankie,
   options: {
-    fontSrc: ['self'],
+    fontSrc: ['self', 'data:'],
     imgSrc: ['self'],
     scriptSrc: ['self', "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='"],
     styleSrc: ['self'],

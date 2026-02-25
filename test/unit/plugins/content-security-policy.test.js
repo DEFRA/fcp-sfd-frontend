@@ -12,7 +12,7 @@ describe('contentSecurityPolicy', () => {
   })
 
   test('should restrict the font src to self', () => {
-    expect(csp.options.fontSrc).toEqual(['self'])
+    expect(csp.options.fontSrc).toEqual(['self', 'data:'])
   })
 
   test('should restrict the img src to self', () => {

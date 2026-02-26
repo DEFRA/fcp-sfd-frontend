@@ -80,4 +80,28 @@ describe('updatePersonalDobChangeService', () => {
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your date of birth')
     })
   })
+
+  describe('when there is no changePersonalDob in session data', () => {
+    beforeEach(() => {
+      data.changePersonalDob = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updatePersonalDobChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updatePersonalDobChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear personalDetailsUpdate from session', async () => {
+      await updatePersonalDobChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
+    })
+  })
 })

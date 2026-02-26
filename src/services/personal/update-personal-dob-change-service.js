@@ -17,6 +17,11 @@ import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updatePersonalDobChangeService = async (yar, credentials) => {
   const personalDetails = await fetchPersonalChangeService(yar, credentials, 'changePersonalDob')
+
+  if (!personalDetails.changePersonalDob) {
+    return
+  }
+
   const { day, month, year } = personalDetails.changePersonalDob
   const personalDob = new Date([`${month}/${day}/${year}`])
   moment.locale('en-ca')

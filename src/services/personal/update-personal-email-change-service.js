@@ -16,6 +16,11 @@ import { flashNotification } from '../../utils/notifications/flash-notification.
 
 const updatePersonalEmailChangeService = async (yar, credentials) => {
   const personalDetails = await fetchPersonalChangeService(yar, credentials, 'changePersonalEmail')
+
+  if (!personalDetails.changePersonalEmail) {
+    return
+  }
+
   const variables = {
     input: {
       email: {

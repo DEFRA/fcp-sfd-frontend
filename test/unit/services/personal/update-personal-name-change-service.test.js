@@ -101,4 +101,28 @@ describe('updatePersonalNameChangeService', () => {
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your full name')
     })
   })
+
+  describe('when there is no changePersonalName in session data', () => {
+    beforeEach(() => {
+      data.changePersonalName = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updatePersonalNameChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updatePersonalNameChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear personalDetailsUpdate from session', async () => {
+      await updatePersonalNameChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
+    })
+  })
 })

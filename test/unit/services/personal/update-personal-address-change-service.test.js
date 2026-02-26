@@ -140,4 +140,28 @@ describe('updatePersonalAddressChangeService', () => {
       }, credentials.sessionId)
     })
   })
+
+  describe('when there is no changePersonalAddress in session data', () => {
+    beforeEach(() => {
+      data.changePersonalAddress = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updatePersonalAddressChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updatePersonalAddressChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear personalDetailsUpdate from session', async () => {
+      await updatePersonalAddressChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
+    })
+  })
 })

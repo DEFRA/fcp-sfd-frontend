@@ -14,12 +14,12 @@ import { businessEmailSchema } from './business-email-schema.js'
 import { businessNameSchema } from './business-name-schema.js'
 import { addressSchema } from './../address-schema.js'
 import { businessPhoneSchema } from './business-phone-schema.js'
-import { businessVatSchema } from './business-vat-schema.js'
+import { businessOptionalVatSchema } from './business-optional-vat-schema.js'
 
 export const businessDetailsSchema = {
   name: businessNameSchema,
   address: addressSchema,
   phone: businessPhoneSchema,
   email: businessEmailSchema,
-  vat: businessVatSchema
+  vat: businessOptionalVatSchema
 }

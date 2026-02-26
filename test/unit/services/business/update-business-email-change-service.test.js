@@ -29,11 +29,12 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updateBusinessEmailChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    const data = getMappedData()
+    data = getMappedData()
     data.changeBusinessEmail = 'new-email@test.com'
     fetchBusinessChangeService.mockReturnValue(data)
 
@@ -69,6 +70,30 @@ describe('updateBusinessEmailChangeService', () => {
       await updateBusinessEmailChangeService(yar, credentials)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business email address')
+    })
+  })
+
+  describe('when there is no changeBusinessEmail in session data', () => {
+    beforeEach(() => {
+      data.changeBusinessEmail = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updateBusinessEmailChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updateBusinessEmailChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear businessDetailsUpdate from session', async () => {
+      await updateBusinessEmailChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
     })
   })
 })

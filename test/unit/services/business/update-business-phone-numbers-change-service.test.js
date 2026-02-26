@@ -82,4 +82,28 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business phone numbers')
     })
   })
+
+  describe('when there is no changeBusinessPhoneNumbers in session data', () => {
+    beforeEach(() => {
+      data.changeBusinessPhoneNumbers = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updateBusinessPhoneNumbersChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updateBusinessPhoneNumbersChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear businessDetailsUpdate from session', async () => {
+      await updateBusinessPhoneNumbersChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
+    })
+  })
 })

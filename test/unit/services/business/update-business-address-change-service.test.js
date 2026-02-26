@@ -144,4 +144,28 @@ describe('updateBusinessAddressChangeService', () => {
       }, credentials.sessionId)
     })
   })
+
+  describe('when there is no changeBusinessAddress in session data', () => {
+    beforeEach(() => {
+      data.changeBusinessAddress = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updateBusinessAddressChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updateBusinessAddressChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear businessDetailsUpdate from session', async () => {
+      await updateBusinessAddressChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
+    })
+  })
 })

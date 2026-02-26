@@ -29,11 +29,12 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
 describe('updateBusinessVatChangeService', () => {
   let yar
   let credentials
+  let data
 
   beforeEach(() => {
     vi.clearAllMocks()
 
-    const data = getMappedData()
+    data = getMappedData()
     data.changeBusinessVat = 'GB123456789'
     fetchBusinessChangeService.mockReturnValue(data)
 
@@ -72,6 +73,30 @@ describe('updateBusinessVatChangeService', () => {
       await updateBusinessVatChangeService(yar, credentials)
 
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your VAT registration number')
+    })
+  })
+
+  describe('when there is no changeBusinessVat in session data', () => {
+    beforeEach(() => {
+      data.changeBusinessVat = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updateBusinessVatChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updateBusinessVatChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear businessDetailsUpdate from session', async () => {
+      await updateBusinessVatChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
     })
   })
 })

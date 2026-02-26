@@ -75,4 +75,28 @@ describe('updateBusinessNameChangeService', () => {
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your business name')
     })
   })
+
+  describe('when there is no changeBusinessName in session data', () => {
+    beforeEach(() => {
+      data.changeBusinessName = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updateBusinessNameChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updateBusinessNameChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear businessDetailsUpdate from session', async () => {
+      await updateBusinessNameChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
+    })
+  })
 })

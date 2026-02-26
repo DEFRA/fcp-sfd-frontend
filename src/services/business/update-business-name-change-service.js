@@ -16,6 +16,11 @@ import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessNameChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessName')
+
+  if (!businessDetails.changeBusinessName) {
+    return
+  }
+
   const variables = { input: { name: businessDetails.changeBusinessName, sbi: businessDetails.info.sbi } }
 
   await updateDalService(updateBusinessNameMutation, variables, credentials.sessionId)

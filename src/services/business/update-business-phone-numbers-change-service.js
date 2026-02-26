@@ -16,6 +16,11 @@ import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessPhoneNumbers')
+
+  if (!businessDetails.changeBusinessPhoneNumbers) {
+    return
+  }
+
   const variables = {
     input: {
       phone: {

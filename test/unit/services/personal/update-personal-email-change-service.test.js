@@ -77,4 +77,28 @@ describe('updatePersonalEmailChangeService', () => {
       expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your personal email address')
     })
   })
+
+  describe('when there is no changePersonalEmail in session data', () => {
+    beforeEach(() => {
+      data.changePersonalEmail = undefined
+    })
+
+    test('it returns early and does not call updateDalService', async () => {
+      await updatePersonalEmailChangeService(yar, credentials)
+
+      expect(updateDalService).not.toHaveBeenCalled()
+    })
+
+    test('it does not add a flash notification', async () => {
+      await updatePersonalEmailChangeService(yar, credentials)
+
+      expect(flashNotification).not.toHaveBeenCalled()
+    })
+
+    test('it does not clear personalDetailsUpdate from session', async () => {
+      await updatePersonalEmailChangeService(yar, credentials)
+
+      expect(yar.clear).not.toHaveBeenCalled()
+    })
+  })
 })

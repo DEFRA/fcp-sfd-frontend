@@ -17,6 +17,10 @@ import { updateDalService } from '../DAL/update-dal-service.js'
 const updatePersonalNameChangeService = async (yar, credentials) => {
   const personalDetails = await fetchPersonalChangeService(yar, credentials, 'changePersonalName')
 
+  if (!personalDetails.changePersonalName) {
+    return
+  }
+
   const variables = {
     input: {
       first: personalDetails.changePersonalName.first,

@@ -17,6 +17,11 @@ import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessAddress')
+
+  if (!businessDetails.changeBusinessAddress) {
+    return
+  }
+
   const variables = businessAddressVariables(businessDetails)
 
   await updateDalService(updateBusinessAddressMutation, variables, credentials.sessionId)

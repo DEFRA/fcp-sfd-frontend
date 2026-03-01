@@ -1,48 +1,50 @@
 /**
  * Builds the mutation variables for updating a user's business details
- * based on their existing data and any submitted changes.
+ * based only on the sections that actually need updating.
  *
  * @module buildBusinessUpdateVariablesService
  */
 
-const buildBusinessUpdateVariables = (businessDetails) => {
-  const { sbi } = businessDetails.info
+const buildBusinessUpdateVariablesService = (businessDetails) => {
+  const { orderedSectionsToFix, info } = businessDetails
+  const { sbi } = info
 
-  return {
-    updateBusinessNameInput: buildNameInput(sbi, businessDetails),
-    updateBusinessEmailInput: buildEmailInput(sbi, businessDetails),
-    updateBusinessPhoneInput: buildPhoneInput(sbi, businessDetails),
-    updateBusinessVATInput: buildVatInput(sbi, businessDetails),
-    updateBusinessAddressInput: buildAddressInput(sbi, businessDetails)
+  const variables = {}
+
+  if (orderedSectionsToFix.includes('name') && businessDetails.changeBusinessName) {
+    variables.updateBusinessNameInput = buildNameInput(sbi, businessDetails)
   }
+
+  if (orderedSectionsToFix.includes('email') && businessDetails.changeBusinessEmail) {
+    variables.updateBusinessEmailInput = buildEmailInput(sbi, businessDetails)
+  }
+
+  if (orderedSectionsToFix.includes('phone') && businessDetails.changeBusinessPhoneNumbers) {
+    variables.updateBusinessPhoneInput = buildPhoneInput(sbi, businessDetails)
+  }
+
+  if (orderedSectionsToFix.includes('vat') && businessDetails.changeBusinessVat !== null) {
+    variables.updateBusinessVATInput = buildVatInput(sbi, businessDetails)
+  }
+
+  if (orderedSectionsToFix.includes('address') && businessDetails.changeBusinessAddress) {
+    variables.updateBusinessAddressInput = buildAddressInput(sbi, businessDetails)
+  }
+
+  return variables
 }
 
 const nullIfUndefined = (value) => value ?? null
 
 const buildAddressInput = (sbi, businessDetails) => {
   const change = businessDetails.changeBusinessAddress
-  const existing = businessDetails.address
 
-  const baseVariables = {
+  return {
     sbi,
-    address: {}
+    address: {
+      withoutUprn: buildManualAddress(change)
+    }
   }
-
-  // If the user has changed the address, it will ALWAYS be manual
-  if (change) {
-    baseVariables.address.withoutUprn = buildManualAddress(change)
-
-    return baseVariables
-  }
-
-  // Otherwise fall back to existing address
-  if (existing.lookup?.uprn) {
-    baseVariables.address.withUprn = formatExistingUprn(existing)
-  } else {
-    baseVariables.address.withoutUprn = formatExistingManual(existing)
-  }
-
-  return baseVariables
 }
 
 const buildManualAddress = (change) => ({
@@ -63,113 +65,41 @@ const buildManualAddress = (change) => ({
 })
 
 const buildVatInput = (sbi, businessDetails) => {
-  let vatNumber = businessDetails.info?.vat
-
-  if (businessDetails.changeBusinessVat) {
-    vatNumber = businessDetails.changeBusinessVat.vatNumber
-  }
-
-  if (vatNumber === null) {
-    vatNumber = ''
-  }
-
   return {
     sbi,
-    vat: vatNumber
+    vat: businessDetails.changeBusinessVat.vatNumber ?? ''
   }
 }
 
+/** Build phone input */
 const buildPhoneInput = (sbi, businessDetails) => {
-  const baseContact = businessDetails.contact
   const changedPhone = businessDetails.changeBusinessPhoneNumbers
-
-  let landline = baseContact?.landline ?? null
-  let mobile = baseContact?.mobile ?? null
-
-  if (changedPhone) {
-    landline = changedPhone.businessTelephone ?? null
-    mobile = changedPhone.businessMobile ?? null
-  }
 
   return {
     sbi,
     phone: {
-      landline,
-      mobile
+      landline: changedPhone.businessTelephone ?? null,
+      mobile: changedPhone.businessMobile ?? null
     }
   }
 }
 
 const buildEmailInput = (sbi, businessDetails) => {
-  let emailAddress = businessDetails.contact?.email
-
-  if (businessDetails.changeBusinessEmail) {
-    emailAddress = businessDetails.changeBusinessEmail.businessEmail
-  }
-
   return {
     sbi,
     email: {
-      address: emailAddress
+      address: businessDetails.changeBusinessEmail.businessEmail
     }
   }
 }
 
 const buildNameInput = (sbi, businessDetails) => {
-  let businessName = businessDetails.info.businessName
-
-  if (businessDetails.changeBusinessName) {
-    businessName = businessDetails.changeBusinessName.businessName
-  }
-
   return {
     sbi,
-    name: businessName
+    name: businessDetails.changeBusinessName.businessName
   }
 }
-
-const formatExistingUprn = (address) => {
-  const lookup = address.lookup ?? {}
-
-  return {
-    buildingNumberRange: nullIfUndefined(lookup.buildingNumberRange),
-    buildingName: nullIfUndefined(lookup.buildingName),
-    flatName: nullIfUndefined(lookup.flatName),
-    street: nullIfUndefined(lookup.street),
-    city: nullIfUndefined(lookup.city),
-    county: nullIfUndefined(lookup.county),
-    postalCode: nullIfUndefined(address.postcode),
-    country: nullIfUndefined(address.country),
-    dependentLocality: nullIfUndefined(lookup.dependentLocality),
-    doubleDependentLocality: nullIfUndefined(lookup.doubleDependentLocality),
-    line1: null,
-    line2: null,
-    line3: null,
-    line4: null,
-    line5: null,
-    uprn: lookup.uprn
-  }
-}
-
-const formatExistingManual = (address) => ({
-  buildingNumberRange: null,
-  buildingName: null,
-  flatName: null,
-  street: null,
-  dependentLocality: null,
-  doubleDependentLocality: null,
-  city: nullIfUndefined(address.manual?.line4),
-  county: nullIfUndefined(address.manual?.line5),
-  postalCode: nullIfUndefined(address.postcode),
-  country: nullIfUndefined(address.country),
-  line1: nullIfUndefined(address.manual?.line1),
-  line2: nullIfUndefined(address.manual?.line2),
-  line3: nullIfUndefined(address.manual?.line3),
-  line4: nullIfUndefined(address.manual?.line4),
-  line5: nullIfUndefined(address.manual?.line5),
-  uprn: null
-})
 
 export {
-  buildBusinessUpdateVariables
+  buildBusinessUpdateVariablesService
 }

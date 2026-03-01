@@ -2,213 +2,32 @@
 import { describe, test, expect, beforeEach } from 'vitest'
 
 // Thing under test
-import { buildPersonalUpdateVariables } from '../../../../src/services/personal/build-personal-update-variables-service.js'
+import { buildPersonalUpdateVariablesService } from '../../../../src/services/personal/build-personal-update-variables-service.js'
 
-describe('buildPersonalUpdateVariables', () => {
+describe('buildPersonalUpdateVariablesService', () => {
   let personalDetails
 
-  describe('when there are no changes to personal details', () => {
-    beforeEach(() => {
-      personalDetails = basePersonalDetails()
-    })
+  beforeEach(() => {
+    personalDetails = basePersonalDetails()
+    personalDetails.orderedSectionsToFix = []
+  })
 
-    test('it builds mutation variables using existing personal details', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
+  describe('when no sections need updating', () => {
+    test('returns empty object if no sections to fix', () => {
+      const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result).toEqual({
-        updateCustomerNameInput: {
-          crn: '123456789',
-          first: 'Jane',
-          middle: 'Alice',
-          last: 'Doe'
-        },
-        updateCustomerEmailInput: {
-          crn: '123456789',
-          email: {
-            address: 'jane.doe@example.com'
-          }
-        },
-        updateCustomerPhoneInput: {
-          crn: '123456789',
-          phone: {
-            landline: '0123456789',
-            mobile: null
-          }
-        },
-        updateCustomerDateOfBirthInput: {
-          crn: '123456789',
-          dateOfBirth: '1990-05-20'
-        },
-        updateCustomerAddressInput: {
-          crn: '123456789',
-          address: {
-            buildingNumberRange: '10',
-            buildingName: null,
-            flatName: null,
-            street: 'High Street',
-            city: 'Bath',
-            county: 'Somerset',
-            postalCode: 'BA1 1AA',
-            country: 'UK',
-            dependentLocality: null,
-            doubleDependentLocality: null,
-            line1: null,
-            line2: null,
-            line3: null,
-            line4: null,
-            line5: null,
-            uprn: '1234567890'
-          }
-        }
-      })
-    })
-
-    describe('when middle name is missing', () => {
-      beforeEach(() => {
-        personalDetails = basePersonalDetails()
-        delete personalDetails.info.fullName.middle
-      })
-
-      test('it defaults middle name to null', () => {
-        const result = buildPersonalUpdateVariables(personalDetails)
-
-        expect(result.updateCustomerNameInput.middle).toBeNull()
-      })
-    })
-
-    describe('when base address fields are missing', () => {
-      beforeEach(() => {
-        personalDetails = basePersonalDetails()
-        personalDetails.address = {
-          lookup: {
-            uprn: '1234567890'
-          }
-        }
-      })
-
-      test('it defaults missing address fields to null', () => {
-        const result = buildPersonalUpdateVariables(personalDetails)
-
-        expect(result.updateCustomerAddressInput.address).toEqual({
-          buildingNumberRange: null,
-          buildingName: null,
-          flatName: null,
-          street: null,
-          city: null,
-          county: null,
-          postalCode: null,
-          country: null,
-          dependentLocality: null,
-          doubleDependentLocality: null,
-          line1: null,
-          line2: null,
-          line3: null,
-          line4: null,
-          line5: null,
-          uprn: '1234567890'
-        })
-      })
-    })
-
-    describe('when the address is a manual input', () => {
-      beforeEach(() => {
-        personalDetails = basePersonalDetails()
-        personalDetails.address = {
-          lookup: {
-            buildingNumberRange: null,
-            street: null,
-            city: null,
-            county: null,
-            uprn: null
-          },
-          manual: {
-            line1: '1 New Road',
-            line2: 'Flat 2',
-            line3: null,
-            line4: 'Somerset',
-            line5: 'Bristol'
-          },
-          postcode: 'BA1 1AA',
-          country: 'UK'
-        }
-      })
-
-      test('it builds mutation variables using manual address fields', () => {
-        const result = buildPersonalUpdateVariables(personalDetails)
-
-        expect(result.updateCustomerAddressInput.address).toEqual({
-          buildingNumberRange: null,
-          buildingName: null,
-          flatName: null,
-          street: null,
-          city: 'Somerset',
-          county: 'Bristol',
-          postalCode: 'BA1 1AA',
-          country: 'UK',
-          dependentLocality: null,
-          doubleDependentLocality: null,
-          line1: '1 New Road',
-          line2: 'Flat 2',
-          line3: null,
-          line4: 'Somerset',
-          line5: 'Bristol',
-          uprn: null
-        })
-      })
-    })
-
-    describe('when manual address fields are undefined', () => {
-      beforeEach(() => {
-        personalDetails = basePersonalDetails()
-        personalDetails.address = {
-          lookup: { uprn: null },
-          manual: {
-            line1: 'Line 1'
-          },
-          postcode: 'BA1 1AA',
-          country: 'UK'
-        }
-      })
-
-      test('it defaults missing manual address fields to null', () => {
-        const result = buildPersonalUpdateVariables(personalDetails)
-
-        expect(result.updateCustomerAddressInput.address).toMatchObject({
-          line2: null,
-          line4: null,
-          line5: null
-        })
-      })
-    })
-
-    describe('when contact exists but telephone and mobile is undefined', () => {
-      beforeEach(() => {
-        personalDetails = basePersonalDetails()
-        delete personalDetails.contact.telephone
-        delete personalDetails.contact.mobile
-      })
-
-      test('it defaults phone to null', () => {
-        const result = buildPersonalUpdateVariables(personalDetails)
-
-        expect(result.updateCustomerPhoneInput.phone.landline).toBeNull()
-        expect(result.updateCustomerPhoneInput.phone.mobile).toBeNull()
-      })
+      expect(result).toEqual({})
     })
   })
 
-  describe('when there are changes to personal name', () => {
+  describe('when there are changes to name', () => {
     beforeEach(() => {
-      personalDetails = basePersonalDetails()
-      personalDetails.changePersonalName = {
-        first: 'Janet',
-        middle: null,
-        last: 'Smith'
-      }
+      personalDetails.orderedSectionsToFix = ['name']
+      personalDetails.changePersonalName = { first: 'Janet', middle: null, last: 'Smith' }
     })
 
-    test('it builds mutation variables using changed personal name', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
+    test('builds name input', () => {
+      const result = buildPersonalUpdateVariablesService(personalDetails)
 
       expect(result.updateCustomerNameInput).toEqual({
         crn: '123456789',
@@ -219,18 +38,49 @@ describe('buildPersonalUpdateVariables', () => {
     })
   })
 
-  describe('when there are changes to date of birth', () => {
+  describe('when there are changes to email', () => {
     beforeEach(() => {
-      personalDetails = basePersonalDetails()
-      personalDetails.changePersonalDob = {
-        day: '01',
-        month: '12',
-        year: '1985'
+      personalDetails.orderedSectionsToFix = ['email']
+      personalDetails.changePersonalEmail = { personalEmail: 'new.email@example.com' }
+    })
+
+    test('builds email input', () => {
+      const result = buildPersonalUpdateVariablesService(personalDetails)
+
+      expect(result.updateCustomerEmailInput).toEqual({
+        crn: '123456789',
+        email: { address: 'new.email@example.com' }
+      })
+    })
+  })
+
+  describe('when there are changes to phone', () => {
+    beforeEach(() => {
+      personalDetails.orderedSectionsToFix = ['phone']
+      personalDetails.changePersonalPhoneNumbers = {
+        personalTelephone: '0123456789',
+        personalMobile: '07999999999'
       }
     })
 
-    test('it builds mutation variables using changed personal date of birth', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
+    test('builds phone input', () => {
+      const result = buildPersonalUpdateVariablesService(personalDetails)
+
+      expect(result.updateCustomerPhoneInput).toEqual({
+        crn: '123456789',
+        phone: { landline: '0123456789', mobile: '07999999999' }
+      })
+    })
+  })
+
+  describe('when there are changes to date of birth', () => {
+    beforeEach(() => {
+      personalDetails.orderedSectionsToFix = ['dob']
+      personalDetails.changePersonalDob = { day: '01', month: '12', year: '1985' }
+    })
+
+    test('builds dob input', () => {
+      const result = buildPersonalUpdateVariablesService(personalDetails)
 
       expect(result.updateCustomerDateOfBirthInput).toEqual({
         crn: '123456789',
@@ -239,77 +89,12 @@ describe('buildPersonalUpdateVariables', () => {
     })
   })
 
-  describe('when there are changes to personal mobile', () => {
+  describe('when there are changes to address', () => {
     beforeEach(() => {
-      personalDetails = basePersonalDetails()
-      personalDetails.changePersonalPhoneNumbers = {
-        personalTelephone: null,
-        personalMobile: '07999999999'
-      }
-    })
-
-    test('it builds mutation variables using changed personal mobile', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
-
-      expect(result.updateCustomerPhoneInput).toEqual({
-        crn: '123456789',
-        phone: {
-          landline: null,
-          mobile: '07999999999'
-        }
-      })
-    })
-  })
-
-  describe('when there are changes to personal telephone', () => {
-    beforeEach(() => {
-      personalDetails = basePersonalDetails()
-      personalDetails.changePersonalPhoneNumbers = {
-        personalTelephone: '0123456789',
-        personalMobile: null
-      }
-    })
-
-    test('it builds mutation variables using changed personal telephone', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
-
-      expect(result.updateCustomerPhoneInput).toEqual({
-        crn: '123456789',
-        phone: {
-          landline: '0123456789',
-          mobile: null
-        }
-      })
-    })
-  })
-
-  describe('when there are changes to personal email', () => {
-    beforeEach(() => {
-      personalDetails = basePersonalDetails()
-      personalDetails.changePersonalEmail = {
-        personalEmail: 'new.email@example.com'
-      }
-    })
-
-    test('it builds mutation variables using changed personal email', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
-
-      expect(result.updateCustomerEmailInput).toEqual({
-        crn: '123456789',
-        email: {
-          address: 'new.email@example.com'
-        }
-      })
-    })
-  })
-
-  describe('when there are changes to personal address', () => {
-    beforeEach(() => {
-      personalDetails = basePersonalDetails()
+      personalDetails.orderedSectionsToFix = ['address']
       personalDetails.changePersonalAddress = {
         address1: '1 New Road',
         address2: 'Flat 2',
-        address3: null,
         city: 'Bristol',
         county: 'Avon',
         postcode: 'BS1 1AA',
@@ -317,8 +102,8 @@ describe('buildPersonalUpdateVariables', () => {
       }
     })
 
-    test('it builds mutation variables using changed personal address', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
+    test('builds address input', () => {
+      const result = buildPersonalUpdateVariablesService(personalDetails)
 
       expect(result.updateCustomerAddressInput).toEqual({
         crn: '123456789',
@@ -340,21 +125,15 @@ describe('buildPersonalUpdateVariables', () => {
         }
       })
     })
-  })
 
-  describe('when changed personal address has optional fields missing', () => {
-    beforeEach(() => {
-      personalDetails = basePersonalDetails()
+    test('defaults missing optional fields to null', () => {
       personalDetails.changePersonalAddress = {
         address1: '1 New Road',
         city: 'Bristol',
         postcode: 'BS1 1AA',
         country: 'UK'
       }
-    })
-
-    test('it defaults missing changed address fields to null', () => {
-      const result = buildPersonalUpdateVariables(personalDetails)
+      const result = buildPersonalUpdateVariablesService(personalDetails)
 
       expect(result.updateCustomerAddressInput.address).toEqual({
         buildingNumberRange: null,
@@ -379,36 +158,6 @@ describe('buildPersonalUpdateVariables', () => {
 const basePersonalDetails = () => {
   return {
     crn: '123456789',
-    info: {
-      fullName: {
-        first: 'Jane',
-        middle: 'Alice',
-        last: 'Doe'
-      },
-      dateOfBirth: { full: '1990-05-20' }
-    },
-    contact: {
-      email: 'jane.doe@example.com',
-      telephone: '0123456789',
-      mobile: null
-    },
-    address: {
-      lookup: {
-        buildingNumberRange: '10',
-        street: 'High Street',
-        city: 'Bath',
-        county: 'Somerset',
-        uprn: '1234567890'
-      },
-      manual: {
-        line1: null,
-        line2: null,
-        line3: null,
-        line4: null,
-        line5: null
-      },
-      postcode: 'BA1 1AA',
-      country: 'UK'
-    }
+    orderedSectionsToFix: []
   }
 }

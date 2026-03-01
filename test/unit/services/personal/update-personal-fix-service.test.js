@@ -11,7 +11,6 @@ import { flashNotification } from '../../../../src/utils/notifications/flash-not
 
 // Thing under test
 import { updatePersonalFixService } from '../../../../src/services/personal/update-personal-fix-service.js'
-import { or } from 'blankie/lib/schema.js'
 
 // Mocks
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({

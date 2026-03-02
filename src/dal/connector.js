@@ -34,10 +34,11 @@ export const dalConnector = async (query, variables, sessionId, defraIdToken = n
     if (responseBody.errors) {
       const extendedErrors = mapDalErrors(responseBody.errors)
 
-      return formatDalResponse({
-        statusCode: extendedErrors[0]?.statusCode,
-        errors: extendedErrors
-      })
+      const formattedErrors = formatDalResponse({ statusCode: extendedErrors[0]?.statusCode, errors: extendedErrors })
+
+      logger.error('DAL responded with errors', formattedErrors)
+
+      return formattedErrors
     }
 
     return formatDalResponse({

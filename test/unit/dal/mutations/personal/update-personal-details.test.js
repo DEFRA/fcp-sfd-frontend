@@ -38,9 +38,9 @@ describe('personalMutationSectionMap', () => {
   })
 
   test('it contains the correct mutation for dateOfBirth', () => {
-    expect(personalMutationSectionMap.dateOfBirth).toContain('updateCustomerDateOfBirth(input: $updateCustomerDateOfBirthInput)')
-    expect(personalMutationSectionMap.dateOfBirth).toContain('customer {')
-    expect(personalMutationSectionMap.dateOfBirth).toContain('dateOfBirth')
+    expect(personalMutationSectionMap.dob).toContain('updateCustomerDateOfBirth(input: $updateCustomerDateOfBirthInput)')
+    expect(personalMutationSectionMap.dob).toContain('customer {')
+    expect(personalMutationSectionMap.dob).toContain('dateOfBirth')
   })
 })
 
@@ -62,6 +62,6 @@ describe('personalVariableTypeMap', () => {
   })
 
   test('it contains the correct variable type for dateOfBirth', () => {
-    expect(personalVariableTypeMap.dateOfBirth).toBe('$updateCustomerDateOfBirthInput: UpdateCustomerDateOfBirthInput!')
+    expect(personalVariableTypeMap.dob).toBe('$updateCustomerDateOfBirthInput: UpdateCustomerDateOfBirthInput!')
   })
 })

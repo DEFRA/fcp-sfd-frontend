@@ -3,28 +3,30 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
+import { buildBusinessDetailsMutationService } from '../../../../src/services/business/build-business-details-mutation-service.js'
 import { buildBusinessSuccessMessage } from '../../../../src/services/business/build-business-success-message-service.js'
-import { buildBusinessUpdateVariables } from '../../../../src/services/business/build-business-update-variables-service.js'
+import { buildBusinessUpdateVariablesService } from '../../../../src/services/business/build-business-update-variables-service.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 
 // Thing under test
 import { updateBusinessFixService } from '../../../../src/services/business/update-business-fix-service.js'
 
-// Test helpers
-import { updateBusinessDetailsMutation } from '../../../../src/dal/mutations/business/update-business-details.js'
-
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-fix-service.js', () => ({
   fetchBusinessFixService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/business/build-business-update-variables-service.js', () => ({
+  buildBusinessUpdateVariablesService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/business/build-business-success-message-service.js', () => ({
   buildBusinessSuccessMessage: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/build-business-update-variables-service.js', () => ({
-  buildBusinessUpdateVariables: vi.fn()
+vi.mock('../../../../src/services/business/build-business-details-mutation-service.js', () => ({
+  buildBusinessDetailsMutationService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
@@ -41,6 +43,7 @@ describe('updateBusinessFixService', () => {
   let credentials
   let businessDetails
   let updateVariables
+  let updateBusinessDetailsMutation
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -59,15 +62,19 @@ describe('updateBusinessFixService', () => {
 
     businessDetails = {
       crn: '123456789',
-      changeBusinessEmail: true
+      changeBusinessEmail: true,
+      orderedSectionsToFix: ['email']
     }
 
     updateVariables = {
       updateBusinessEmailInput: {}
     }
 
+    updateBusinessDetailsMutation = 'mutation Mutation ($updateBusinessEmailInput: UpdateBusinessEmailInput!)'
+
     fetchBusinessFixService.mockResolvedValue(businessDetails)
-    buildBusinessUpdateVariables.mockReturnValue(updateVariables)
+    buildBusinessUpdateVariablesService.mockReturnValue(updateVariables)
+    buildBusinessDetailsMutationService.mockReturnValue(updateBusinessDetailsMutation)
     buildBusinessSuccessMessage.mockReturnValue({
       type: 'text',
       value: 'You have updated your business email address'
@@ -84,7 +91,13 @@ describe('updateBusinessFixService', () => {
     test('it builds mutation variables from business details', async () => {
       await updateBusinessFixService(sessionData, yar, credentials)
 
-      expect(buildBusinessUpdateVariables).toHaveBeenCalledWith(businessDetails)
+      expect(buildBusinessUpdateVariablesService).toHaveBeenCalledWith(businessDetails)
+    })
+
+    test('it builds the business details mutation', async () => {
+      await updateBusinessFixService(sessionData, yar, credentials)
+
+      expect(buildBusinessDetailsMutationService).toHaveBeenCalledWith(businessDetails.orderedSectionsToFix)
     })
 
     test('it calls the DAL update service with the correct mutation and variables', async () => {

@@ -4,15 +4,13 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Things we need to mock
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 import { buildPersonalSuccessMessage } from '../../../../src/services/personal/build-personal-success-message-service.js'
-import { buildPersonalUpdateVariables } from '../../../../src/services/personal/build-personal-update-variables-service.js'
+import { buildPersonalDetailsMutationService } from '../../../../src/services/personal/build-personal-details-mutation-service.js'
+import { buildPersonalUpdateVariablesService } from '../../../../src/services/personal/build-personal-update-variables-service.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 
 // Thing under test
 import { updatePersonalFixService } from '../../../../src/services/personal/update-personal-fix-service.js'
-
-// Test helpers
-import { updatePersonalDetailsMutation } from '../../../../src/dal/mutations/personal/update-personal-details.js'
 
 // Mocks
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
@@ -24,7 +22,11 @@ vi.mock('../../../../src/services/personal/build-personal-success-message-servic
 }))
 
 vi.mock('../../../../src/services/personal/build-personal-update-variables-service.js', () => ({
-  buildPersonalUpdateVariables: vi.fn()
+  buildPersonalUpdateVariablesService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/personal/build-personal-details-mutation-service.js', () => ({
+  buildPersonalDetailsMutationService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
@@ -41,6 +43,7 @@ describe('updatePersonalFixService', () => {
   let credentials
   let personalDetails
   let updateVariables
+  let updatePersonalDetailsMutation
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -59,15 +62,19 @@ describe('updatePersonalFixService', () => {
 
     personalDetails = {
       crn: '123456789',
-      changePersonalEmail: true
+      changePersonalEmail: true,
+      orderedSectionsToFix: ['email']
     }
 
     updateVariables = {
       updateCustomerEmailInput: {}
     }
 
+    updatePersonalDetailsMutation = 'mutation Mutation ($updateCustomerEmailInput: UpdateCustomerEmailInput!)'
+
     fetchPersonalFixService.mockResolvedValue(personalDetails)
-    buildPersonalUpdateVariables.mockReturnValue(updateVariables)
+    buildPersonalUpdateVariablesService.mockReturnValue(updateVariables)
+    buildPersonalDetailsMutationService.mockReturnValue(updatePersonalDetailsMutation)
     buildPersonalSuccessMessage.mockReturnValue({
       type: 'text',
       value: 'You have updated your personal email address'
@@ -84,7 +91,13 @@ describe('updatePersonalFixService', () => {
     test('it builds mutation variables from personal details', async () => {
       await updatePersonalFixService(sessionData, yar, credentials)
 
-      expect(buildPersonalUpdateVariables).toHaveBeenCalledWith(personalDetails)
+      expect(buildPersonalUpdateVariablesService).toHaveBeenCalledWith(personalDetails)
+    })
+
+    test('it builds the personal details mutation', async () => {
+      await updatePersonalFixService(sessionData, yar, credentials)
+
+      expect(buildPersonalDetailsMutationService).toHaveBeenCalledWith(personalDetails.orderedSectionsToFix)
     })
 
     test('it calls the DAL update service with the correct mutation and variables', async () => {

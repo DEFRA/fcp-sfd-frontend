@@ -5,14 +5,15 @@
 
 import { fetchBusinessFixService } from './fetch-business-fix-service.js'
 import { buildBusinessSuccessMessage } from './build-business-success-message-service.js'
-import { updateBusinessDetailsMutation } from '../../dal/mutations/business/update-business-details.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
-import { buildBusinessUpdateVariables } from './build-business-update-variables-service.js'
+import { buildBusinessUpdateVariablesService } from './build-business-update-variables-service.js'
+import { buildBusinessDetailsMutationService } from './build-business-details-mutation-service.js'
 
 const updateBusinessFixService = async (sessionData, yar, credentials) => {
   const businessDetails = await fetchBusinessFixService(credentials, sessionData)
-  const variables = buildBusinessUpdateVariables(businessDetails)
+  const variables = buildBusinessUpdateVariablesService(businessDetails)
+  const updateBusinessDetailsMutation = buildBusinessDetailsMutationService(businessDetails.orderedSectionsToFix)
 
   await updateDalService(updateBusinessDetailsMutation, variables, credentials.sessionId)
 

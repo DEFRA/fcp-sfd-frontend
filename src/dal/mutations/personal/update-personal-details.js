@@ -63,7 +63,7 @@ export const personalMutationSectionMap = {
     }
   `,
 
-  dateOfBirth: `
+  dob: `
     updateCustomerDateOfBirth(input: $updateCustomerDateOfBirthInput) {
       customer {
         info {
@@ -79,5 +79,5 @@ export const personalVariableTypeMap = {
   email: '$updateCustomerEmailInput: UpdateCustomerEmailInput!',
   address: '$updateCustomerAddressInput: UpdateCustomerAddressInput!',
   phone: '$updateCustomerPhoneInput: UpdateCustomerPhoneInput!',
-  dateOfBirth: '$updateCustomerDateOfBirthInput: UpdateCustomerDateOfBirthInput!'
+  dob: '$updateCustomerDateOfBirthInput: UpdateCustomerDateOfBirthInput!'
 }

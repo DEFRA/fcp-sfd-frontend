@@ -34,7 +34,7 @@ describe('buildPersonalDetailsMutationService', () => {
 
       expect(result).not.toContain(personalVariableTypeMap.email)
       expect(result).not.toContain(personalVariableTypeMap.phone)
-      expect(result).not.toContain(personalVariableTypeMap.dateOfBirth)
+      expect(result).not.toContain(personalVariableTypeMap.dob)
       expect(result).not.toContain(personalVariableTypeMap.address)
     })
 
@@ -45,7 +45,7 @@ describe('buildPersonalDetailsMutationService', () => {
 
       expect(result).not.toContain(personalMutationSectionMap.email.trim())
       expect(result).not.toContain(personalMutationSectionMap.phone.trim())
-      expect(result).not.toContain(personalMutationSectionMap.dateOfBirth.trim())
+      expect(result).not.toContain(personalMutationSectionMap.dob.trim())
       expect(result).not.toContain(personalMutationSectionMap.address.trim())
     })
   })
@@ -62,7 +62,7 @@ describe('buildPersonalDetailsMutationService', () => {
 
       expect(result).not.toContain(personalVariableTypeMap.name)
       expect(result).not.toContain(personalVariableTypeMap.phone)
-      expect(result).not.toContain(personalVariableTypeMap.dateOfBirth)
+      expect(result).not.toContain(personalVariableTypeMap.dob)
       expect(result).not.toContain(personalVariableTypeMap.address)
     })
 
@@ -73,14 +73,14 @@ describe('buildPersonalDetailsMutationService', () => {
 
       expect(result).not.toContain(personalMutationSectionMap.name.trim())
       expect(result).not.toContain(personalMutationSectionMap.phone.trim())
-      expect(result).not.toContain(personalMutationSectionMap.dateOfBirth.trim())
+      expect(result).not.toContain(personalMutationSectionMap.dob.trim())
       expect(result).not.toContain(personalMutationSectionMap.address.trim())
     })
   })
 
   describe('when multiple sections need updating', () => {
     beforeEach(() => {
-      sectionsNeedingUpdate = ['name', 'email', 'dateOfBirth']
+      sectionsNeedingUpdate = ['name', 'email', 'dob']
     })
 
     test('includes all specified variable definitions', () => {
@@ -88,7 +88,7 @@ describe('buildPersonalDetailsMutationService', () => {
 
       expect(result).toContain(personalVariableTypeMap.name)
       expect(result).toContain(personalVariableTypeMap.email)
-      expect(result).toContain(personalVariableTypeMap.dateOfBirth)
+      expect(result).toContain(personalVariableTypeMap.dob)
 
       expect(result).not.toContain(personalVariableTypeMap.phone)
       expect(result).not.toContain(personalVariableTypeMap.address)
@@ -99,7 +99,7 @@ describe('buildPersonalDetailsMutationService', () => {
 
       expect(result).toContain(personalMutationSectionMap.name.trim())
       expect(result).toContain(personalMutationSectionMap.email.trim())
-      expect(result).toContain(personalMutationSectionMap.dateOfBirth.trim())
+      expect(result).toContain(personalMutationSectionMap.dob.trim())
 
       expect(result).not.toContain(personalMutationSectionMap.phone.trim())
       expect(result).not.toContain(personalMutationSectionMap.address.trim())

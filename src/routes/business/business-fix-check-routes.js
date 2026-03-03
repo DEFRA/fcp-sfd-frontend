@@ -1,10 +1,14 @@
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { businessFixCheckPresenter } from '../../presenters/business/business-fix-check-presenter.js'
 import { updateBusinessFixService } from '../../services/business/update-business-fix-service.js'
+import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
 
 const getBusinessFixCheck = {
   method: 'GET',
   path: '/business-fix-check',
+  options: {
+    pre: [checkInterruptedJourneyPreHandler('businessDetailsValidation', '/business-details')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
 
@@ -19,6 +23,9 @@ const getBusinessFixCheck = {
 const postBusinessFixCheck = {
   method: 'POST',
   path: '/business-fix-check',
+  options: {
+    pre: [checkInterruptedJourneyPreHandler('businessDetailsValidation', '/business-details')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
 

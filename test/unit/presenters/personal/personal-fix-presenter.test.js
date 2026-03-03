@@ -26,7 +26,7 @@ describe('personalFixPresenter', () => {
         backLink: { href: '/personal-details' },
         pageTitle: 'Update your personal details',
         metaDescription: 'Update your personal details.',
-        updateText: 'We will ask you to update these details as well as your personal name:',
+        updateText: 'We will ask you to update these details as well as your full name:',
         listOfErrors: []
       })
     })
@@ -48,7 +48,7 @@ describe('personalFixPresenter', () => {
         const result = personalFixPresenter(personalDetails)
 
         expect(result.updateText)
-          .toEqual('We will ask you to update your personal email address as well as your personal name.')
+          .toEqual('We will ask you to update your personal email address as well as your full name.')
       })
     })
 
@@ -124,8 +124,8 @@ describe('personalFixPresenter', () => {
         const result = personalFixPresenter(personalDetails)
 
         expect(result.listOfErrors).toEqual([
-          'personal name',
-          'personal date of birth',
+          'full name',
+          'date of birth',
           'personal email address'
         ])
       })

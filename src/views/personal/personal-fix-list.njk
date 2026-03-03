@@ -39,7 +39,7 @@
         <div class="govuk-!-margin-top-4">
           {% for section in sections %}
             {% if section === 'name' %}
-              <h2 class="govuk-heading-m">Personal name</h2>
+              <h2 class="govuk-heading-m">Full name</h2>
               {{ govukInput({
                 label: {
                   text: "First name"
@@ -245,7 +245,7 @@
                     {% set yearErrorClass = " govuk-input--error" %}
                   {% endif %}
                 {% endif %}
-              <h2 class="govuk-heading-m">Personal date of birth</h2>
+              <h2 class="govuk-heading-m">Date of birth</h2>
               {{ govukDateInput({
                 label: {
                   text: "Date of birth"

@@ -5,10 +5,14 @@ import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
 import { personalDetailsSchema } from '../../schemas/personal/personal-details-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
+import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
 
 const getPersonalFixList = {
   method: 'GET',
   path: '/personal-fix-list',
+  options: {
+    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
 
@@ -23,6 +27,9 @@ const getPersonalFixList = {
 const postPersonalFixList = {
   method: 'POST',
   path: '/personal-fix-list',
+  options: {
+    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+  },
   handler: async (request, h) => {
     const { yar, auth, payload } = request
 

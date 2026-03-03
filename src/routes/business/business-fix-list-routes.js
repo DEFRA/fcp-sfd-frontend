@@ -4,11 +4,15 @@ import { validateFixDetailsService } from '../../services/validate-fix-details-s
 import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { businessDetailsSchema } from '../../schemas/business/business-details-schema.js'
+import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getBusinessFixList = {
   method: 'GET',
   path: '/business-fix-list',
+  options: {
+    pre: [checkInterruptedJourneyPreHandler('businessDetailsValidation', '/business-details')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
 
@@ -23,6 +27,9 @@ const getBusinessFixList = {
 const postBusinessFixList = {
   method: 'POST',
   path: '/business-fix-list',
+  options: {
+    pre: [checkInterruptedJourneyPreHandler('businessDetailsValidation', '/business-details')]
+  },
   handler: async (request, h) => {
     const { yar, auth, payload } = request
 

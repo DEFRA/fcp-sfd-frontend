@@ -3,11 +3,13 @@ import { personalFixCheckPresenter } from '../../presenters/personal/personal-fi
 import { updatePersonalFixService } from '../../services/personal/update-personal-fix-service.js'
 import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
 
+const PERSONAL_DETAILS_ROUTE = '/personal-details'
+
 const getPersonalFixCheck = {
   method: 'GET',
   path: '/personal-fix-check',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', PERSONAL_DETAILS_ROUTE)]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +26,7 @@ const postPersonalFixCheck = {
   method: 'POST',
   path: '/personal-fix-check',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', PERSONAL_DETAILS_ROUTE)]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -32,7 +34,7 @@ const postPersonalFixCheck = {
     const sessionData = yar.get('personalDetailsValidation')
     await updatePersonalFixService(sessionData, yar, auth.credentials)
 
-    return h.redirect('/personal-details')
+    return h.redirect(PERSONAL_DETAILS_ROUTE)
   }
 }
 

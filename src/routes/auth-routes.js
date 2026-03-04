@@ -115,10 +115,29 @@ const organisation = {
   }
 }
 
+const reselectBusiness = {
+  method: 'GET',
+  path: '/auth/reselect-business',
+  options: {
+    auth: 'defra-id'
+  },
+  handler: async function (request, h) {
+    if (!request.auth.isAuthenticated) {
+      return h.redirect('/auth/sign-in')
+    }
+    // Store the current location so user is redirected back to /home after selecting a business
+    request.yar.set('redirect', '/home')
+    // Redirect to Defra Identity with forceReselection parameter to trigger business selection screen
+    // The providerParams in the auth plugin will add forceReselection=true for this path
+    return h.redirect('/auth/sign-in')
+  }
+}
+
 export const auth = [
   signIn,
   signInOidc,
   signOut,
   signOutOidc,
-  organisation
+  organisation,
+  reselectBusiness
 ]

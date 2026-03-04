@@ -125,6 +125,24 @@ describe('auth', () => {
       expect(route.handler).toBeInstanceOf(Function)
     })
   })
+
+  describe('GET /auth/reselect-business', () => {
+    beforeEach(() => {
+      route = getRoute('GET', '/auth/reselect-business')
+    })
+
+    test('should exist', () => {
+      expect(route).toBeDefined()
+    })
+
+    test('should require authentication with default strategy', () => {
+      expect(route.options.auth.mode).toBeUndefined()
+    })
+
+    test('should have a handler', () => {
+      expect(route.handler).toBeInstanceOf(Function)
+    })
+  })
 })
 
 function getRoute (method, path) {

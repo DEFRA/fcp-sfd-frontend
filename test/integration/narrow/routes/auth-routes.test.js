@@ -416,4 +416,44 @@ describe('auth routes', () => {
       expect(response.headers.location).toBe('/home')
     })
   })
+
+  describe('GET /auth/reselect-business', () => {
+    beforeEach(() => {
+      path = '/auth/reselect-business'
+    })
+
+    test('redirects to oidc sign in if unauthenticated', async () => {
+      const response = await server.inject({
+        url: path
+      })
+
+      const redirect = new URL(response.headers.location)
+      const params = new URLSearchParams(redirect.search)
+
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(redirect.origin).toBe('https://oidc.example.com')
+      expect(redirect.pathname).toBe('/authorize')
+      expect(params.get('serviceId')).toBe(process.env.DEFRA_ID_SERVICE_ID)
+      expect(params.get('p')).toBe(process.env.DEFRA_ID_POLICY)
+      expect(params.get('response_mode')).toBe('query')
+      expect(params.get('client_id')).toBe(process.env.DEFRA_ID_CLIENT_ID)
+      expect(params.get('response_type')).toBe('code')
+      expect(params.get('redirect_uri')).toBe(process.env.DEFRA_ID_REDIRECT_URL)
+      expect(params.get('state')).toBeDefined()
+      expect(params.get('scope')).toBe(`openid offline_access ${process.env.DEFRA_ID_CLIENT_ID}`)
+    })
+
+    test('redirects to /auth/sign-in when authenticated', async () => {
+      const response = await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.headers.location).toBe('/auth/sign-in')
+    })
+  })
 })

@@ -52,6 +52,11 @@ You can find further information on how SFD integrates with the DAL on [Confluen
 
 The application will be available at http://localhost:3000.
 
+## Features
+
+### Business Selection
+Users with multiple business enrollments can switch between businesses by clicking the "Choose another business" link in the top left of the home page. This triggers re-authentication with Defra ID to allow selecting a different business/organisation.
+
 ## Tests
 
 ### Running tests

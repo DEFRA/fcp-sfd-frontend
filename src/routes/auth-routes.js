@@ -4,9 +4,11 @@ import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 
+const AUTH_SIGN_IN_PATH = '/auth/sign-in'
+
 const signIn = {
   method: 'GET',
-  path: '/auth/sign-in',
+  path: AUTH_SIGN_IN_PATH,
   options: {
     auth: 'defra-id'
   },
@@ -115,10 +117,29 @@ const organisation = {
   }
 }
 
+const reselectBusiness = {
+  method: 'GET',
+  path: '/auth/reselect-business',
+  options: {
+    auth: 'defra-id'
+  },
+  handler: async function (request, h) {
+    if (!request.auth.isAuthenticated) {
+      return h.redirect(AUTH_SIGN_IN_PATH)
+    }
+    // Store the current location so user is redirected back to /home after selecting a business
+    request.yar.set('redirect', '/home')
+    // Redirect to Defra Identity with forceReselection parameter to trigger business selection screen
+    // The providerParams in the auth plugin will add forceReselection=true for this path
+    return h.redirect(AUTH_SIGN_IN_PATH)
+  }
+}
+
 export const auth = [
   signIn,
   signInOidc,
   signOut,
   signOutOidc,
-  organisation
+  organisation,
+  reselectBusiness
 ]

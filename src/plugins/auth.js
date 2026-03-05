@@ -61,7 +61,7 @@ function getBellOptions (oidcConfig) {
       }
 
       // If user intends to switch organisation, force Defra Identity to display the organisation selection screen
-      if (request.path === '/auth/organisation') {
+      if (request.path === '/auth/organisation' || request.path === '/auth/reselect-business') {
         params.forceReselection = true
         // If user has already selected an organisation in another service, pass the organisation Id to force Defra Id to skip the organisation selection screen
         if (request.query.organisationId) {

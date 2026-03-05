@@ -168,4 +168,17 @@ describe('fetchPersonalFixService', () => {
       })
     })
   })
+
+  describe('when sessionData is null', () => {
+    test('it does not throw and returns personal details with undefined source and orderedSectionsToFix', async () => {
+      const result = await fetchPersonalFixService(credentials, null)
+
+      expect(fetchPersonalDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toMatchObject({
+        ...personalDetails
+      })
+      expect(result.source).toBeUndefined()
+      expect(result.orderedSectionsToFix).toBeUndefined()
+    })
+  })
 })

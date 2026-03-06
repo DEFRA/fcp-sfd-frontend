@@ -1,6 +1,7 @@
 /**
- * Builds mutation variables for updating a user's personal details
- * based only on the sections that actually need updating.
+ * Builds mutation variables for updating a user's personal details.
+ * Only includes the sections that actually need updating, using the
+ * unified `allFieldsInput` format for the GraphQL mutation.
  *
  * @module buildPersonalUpdateVariablesService
  */
@@ -8,34 +9,34 @@
 const buildPersonalUpdateVariablesService = (personalDetails) => {
   const { orderedSectionsToFix, crn } = personalDetails
 
-  const variables = {}
+  const allFieldsInput = { crn }
 
+  // Conditionally merge each section into allFieldsInput if its been updated by the user
   if (orderedSectionsToFix.includes('name') && personalDetails.changePersonalName) {
-    variables.updateCustomerNameInput = buildNameInput(crn, personalDetails.changePersonalName)
+    Object.assign(allFieldsInput, buildNameInput(personalDetails.changePersonalName))
   }
 
   if (orderedSectionsToFix.includes('email') && personalDetails.changePersonalEmail) {
-    variables.updateCustomerEmailInput = buildEmailInput(crn, personalDetails.changePersonalEmail)
+    Object.assign(allFieldsInput, buildEmailInput(personalDetails.changePersonalEmail))
   }
 
   if (orderedSectionsToFix.includes('phone') && personalDetails.changePersonalPhoneNumbers) {
-    variables.updateCustomerPhoneInput = buildPhoneInput(crn, personalDetails.changePersonalPhoneNumbers)
+    Object.assign(allFieldsInput, buildPhoneInput(personalDetails.changePersonalPhoneNumbers))
   }
 
   if (orderedSectionsToFix.includes('dob') && personalDetails.changePersonalDob) {
-    variables.updateCustomerDateOfBirthInput = buildDobInput(crn, personalDetails.changePersonalDob)
+    Object.assign(allFieldsInput, buildDobInput(personalDetails.changePersonalDob))
   }
 
   if (orderedSectionsToFix.includes('address') && personalDetails.changePersonalAddress) {
-    variables.updateCustomerAddressInput = buildAddressInput(crn, personalDetails.changePersonalAddress)
+    Object.assign(allFieldsInput, buildAddressInput(personalDetails.changePersonalAddress))
   }
 
-  return variables
+  return { allFieldsInput }
 }
 
-const buildPhoneInput = (crn, change) => {
+const buildPhoneInput = (change) => {
   return {
-    crn,
     phone: {
       landline: change.personalTelephone ?? null,
       mobile: change.personalMobile ?? null
@@ -43,36 +44,32 @@ const buildPhoneInput = (crn, change) => {
   }
 }
 
-const buildEmailInput = (crn, change) => {
+const buildEmailInput = (change) => {
   return {
-    crn,
     email: {
       address: change.personalEmail
     }
   }
 }
 
-const buildNameInput = (crn, change) => {
+const buildNameInput = (change) => {
   return {
-    crn,
     first: change.first,
     middle: change.middle ?? null,
     last: change.last
   }
 }
 
-const buildDobInput = (crn, change) => {
+const buildDobInput = (change) => {
   const { day, month, year } = change
 
   return {
-    crn,
     dateOfBirth: `${year}-${month}-${day}`
   }
 }
 
-const buildAddressInput = (crn, change) => {
+const buildAddressInput = (change) => {
   return {
-    crn,
     address: {
       buildingNumberRange: null,
       buildingName: null,

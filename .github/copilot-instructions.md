@@ -210,6 +210,20 @@ export const mapBusinessDetails = (dalData) => {
 3. Add Joi validation schema in `src/schemas/`
 4. Register route in `src/routes/routes.js`
 
+### Implementing Business Selection/Switching
+When users need to switch between multiple enrollments/businesses:
+1. **Presenter** - Add conditional property based on `enrolmentCount`:
+   - Only include link/backLink if `enrolmentCount > 1`
+   - Pass data from `auth.credentials.enrolmentCount`
+2. **Route Handler** - Pass `enrolmentCount` from credentials to presenter:
+   - `homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount)`
+3. **Template** - Make navigation conditional on property existence:
+   - `{% if backLink %}...{% endif %}`
+   - Link target should trigger Defra ID reselection (e.g., `/auth/reselect-business`)
+4. **Auth Plugin** - Configure `forceReselection` for the route path:
+   - Add route path to `providerParams` check for `forceReselection = true`
+   - This triggers Defra ID business/organisation selection screen
+
 ### Adding a DAL Query
 1. Create `src/dal/queries/my-query.js`
 2. Export GraphQL query string

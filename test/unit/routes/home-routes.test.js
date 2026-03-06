@@ -62,7 +62,8 @@ describe('Home endpoint', () => {
           auth: {
             credentials: {
               sbi: '123456789',
-              scope: ['BUSINESS_DETAILS:FULL_PERMISSION']
+              scope: ['BUSINESS_DETAILS:FULL_PERMISSION'],
+              enrolmentCount: 7
             }
           }
         }
@@ -81,7 +82,7 @@ describe('Home endpoint', () => {
         await home.handler(request, h)
 
         expect(fetchPersonalBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope)
+        expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope, request.auth.credentials.enrolmentCount)
         expect(h.view).toHaveBeenCalledWith('home', pageData)
       })
     })

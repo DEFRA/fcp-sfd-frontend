@@ -5,8 +5,8 @@
 
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
 
-const homePresenter = (data, permissionGroups) => {
-  return {
+const homePresenter = (data, permissionGroups, enrolmentCount) => {
+  const presentedData = {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
     userName: data.info.userName,
@@ -14,6 +14,15 @@ const homePresenter = (data, permissionGroups) => {
     businessDetails: setBusinessDetails(permissionGroups),
     sbi: data.business.info.sbi
   }
+
+  if (enrolmentCount && enrolmentCount > 1) {
+    presentedData.backLink = {
+      text: 'Choose another business',
+      href: '/auth/reselect-business'
+    }
+  }
+
+  return presentedData
 }
 
 const setBusinessDetails = (permissionGroups) => {

@@ -13,10 +13,57 @@ describe('buildPersonalUpdateVariablesService', () => {
   })
 
   describe('when no sections need updating', () => {
-    test('returns empty object if no sections to fix', () => {
+    test('returns object with only crn', () => {
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result).toEqual({})
+      expect(result).toEqual({ allFieldsInput: { crn: '123456789' } })
+    })
+  })
+
+  describe('when multiple sections are partially missing', () => {
+    beforeEach(() => {
+      personalDetails.orderedSectionsToFix = ['name', 'email', 'phone', 'dob', 'address']
+      personalDetails.changePersonalName = { first: 'Alice', last: 'Jones' }
+      personalDetails.changePersonalEmail = { personalEmail: 'newEmail@example.com' }
+      personalDetails.changePersonalPhoneNumbers = { personalTelephone: null, personalMobile: '07123456789' }
+      personalDetails.changePersonalDob = { day: '15', month: '06', year: '1990' }
+      personalDetails.changePersonalAddress = {
+        address1: '10 Downing St',
+        city: 'London',
+        postcode: 'SW1A 2AA',
+        country: 'UK'
+        // missing optional fields
+      }
+    })
+
+    test('builds allFieldsInput with defaults for missing fields', () => {
+      const result = buildPersonalUpdateVariablesService(personalDetails)
+
+      expect(result.allFieldsInput).toEqual({
+        crn: '123456789',
+        first: 'Alice',
+        middle: null,
+        last: 'Jones',
+        email: { address: 'newEmail@example.com' },
+        phone: { landline: null, mobile: '07123456789' },
+        dateOfBirth: '1990-06-15',
+        address: {
+          buildingNumberRange: null,
+          buildingName: null,
+          flatName: null,
+          street: null,
+          city: 'London',
+          county: null,
+          postalCode: 'SW1A 2AA',
+          country: 'UK',
+          line1: '10 Downing St',
+          line2: null,
+          line3: null,
+          line4: 'London',
+          line5: null,
+          uprn: null
+        }
+      })
     })
   })
 
@@ -29,7 +76,7 @@ describe('buildPersonalUpdateVariablesService', () => {
     test('builds name input', () => {
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result.updateCustomerNameInput).toEqual({
+      expect(result.allFieldsInput).toEqual({
         crn: '123456789',
         first: 'Janet',
         middle: null,
@@ -47,7 +94,7 @@ describe('buildPersonalUpdateVariablesService', () => {
     test('builds email input', () => {
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result.updateCustomerEmailInput).toEqual({
+      expect(result.allFieldsInput).toEqual({
         crn: '123456789',
         email: { address: 'new.email@example.com' }
       })
@@ -66,7 +113,7 @@ describe('buildPersonalUpdateVariablesService', () => {
     test('builds phone input', () => {
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result.updateCustomerPhoneInput).toEqual({
+      expect(result.allFieldsInput).toEqual({
         crn: '123456789',
         phone: { landline: '0123456789', mobile: '07999999999' }
       })
@@ -82,7 +129,7 @@ describe('buildPersonalUpdateVariablesService', () => {
     test('builds dob input', () => {
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result.updateCustomerDateOfBirthInput).toEqual({
+      expect(result.allFieldsInput).toEqual({
         crn: '123456789',
         dateOfBirth: '1985-12-01'
       })
@@ -105,7 +152,7 @@ describe('buildPersonalUpdateVariablesService', () => {
     test('builds address input', () => {
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result.updateCustomerAddressInput).toEqual({
+      expect(result.allFieldsInput).toEqual({
         crn: '123456789',
         address: {
           buildingNumberRange: null,
@@ -135,7 +182,7 @@ describe('buildPersonalUpdateVariablesService', () => {
       }
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
-      expect(result.updateCustomerAddressInput.address).toEqual({
+      expect(result.allFieldsInput.address).toEqual({
         buildingNumberRange: null,
         buildingName: null,
         flatName: null,

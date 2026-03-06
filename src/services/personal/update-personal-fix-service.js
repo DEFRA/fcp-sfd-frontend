@@ -8,12 +8,11 @@ import { buildPersonalSuccessMessage } from './build-personal-success-message-se
 import { updateDalService } from '../DAL/update-dal-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { buildPersonalUpdateVariablesService } from './build-personal-update-variables-service.js'
-import { buildPersonalDetailsMutationService } from './build-personal-details-mutation-service.js'
+import { updatePersonalDetailsMutation } from '../../dal/mutations/personal/update-personal-details.js'
 
 const updatePersonalFixService = async (sessionData, yar, credentials) => {
   const personalDetails = await fetchPersonalFixService(credentials, sessionData)
   const variables = buildPersonalUpdateVariablesService(personalDetails)
-  const updatePersonalDetailsMutation = buildPersonalDetailsMutationService(personalDetails.orderedSectionsToFix)
 
   await updateDalService(updatePersonalDetailsMutation, variables, credentials.sessionId)
 

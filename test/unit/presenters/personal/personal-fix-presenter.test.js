@@ -32,6 +32,25 @@ describe('personalFixPresenter', () => {
     })
   })
 
+  describe('when personalDetails has no orderedSectionsToFix', () => {
+    beforeEach(() => {
+      personalDetails = {
+        source: 'name',
+        info: {
+          userName: 'Jane Doe'
+        }
+      }
+    })
+
+    test('it does not throw and returns a result with empty listOfErrors and generic update text', () => {
+      const result = personalFixPresenter(personalDetails)
+
+      expect(result.listOfErrors).toEqual([])
+      expect(result.updateText).toEqual('We will ask you to update these details as well as your full name:')
+      expect(result.pageTitle).toEqual('Update your personal details')
+    })
+  })
+
   describe('the "updateText" property', () => {
     describe('when two sections need fixing', () => {
       beforeEach(() => {

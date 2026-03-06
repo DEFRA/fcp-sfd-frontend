@@ -6,7 +6,8 @@
 import { PERSONAL_SECTION_ORDER, PERSONAL_UPDATE_TEXT_LABELS, PERSONAL_SECTION_LABELS } from '../../constants/interrupter-journey.js'
 
 const personalFixPresenter = (personalDetails) => {
-  const { source, orderedSectionsToFix } = personalDetails
+  // orderedSectionsToFix can be missing; default to [] so .length/.includes doesn't throw 500 errors
+  const { source, orderedSectionsToFix = [] } = personalDetails
   const hasMultipleErrors = orderedSectionsToFix.length > 2
 
   return {

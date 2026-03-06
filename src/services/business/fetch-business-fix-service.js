@@ -7,7 +7,9 @@
 import { fetchBusinessDetailsService } from './fetch-business-details-service.js'
 
 const fetchBusinessFixService = async (credentials, sessionData = {}) => {
-  const { orderedSectionsToFix, businessFixUpdates, source } = sessionData
+  // Session can be null; normalise to {} so destructuring doesn't throw 500 errors
+  const safeSession = sessionData ?? {}
+  const { orderedSectionsToFix, businessFixUpdates, source } = safeSession
   const businessDetails = await fetchBusinessDetailsService(credentials)
 
   const updatedBusinessDetails = {

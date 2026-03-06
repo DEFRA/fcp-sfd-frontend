@@ -6,7 +6,9 @@
 import { BUSINESS_SECTION_ORDER, BUSINESS_UPDATE_TEXT_LABELS, BUSINESS_SECTION_LABELS } from '../../constants/interrupter-journey.js'
 
 const businessFixPresenter = (sessionData, businessDetails) => {
-  const { source, orderedSectionsToFix } = sessionData
+  // orderedSectionsToFix can be missing; default to [] so .length/.includes don't throw 500 errors
+  const safeSession = sessionData ?? {}
+  const { source, orderedSectionsToFix = [] } = safeSession
   const hasMultipleErrors = orderedSectionsToFix.length > 2
 
   return {

@@ -152,4 +152,17 @@ describe('fetchBusinessFixService', () => {
       })
     })
   })
+
+  describe('when sessionData is null', () => {
+    test('it does not throw and returns business details with undefined source and orderedSectionsToFix', async () => {
+      const result = await fetchBusinessFixService(credentials, null)
+
+      expect(fetchBusinessDetailsService).toHaveBeenCalledWith(credentials)
+      expect(result).toMatchObject({
+        ...businessDetails
+      })
+      expect(result.source).toBeUndefined()
+      expect(result.orderedSectionsToFix).toBeUndefined()
+    })
+  })
 })

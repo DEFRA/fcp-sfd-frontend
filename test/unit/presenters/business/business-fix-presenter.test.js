@@ -42,6 +42,28 @@ describe('businessFixPresenter', () => {
     })
   })
 
+  describe('when sessionData is null or has no orderedSectionsToFix', () => {
+    beforeEach(() => {
+      businessDetails = {
+        info: {
+          sbi: '123456789',
+          businessName: 'Test Business'
+        },
+        customer: {
+          userName: 'testuser'
+        }
+      }
+    })
+
+    test('it does not throw and returns a result with empty listOfErrors and generic update text', () => {
+      const result = businessFixPresenter(null, businessDetails)
+
+      expect(result.listOfErrors).toEqual([])
+      expect(result.updateText).toEqual('We will ask you to update these details.')
+      expect(result.pageTitle).toEqual('Update your business details')
+    })
+  })
+
   describe('the "updateText" property', () => {
     describe('when two sections need fixing', () => {
       beforeEach(() => {

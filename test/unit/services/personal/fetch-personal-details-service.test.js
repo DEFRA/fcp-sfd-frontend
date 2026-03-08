@@ -4,7 +4,6 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Things we need to mock
 import { dalConnector } from '../../../../src/dal/connector.js'
 const mockMappedValue = vi.fn()
-const mockConfigGet = vi.fn()
 
 vi.mock('../../../../src/dal/connector.js', () => ({
   dalConnector: vi.fn()
@@ -15,9 +14,7 @@ vi.mock('../../../../src/mappers/personal-details-mapper.js', () => ({
 }))
 
 vi.mock('../../../../src/config/index.js', () => ({
-  config: {
-    get: mockConfigGet
-  }
+  config: { get: vi.fn() }
 }))
 
 // Test helpers
@@ -45,21 +42,20 @@ describe('fetchPersonalDetailsService', () => {
     }
   })
 
-  describe('when DAL_CONNECTION is true', () => {
+  describe('when dalConnectionEnabled is true', () => {
     beforeEach(() => {
-      mockConfigGet.mockReturnValue(true)
       dalConnector.mockResolvedValue(data)
       mockMappedValue.mockResolvedValue(mappedDalData)
     })
 
     test('dalConnector is called', async () => {
-      await fetchPersonalDetailsService(credentials)
+      await fetchPersonalDetailsService(credentials, { dalConnectionEnabled: true })
 
       expect(dalConnector).toHaveBeenCalled()
     })
 
     test('it correctly returns mappedData if dalConnector response has object data', async () => {
-      const result = await fetchPersonalDetailsService(credentials)
+      const result = await fetchPersonalDetailsService(credentials, { dalConnectionEnabled: true })
 
       expect(result).toMatchObject(mappedDalData)
     })
@@ -67,24 +63,21 @@ describe('fetchPersonalDetailsService', () => {
     test('it returns the full response object if dalConnector response has no object data', async () => {
       const dalErrorResponse = { error: 'error response from dal' }
       dalConnector.mockResolvedValue(dalErrorResponse)
-      const result = await fetchPersonalDetailsService(credentials)
+      const result = await fetchPersonalDetailsService(credentials, { dalConnectionEnabled: true })
 
       expect(result).toMatchObject(dalErrorResponse)
     })
   })
 
-  describe('when DAL_CONNECTION is false', () => {
-    beforeEach(() => {
-      mockConfigGet.mockReturnValue(false)
-    })
+  describe('when dalConnectionEnabled is false', () => {
     test('dalConnector is not called', async () => {
-      await fetchPersonalDetailsService(credentials)
+      await fetchPersonalDetailsService(credentials, { dalConnectionEnabled: false })
 
       expect(dalConnector).not.toHaveBeenCalled()
     })
 
     test('it correctly returns data static data source', async () => {
-      const result = await fetchPersonalDetailsService(credentials)
+      const result = await fetchPersonalDetailsService(credentials, { dalConnectionEnabled: false })
 
       expect(result).toMatchObject(getMappedData())
     })

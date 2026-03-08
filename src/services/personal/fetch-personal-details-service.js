@@ -12,8 +12,11 @@ import { mapPersonalDetails } from '../../mappers/personal-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData } from '../../mock-data/mock-personal-details.js'
 
-const fetchPersonalDetailsService = async (credentials) => {
-  if (!config.get('featureToggle.dalConnection')) {
+const fetchPersonalDetailsService = async (credentials, options = {}) => {
+  // Use the caller’s value if they passed it (e.g. in tests); otherwise use app config.
+  const dalConnectionEnabled = options.dalConnectionEnabled ?? config.get('featureToggle.dalConnection')
+
+  if (!dalConnectionEnabled) {
     return mappedData
   }
 

@@ -20,12 +20,11 @@ const checkInterruptedJourneySessionService = (yar, journeyKey) => {
   if (!sessionData) {
     return false
   }
-
-  if (!Array.isArray(sessionData.orderedSectionsToFix)) {
-    return false
+  if (Array.isArray(sessionData.orderedSectionsToFix) || Array.isArray(sessionData.sectionsNeedingUpdate)) {
+    return true
   }
 
-  return true
+  return false
 }
 
 export {

@@ -4,6 +4,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Things we need to mock
 import { dalConnector } from '../../../../src/dal/connector.js'
 const mockMappedValue = vi.fn()
+const mockConfigGet = vi.fn()
 
 vi.mock('../../../../src/dal/connector.js', () => ({
   dalConnector: vi.fn()
@@ -14,7 +15,7 @@ vi.mock('../../../../src/mappers/personal-details-mapper.js', () => ({
 }))
 
 vi.mock('../../../../src/config/index.js', () => ({
-  config: { get: vi.fn() }
+  config: { get: mockConfigGet }
 }))
 
 // Test helpers
@@ -31,6 +32,7 @@ describe('fetchPersonalDetailsService', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
     vi.resetModules()
+    mockConfigGet.mockReset()
 
     data = { data: getDalData() }
     mappedDalData = getMappedData()
@@ -79,6 +81,28 @@ describe('fetchPersonalDetailsService', () => {
     test('it correctly returns data static data source', async () => {
       const result = await fetchPersonalDetailsService(credentials, { dalConnectionEnabled: false })
 
+      expect(result).toMatchObject(getMappedData())
+    })
+  })
+
+  describe('when options are not passed (uses config)', () => {
+    test('uses DAL when config.get returns true', async () => {
+      mockConfigGet.mockReturnValue(true)
+      dalConnector.mockResolvedValue(data)
+      mockMappedValue.mockResolvedValue(mappedDalData)
+
+      const result = await fetchPersonalDetailsService(credentials)
+
+      expect(dalConnector).toHaveBeenCalled()
+      expect(result).toMatchObject(mappedDalData)
+    })
+
+    test('returns static data when config.get returns false', async () => {
+      mockConfigGet.mockReturnValue(false)
+
+      const result = await fetchPersonalDetailsService(credentials)
+
+      expect(dalConnector).not.toHaveBeenCalled()
       expect(result).toMatchObject(getMappedData())
     })
   })

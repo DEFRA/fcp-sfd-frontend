@@ -1,10 +1,16 @@
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { businessFixPresenter } from '../../presenters/business/business-fix-presenter.js'
 import { initialiseFixJourneyService } from '../../services/initialise-fix-journey-service.js'
+import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
+
+const BUSINESS_DETAILS_ROUTE = '/business-details'
 
 const getBusinessFix = {
   method: 'GET',
   path: '/business-fix',
+  options: {
+    pre: [checkInterruptedJourneyPreHandler('businessDetailsValidation', BUSINESS_DETAILS_ROUTE)]
+  },
   handler: async (request, h) => {
     const { yar, query, auth } = request
 

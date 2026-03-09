@@ -43,17 +43,34 @@ describe('checkInterruptedJourneySessionService', () => {
   })
 
   describe('when session data is valid', () => {
-    beforeEach(() => {
-      yar.get.mockReturnValue({
-        orderedSectionsToFix: ['name', 'email']
+    describe('because orderedSectionsToFix is a defined array', () => {
+      beforeEach(() => {
+        yar.get.mockReturnValue({
+          orderedSectionsToFix: ['name', 'email']
+        })
+      })
+
+      test('returns true', () => {
+        const result = checkInterruptedJourneySessionService(yar, journeyKey)
+
+        expect(result).toBe(true)
+        expect(yar.get).toHaveBeenCalledWith(journeyKey)
       })
     })
 
-    test('returns true', () => {
-      const result = checkInterruptedJourneySessionService(yar, journeyKey)
+    describe('because sectionsNeedingUpdate is a defined array', () => {
+      beforeEach(() => {
+        yar.get.mockReturnValue({
+          sectionsNeedingUpdate: ['name', 'email']
+        })
+      })
 
-      expect(result).toBe(true)
-      expect(yar.get).toHaveBeenCalledWith(journeyKey)
+      test('returns true', () => {
+        const result = checkInterruptedJourneySessionService(yar, journeyKey)
+
+        expect(result).toBe(true)
+        expect(yar.get).toHaveBeenCalledWith(journeyKey)
+      })
     })
   })
 })

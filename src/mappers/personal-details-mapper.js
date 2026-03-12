@@ -34,6 +34,7 @@ export const mapPersonalDetails = (value) => {
     },
     address: {
       lookup: {
+        pafOrganisationName: value.customer.info.address.pafOrganisationName,
         buildingNumberRange: value.customer.info.address.buildingNumberRange,
         flatName: value.customer.info.address.flatName,
         buildingName: value.customer.info.address.buildingName,

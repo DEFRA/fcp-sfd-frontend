@@ -20,6 +20,7 @@ export const mapBusinessDetails = (value) => {
     },
     address: {
       lookup: {
+        pafOrganisationName: value.business.info.address.pafOrganisationName,
         buildingNumberRange: value.business.info.address.buildingNumberRange,
         flatName: value.business.info.address.flatName,
         buildingName: value.business.info.address.buildingName,

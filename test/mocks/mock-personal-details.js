@@ -23,12 +23,15 @@ const getDalData = () => ({
         address: 'test@example.com'
       },
       address: {
+        pafOrganisationName: 'Acme Corp',
         flatName: 'THE COACH HOUSE',
         buildingName: 'STOCKWELL HALL',
         buildingNumberRange: '7',
         street: 'HAREWOOD AVENUE',
         city: 'DARLINGTON',
         county: 'Dorset',
+        dependentLocality: 'ELLICOMBE',
+        doubleDependentLocality: 'WOODTHORPE',
         line1: '76 Robinswood Road',
         line2: 'UPPER CHUTE',
         line3: 'Child Okeford',
@@ -66,11 +69,13 @@ const getMappedData = () => ({
   },
   address: {
     lookup: {
+      pafOrganisationName: 'Acme Corp',
       flatName: 'THE COACH HOUSE',
       buildingName: 'STOCKWELL HALL',
       buildingNumberRange: '7',
+      dependentLocality: 'ELLICOMBE',
+      doubleDependentLocality: 'WOODTHORPE',
       street: 'HAREWOOD AVENUE',
-      city: 'DARLINGTON',
       county: 'Dorset',
       uprn: '12345'
     },
@@ -81,6 +86,7 @@ const getMappedData = () => ({
       line4: null,
       line5: null
     },
+    city: 'DARLINGTON',
     postcode: 'CO9 3LS',
     country: 'United Kingdom'
   },

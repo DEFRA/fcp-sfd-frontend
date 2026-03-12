@@ -28,7 +28,7 @@ export const mapBusinessDetails = (value) => {
         doubleDependentLocality: value.business.info.address.doubleDependentLocality,
         street: value.business.info.address.street,
         county: value.business.info.address.county,
-        uprn: value.business.info.address.uprn,
+        uprn: value.business.info.address.uprn
       },
       manual: {
         line1: value.business.info.address.line1,

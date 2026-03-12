@@ -38,6 +38,8 @@ export const mapPersonalDetails = (value) => {
         buildingNumberRange: value.customer.info.address.buildingNumberRange,
         flatName: value.customer.info.address.flatName,
         buildingName: value.customer.info.address.buildingName,
+        dependentLocality: value.customer.info.address.dependentLocality,
+        doubleDependentLocality: value.customer.info.address.doubleDependentLocality,
         street: value.customer.info.address.street,
         city: value.customer.info.address.city,
         county: value.customer.info.address.county,

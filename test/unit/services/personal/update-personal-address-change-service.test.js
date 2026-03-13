@@ -65,20 +65,23 @@ describe('updatePersonalAddressChangeService', () => {
         input: {
           crn: '123456890',
           address: {
+            pafOrganisationName: null,
             buildingNumberRange: null,
             buildingName: null,
             flatName: null,
             street: null,
-            city: 'Maidstone',
+            dependentLocality: null,
+            doubleDependentLocality: null,
             county: null,
-            postalCode: 'BA123 ABC',
-            country: 'United Kingdom',
+            uprn: null,
             line1: 'A different address',
             line2: null,
             line3: null,
-            line4: 'Maidstone',
+            line4: null,
             line5: null,
-            uprn: null
+            city: 'Maidstone',
+            postalCode: 'BA123 ABC',
+            country: 'United Kingdom'
           }
         }
       }, credentials.sessionId)
@@ -119,6 +122,7 @@ describe('updatePersonalAddressChangeService', () => {
         input: {
           crn: '123456890',
           address: {
+            pafOrganisationName: null,
             buildingNumberRange: null,
             buildingName: 'Test House',
             flatName: null,

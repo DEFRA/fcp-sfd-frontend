@@ -18,7 +18,7 @@ const getDalData = () => ({
       legalStatus: { code: 102111, type: 'Sole Proprietorship' },
       type: { code: 101443, type: 'Not Specified' },
       address: {
-        pafOrganisationName: 'HENLEY, RE',
+        pafOrganisationName: 'Corp ltd',
         buildingNumberRange: '7',
         buildingName: 'STOCKWELL HALL',
         flatName: 'THE COACH HOUSE',
@@ -63,7 +63,7 @@ const getMappedData = () => ({
   },
   address: {
     lookup: {
-      pafOrganisationName: 'HENLEY, RE',
+      pafOrganisationName: 'Corp ltd',
       flatName: 'THE COACH HOUSE',
       buildingNumberRange: '7',
       buildingName: 'STOCKWELL HALL',

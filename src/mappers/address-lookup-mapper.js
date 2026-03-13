@@ -36,33 +36,33 @@ const addressLookupMapper = (addresses) => {
       COUNTRY_CODE
     } = address.properties
 
-    const pafOrganisationName = filterAndJoin([ORGANISATION_NAME, DEPARTMENT_NAME])
     const buildingName = PO_BOX_NUMBER ? `PO BOX ${PO_BOX_NUMBER}` : BUILDING_NAME || null
-    const street = filterAndJoin([DEPENDENT_THOROUGHFARE_NAME, THOROUGHFARE_NAME])
-
-    // Remove placeholder county values
-    const county =
-      LOCAL_CUSTODIAN_CODE_DESCRIPTION === 'ORDNANCE SURVEY' ||
-      LOCAL_CUSTODIAN_CODE_DESCRIPTION === POST_TOWN
-        ? null
-        : LOCAL_CUSTODIAN_CODE_DESCRIPTION
 
     return {
       displayAddress: ADDRESS,
-      pafOrganisationName,
+      pafOrganisationName: filterAndJoin([ORGANISATION_NAME, DEPARTMENT_NAME]),
       flatName: SUB_BUILDING_NAME ?? null,
       buildingName,
       buildingNumberRange: BUILDING_NUMBER ?? null,
-      street,
+      street: filterAndJoin([DEPENDENT_THOROUGHFARE_NAME, THOROUGHFARE_NAME]),
       dependentLocality: DEPENDENT_LOCALITY ?? null,
       doubleDependentLocality: DOUBLE_DEPENDENT_LOCALITY ?? null,
       city: POST_TOWN,
-      county,
+      county: formatCounty(LOCAL_CUSTODIAN_CODE_DESCRIPTION, POST_TOWN),
       postcode: POSTCODE,
       country: COUNTRY_NAMES[COUNTRY_CODE] ?? null,
       uprn: UPRN
     }
   }).filter(Boolean)
+}
+
+// Remove placeholder county values
+const formatCounty = (localCustodianCodeDescription, postTown) => {
+  if (localCustodianCodeDescription === 'ORDNANCE SURVEY' || localCustodianCodeDescription === postTown) {
+    return null
+  }
+
+  return localCustodianCodeDescription
 }
 
 const filterAndJoin = (addressesProperties) => {

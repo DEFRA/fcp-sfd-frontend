@@ -55,6 +55,7 @@ const nullIfUndefined = (value) => {
  */
 const buildUprnAddress = (change) => {
   return {
+    pafOrganisationName: nullIfUndefined(change.pafOrganisationName),
     buildingNumberRange: nullIfUndefined(change.buildingNumberRange),
     buildingName: nullIfUndefined(change.buildingName),
     flatName: nullIfUndefined(change.flatName),
@@ -96,20 +97,23 @@ const buildUprnAddress = (change) => {
  */
 const buildManualAddress = (change) => {
   return {
+    pafOrganisationName: null,
     buildingNumberRange: null,
     buildingName: null,
     flatName: null,
     street: null,
-    city: change.city, // required for DAL/v1
-    county: nullIfUndefined(change.county),
-    postalCode: change.postcode, // required for DAL/v1
-    country: change.country, // required for DAL/v1
+    dependentLocality: null,
+    doubleDependentLocality: null,
+    county: null,
+    uprn: null,
     line1: change.address1, // required for DAL/v1
     line2: nullIfUndefined(change.address2),
     line3: nullIfUndefined(change.address3),
-    line4: nullIfUndefined(change.city), // manual city mapped for validation
-    line5: nullIfUndefined(change.county),
-    uprn: null
+    line4: nullIfUndefined(change.county), // manual city mapped for validation
+    line5: null,
+    city: change.city, // required for DAL/v1
+    postalCode: change.postcode, // required for DAL/v1
+    country: change.country // required for DAL/v1
   }
 }
 

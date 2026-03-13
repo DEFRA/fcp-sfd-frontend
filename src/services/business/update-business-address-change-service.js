@@ -55,6 +55,7 @@ const nullIfUndefined = (value) => {
  */
 const buildUprnAddress = (change) => {
   return {
+    pafOrganisationName: nullIfUndefined(change.pafOrganisationName),
     buildingNumberRange: nullIfUndefined(change.buildingNumberRange),
     buildingName: nullIfUndefined(change.buildingName),
     flatName: nullIfUndefined(change.flatName),
@@ -76,66 +77,81 @@ const buildUprnAddress = (change) => {
 
 /**
  * Builds address variables for a manually entered address (without UPRN).
- * When there is no UPRN, the DAL/v1 enforces validation and requires the following
- * fields to be present:
+ *
+ * When there is no UPRN, the DAL/v1 enforces validation and requires:
  * - `postcode`
  * - `line1`
  * - `city`
  * - `country`
  *
- * When a user enters the address manually, the `city` is always captured
- * but stored as `line5`. We explicitly map `line4` into the `city` field
- * so that the DAL's validation rules are satisfied.
+ * The mapping from user input to DAL fields is:
+ * | User input field | DAL field |
+ * |-----------------|-----------|
+ * | address1        | line1     |
+ * | address2        | line2     |
+ * | address3        | line3     |
+ * | county          | line4     |
+ * | city            | city      |
  *
- * Optional fields are normalized using nullIfUndefined to ensure they are
- * explicitly set to `null` rather than being left `undefined`.
+ * line5 is unused and explicitly set to null.
  *
- * @param {Object} change - The address change object containing manually entered address fields
+ * Optional fields are normalized using nullIfUndefined so that undefined values
+ * are converted to null before sending to the DAL.
+ *
+ * @param {Object} change - The manually entered address
  * @returns {Object} Address object formatted for DAL/v1 without UPRN
  * @private
  */
 const buildManualAddress = (change) => {
   return {
+    pafOrganisationName: null,
     buildingNumberRange: null,
     buildingName: null,
     flatName: null,
     street: null,
-    city: change.city, // required for DAL/v1
-    county: nullIfUndefined(change.county),
-    postalCode: change.postcode, // required for DAL/v1
-    country: change.country, // required for DAL/v1
+    dependentLocality: null,
+    doubleDependentLocality: null,
+    county: null,
+    uprn: null,
     line1: change.address1, // required for DAL/v1
     line2: nullIfUndefined(change.address2),
     line3: nullIfUndefined(change.address3),
-    line4: nullIfUndefined(change.city), // manual city mapped for validation
-    line5: nullIfUndefined(change.county),
-    uprn: null
+    line4: nullIfUndefined(change.county), // manual city mapped for validation
+    line5: null,
+    city: change.city, // required for DAL/v1
+    postalCode: change.postcode, // required for DAL/v1
+    country: change.country // required for DAL/v1
   }
 }
 
 /**
  * Prepares the address details needed to update a business address.
- * On the DAL/v1 there are two types of validation:
  *
- * 1. If the address comes from the postcode lookup, a `uprn`
- *    (Unique Property Reference Number) will be present. In this case,
- *    the only required field is the `uprn`. The rest of the address data
- *    is still included, but the DAL/v1 does not apply further validation.
+ * There are two modes of validation in the DAL/v1:
  *
- * 2. If there is no `uprn`, it means the user entered the address manually.
- *    In this case, the DAL/v1 enforces validation and requires the following
- *    fields to be present:
- *    - `postcode`
+ * 1. Postcode lookup (with UPRN):
+ *    If `uprn` is present, it is the primary identifier. Other address fields
+ *    are included but not strictly validated.
+ *
+ * 2. Manually entered address (without UPRN):
+ *    If there is no `uprn`, the DAL requires:
  *    - `line1`
  *    - `city`
+ *    - `postalCode`
  *    - `country`
  *
- * When a user enters the address manually, the `city` is always captured
- * but stored as `line5`. We explicitly map `line4` into the `city` field
- * so that the DAL's validation rules are satisfied.
+ * For manual addresses, address lines are mapped as follows:
+ * | User input field | DAL field |
+ * |-----------------|-----------|
+ * | address1        | line1     |
+ * | address2        | line2     |
+ * | address3        | line3     |
+ * | county          | line4     |
+ * | city            | city      |
  *
- * Optional fields are normalized to ensure they are explicitly set to `null`
- * rather than being left `undefined`.
+ * line5 is unused.
+ *
+ * Optional fields are normalized to ensure undefined values are sent as null.
  *
  * @param {Object} businessDetails - The business details object containing the address change
  * @returns {Object} Variables object formatted for DAL mutation

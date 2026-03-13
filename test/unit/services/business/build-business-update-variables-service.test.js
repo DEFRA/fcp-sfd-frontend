@@ -83,20 +83,23 @@ describe('buildBusinessUpdateVariablesService', () => {
         sbi: '106705779',
         address: {
           withoutUprn: {
+            pafOrganisationName: null,
             buildingNumberRange: null,
             buildingName: null,
             flatName: null,
             street: null,
-            city: 'Leeds',
-            county: 'Yorkshire',
-            postalCode: 'LS1 1AA',
-            country: 'UK',
+            dependentLocality: null,
+            doubleDependentLocality: null,
+            county: null,
+            uprn: null,
             line1: '100 New Street',
             line2: 'Suite 5',
             line3: null,
-            line4: 'Leeds',
-            line5: 'Yorkshire',
-            uprn: null
+            line4: 'Yorkshire',
+            line5: null,
+            city: 'Leeds',
+            postalCode: 'LS1 1AA',
+            country: 'UK'
           }
         }
       })

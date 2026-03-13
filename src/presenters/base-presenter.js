@@ -75,7 +75,8 @@ export const formatDisplayAddress = (address) => {
       lookup.buildingName,
       buildingAndStreet,
       lookup.doubleDependentLocality,
-      lookup.dependentLocality
+      lookup.dependentLocality,
+      lookup.county
     ]
   } else {
     // Otherwise the user manually entered the address
@@ -108,17 +109,31 @@ export const formatDisplayAddress = (address) => {
  * @returns {Object} A flattened address object with consistent keys
  */
 export const formatOriginalAddress = (originalAddress) => {
-  const { manual, country, postcode, lookup } = originalAddress
+  const { lookup, manual, city, country, postcode } = originalAddress
 
   if (lookup.uprn) {
-    const addressLine1 = [lookup.flatName, lookup.buildingName, lookup.buildingNumberRange].filter(Boolean).join(', ')
+    const addressLine1 = [
+      lookup.pafOrganisationName,
+      lookup.flatName,
+      lookup.buildingName
+    ].filter(Boolean).join(', ')
+
+    const addressLine2 = [
+      lookup.buildingNumberRange,
+      lookup.street
+    ].filter(Boolean).join(' ')
+
+    const addressLine3 = [
+      lookup.doubleDependentLocality,
+      lookup.dependentLocality
+    ].filter(Boolean).join(', ')
 
     return {
       address1: addressLine1 || null,
-      address2: lookup.street ?? null,
-      address3: null,
-      city: lookup.city ?? null,
+      address2: addressLine2 || null,
+      address3: addressLine3 || null,
       county: lookup.county ?? null,
+      city: city ?? null,
       country: country ?? null,
       postcode: postcode ?? null
     }
@@ -128,8 +143,8 @@ export const formatOriginalAddress = (originalAddress) => {
     address1: manual.line1 ?? null,
     address2: manual.line2 ?? null,
     address3: manual.line3 ?? null,
-    city: manual.line4 ?? null,
-    county: manual.line5 ?? null,
+    city: city ?? null,
+    county: manual.line4 ?? null,
     country: country ?? null,
     postcode: postcode ?? null
   }
@@ -150,25 +165,50 @@ export const formatOriginalAddress = (originalAddress) => {
  * `city`, `county`, `country`, and `postcode`.
  */
 export const formatChangedAddress = (changeBusinessAddress) => {
-  // If the change address has a UPRN we need to map the lookup address to the manual one
   if (changeBusinessAddress.uprn) {
-    const { flatName, buildingName, buildingNumberRange, street, city, county, country, postcode } = changeBusinessAddress
+    const {
+      pafOrganisationName,
+      flatName,
+      buildingName,
+      buildingNumberRange,
+      street,
+      doubleDependentLocality,
+      dependentLocality,
+      city,
+      county,
+      country,
+      postcode
+    } = changeBusinessAddress
 
-    const addressLine1 = [flatName, buildingName, buildingNumberRange].filter(Boolean).join(', ')
+    const addressLine1 = [
+      pafOrganisationName,
+      flatName,
+      buildingName
+    ].filter(Boolean).join(', ')
+
+    const addressLine2 = [
+      buildingNumberRange,
+      street
+    ].filter(Boolean).join(' ')
+
+    const addressLine3 = [
+      doubleDependentLocality,
+      dependentLocality
+    ].filter(Boolean).join(', ')
 
     return {
       address1: addressLine1 || null,
-      address2: street ?? null,
-      address3: null,
+      address2: addressLine2 || null,
+      address3: addressLine3 || null,
       city: city ?? null,
       county: county ?? null,
       country: country ?? null,
       postcode: postcode ?? null
     }
-  } else {
-    // If the change address has no UPRN it means its been manually entered and we don't need to map it
-    return changeBusinessAddress
   }
+
+  // manual address (no lookup used)
+  return changeBusinessAddress
 }
 
 /**

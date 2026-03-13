@@ -22,17 +22,27 @@ const businessAddressEnterPresenter = (data, payload) => {
  *
  * The function prioritises the input parameters in the following order:
  *
- * 1. If `payload` exists, it returns `payload` as-is (usually due to a validation error).
+ * 1. If `payload` exists, it is returned as-is.
+ *    This usually occurs when validation has failed and the form needs to be
+ *    re-rendered with the user's submitted values.
  *
  * 2. If `changeBusinessAddress` exists:
- *    - Returns a formatted address combining `flatName`, `buildingName`, and `buildingNumberRange` into `address1`
- *      if it contains a `uprn` (selected from address lookup).
+ *    - If it contains a `uprn`, it indicates the address was selected from
+ *      the postcode lookup. The lookup fields are mapped into the manual
+ *      address structure used by the form:
+ *        - `address1` → `pafOrganisationName`, `flatName`, `buildingName`
+ *        - `address2` → `buildingNumberRange` + `street`
+ *        - `address3` → `doubleDependentLocality`, `dependentLocality`
  *
- *    - Otherwise, returns `changeBusinessAddress` as-is (manually entered address).
+ *    - If no `uprn` is present, the address is assumed to have been manually
+ *      entered and is returned as-is.
  *
  * 3. If `originalAddress` exists:
- *    - Returns a formatted address from `lookup` if `lookup.uprn` is present (selected from postcode lookup).
- *    - Otherwise, returns a formatted address from `manual` lines.
+ *    - If `lookup.uprn` is present, the lookup address is mapped into the
+ *      manual address structure used by the form.
+ *    - Otherwise, the manual address lines (`line1`–`line5`) are used.
+ *
+ * Returns `null` if no address data is available.
  */
 const formatAddress = (payload, changeBusinessAddress, originalAddress) => {
   if (payload) {

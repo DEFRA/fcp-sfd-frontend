@@ -42,14 +42,6 @@ describe('business phone schema', () => {
         expect(error).toBeUndefined()
       })
 
-      test('it allows hyphens', () => {
-        payload.businessTelephone = '012-345-67890'
-
-        const { error } = schema.validate(payload, { abortEarly: false })
-
-        expect(error).toBeUndefined()
-      })
-
       test('it allows plus sign', () => {
         payload.businessTelephone = '+44 1234567890'
 
@@ -70,14 +62,6 @@ describe('business phone schema', () => {
 
       test('it allows brackets', () => {
         payload.businessMobile = '(012) 345 67890'
-
-        const { error } = schema.validate(payload, { abortEarly: false })
-
-        expect(error).toBeUndefined()
-      })
-
-      test('it allows hyphens', () => {
-        payload.businessMobile = '012-345-67890'
 
         const { error } = schema.validate(payload, { abortEarly: false })
 
@@ -179,7 +163,7 @@ describe('business phone schema', () => {
       })
     })
 
-    describe('because "businessTelephone" contains valid special characters', () => {
+    describe('because "businessTelephone" contains invalid special characters', () => {
       beforeEach(() => {
         payload.businessTelephone = '0123@#$%^&*abcdef'
       })
@@ -190,7 +174,7 @@ describe('business phone schema', () => {
         expect(value).toEqual(payload)
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business telephone number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
+          message: 'Business telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
           path: ['businessTelephone'],
           type: 'string.pattern.base'
         }))
@@ -233,7 +217,7 @@ describe('business phone schema', () => {
       })
     })
 
-    describe('because "businessMobile" contains valid special characters', () => {
+    describe('because "businessMobile" contains invalid special characters', () => {
       beforeEach(() => {
         payload.businessMobile = '0123@#$%^&*abcdef'
       })
@@ -244,7 +228,7 @@ describe('business phone schema', () => {
         expect(value).toEqual(payload)
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Business mobile phone number must only include numbers 0 to 9 and special characters such as spaces, hyphens, brackets, - and +',
+          message: 'Business mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
           path: ['businessMobile'],
           type: 'string.pattern.base'
         }))

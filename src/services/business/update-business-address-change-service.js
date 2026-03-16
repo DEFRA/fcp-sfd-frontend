@@ -14,6 +14,7 @@ import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
+import { buildUprnAddress, buildManualAddress } from '../build-address-variables-service.js'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessAddress')
@@ -29,99 +30,6 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
   yar.clear('businessDetailsUpdate')
 
   flashNotification(yar, 'Success', 'You have updated your business address')
-}
-
-/**
- * Normalizes a value to null if it is undefined.
- * @param {*} value - The value to normalize
- * @returns {*|null} The value if defined, otherwise null
- * @private
- */
-const nullIfUndefined = (value) => {
-  return value ?? null
-}
-
-/**
- * Builds address variables for an address chosen via postcode lookup (with UPRN).
- * When a UPRN is present, it is the only required field. The rest of the address
- * data is included but the DAL/v1 does not apply further validation.
- *
- * Optional fields are normalized using nullIfUndefined to ensure they are
- * explicitly set to `null` rather than being left `undefined`.
- *
- * @param {Object} change - The address change object containing UPRN and address fields
- * @returns {Object} Address object formatted for DAL/v1 with UPRN
- * @private
- */
-const buildUprnAddress = (change) => {
-  return {
-    pafOrganisationName: nullIfUndefined(change.pafOrganisationName),
-    buildingNumberRange: nullIfUndefined(change.buildingNumberRange),
-    buildingName: nullIfUndefined(change.buildingName),
-    flatName: nullIfUndefined(change.flatName),
-    street: nullIfUndefined(change.street),
-    city: nullIfUndefined(change.city),
-    county: nullIfUndefined(change.county),
-    postalCode: nullIfUndefined(change.postcode),
-    country: nullIfUndefined(change.country),
-    dependentLocality: nullIfUndefined(change.dependentLocality),
-    doubleDependentLocality: nullIfUndefined(change.doubleDependentLocality),
-    line1: null,
-    line2: null,
-    line3: null,
-    line4: null,
-    line5: null,
-    uprn: change.uprn // required for DAL/v1
-  }
-}
-
-/**
- * Builds address variables for a manually entered address (without UPRN).
- *
- * When there is no UPRN, the DAL/v1 enforces validation and requires:
- * - `postcode`
- * - `line1`
- * - `city`
- * - `country`
- *
- * The mapping from user input to DAL fields is:
- * | User input field | DAL field |
- * |-----------------|-----------|
- * | address1        | line1     |
- * | address2        | line2     |
- * | address3        | line3     |
- * | county          | line4     |
- * | city            | city      |
- *
- * line5 is unused and explicitly set to null.
- *
- * Optional fields are normalized using nullIfUndefined so that undefined values
- * are converted to null before sending to the DAL.
- *
- * @param {Object} change - The manually entered address
- * @returns {Object} Address object formatted for DAL/v1 without UPRN
- * @private
- */
-const buildManualAddress = (change) => {
-  return {
-    pafOrganisationName: null,
-    buildingNumberRange: null,
-    buildingName: null,
-    flatName: null,
-    street: null,
-    dependentLocality: null,
-    doubleDependentLocality: null,
-    county: null,
-    uprn: null,
-    line1: change.address1, // required for DAL/v1
-    line2: nullIfUndefined(change.address2),
-    line3: nullIfUndefined(change.address3),
-    line4: nullIfUndefined(change.county), // manual city mapped for validation
-    line5: null,
-    city: change.city, // required for DAL/v1
-    postalCode: change.postcode, // required for DAL/v1
-    country: change.country // required for DAL/v1
-  }
 }
 
 /**

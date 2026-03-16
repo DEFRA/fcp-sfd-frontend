@@ -5,27 +5,31 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { addressLookupMapper } from '../../../src/mappers/address-lookup-mapper.js'
 
 describe('address lookup mapper', () => {
-  const addresses = [
-    {
-      properties: {
-        UPRN: '100012345678',
-        ADDRESS: 'LIFE 4 CUTS, 14, BRUSHFIELD STREET, LONDON, E1 6AN',
-        ORGANISATION_NAME: 'LIFE 4 CUTS',
-        DEPARTMENT_NAME: 'Hairdressing Department',
-        SUB_BUILDING_NAME: 'Suite 2',
-        BUILDING_NAME: 'The Brushfield Building',
-        BUILDING_NUMBER: '14',
-        DEPENDENT_THOROUGHFARE_NAME: 'Brushfield Lane',
-        THOROUGHFARE_NAME: 'BRUSHFIELD STREET',
-        DOUBLE_DEPENDENT_LOCALITY: 'Spitalfields',
-        DEPENDENT_LOCALITY: 'London Borough of Tower Hamlets',
-        POST_TOWN: 'LONDON',
-        POSTCODE: 'E1 6AN',
-        LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'CITY OF LONDON',
-        COUNTRY_CODE: 'E'
+  let addresses
+
+  beforeEach(() => {
+    addresses = [
+      {
+        properties: {
+          UPRN: '100012345678',
+          ADDRESS: 'LIFE 4 CUTS, 14, BRUSHFIELD STREET, LONDON, E1 6AN',
+          ORGANISATION_NAME: 'LIFE 4 CUTS',
+          DEPARTMENT_NAME: 'Hairdressing Department',
+          SUB_BUILDING_NAME: 'Suite 2',
+          BUILDING_NAME: 'The Brushfield Building',
+          BUILDING_NUMBER: '14',
+          DEPENDENT_THOROUGHFARE_NAME: 'Brushfield Lane',
+          THOROUGHFARE_NAME: 'BRUSHFIELD STREET',
+          DOUBLE_DEPENDENT_LOCALITY: 'Spitalfields',
+          DEPENDENT_LOCALITY: 'London Borough of Tower Hamlets',
+          POST_TOWN: 'LONDON',
+          POSTCODE: 'E1 6AN',
+          LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'CITY OF LONDON',
+          COUNTRY_CODE: 'E'
+        }
       }
-    }
-  ]
+    ]
+  })
 
   test('it maps a full OS Places address correctly', () => {
     const results = addressLookupMapper(addresses)
@@ -33,8 +37,9 @@ describe('address lookup mapper', () => {
     expect(results).toEqual([
       {
         displayAddress: 'LIFE 4 CUTS, 14, BRUSHFIELD STREET, LONDON, E1 6AN',
-        buildingName: 'LIFE 4 CUTS, Hairdressing Department, The Brushfield Building',
+        pafOrganisationName: 'LIFE 4 CUTS, Hairdressing Department',
         flatName: 'Suite 2',
+        buildingName: 'The Brushfield Building',
         buildingNumberRange: '14',
         street: 'Brushfield Lane, BRUSHFIELD STREET',
         dependentLocality: 'London Borough of Tower Hamlets',
@@ -67,8 +72,9 @@ describe('address lookup mapper', () => {
       expect(results).toEqual([
         {
           displayAddress: 'LIFE 4 CUTS, 14, BRUSHFIELD STREET, LONDON, E1 6AN',
-          buildingName: null,
+          pafOrganisationName: null,
           flatName: null,
+          buildingName: null,
           buildingNumberRange: null,
           street: null,
           dependentLocality: null,
@@ -128,7 +134,7 @@ describe('address lookup mapper', () => {
           POSTCODE: 'X1 1XX',
           LOCAL_CUSTODIAN_CODE_DESCRIPTION: 'NOWHERE',
           COUNTRY_CODE: 'E',
-          UPRN: '100012345678'
+          UPRN: '200000000000'
         }
       })
     })
@@ -136,7 +142,7 @@ describe('address lookup mapper', () => {
     test('it only returns valid addresses', () => {
       const results = addressLookupMapper(addresses)
 
-      expect(results.length).toBe(1)
+      expect(results.length).toBe(2)
     })
   })
 })

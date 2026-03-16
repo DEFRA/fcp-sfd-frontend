@@ -15,7 +15,7 @@ export const addressLookupSchema = Joi.object({
     DEPENDENT_LOCALITY: Joi.string().allow(null),
     POST_TOWN: Joi.string().required(),
     POSTCODE: Joi.string().required(),
-    LOCAL_CUSTODIAN_CODE_DESCRIPTION: Joi.string().required(),
+    LOCAL_CUSTODIAN_CODE_DESCRIPTION: Joi.string().allow(null),
     COUNTRY_CODE: Joi.string().required()
   }).unknown(true).required()
 }).unknown(true)

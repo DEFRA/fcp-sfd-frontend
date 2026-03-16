@@ -87,18 +87,20 @@ describe('basePresenter', () => {
     })
   })
 
-  describe('#formatAddress', () => {
+  describe('#formatDisplayAddress', () => {
     let address
 
     beforeEach(() => {
       address = {
         lookup: {
-          flatName: 'THE COACH HOUSE',
+          pafOrganisationName: 'THE COACH HOUSE',
+          flatName: 'FLAT 1',
           buildingNumberRange: '7',
           buildingName: 'STOCKWELL HALL',
           street: 'HAREWOOD AVENUE',
+          doubleDependentLocality: null,
+          dependentLocality: null,
           county: 'Dorset',
-          city: 'DARLINGTON',
           uprn: '12345'
         },
         manual: {
@@ -108,6 +110,7 @@ describe('basePresenter', () => {
           line4: null,
           line5: null
         },
+        city: 'DARLINGTON',
         postcode: 'CO9 3LS',
         country: 'United Kingdom'
       }
@@ -119,10 +122,11 @@ describe('basePresenter', () => {
 
         expect(result).toStrictEqual([
           'THE COACH HOUSE',
+          'FLAT 1',
           'STOCKWELL HALL',
           '7 HAREWOOD AVENUE',
-          'DARLINGTON',
           'Dorset',
+          'DARLINGTON',
           'CO9 3LS',
           'United Kingdom'
         ])
@@ -134,10 +138,11 @@ describe('basePresenter', () => {
 
         expect(result).toStrictEqual([
           'THE COACH HOUSE',
+          'FLAT 1',
           'STOCKWELL HALL',
           'HAREWOOD AVENUE',
-          'DARLINGTON',
           'Dorset',
+          'DARLINGTON',
           'CO9 3LS',
           'United Kingdom'
         ])
@@ -145,7 +150,7 @@ describe('basePresenter', () => {
     })
 
     describe('when the address is a manual address', () => {
-      test('it should use manual lines in order, filtering out nulls, and append postcode and country', () => {
+      test('it should use manual lines in order, filtering out nulls, and append city, postcode, country', () => {
         address.lookup.uprn = null
         const result = formatDisplayAddress(address)
 
@@ -153,6 +158,7 @@ describe('basePresenter', () => {
           '76 Robinswood Road',
           'UPPER CHUTE',
           'Child Okeford',
+          'DARLINGTON',
           'CO9 3LS',
           'United Kingdom'
         ])
@@ -170,6 +176,7 @@ describe('basePresenter', () => {
           'UPPER CHUTE',
           'Child Okeford',
           'Optional Line 4',
+          'DARLINGTON',
           'CO9 3LS',
           'United Kingdom'
         ])
@@ -187,9 +194,10 @@ describe('basePresenter', () => {
           line1: '10 Skirbeck Way',
           line2: 'Lonely Lane',
           line3: 'Child Okeford',
-          line4: 'Maidstone',
-          line5: 'Somerset'
+          line4: 'Somerset',
+          line5: null
         },
+        city: 'Maidstone',
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       }
@@ -203,7 +211,8 @@ describe('basePresenter', () => {
           buildingName: 'Rosewood Court',
           buildingNumberRange: '120-124',
           street: 'High Street',
-          city: 'Bristol',
+          doubleDependentLocality: null,
+          dependentLocality: null,
           county: 'Somerset'
         }
       })
@@ -212,10 +221,10 @@ describe('basePresenter', () => {
         const result = formatOriginalAddress(originalAddress)
 
         expect(result).toEqual({
-          address1: 'Flat 1A, Rosewood Court, 120-124',
-          address2: 'High Street',
+          address1: 'Flat 1A, Rosewood Court',
+          address2: '120-124 High Street',
           address3: null,
-          city: 'Bristol',
+          city: 'Maidstone',
           county: 'Somerset',
           country: 'United Kingdom',
           postcode: 'SK22 1DL'
@@ -230,7 +239,7 @@ describe('basePresenter', () => {
           address1: null,
           address2: null,
           address3: null,
-          city: null,
+          city: 'Maidstone',
           county: null,
           country: 'United Kingdom',
           postcode: 'SK22 1DL'
@@ -259,6 +268,7 @@ describe('basePresenter', () => {
 
       test('it should handle missing manual lines gracefully', () => {
         originalAddress.manual = {}
+        originalAddress.city = null
         const result = formatOriginalAddress(originalAddress)
 
         expect(result).toEqual({
@@ -281,10 +291,13 @@ describe('basePresenter', () => {
       beforeEach(() => {
         changeBusinessAddress = {
           uprn: '123456',
+          pafOrganisationName: 'Testing ltd',
           flatName: 'Flat 1A',
           buildingName: 'Rosewood Court',
           buildingNumberRange: '120-124',
           street: 'High Street',
+          doubleDependentLocality: null,
+          dependentLocality: null,
           city: 'Bristol',
           county: 'Somerset',
           postcode: 'BS1 2AB',
@@ -296,8 +309,8 @@ describe('basePresenter', () => {
         const result = formatChangedAddress(changeBusinessAddress)
 
         expect(result).toEqual({
-          address1: 'Flat 1A, Rosewood Court, 120-124',
-          address2: 'High Street',
+          address1: 'Testing ltd, Flat 1A, Rosewood Court',
+          address2: '120-124 High Street',
           address3: null,
           city: 'Bristol',
           county: 'Somerset',
@@ -369,7 +382,7 @@ describe('basePresenter', () => {
       })
     })
 
-    test('it should prepend a summary row showing the correct number of addresses', async () => {
+    test('it should prepend a summary row showing the correct number of addresses', () => {
       const result = formatDisplayAddresses(addresses, previouslyPickedAddress)
 
       expect(result[0]).toEqual({
@@ -379,7 +392,7 @@ describe('basePresenter', () => {
       })
     })
 
-    test('it should show "1 address found" if only one address exists', async () => {
+    test('it should show "1 address found" if only one address exists', () => {
       const result = formatDisplayAddresses([addresses[0]], previouslyPickedAddress)
 
       expect(result[0]).toEqual({
@@ -389,7 +402,7 @@ describe('basePresenter', () => {
       })
     })
 
-    test('it should mark the previously picked address as selected', async () => {
+    test('it should mark the previously picked address as selected', () => {
       previouslyPickedAddress = { uprn: '222', displayAddress: '2 High Road, Bristol, BS1 4ST' }
 
       const result = formatDisplayAddresses(addresses, previouslyPickedAddress)
@@ -398,7 +411,7 @@ describe('basePresenter', () => {
       expect(result[0].selected).toBe(false)
     })
 
-    test('it should leave summary row selected if no address matches the previously picked address', async () => {
+    test('it should leave summary row selected if no address matches the previously picked address', () => {
       previouslyPickedAddress = { uprn: '999', displayAddress: 'Nonexistent Address' }
 
       const result = formatDisplayAddresses(addresses, previouslyPickedAddress)

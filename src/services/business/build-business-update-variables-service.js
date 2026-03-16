@@ -48,20 +48,23 @@ const buildAddressInput = (sbi, businessDetails) => {
 }
 
 const buildManualAddress = (change) => ({
+  pafOrganisationName: null,
   buildingNumberRange: null,
   buildingName: null,
   flatName: null,
   street: null,
-  city: change.city,
-  county: nullIfUndefined(change.county),
-  postalCode: change.postcode,
-  country: change.country,
+  dependentLocality: null,
+  doubleDependentLocality: null,
+  county: null,
+  uprn: null,
   line1: change.address1,
   line2: nullIfUndefined(change.address2),
   line3: nullIfUndefined(change.address3),
-  line4: nullIfUndefined(change.city),
-  line5: nullIfUndefined(change.county),
-  uprn: null
+  line4: nullIfUndefined(change.county),
+  line5: null,
+  city: change.city,
+  postalCode: change.postcode,
+  country: change.country
 })
 
 const buildVatInput = (sbi, businessDetails) => {

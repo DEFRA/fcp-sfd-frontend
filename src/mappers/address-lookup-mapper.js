@@ -20,6 +20,7 @@ const addressLookupMapper = (addresses) => {
     const {
       UPRN,
       ADDRESS,
+      PO_BOX_NUMBER,
       ORGANISATION_NAME,
       DEPARTMENT_NAME,
       SUB_BUILDING_NAME,
@@ -35,30 +36,33 @@ const addressLookupMapper = (addresses) => {
       COUNTRY_CODE
     } = address.properties
 
-    const buildingName = filterAndJoin([ORGANISATION_NAME, DEPARTMENT_NAME, BUILDING_NAME])
-    const street = filterAndJoin([DEPENDENT_THOROUGHFARE_NAME, THOROUGHFARE_NAME])
-
-    // Set county to null if it's just a placeholder or the same as the post town
-    const county =
-      LOCAL_CUSTODIAN_CODE_DESCRIPTION === 'ORDNANCE SURVEY' || LOCAL_CUSTODIAN_CODE_DESCRIPTION === POST_TOWN
-        ? null
-        : LOCAL_CUSTODIAN_CODE_DESCRIPTION
+    const buildingName = PO_BOX_NUMBER ? `PO BOX ${PO_BOX_NUMBER}` : BUILDING_NAME || null
 
     return {
       displayAddress: ADDRESS,
+      pafOrganisationName: filterAndJoin([ORGANISATION_NAME, DEPARTMENT_NAME]),
       flatName: SUB_BUILDING_NAME ?? null,
       buildingName,
       buildingNumberRange: BUILDING_NUMBER ?? null,
-      street,
+      street: filterAndJoin([DEPENDENT_THOROUGHFARE_NAME, THOROUGHFARE_NAME]),
       dependentLocality: DEPENDENT_LOCALITY ?? null,
       doubleDependentLocality: DOUBLE_DEPENDENT_LOCALITY ?? null,
       city: POST_TOWN,
-      county,
+      county: formatCounty(LOCAL_CUSTODIAN_CODE_DESCRIPTION, POST_TOWN),
       postcode: POSTCODE,
       country: COUNTRY_NAMES[COUNTRY_CODE] ?? null,
       uprn: UPRN
     }
-  }).filter(Boolean) // remove null values
+  }).filter(Boolean)
+}
+
+// Remove placeholder county values
+const formatCounty = (localCustodianCodeDescription, postTown) => {
+  if (localCustodianCodeDescription === 'ORDNANCE SURVEY' || localCustodianCodeDescription === postTown) {
+    return null
+  }
+
+  return localCustodianCodeDescription
 }
 
 const filterAndJoin = (addressesProperties) => {

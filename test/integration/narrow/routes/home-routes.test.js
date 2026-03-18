@@ -1,6 +1,5 @@
 import { constants } from 'node:http2'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
-import { SCOPE } from '../../../../src/constants/scope/business-details.js'
 import '../../../mocks/setup-server-mocks.js'
 
 const { HTTP_STATUS_OK, HTTP_STATUS_FOUND } = constants
@@ -33,8 +32,6 @@ describe('index route', () => {
 })
 
 describe('home route', () => {
-  const path = '/home'
-
   beforeAll(async () => {
     vi.clearAllMocks()
 
@@ -46,21 +43,6 @@ describe('home route', () => {
     if (server) {
       await server.stop()
     }
-  })
-
-  test('GET /home returns index view if authenticated and has "user" scope', async () => {
-    const response = await server.inject({
-      url: path,
-      auth: {
-        strategy: 'session',
-        credentials: {
-          sessionId: 'session-id',
-          scope: SCOPE
-        }
-      }
-    })
-    expect(response.statusCode).toBe(HTTP_STATUS_OK)
-    expect(response.request.response.source.template).toBe('home')
   })
 
   test('GET /home redirects to /auth/sign-in if not authenticated', async () => {

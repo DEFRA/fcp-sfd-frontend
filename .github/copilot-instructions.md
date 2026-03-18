@@ -54,7 +54,7 @@ src/
 ├── constants/           # Shared constants
 ├── dal/                 # GraphQL queries and DAL connector
 ├── mappers/             # Transform DAL responses to frontend format
-├── mock-data/           # Mock responses for local dev (when DAL disabled)
+├── mock-data/           # OS Places stub addresses only (`os-places-stub`)
 ├── plugins/             # Hapi plugins (security, logging, routing, etc.)
 ├── presenters/          # Prepare data for Nunjucks templates
 ├── routes/              # HTTP route handlers
@@ -167,7 +167,7 @@ export const mapBusinessDetails = (dalData) => {
 ### Testing Patterns
 - **Unit tests:** Mock DAL calls and services in `test/unit/`
 - **Integration tests:** Real DAL calls in Docker in `test/integration/narrow/`
-- **Mock data:** Use `src/mock-data/` for local dev when DAL disabled
+- **Mock data:** Use `test/mocks/` for unit-test fixtures; `src/mock-data/` only for OS Places stub data
 - Test utilities in `test/helpers/`, test doubles in `test/mocks/`
 
 ### Error Handling

@@ -76,6 +76,7 @@ export const formatDisplayAddress = (address) => {
       buildingAndStreet,
       lookup.doubleDependentLocality,
       lookup.dependentLocality,
+      city,
       lookup.county
     ]
   } else {
@@ -84,14 +85,14 @@ export const formatDisplayAddress = (address) => {
       manual.line1,
       manual.line2,
       manual.line3,
-      manual.line4,
+      city,
+      manual.line4, // County
       manual.line5
     ]
   }
 
   return [
     ...addressLines.filter(Boolean),
-    city,
     postcode,
     country
   ]

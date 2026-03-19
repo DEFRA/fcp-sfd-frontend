@@ -125,8 +125,8 @@ describe('basePresenter', () => {
           'FLAT 1',
           'STOCKWELL HALL',
           '7 HAREWOOD AVENUE',
-          'Dorset',
           'DARLINGTON',
+          'Dorset',
           'CO9 3LS',
           'United Kingdom'
         ])
@@ -141,8 +141,8 @@ describe('basePresenter', () => {
           'FLAT 1',
           'STOCKWELL HALL',
           'HAREWOOD AVENUE',
-          'Dorset',
           'DARLINGTON',
+          'Dorset',
           'CO9 3LS',
           'United Kingdom'
         ])
@@ -166,7 +166,7 @@ describe('basePresenter', () => {
 
       test('it should handle optional line4 and line5 correctly', () => {
         address.lookup.uprn = null
-        address.manual.line4 = 'Optional Line 4'
+        address.manual.line4 = 'Optional County'
         address.manual.line5 = null
 
         const result = formatDisplayAddress(address)
@@ -175,8 +175,8 @@ describe('basePresenter', () => {
           '76 Robinswood Road',
           'UPPER CHUTE',
           'Child Okeford',
-          'Optional Line 4',
           'DARLINGTON',
+          'Optional County',
           'CO9 3LS',
           'United Kingdom'
         ])

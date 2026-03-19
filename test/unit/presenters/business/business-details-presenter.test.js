@@ -60,8 +60,8 @@ describe('businessDetailsPresenter', () => {
             '7 HAREWOOD AVENUE',
             'WOODTHORPE',
             'ELLICOMBE',
-            'Dorset',
             'DARLINGTON',
+            'Dorset',
             'CO9 3LS',
             'United Kingdom'
           ],

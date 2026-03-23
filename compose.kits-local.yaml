@@ -8,6 +8,8 @@ services:
       context: ${DAL_UPSTREAM_MOCK_LOCAL_PATH}
       target: development
     command: ["node", "src"]
+    environment:
+      KIT_EXT_PERSON_ID_OVERRIDE: 3000000
   fcp-dal-api:
     environment:
       KITS_GATEWAY_INTERNAL_URL: http://kits-mock:3100/extapi/

@@ -33,6 +33,11 @@ services:
     networks:
       - fcp-sfd
 
+  mongo:
+    image: mongo:7.0
+    networks:
+      - fcp-sfd
+
 networks:
   fcp-sfd:
     driver: bridge

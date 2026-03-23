@@ -1,0 +1,5 @@
+services:
+  fcp-sfd-frontend:
+    environment:
+      DAL_ENDPOINT: http://fcp-dal-api:3005/graphql
+      DEFRA_ID_WELL_KNOWN_URL: http://fcp-defra-id-stub:3007/idphub/b2c/b2c_1a_cui_cpdev_signupsigninsfi/.well-known/openid-configuration

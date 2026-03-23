@@ -41,6 +41,8 @@ services:
       MOCK_SERVER_COLLECTION: all
       NODE_ENV: development
       PORT: 3100
+      KIT_EXT_PERSON_ID_OVERRIDE: 3000000
+
 
   fcp-dal-api:
     image: defradigital/fcp-dal-api:0.116.0
@@ -56,21 +58,13 @@ services:
       DISABLE_PROXY: true
       GRAPHQL_DASHBOARD_ENABLED: true
       ADMIN_AD_GROUP_ID: unused
-      # Upstream mock routes are mounted under `/extapi` (not `/v1`)
       KITS_INTERNAL_GATEWAY_URL: http://kits-mock:3100/extapi/
       KITS_EXTERNAL_GATEWAY_URL: http://kits-mock:3100/extapi/
-      # Used by the newer DAL config schema validation.
       KIT_EXT_PERSON_ID_OVERRIDE: 3000000
       KITS_GATEWAY_TIMEOUT_MS: 3000
       KITS_DISABLE_MTLS: true
-      # Newer DAL versions require MongoDB connectivity at startup.
       MONGO_URI: mongodb://mongo:27017
       DAL_REQUEST_TIMEOUT_MS: 3000
-
-  mongo:
-    image: mongo:7.0
-    networks:
-      - fcp-sfd
 
   redis:
     image: redis:7.2.3-alpine3.18

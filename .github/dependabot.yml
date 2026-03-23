@@ -1,7 +1,9 @@
 version: 2
+
 updates:
   - package-ecosystem: "docker-compose"
     directory: "/"
+    target-branch: "fix-dependabot"
     schedule:
       interval: "daily"
     commit-message:

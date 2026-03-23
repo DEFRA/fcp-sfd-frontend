@@ -34,7 +34,6 @@ services:
       - fcp-sfd
 
   mongo:
-    image: mongo:7.0
     networks:
       - fcp-sfd
 

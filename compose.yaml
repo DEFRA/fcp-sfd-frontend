@@ -48,6 +48,7 @@ services:
     image: defradigital/fcp-dal-api:0.116.0
     depends_on:
       - kits-mock
+      - mongo
     environment:
       ALL_SCHEMA_ON: true
       LOG_LEVEL: info
@@ -68,6 +69,9 @@ services:
 
   redis:
     image: redis:7.2.3-alpine3.18
+
+  mongo:
+    image: mongo:7.0
 
   fcp-defra-id-stub:
     image: defradigital/fcp-defra-id-stub

@@ -1,12 +1,9 @@
 version: 2
 updates:
-  - package-ecosystem: "docker"
+  - package-ecosystem: "docker-compose"
     directory: "/"
     schedule:
       interval: "daily"
     commit-message:
       prefix: "chore"
     open-pull-requests-limit: 5
-    # explicitly tell Dependabot which file to look at
-    # "docker-compose.yaml" is the default, so here we override it
-    docker-compose-file: "compose.yaml"

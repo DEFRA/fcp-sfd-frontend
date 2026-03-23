@@ -188,9 +188,9 @@
     },
     {
       "label": "🥸🧪 Run with stubs (DefraID + published kits)",
-      "detail": "Uses compose.stub.yaml with published kits image from compose.yaml",
+      "detail": "Uses DefraID stub and builds kits-mock from published docker image",
       "type": "shell",
-      "command": "docker compose -f compose.yaml -f compose.override.yaml -f compose.stub.yaml up -d --build --force-recreate && echo \"Stub mode enabled (published kits) – containers restarted 🎉\"",
+      "command": "docker compose -f compose.yaml -f compose.override.yaml -f compose.stub.yaml up --build",
       "group": "test",
       "presentation": {
         "echo": true,
@@ -203,9 +203,9 @@
     },
     {
       "label": "🥸🧪🔧 Run with stubs (DefraID + local kits)",
-      "detail": "Uses compose.stub.yaml + compose.kits-local.yaml to build kits from local repo",
+      "detail": "Uses DefraID stub and builds kits-mock from local",
       "type": "shell",
-      "command": "docker compose -f compose.yaml -f compose.override.yaml -f compose.stub.yaml -f compose.kits-local.yaml up -d --build --force-recreate && echo \"Stub mode enabled (local kits) – containers restarted 🎉\"",
+      "command": "docker compose -f compose.yaml -f compose.override.yaml -f compose.stub.yaml -f compose.kits-local.yaml up --build",
       "group": "test",
       "presentation": {
         "echo": true,

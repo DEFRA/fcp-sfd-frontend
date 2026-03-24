@@ -2521,6 +2521,430 @@
       ]
     },
     {
+      "crn": 3010001000,
+      "firstName": "View Level Permission",
+      "lastName": "Example 1",
+      "organisations": [
+        {
+          "organisationId": "3009000",
+          "sbi": 300900001,
+          "name": "Clean control - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010002000,
+      "firstName": "View Level Permission",
+      "lastName": "Example 2",
+      "organisations": [
+        {
+          "organisationId": "3009000",
+          "sbi": 300900001,
+          "name": "Clean control - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010003000,
+      "firstName": "Amend Level Permission",
+      "lastName": "All Valid - example 1",
+      "organisations": [
+        {
+          "organisationId": "3009000",
+          "sbi": 300900001,
+          "name": "Clean control - example 1"
+        },
+        {
+          "organisationId": "3009001",
+          "sbi": 300900002,
+          "name": "Clean control - example 2"
+        },
+        {
+          "organisationId": "3009002",
+          "sbi": 300900003,
+          "name": "Clean control - example 3"
+        },
+        {
+          "organisationId": "3009003",
+          "sbi": 300900004,
+          "name": "Clean control - example 4"
+        },
+        {
+          "organisationId": "3009004",
+          "sbi": 300900005,
+          "name": "Clean control - example 5"
+        }
+      ]
+    },
+    {
+      "crn": 3010004000,
+      "firstName": "Amend Level Permission",
+      "lastName": "All Valid - example 2",
+      "organisations": [
+        {
+          "organisationId": "3009000",
+          "sbi": 300900001,
+          "name": "Clean control - example 1"
+        },
+        {
+          "organisationId": "3009001",
+          "sbi": 300900002,
+          "name": "Clean control - example 2"
+        },
+        {
+          "organisationId": "3009002",
+          "sbi": 300900003,
+          "name": "Clean control - example 3"
+        },
+        {
+          "organisationId": "3009003",
+          "sbi": 300900004,
+          "name": "Clean control - example 4"
+        },
+        {
+          "organisationId": "3009004",
+          "sbi": 300900005,
+          "name": "Clean control - example 5"
+        }
+      ]
+    },
+    {
+      "crn": 3010005000,
+      "firstName": "Amend Level Permission",
+      "lastName": "All Valid - example 3",
+      "organisations": [
+        {
+          "organisationId": "3009000",
+          "sbi": 300900001,
+          "name": "Clean control - example 1"
+        },
+        {
+          "organisationId": "3009001",
+          "sbi": 300900002,
+          "name": "Clean control - example 2"
+        },
+        {
+          "organisationId": "3009002",
+          "sbi": 300900003,
+          "name": "Clean control - example 3"
+        },
+        {
+          "organisationId": "3009003",
+          "sbi": 300900004,
+          "name": "Clean control - example 4"
+        },
+        {
+          "organisationId": "3009004",
+          "sbi": 300900005,
+          "name": "Clean control - example 5"
+        }
+      ]
+    },
+    {
+      "crn": 3010006000,
+      "firstName": "Amend Level Permission",
+      "lastName": "All Valid - example 4",
+      "organisations": [
+        {
+          "organisationId": "3009000",
+          "sbi": 300900001,
+          "name": "Clean control - example 1"
+        },
+        {
+          "organisationId": "3009001",
+          "sbi": 300900002,
+          "name": "Clean control - example 2"
+        },
+        {
+          "organisationId": "3009002",
+          "sbi": 300900003,
+          "name": "Clean control - example 3"
+        },
+        {
+          "organisationId": "3009003",
+          "sbi": 300900004,
+          "name": "Clean control - example 4"
+        },
+        {
+          "organisationId": "3009004",
+          "sbi": 300900005,
+          "name": "Clean control - example 5"
+        }
+      ]
+    },
+    {
+      "crn": 3010007000,
+      "firstName": "Amend Level Permission",
+      "lastName": "All Valid - example 5",
+      "organisations": [
+        {
+          "organisationId": "3009000",
+          "sbi": 300900001,
+          "name": "Clean control - example 1"
+        },
+        {
+          "organisationId": "3009001",
+          "sbi": 300900002,
+          "name": "Clean control - example 2"
+        },
+        {
+          "organisationId": "3009002",
+          "sbi": 300900003,
+          "name": "Clean control - example 3"
+        },
+        {
+          "organisationId": "3009003",
+          "sbi": 300900004,
+          "name": "Clean control - example 4"
+        },
+        {
+          "organisationId": "3009004",
+          "sbi": 300900005,
+          "name": "Clean control - example 5"
+        }
+      ]
+    },
+    {
+      "crn": 3010008000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 1",
+      "organisations": [
+        {
+          "organisationId": "3009300",
+          "sbi": 300900301,
+          "name": "Address line 1 empty - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010009000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 2",
+      "organisations": [
+        {
+          "organisationId": "3009400",
+          "sbi": 300900401,
+          "name": "Address line 1 too long - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010010000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 3",
+      "organisations": [
+        {
+          "organisationId": "3009500",
+          "sbi": 300900501,
+          "name": "Address line 2 too long - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010011000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 4",
+      "organisations": [
+        {
+          "organisationId": "3009600",
+          "sbi": 300900601,
+          "name": "Address line 3 too long - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010012000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 5",
+      "organisations": [
+        {
+          "organisationId": "3009700",
+          "sbi": 300900701,
+          "name": "City empty - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010013000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 6",
+      "organisations": [
+        {
+          "organisationId": "3009800",
+          "sbi": 300900801,
+          "name": "City too long - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010014000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 7",
+      "organisations": [
+        {
+          "organisationId": "3009900",
+          "sbi": 300900901,
+          "name": "County too long - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010015000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 8",
+      "organisations": [
+        {
+          "organisationId": "3010000",
+          "sbi": 300901001,
+          "name": "Postcode empty - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010016000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 9",
+      "organisations": [
+        {
+          "organisationId": "3010100",
+          "sbi": 300901101,
+          "name": "Postcode too long - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010017000,
+      "firstName": "Amend Level Permission",
+      "lastName": "One Invalid - example 10",
+      "organisations": [
+        {
+          "organisationId": "3010200",
+          "sbi": 300901201,
+          "name": "Country empty - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010018000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 1",
+      "organisations": [
+        {
+          "organisationId": "3012300",
+          "sbi": 300903301,
+          "name": "Address + phone invalid - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010019000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 2",
+      "organisations": [
+        {
+          "organisationId": "3012301",
+          "sbi": 300903302,
+          "name": "Address + phone invalid - example 2"
+        }
+      ]
+    },
+    {
+      "crn": 3010020000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 3",
+      "organisations": [
+        {
+          "organisationId": "3012302",
+          "sbi": 300903303,
+          "name": "Address + phone invalid - example 3"
+        }
+      ]
+    },
+    {
+      "crn": 3010021000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 4",
+      "organisations": [
+        {
+          "organisationId": "3012400",
+          "sbi": 300903401,
+          "name": "Address + email invalid - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010022000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 5",
+      "organisations": [
+        {
+          "organisationId": "3012401",
+          "sbi": 300903402,
+          "name": "Address + email invalid - example 2"
+        }
+      ]
+    },
+    {
+      "crn": 3010023000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 6",
+      "organisations": [
+        {
+          "organisationId": "3012500",
+          "sbi": 300903501,
+          "name": "Phone + email invalid - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010024000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 7",
+      "organisations": [
+        {
+          "organisationId": "3012501",
+          "sbi": 300903502,
+          "name": "Phone + email invalid - example 2"
+        }
+      ]
+    },
+    {
+      "crn": 3010025000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 8",
+      "organisations": [
+        {
+          "organisationId": "3012600",
+          "sbi": 300903601,
+          "name": "All three invalid - example 1"
+        }
+      ]
+    },
+    {
+      "crn": 3010026000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 9",
+      "organisations": [
+        {
+          "organisationId": "3012601",
+          "sbi": 300903602,
+          "name": "All three invalid - example 2"
+        }
+      ]
+    },
+    {
+      "crn": 3010027000,
+      "firstName": "Amend Level Permission",
+      "lastName": "Two Invalid - example 10",
+      "organisations": [
+        {
+          "organisationId": "3012303",
+          "sbi": 300903304,
+          "name": "Address + phone invalid - example 4"
+        }
+      ]
+    },
+    {
       "crn": 3020000000,
       "firstName": "Business",
       "lastName": "Details Test",

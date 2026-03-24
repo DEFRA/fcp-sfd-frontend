@@ -25,11 +25,14 @@ const dalData = {
         address: 'test@example.com'
       },
       address: {
+        pafOrganisationName: 'Acme Corp',
         flatName: 'THE COACH HOUSE',
         buildingName: 'STOCKWELL HALL',
         buildingNumberRange: '7',
         street: 'HAREWOOD AVENUE',
         city: 'DARLINGTON',
+        dependentLocality: 'ELLICOMBE',
+        doubleDependentLocality: 'WOODTHORPE',
         county: 'Dorset',
         line1: '76 Robinswood Road',
         line2: 'UPPER CHUTE',
@@ -64,11 +67,13 @@ const mappedData = {
   },
   address: {
     lookup: {
+      pafOrganisationName: 'Acme Corp',
       flatName: 'THE COACH HOUSE',
+      dependentLocality: 'ELLICOMBE',
+      doubleDependentLocality: 'WOODTHORPE',
       buildingName: 'STOCKWELL HALL',
       buildingNumberRange: '7',
       street: 'HAREWOOD AVENUE',
-      city: 'DARLINGTON',
       county: 'Dorset',
       uprn: '12345'
     },
@@ -79,6 +84,7 @@ const mappedData = {
       line4: null,
       line5: null
     },
+    city: 'DARLINGTON',
     postcode: 'CO9 3LS',
     country: 'United Kingdom'
   },

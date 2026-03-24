@@ -23,8 +23,8 @@ describe('personalAddressEnterPresenter', () => {
           line1: '10 Skirbeck Way',
           line2: 'Lonely Lane',
           line3: 'Child Okeford',
-          line4: 'Maidstone',
-          line5: 'Somerset'
+          line4: 'Somerset',
+          line5: null
         },
         city: 'Maidstone',
         postcode: 'SK22 1DL',
@@ -156,8 +156,8 @@ describe('personalAddressEnterPresenter', () => {
           const result = personalAddressEnterPresenter(data)
 
           expect(result.address).toEqual({
-            address1: 'Flat 1A, Rosewood Court, 120-124',
-            address2: 'High Street',
+            address1: 'Flat 1A, Rosewood Court',
+            address2: '120-124 High Street',
             address3: null,
             city: 'Bristol',
             county: 'Somerset',
@@ -225,9 +225,9 @@ describe('personalAddressEnterPresenter', () => {
             flatName: 'Flat 1A',
             buildingName: 'Rosewood Court',
             buildingNumberRange: '120-124',
-            street: 'High Street',
-            city: 'Bristol'
+            street: 'High Street'
           },
+          city: 'Bristol',
           postcode: 'BS1 2AB',
           country: 'United Kingdom'
         }
@@ -237,8 +237,8 @@ describe('personalAddressEnterPresenter', () => {
         const result = personalAddressEnterPresenter(data)
 
         expect(result.address).toEqual({
-          address1: 'Flat 1A, Rosewood Court, 120-124',
-          address2: 'High Street',
+          address1: 'Flat 1A, Rosewood Court',
+          address2: '120-124 High Street',
           address3: null,
           city: 'Bristol',
           county: null,
@@ -257,6 +257,7 @@ describe('personalAddressEnterPresenter', () => {
         delete data.address.manual.line5
         delete data.address.postcode
         delete data.address.country
+        delete data.address.city
       })
 
       test('it should return the address fields as null', () => {

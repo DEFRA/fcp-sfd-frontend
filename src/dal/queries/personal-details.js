@@ -4,6 +4,7 @@ query Customer($crn: ID!, $sbi: ID!) {
     crn
     info {
       address {
+        pafOrganisationName
         buildingNumberRange
         buildingName
         flatName

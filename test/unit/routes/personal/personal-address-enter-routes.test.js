@@ -158,7 +158,7 @@ const getMockData = () => {
         line1: '10 Skirbeck Way',
         line2: '',
         line3: '',
-        line4: 'Maidstone',
+        line4: 'Somerset',
         line5: ''
       },
       city: 'Maidstone',
@@ -185,7 +185,7 @@ const getPageData = () => {
       address2: '',
       address3: '',
       city: 'Maidstone',
-      county: '',
+      county: 'Somerset',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },

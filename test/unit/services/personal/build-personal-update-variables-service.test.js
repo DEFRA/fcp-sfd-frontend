@@ -32,7 +32,6 @@ describe('buildPersonalUpdateVariablesService', () => {
         city: 'London',
         postcode: 'SW1A 2AA',
         country: 'UK'
-        // missing optional fields
       }
     })
 
@@ -48,20 +47,23 @@ describe('buildPersonalUpdateVariablesService', () => {
         phone: { landline: null, mobile: '07123456789' },
         dateOfBirth: '1990-06-15',
         address: {
+          pafOrganisationName: null,
           buildingNumberRange: null,
           buildingName: null,
           flatName: null,
           street: null,
-          city: 'London',
+          dependentLocality: null,
+          doubleDependentLocality: null,
+          uprn: null,
           county: null,
-          postalCode: 'SW1A 2AA',
-          country: 'UK',
           line1: '10 Downing St',
           line2: null,
           line3: null,
-          line4: 'London',
+          line4: null,
           line5: null,
-          uprn: null
+          city: 'London',
+          postalCode: 'SW1A 2AA',
+          country: 'UK'
         }
       })
     })
@@ -155,20 +157,23 @@ describe('buildPersonalUpdateVariablesService', () => {
       expect(result.allFieldsInput).toEqual({
         crn: '123456789',
         address: {
+          pafOrganisationName: null,
           buildingNumberRange: null,
           buildingName: null,
           flatName: null,
           street: null,
-          city: 'Bristol',
-          county: 'Avon',
-          postalCode: 'BS1 1AA',
-          country: 'UK',
+          dependentLocality: null,
+          doubleDependentLocality: null,
+          uprn: null,
+          county: null,
           line1: '1 New Road',
           line2: 'Flat 2',
           line3: null,
-          line4: 'Bristol',
-          line5: 'Avon',
-          uprn: null
+          line4: 'Avon',
+          line5: null,
+          city: 'Bristol',
+          postalCode: 'BS1 1AA',
+          country: 'UK'
         }
       })
     })
@@ -180,23 +185,27 @@ describe('buildPersonalUpdateVariablesService', () => {
         postcode: 'BS1 1AA',
         country: 'UK'
       }
+
       const result = buildPersonalUpdateVariablesService(personalDetails)
 
       expect(result.allFieldsInput.address).toEqual({
+        pafOrganisationName: null,
         buildingNumberRange: null,
         buildingName: null,
         flatName: null,
         street: null,
-        city: 'Bristol',
+        dependentLocality: null,
+        doubleDependentLocality: null,
+        uprn: null,
         county: null,
-        postalCode: 'BS1 1AA',
-        country: 'UK',
         line1: '1 New Road',
         line2: null,
         line3: null,
-        line4: 'Bristol',
+        line4: null,
         line5: null,
-        uprn: null
+        city: 'Bristol',
+        postalCode: 'BS1 1AA',
+        country: 'UK'
       })
     })
   })

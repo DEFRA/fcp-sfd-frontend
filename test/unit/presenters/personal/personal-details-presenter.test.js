@@ -53,9 +53,12 @@ describe('personalDetailsPresenter', () => {
         crn: data.crn,
         personalAddress: {
           address: [
+            'Acme Corp',
             'THE COACH HOUSE',
             'STOCKWELL HALL',
             '7 HAREWOOD AVENUE',
+            'WOODTHORPE',
+            'ELLICOMBE',
             'DARLINGTON',
             'Dorset',
             'CO9 3LS',

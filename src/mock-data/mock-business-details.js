@@ -20,6 +20,7 @@ const dalData = {
       type: { code: 101443, type: 'Not Specified' },
       countyParishHoldings: [{ cphNumber: '12/123/1234' }],
       address: {
+        pafOrganisationName: 'HENLEY, RE',
         buildingNumberRange: '7',
         buildingName: 'STOCKWELL HALL',
         flatName: 'THE COACH HOUSE',
@@ -64,11 +65,13 @@ const mappedData = {
   },
   address: {
     lookup: {
+      pafOrganisationName: 'HENLEY, RE',
+      dependentLocality: 'ELLICOMBE',
+      doubleDependentLocality: 'WOODTHORPE',
       flatName: 'THE COACH HOUSE',
       buildingNumberRange: '7',
       buildingName: 'STOCKWELL HALL',
       street: 'HAREWOOD AVENUE',
-      city: 'DARLINGTON',
       county: 'Dorset',
       uprn: '12345'
     },
@@ -79,6 +82,7 @@ const mappedData = {
       line4: null,
       line5: null
     },
+    city: 'DARLINGTON',
     postcode: 'CO9 3LS',
     country: 'United Kingdom'
   },

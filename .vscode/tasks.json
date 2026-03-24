@@ -187,15 +187,25 @@
       }
     },
     {
-      "label": "🥸🧪 DefraID stub + DAL upstream mock",
-      "detail": "Use DefraID stub and local DAL upstream mock together (requires compose.kits-local.yaml)",
+      "label": "🥸🧪 Run with stubs (DefraID + published kits)",
+      "detail": "Uses DefraID stub and builds kits-mock from published docker image",
       "type": "shell",
-      "command": "docker compose -f compose.yaml -f compose.override.yaml -f compose.kits-local.yaml up -d --build --force-recreate && echo \"DefraID stub + DAL upstream mock enabled – containers restarted 🎉\"",
-      "options": {
-        "env": {
-          "DEFRA_ID_WELL_KNOWN_URL": "http://host.docker.internal:3007/idphub/b2c/b2c_1a_cui_cpdev_signupsigninsfi/.well-known/openid-configuration"
-        }
-      },
+      "command": "docker compose -f compose.yaml -f compose.override.yaml -f compose.stub.yaml up --build",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": true,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": true
+      }
+    },
+    {
+      "label": "🥸🧪🔧 Run with stubs (DefraID + local kits)",
+      "detail": "Uses DefraID stub and builds kits-mock from local",
+      "type": "shell",
+      "command": "docker compose -f compose.yaml -f compose.override.yaml -f compose.stub.yaml -f compose.kits-local.yaml up --build",
       "group": "test",
       "presentation": {
         "echo": true,

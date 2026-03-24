@@ -35,17 +35,20 @@ services:
       CPH_ENABLED: ${CPH_ENABLED:-false}
 
   kits-mock:
-    image: defradigital/fcp-dal-upstream-mock:0.38.0
+    image: defradigital/fcp-dal-upstream-mock:0.73.0
     environment:
       MOCK_LOG_LEVEL: info
       MOCK_SERVER_COLLECTION: all
       NODE_ENV: development
       PORT: 3100
+      KIT_EXT_PERSON_ID_OVERRIDE: 3000000
+
 
   fcp-dal-api:
-    image: defradigital/fcp-dal-api:0.68.0
+    image: defradigital/fcp-dal-api:0.116.0
     depends_on:
       - kits-mock
+      - mongo
     environment:
       ALL_SCHEMA_ON: true
       LOG_LEVEL: info
@@ -56,13 +59,19 @@ services:
       DISABLE_PROXY: true
       GRAPHQL_DASHBOARD_ENABLED: true
       ADMIN_AD_GROUP_ID: unused
-      KITS_GATEWAY_INTERNAL_URL: http://kits-mock:3100/v1/
+      KITS_INTERNAL_GATEWAY_URL: http://kits-mock:3100/extapi/
+      KITS_EXTERNAL_GATEWAY_URL: http://kits-mock:3100/extapi/
+      KIT_EXT_PERSON_ID_OVERRIDE: 3000000
       KITS_GATEWAY_TIMEOUT_MS: 3000
       KITS_DISABLE_MTLS: true
+      MONGO_URI: mongodb://mongo:27017
       DAL_REQUEST_TIMEOUT_MS: 3000
 
   redis:
     image: redis:7.2.3-alpine3.18
+
+  mongo:
+    image: mongo:7.0
 
   fcp-defra-id-stub:
     image: defradigital/fcp-defra-id-stub

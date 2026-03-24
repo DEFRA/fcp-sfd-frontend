@@ -3,6 +3,7 @@ import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
 import { getSafeRedirect } from '../utils/get-safe-redirect.js'
+import { allowListService } from '../services/allow-list-service.js'
 
 const AUTH_SIGN_IN_PATH = '/auth/sign-in'
 
@@ -41,6 +42,9 @@ const signInOidc = {
     // These calls are authenticated using the token returned from Defra Identity
     const { sbi, crn, sessionId } = profile
     const { privileges, businessName } = await getPermissions(sbi, crn, token)
+
+    const allowFPTT = allowListService(sbi, crn, 'fptt')
+
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(sessionId, {
       isAuthenticated: true,
@@ -49,7 +53,8 @@ const signInOidc = {
       businessName,
       scope: privileges,
       token,
-      refreshToken
+      refreshToken,
+      allowFPTT
     })
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests

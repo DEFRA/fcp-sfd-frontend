@@ -1,5 +1,4 @@
 {% extends 'common/layout.njk' %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% block beforeContent %}
   <div class="govuk-grid-row sub-header-container govuk-!-padding-top-3">
@@ -31,37 +30,6 @@
       <span class="govuk-caption-xl text-wrap-no-hyphen">{{ userName }}</span>
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-2 text-wrap-no-hyphen">{{ businessName }}</h1>
       <p class="govuk-caption-m">Single business identifier (SBI): {{ sbi }}</p>
-
-      {% if showFarmingPaymentsGrants %}
-        <h3 class="govuk-heading-m">Apply for schemes and grants</h3>
-
-        {{ govukSummaryList({
-          card: {
-            title: {
-              text: "Farm Payments Technical Test"
-            }
-          },
-          rows: [
-            {
-              key: {
-                text: "Age"
-              },
-              value: {
-                html: "38"
-              },
-              actions: {
-                items: [
-                  {
-                    href: "#",
-                    text: "Change",
-                    visuallyHiddenText: "age"
-                  }
-                ]
-              }
-            }
-          ]
-        }) }}
-      {% endif %}
 
       <h3 class="govuk-heading-m"> Business details</h3>
       <p>

@@ -50,7 +50,7 @@ const getAllowList = (scheme, type) => {
 
   // The allow list is returned from the config as a string. This function splits the string into an array and trims
   // any whitespace
-  const allowListArray = allowList.split(',').map((item)=> {
+  const allowListArray = allowList.split(',').map((item) => {
     return item.trim()
   })
 

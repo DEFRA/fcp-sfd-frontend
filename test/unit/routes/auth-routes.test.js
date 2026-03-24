@@ -199,7 +199,8 @@ describe('auth', () => {
         businessName: 'Test Business',
         scope: ['user'],
         token: 'token',
-        refreshToken: 'refresh-token'
+        refreshToken: 'refresh-token',
+        allowFPTT: false
       }))
     })
 

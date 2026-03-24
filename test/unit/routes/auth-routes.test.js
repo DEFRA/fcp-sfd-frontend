@@ -200,7 +200,7 @@ describe('auth', () => {
         scope: ['user'],
         token: 'token',
         refreshToken: 'refresh-token',
-        allowFPTT: false
+        isOnFarmingPaymentsWhitelist: false
       }))
     })
 

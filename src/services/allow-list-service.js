@@ -5,7 +5,7 @@
 import { config } from '../config/index.js'
 
 const allowListMap = {
-  fptt: {
+  farmingPayments: {
     crn: 'allowLists.farmingPaymentsWhitelistCrns',
     sbi: 'allowLists.farmingPaymentsWhitelistSbis'
   }
@@ -34,7 +34,7 @@ const isAllowed = (allowedCrnList, allowedSbiList, crn, sbi) => {
 
 const getAllowList = (scheme, type) => {
   // Grab the relevant config key,
-  // i.e if schema is 'fptt' and type is 'crn', the config key would be 'allowLists.farmingPaymentsWhitelistCrns'
+  // i.e if schema is 'farmingPayments' and type is 'crn', the config key would be 'allowLists.farmingPaymentsWhitelistCrns'
   const configKey = allowListMap[scheme]?.[type]
 
   if (!configKey) {

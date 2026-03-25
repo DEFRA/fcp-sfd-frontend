@@ -12,7 +12,13 @@ const homePresenter = (data, permissionGroups, enrolmentCount) => {
     userName: data.info.userName,
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
-    sbi: data.business.info.sbi
+    sbi: data.business.info.sbi,
+    isOnFarmingPaymentsWhitelist: true,
+    farmingPayments: {
+      link: 'fp-check-your-details',
+      title: 'Farm Payments Technical Test',
+      status: 'started'
+    }
   }
 
   if (enrolmentCount && enrolmentCount > 1) {

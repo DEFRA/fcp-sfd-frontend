@@ -1,4 +1,5 @@
 {% extends 'common/layout.njk' %}
+{% from "components/service-card/macro.njk" import serviceCard %}
 
 {% block beforeContent %}
   <div class="govuk-grid-row sub-header-container govuk-!-padding-top-3">
@@ -25,65 +26,39 @@
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <span class="govuk-caption-xl text-wrap-no-hyphen">{{ userName }}</span>
-      <h1 class="govuk-heading-xl govuk-!-margin-bottom-2 text-wrap-no-hyphen">{{ businessName }}</h1>
-      <p class="govuk-caption-m">Single business identifier (SBI): {{ sbi }}</p>
-
-      <h2 class="govuk-heading-m">
-        Apply for schemes and grants
-      </h2>
-
-<!--card-->
-<div class="gem-c-cards" style="margin-left: -15px;">
+<div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <ul class="gem-c-cards__list gem-c-cards__list-cards">
-      <li class="gem-c-cards__list-item-variant">
-
-        <div class="gem-c-cards__list-item-wrapper-variant">
-
-          <h3 class="govuk-heading-s">
-            Farm Payments Technical Test
-          </h3>
-          {% if data.integrationPath == "notstarted" %}
-          <p class="govuk-body">
-            <strong class="govuk-tag govuk-tag--grey">
-            Not started
-          </strong>
-          </p>
-          <a href="fp-check-your-details" class="govuk-link govuk-link--no-visited-state">
-              Start application
-          </a>
-          {% else %}
-          <p class="govuk-body">
-            <strong class="govuk-tag">
-            In progress
-          </strong>
-          </p>
-          <a href="fp-check-your-details" class="govuk-link govuk-link--no-visited-state">
-              Continue application
-          </a>
-          {% endif %}
-        </div>
-        </a>
-      </li>
-
-    </ul>
+    <span class="govuk-caption-xl text-wrap-no-hyphen">{{ userName }}</span>
+    <h1 class="govuk-heading-xl govuk-!-margin-bottom-2 text-wrap-no-hyphen">{{ businessName }}</h1>
+    <p class="govuk-caption-m">Single business identifier (SBI): {{ sbi }}</p>
   </div>
 </div>
 
-<!---->
-
-      <h3 class="govuk-heading-m"> Business details</h3>
-      <p>
-        <a href={{businessDetails.link}} class="govuk-link govuk-link--no-visited-state">{{businessDetails.text}}</a>
-      </p>
-      <h3 class="govuk-heading-m"> Personal details</h3>
-      <p>
-        <a href="/personal-details" class="govuk-link govuk-link--no-visited-state">View and update your personal details</a>
-      </p>
-
+{% if isOnFarmingPaymentsWhitelist %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-m">Apply for schemes and grants</h2>
     </div>
   </div>
+
+  {{ serviceCard({
+    title: farmingPayments.title,
+    status: farmingPayments.status,
+    link: farmingPayments.link
+  }) }}
+{% endif %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h3 class="govuk-heading-m">Business details</h3>
+    <p>
+      <a href="{{ businessDetails.link }}" class="govuk-link govuk-link--no-visited-state">{{ businessDetails.text }}</a>
+    </p>
+
+    <h3 class="govuk-heading-m">Personal details</h3>
+    <p>
+      <a href="/personal-details" class="govuk-link govuk-link--no-visited-state">View and update your personal details</a>
+    </p>
+  </div>
+</div>
 {% endblock %}

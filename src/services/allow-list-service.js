@@ -1,10 +1,12 @@
 /**
- * Checks whether a given CRN and SBI are permitted for a scheme based on configured allow lists.
+ * Checks whether a given CRN and SBI are permitted for a scheme based on if they are present in their respective
+ * allow lists.
  *
  * The service:
- * - Reads comma-separated allow lists from config (CRNs and SBIs)
- * - Normalises values to strings for comparison
- * - Returns `false` when allow lists are missing/empty
+ * - Reads the string of allowed CRNs and SBIs from the config, which are expected to be comma-separated values
+ * - Normalises the allow lists by splitting the string into an array and trimming whitespace
+ * - Checks whether the provided CRN and SBI are included in their respective allow lists
+ * - Returns `false` when allow lists are missing/empty or when either the CRN or SBI are not included
  *
  * @module allowListService
  */

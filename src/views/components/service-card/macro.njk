@@ -21,15 +21,18 @@
             {{ params.title }}
           </h3>
 
-          <p class="govuk-body">
-            <strong class="govuk-tag{% if params.status == 'not-started' %} govuk-tag--grey{% endif %}">
-              {% if params.status == 'not-started' %}
-                Not started
-              {% else %}
-                In progress
-              {% endif %}
-            </strong>
-          </p>
+          {# Only show status if not 'do-not-show' #}
+          {% if params.status != 'do-not-show' %}
+            <p class="govuk-body">
+              <strong class="govuk-tag{% if params.status == 'not-started' %} govuk-tag--grey{% endif %}">
+                {% if params.status == 'not-started' %}
+                  Not started
+                {% else %}
+                  In progress
+                {% endif %}
+              </strong>
+            </p>
+          {% endif %}
 
           <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
             {% if params.status == 'not-started' %}

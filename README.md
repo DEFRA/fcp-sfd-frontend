@@ -4,7 +4,29 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-frontend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-frontend)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=DEFRA_fcp-sfd-frontend&metric=coverage)](https://sonarcloud.io/summary/new_code?id=DEFRA_fcp-sfd-frontend)
 
-Frontend service for the Farm and land service. This service provides the user interface for customers to interact with the Single Front Door service.
+Frontend service for the Single Front Door (SFD) on the Future Farming and Countryside Programme (FCP). It provides a GOV.UK-styled interface for farmers and land managers to view and manage their business and personal details.
+
+The service retrieves and updates data through the [Data Access Layer (DAL)](https://github.com/DEFRA/fcp-dal-api) via GraphQL, which acts as a unified gateway to Rural Payments (KITS) upstream services. Address lookups are performed against the [OS Places API](https://osdatahub.os.uk/) using postcode search, allowing users to find and select addresses when updating their business or personal details. Users authenticate via Defra ID using OpenID Connect (OIDC).
+
+### How the service communicates
+
+```mermaid
+flowchart LR
+    User([User])
+    SFD[fcp-sfd-frontend\nHapi / Node.js]
+    DAL[fcp-dal-api\nGraphQL]
+    KITS[Rural Payments\nKITS]
+    OS[OS Places API]
+    DefraID[Defra ID\nOIDC]
+    Redis[(Redis\nSession Cache)]
+
+    User -->|HTTPS| SFD
+    SFD -->|GraphQL| DAL
+    DAL -->|REST| KITS
+    SFD -->|REST| OS
+    SFD -->|OIDC| DefraID
+    SFD -->|Catbox| Redis
+```
 
 ## Prerequisites
 

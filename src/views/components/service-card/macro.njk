@@ -1,39 +1,47 @@
-{# {% macro serviceCard(params) %}
+{#
+  Example usage:
 
-<div class="service-card">
-  <ul class="service-card__list service-card__list--cards">
+  {% from "components/service-card/macro.njk" import serviceCard %}
 
-    {% for card in params.cards %}
-      <li class="service-card__item">
+  {{ serviceCard({
+    title: "Farm Payments Technical Test",
+    status: 'not-started',
+    link: "fp-check-your-details"
+  }) }}
+#}
 
-        <div class="service-card__item-wrapper">
+{% macro serviceCard(params) %}
 
+<div class="service-card custom-cards-margin">
+  <div class="govuk-grid-column-two-thirds">
+    <ul class="service-card__list service-card__list-cards">
+      <li class="service-card__list-item-variant">
+        <div class="service-card__list-item-wrapper-variant">
           <h3 class="govuk-heading-s">
-            {{ card.title }}
+            {{ params.title }}
           </h3>
 
           <p class="govuk-body">
-            {% if card.status == "not-started" %}
-              <strong class="govuk-tag govuk-tag--grey">Not started</strong>
-            {% else %}
-              <strong class="govuk-tag">In progress</strong>
-            {% endif %}
+            <strong class="govuk-tag{% if params.status == 'not-started' %} govuk-tag--grey{% endif %}">
+              {% if params.status == 'not-started' %}
+                Not started
+              {% else %}
+                In progress
+              {% endif %}
+            </strong>
           </p>
 
-          <a href="{{ card.href }}" class="govuk-link govuk-link--no-visited-state">
-            {% if card.status == "not-started" %}
+          <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
+            {% if params.status == 'not-started' %}
               Start application
             {% else %}
               Continue application
             {% endif %}
           </a>
-
         </div>
-
       </li>
-    {% endfor %}
-
-  </ul>
+    </ul>
+  </div>
 </div>
 
-{% endmacro %} #}
+{% endmacro %}

@@ -14,14 +14,14 @@ vi.mock('../../../src/config/index.js', () => ({
 const { allowListService } = await import('../../../src/services/allow-list-service.js')
 
 describe('allowListService', () => {
+  const sbi = 123456789
+  const crn = 987654321
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   test('returns true when CRN and SBI are both in the allow lists', () => {
-    const sbi = 123456789
-    const crn = 987654321
-
     mockConfigGet.mockImplementation((key) => ({
       'allowLists.farmingPaymentsWhitelistCrns': ' 987654321 ',
       'allowLists.farmingPaymentsWhitelistSbis': '123456789'
@@ -33,9 +33,6 @@ describe('allowListService', () => {
   })
 
   test('returns false when one of the allow lists is empty', () => {
-    const sbi = 123456789
-    const crn = 987654321
-
     mockConfigGet.mockImplementation((key) => ({
       'allowLists.farmingPaymentsWhitelistCrns': '987654321',
       'allowLists.farmingPaymentsWhitelistSbis': ''
@@ -47,18 +44,12 @@ describe('allowListService', () => {
   })
 
   test('returns false when schema is not recognised', () => {
-    const sbi = 123456789
-    const crn = 987654321
-
     const result = allowListService(sbi, crn, 'unknownSchema')
 
     expect(result).toBe(false)
   })
 
   test('returns false when an allow list is an empty CSV string', () => {
-    const sbi = 123456789
-    const crn = 987654321
-
     mockConfigGet.mockImplementation((key) => ({
       'allowLists.farmingPaymentsWhitelistCrns': ' , ,   ',
       'allowLists.farmingPaymentsWhitelistSbis': '123456789'

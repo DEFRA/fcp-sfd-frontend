@@ -53,9 +53,11 @@ const signInOidc = {
       businessName,
       scope: privileges,
       token,
-      refreshToken,
-      isOnFarmingPaymentsWhitelist
+      refreshToken
     })
+
+    // Store lightweight flags like whitelist in Yar for easy access
+    request.yar.set('isOnFarmingPaymentsWhitelist', isOnFarmingPaymentsWhitelist)
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
     request.cookieAuth.set({ sessionId })

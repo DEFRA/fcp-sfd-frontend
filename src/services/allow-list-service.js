@@ -1,4 +1,11 @@
 /**
+ * Checks whether a given CRN and SBI are permitted for a scheme based on configured allow lists.
+ *
+ * The service:
+ * - Reads comma-separated allow lists from config (CRNs and SBIs)
+ * - Normalises values to strings for comparison
+ * - Returns `false` when allow lists are missing/empty
+ *
  * @module allowListService
  */
 
@@ -24,7 +31,7 @@ const allowListService = (sbi, crn, schema) => {
 }
 
 /**
- * Checks if the given CRN and SBI are in the allowed list.
+ * Returns `true` when both CRN and SBI are present in their respective allow lists.
  */
 const isAllowed = (allowedCrnList, allowedSbiList, crn, sbi) => {
   return (
@@ -32,6 +39,10 @@ const isAllowed = (allowedCrnList, allowedSbiList, crn, sbi) => {
   )
 }
 
+/**
+ * Reads and parses the allow list for a given scheme and identifier type.
+ * Returns an array of trimmed strings, or an empty array when not configured.
+ */
 const getAllowList = (scheme, type) => {
   // Grab the relevant config key,
   // i.e if schema is 'farmingPayments' and type is 'crn', the config key would be 'allowLists.farmingPaymentsWhitelistCrns'

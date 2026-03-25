@@ -1,0 +1,39 @@
+{# {% macro serviceCard(params) %}
+
+<div class="service-card">
+  <ul class="service-card__list service-card__list--cards">
+
+    {% for card in params.cards %}
+      <li class="service-card__item">
+
+        <div class="service-card__item-wrapper">
+
+          <h3 class="govuk-heading-s">
+            {{ card.title }}
+          </h3>
+
+          <p class="govuk-body">
+            {% if card.status == "not-started" %}
+              <strong class="govuk-tag govuk-tag--grey">Not started</strong>
+            {% else %}
+              <strong class="govuk-tag">In progress</strong>
+            {% endif %}
+          </p>
+
+          <a href="{{ card.href }}" class="govuk-link govuk-link--no-visited-state">
+            {% if card.status == "not-started" %}
+              Start application
+            {% else %}
+              Continue application
+            {% endif %}
+          </a>
+
+        </div>
+
+      </li>
+    {% endfor %}
+
+  </ul>
+</div>
+
+{% endmacro %} #}

@@ -31,6 +31,50 @@
       <h1 class="govuk-heading-xl govuk-!-margin-bottom-2 text-wrap-no-hyphen">{{ businessName }}</h1>
       <p class="govuk-caption-m">Single business identifier (SBI): {{ sbi }}</p>
 
+      <h2 class="govuk-heading-m">
+        Apply for schemes and grants
+      </h2>
+
+<!--card-->
+<div class="gem-c-cards" style="margin-left: -15px;">
+  <div class="govuk-grid-column-two-thirds">
+    <ul class="gem-c-cards__list gem-c-cards__list-cards">
+      <li class="gem-c-cards__list-item-variant">
+
+        <div class="gem-c-cards__list-item-wrapper-variant">
+
+          <h3 class="govuk-heading-s">
+            Farm Payments Technical Test
+          </h3>
+          {% if data.integrationPath == "notstarted" %}
+          <p class="govuk-body">
+            <strong class="govuk-tag govuk-tag--grey">
+            Not started
+          </strong>
+          </p>
+          <a href="fp-check-your-details" class="govuk-link govuk-link--no-visited-state">
+              Start application
+          </a>
+          {% else %}
+          <p class="govuk-body">
+            <strong class="govuk-tag">
+            In progress
+          </strong>
+          </p>
+          <a href="fp-check-your-details" class="govuk-link govuk-link--no-visited-state">
+              Continue application
+          </a>
+          {% endif %}
+        </div>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+<!---->
+
       <h3 class="govuk-heading-m"> Business details</h3>
       <p>
         <a href={{businessDetails.link}} class="govuk-link govuk-link--no-visited-state">{{businessDetails.text}}</a>

@@ -16,9 +16,11 @@ const home = {
   method: 'GET',
   path: '/home',
   handler: async (request, h) => {
-    const { auth } = request
+    const { auth, yar } = request
+
+    const isOnFarmingPaymentsWhitelist = yar.get('isOnFarmingPaymentsWhitelist')
     const data = await fetchPersonalBusinessDetailsService(auth.credentials)
-    const pageData = homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount)
+    const pageData = homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount, isOnFarmingPaymentsWhitelist)
 
     return h.view('home', pageData)
   }

@@ -1,17 +1,18 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
-// Things we need to mock
-const mockConfigGet = vi.fn()
+// Thing under test
+import { allowListService } from '../../../src/services/allow-list-service.js'
 
+// Mock dependencies
+import { config } from '../../../src/config/index.js'
+
+// Mock imports
 vi.mock('../../../src/config/index.js', () => ({
   config: {
-    get: mockConfigGet
+    get: vi.fn()
   }
 }))
-
-// Thing under test
-const { allowListService } = await import('../../../src/services/allow-list-service.js')
 
 describe('allowListService', () => {
   const sbi = 123456789
@@ -19,44 +20,81 @@ describe('allowListService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    config.get.mockReset()
   })
 
-  test('returns true when CRN and SBI are both in the allow lists', () => {
-    mockConfigGet.mockImplementation((key) => ({
-      'allowLists.farmingPaymentsWhitelistCrns': ' 987654321 ',
-      'allowLists.farmingPaymentsWhitelistSbis': '123456789'
-    })[key])
+  describe('when passed a CRN and SBI both in the allow list', () => {
+    beforeEach(() => {
+      // First time config.get is called, it returns the CRN allow list
+      config.get.mockReturnValueOnce('987654321')
+      // Second time config.get is called, it returns the SBI allow list
+      config.get.mockReturnValueOnce('123456789')
+    })
 
-    const result = allowListService(sbi, crn, 'farmingPayments')
+    test('it returns true', () => {
+      const result = allowListService(sbi, crn, 'farmingPayments')
 
-    expect(result).toBe(true)
+      expect(result).toBe(true)
+    })
   })
 
-  test('returns false when one of the allow lists is empty', () => {
-    mockConfigGet.mockImplementation((key) => ({
-      'allowLists.farmingPaymentsWhitelistCrns': '987654321',
-      'allowLists.farmingPaymentsWhitelistSbis': ''
-    })[key])
+  describe('when passed a CRN on the allow list but an SBI that is not', () => {
+    beforeEach(() => {
+      config.get.mockReturnValueOnce('987654321')
+      config.get.mockReturnValueOnce('111111111')
+    })
 
-    const result = allowListService(sbi, crn, 'farmingPayments')
+    test('it returns false', () => {
+      const result = allowListService(sbi, crn, 'farmingPayments')
 
-    expect(result).toBe(false)
+      expect(result).toBe(false)
+    })
   })
 
-  test('returns false when schema is not recognised', () => {
-    const result = allowListService(sbi, crn, 'unknownSchema')
+  describe('when passed an SBI on the allow list but a CRN that is not', () => {
+    beforeEach(() => {
+      config.get.mockReturnValueOnce('111111111')
+      config.get.mockReturnValueOnce('123456789')
+    })
 
-    expect(result).toBe(false)
+    test('it returns false', () => {
+      const result = allowListService(sbi, crn, 'farmingPayments')
+
+      expect(result).toBe(false)
+    })
   })
 
-  test('returns false when an allow list is an empty CSV string', () => {
-    mockConfigGet.mockImplementation((key) => ({
-      'allowLists.farmingPaymentsWhitelistCrns': ' , ,   ',
-      'allowLists.farmingPaymentsWhitelistSbis': '123456789'
-    })[key])
+  describe('when passed a schema that does not exist in the allowListMap', () => {
+    test('it returns false', () => {
+      const result = allowListService(sbi, crn, 'unknownSchema')
 
-    const result = allowListService(sbi, crn, 'farmingPayments')
+      expect(result).toBe(false)
+    })
+  })
 
-    expect(result).toBe(false)
+  describe('when one or both allow lists are empty', () => {
+    beforeEach(() => {
+      config.get.mockReturnValueOnce('')
+      config.get.mockReturnValueOnce('')
+    })
+
+    test('it returns false', () => {
+      const result = allowListService(sbi, crn, 'farmingPayments')
+
+      expect(result).toBe(false)
+    })
+  })
+
+  describe('when one or both allow lists are misconfigured', () => {
+    beforeEach(() => {
+      config.get.mockReturnValueOnce(' , ,   ')
+      config.get.mockReturnValueOnce('123456789')
+    })
+
+    test('it returns false', () => {
+      const result = allowListService(sbi, crn, 'farmingPayments')
+
+      expect(result).toBe(false)
+    })
   })
 })

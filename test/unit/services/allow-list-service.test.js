@@ -45,4 +45,27 @@ describe('allowListService', () => {
 
     expect(result).toBe(false)
   })
+
+  test('returns false when schema is not recognised', () => {
+    const sbi = 123456789
+    const crn = 987654321
+
+    const result = allowListService(sbi, crn, 'unknownSchema')
+
+    expect(result).toBe(false)
+  })
+
+  test('returns false when an allow list is an empty CSV string', () => {
+    const sbi = 123456789
+    const crn = 987654321
+
+    mockConfigGet.mockImplementation((key) => ({
+      'allowLists.farmingPaymentsWhitelistCrns': ' , ,   ',
+      'allowLists.farmingPaymentsWhitelistSbis': '123456789'
+    })[key])
+
+    const result = allowListService(sbi, crn, 'farmingPayments')
+
+    expect(result).toBe(false)
+  })
 })

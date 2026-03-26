@@ -11,7 +11,7 @@ describe('homePresenter', () => {
   let data
   let permissionGroups
   let enrolmentCount
-  let isOnFarmingPaymentsAllowlist
+  let isOnFarmingPaymentsAllowList
 
   beforeEach(() => {
     data = {
@@ -28,12 +28,12 @@ describe('homePresenter', () => {
     }
     permissionGroups = ['BUSINESS_DETAILS:VIEW']
     enrolmentCount = 1
-    isOnFarmingPaymentsAllowlist = false
+    isOnFarmingPaymentsAllowList = false
   })
 
   describe('when provided with home data and permission groups', () => {
     test('it correctly presents the data', () => {
-      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist)
+      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
       expect(result).toEqual({
         pageTitle: 'Your business',
@@ -45,7 +45,7 @@ describe('homePresenter', () => {
           text: 'View your Business details'
         },
         sbi: '123456789',
-        isOnFarmingPaymentsAllowlist: false,
+        isOnFarmingPaymentsAllowList: false,
         farmingPayments: {
           link: 'fp-check-your-details',
           title: 'Farm Payments Technical Test',
@@ -62,7 +62,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -77,7 +77,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View and update your business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -94,7 +94,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return the choose another business link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.backLink).toEqual({
           text: 'Choose another business',
@@ -109,7 +109,7 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.backLink).toBeUndefined()
       })
@@ -121,23 +121,23 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.backLink).toBeUndefined()
       })
     })
   })
 
-  describe('the "isOnFarmingPaymentsAllowlist" property', () => {
-    describe('when the user is on the allowlist', () => {
+  describe('the "isOnFarmingPaymentsAllowList" property', () => {
+    describe('when the user is on the allow list', () => {
       beforeEach(() => {
-        isOnFarmingPaymentsAllowlist = true
+        isOnFarmingPaymentsAllowList = true
       })
 
       test('it should return true', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
-        expect(result.isOnFarmingPaymentsAllowlist).toBe(true)
+        expect(result.isOnFarmingPaymentsAllowList).toBe(true)
       })
     })
   })

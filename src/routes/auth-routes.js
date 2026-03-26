@@ -43,7 +43,7 @@ const signInOidc = {
     const { sbi, crn, sessionId } = profile
     const { privileges, businessName } = await getPermissions(sbi, crn, token)
 
-    const isOnFarmingPaymentsAllowlist = allowListService(sbi, crn, 'farmingPayments')
+    const isOnFarmingPaymentsAllowList = allowListService(sbi, crn, 'farmingPayments')
 
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(sessionId, {
@@ -57,7 +57,7 @@ const signInOidc = {
     })
 
     // Store lightweight flags like allow list in Yar for easy access
-    request.yar.set('isOnFarmingPaymentsAllowlist', isOnFarmingPaymentsAllowlist)
+    request.yar.set('isOnFarmingPaymentsAllowList', isOnFarmingPaymentsAllowList)
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
     request.cookieAuth.set({ sessionId })

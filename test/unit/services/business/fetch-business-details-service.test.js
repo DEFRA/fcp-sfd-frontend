@@ -5,6 +5,9 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { dalConnector } from '../../../../src/dal/connector.js'
 import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../../../src/dal/queries/business-details.js'
 
+// Test helpers
+import { getMappedData, getDalData } from '../../../mocks/mock-business-details.js'
+
 // Mock dependencies
 const mockMapBusinessDetails = vi.fn()
 const mockConfigValues = {}
@@ -23,9 +26,6 @@ vi.mock('../../../../src/config/index.js', () => ({
     get: (key) => mockConfigValues[key]
   }
 }))
-
-// Test helpers
-const { getMappedData, getDalData } = await import('../../../mocks/mock-business-details.js')
 
 // Thing under test
 const { fetchBusinessDetailsService } = await import('../../../../src/services/business/fetch-business-details-service.js')

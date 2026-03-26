@@ -65,6 +65,9 @@ describe('Home endpoint', () => {
               scope: ['BUSINESS_DETAILS:FULL_PERMISSION'],
               enrolmentCount: 7
             }
+          },
+          yar: {
+            get: vi.fn().mockReturnValue(true)
           }
         }
 
@@ -82,7 +85,7 @@ describe('Home endpoint', () => {
         await home.handler(request, h)
 
         expect(fetchPersonalBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope, request.auth.credentials.enrolmentCount)
+        expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope, request.auth.credentials.enrolmentCount, true)
         expect(h.view).toHaveBeenCalledWith('home', pageData)
       })
     })

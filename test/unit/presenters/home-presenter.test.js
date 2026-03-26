@@ -11,6 +11,7 @@ describe('homePresenter', () => {
   let data
   let permissionGroups
   let enrolmentCount
+  let isOnFarmingPaymentsAllowList
 
   beforeEach(() => {
     data = {
@@ -27,11 +28,12 @@ describe('homePresenter', () => {
     }
     permissionGroups = ['BUSINESS_DETAILS:VIEW']
     enrolmentCount = 1
+    isOnFarmingPaymentsAllowList = false
   })
 
   describe('when provided with home data and permission groups', () => {
     test('it correctly presents the data', () => {
-      const result = homePresenter(data, permissionGroups, enrolmentCount)
+      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
       expect(result).toEqual({
         pageTitle: 'Your business',
@@ -42,7 +44,8 @@ describe('homePresenter', () => {
           link: '/business-details',
           text: 'View your Business details'
         },
-        sbi: '123456789'
+        sbi: '123456789',
+        isOnFarmingPaymentsAllowList: false
       })
     })
   })
@@ -54,7 +57,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -69,7 +72,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View and update your business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -86,7 +89,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return the choose another business link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.backLink).toEqual({
           text: 'Choose another business',
@@ -101,7 +104,7 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.backLink).toBeUndefined()
       })
@@ -113,9 +116,33 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.backLink).toBeUndefined()
+      })
+    })
+  })
+
+  describe('the "isOnFarmingPaymentsAllowList" property', () => {
+    describe('when the user is on the allow list', () => {
+      beforeEach(() => {
+        isOnFarmingPaymentsAllowList = true
+      })
+
+      test('it should return true', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+
+        expect(result.isOnFarmingPaymentsAllowList).toBe(true)
+      })
+
+      test('it should return farming payments data', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+
+        expect(result.farmingPayments).toEqual({
+          link: 'fp-check-your-details',
+          title: 'Farm Payments Technical Test',
+          status: 'do-not-show'
+        })
       })
     })
   })

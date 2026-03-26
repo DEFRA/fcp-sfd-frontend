@@ -1,0 +1,54 @@
+{#
+  Example usage:
+
+  {% from "components/service-card/macro.njk" import serviceCard %}
+
+  {{ serviceCard({
+    title: "Farm Payments Technical Test",
+    status: 'not-started',
+    link: "fp-check-your-details"
+  }) }}
+#}
+
+{% macro serviceCard(params) %}
+
+<div class="service-card custom-cards-margin">
+  <div class="govuk-grid-column-two-thirds">
+    <ul class="service-card__list service-card__list-cards">
+      <li class="service-card__list-item-variant">
+        <div class="service-card__list-item-wrapper-variant">
+          <h3 class="govuk-heading-s">
+            {{ params.title }}
+          </h3>
+
+          {# Only show status if not 'do-not-show' #}
+          {% if params.status != 'do-not-show' %}
+            <p class="govuk-body">
+              <strong class="govuk-tag{% if params.status == 'not-started' %} govuk-tag--grey{% endif %}">
+                {% if params.status == 'not-started' %}
+                  Not started
+                {% else %}
+                  In progress
+                {% endif %}
+              </strong>
+            </p>
+
+            <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
+              {% if params.status == 'not-started' %}
+                Start application
+              {% else %}
+                Continue application
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
+              Go to application
+            </a>
+          {% endif %}
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% endmacro %}

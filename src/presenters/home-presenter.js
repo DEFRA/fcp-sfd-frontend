@@ -13,19 +13,23 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymen
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
     sbi: data.business.info.sbi,
-    isOnFarmingPaymentsAllowList,
-    farmingPayments: {
-      link: 'fp-check-your-details',
-      title: 'Farm Payments Technical Test',
-      // Status hidden for now; endpoint from FPTT not available yet. Will update in a future ticket.
-      status: 'do-not-show'
-    }
+    isOnFarmingPaymentsAllowList
   }
 
   if (enrolmentCount && enrolmentCount > 1) {
     presentedData.backLink = {
       text: 'Choose another business',
       href: '/auth/reselect-business'
+    }
+  }
+
+  if (isOnFarmingPaymentsAllowList) {
+    presentedData.farmingPayments = {
+      // Link is currently a placegolder until endpoint is available from FPTT, will update in a future ticket
+      link: 'fp-check-your-details',
+      title: 'Farm Payments Technical Test',
+      // Status hidden for now; endpoint from FPTT not available yet. Will update in a future ticket.
+      status: 'do-not-show'
     }
   }
 

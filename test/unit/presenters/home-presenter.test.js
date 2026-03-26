@@ -45,12 +45,7 @@ describe('homePresenter', () => {
           text: 'View your Business details'
         },
         sbi: '123456789',
-        isOnFarmingPaymentsAllowList: false,
-        farmingPayments: {
-          link: 'fp-check-your-details',
-          title: 'Farm Payments Technical Test',
-          status: 'do-not-show'
-        }
+        isOnFarmingPaymentsAllowList: false
       })
     })
   })
@@ -138,6 +133,16 @@ describe('homePresenter', () => {
         const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
 
         expect(result.isOnFarmingPaymentsAllowList).toBe(true)
+      })
+
+      test('it should return farming payments data', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+
+        expect(result.farmingPayments).toEqual({
+          link: 'fp-check-your-details',
+          title: 'Farm Payments Technical Test',
+          status: 'do-not-show'
+        })
       })
     })
   })

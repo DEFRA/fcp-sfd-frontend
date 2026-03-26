@@ -32,15 +32,19 @@
                 {% endif %}
               </strong>
             </p>
-          {% endif %}
 
-          <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
-            {% if params.status == 'not-started' %}
-              Start application
-            {% else %}
-              Continue application
-            {% endif %}
-          </a>
+            <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
+              {% if params.status == 'not-started' %}
+                Start application
+              {% else %}
+                Continue application
+              {% endif %}
+            </a>
+          {% else %}
+            <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
+              Go to application
+            </a>
+          {% endif %}
         </div>
       </li>
     </ul>

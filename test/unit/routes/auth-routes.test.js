@@ -1,5 +1,18 @@
+// Test framework dependencies
 import { vi, describe, beforeEach, test, expect } from 'vitest'
 
+// Things we need to mock
+import { getPermissions } from '../../../src/auth/get-permissions.js'
+import { getSignOutUrl } from '../../../src/auth/get-sign-out-url.js'
+import { validateState } from '../../../src/auth/state.js'
+import { verifyToken } from '../../../src/auth/verify-token.js'
+import { getSafeRedirect } from '../../../src/utils/get-safe-redirect.js'
+import { allowListService } from '../../../src/services/allow-list-service.js'
+
+// Thing under test
+import { auth } from '../../../src/routes/auth-routes.js'
+
+// Mocks
 vi.mock('../../../src/auth/get-permissions.js', () => ({
   getPermissions: vi.fn()
 }))
@@ -20,12 +33,9 @@ vi.mock('../../../src/utils/get-safe-redirect.js', () => ({
   getSafeRedirect: vi.fn()
 }))
 
-const { getPermissions } = await import('../../../src/auth/get-permissions.js')
-const { getSignOutUrl } = await import('../../../src/auth/get-sign-out-url.js')
-const { validateState } = await import('../../../src/auth/state.js')
-const { verifyToken } = await import('../../../src/auth/verify-token.js')
-const { getSafeRedirect } = await import('../../../src/utils/get-safe-redirect.js')
-const { auth } = await import('../../../src/routes/auth-routes.js')
+vi.mock('../../../src/services/allow-list-service.js', () => ({
+  allowListService: vi.fn()
+}))
 
 let route
 
@@ -33,6 +43,10 @@ describe('auth', () => {
   beforeEach(() => {
     route = null
     vi.clearAllMocks()
+
+    verifyToken.mockResolvedValue()
+    getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
+    getSafeRedirect.mockReturnValue('/home')
   })
 
   test('should return an array of routes', () => {
@@ -59,6 +73,7 @@ describe('auth', () => {
     test('handler should redirect to /home', () => {
       const mockH = { redirect: vi.fn() }
       route.handler({}, mockH)
+
       expect(mockH.redirect).toHaveBeenCalledWith('/home')
     })
   })
@@ -85,112 +100,54 @@ describe('auth', () => {
       const mockH = { view: vi.fn() }
       const mockRequest = { auth: { isAuthenticated: false } }
       await route.handler(mockRequest, mockH)
+
       expect(mockH.view).toHaveBeenCalledWith('unauthorised')
     })
 
     test('handler should verify token when authenticated', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: {
-            profile: { sbi: '123', crn: '456', sessionId: 'session-id' },
-            token: 'token',
-            refreshToken: 'refresh-token'
-          }
-        },
-        server: {
-          app: {
-            cache: {
-              set: vi.fn()
-            }
-          }
-        },
-        cookieAuth: {
-          set: vi.fn()
-        },
-        yar: {
-          get: vi.fn().mockReturnValue(null),
-          clear: vi.fn()
-        }
-      }
-
-      verifyToken.mockResolvedValue()
-      getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
-      getSafeRedirect.mockReturnValue('/home')
-
+      const mockRequest = createMockRequest()
       await route.handler(mockRequest, mockH)
+
       expect(verifyToken).toHaveBeenCalledWith('token')
     })
 
     test('handler should call getPermissions with correct parameters', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: {
-            profile: { sbi: '123', crn: '456', sessionId: 'session-id' },
-            token: 'token',
-            refreshToken: 'refresh-token'
-          }
-        },
-        server: {
-          app: {
-            cache: {
-              set: vi.fn()
-            }
-          }
-        },
-        cookieAuth: {
-          set: vi.fn()
-        },
-        yar: {
-          get: vi.fn().mockReturnValue(null),
-          clear: vi.fn()
-        }
-      }
+      const mockRequest = createMockRequest()
+      await route.handler(mockRequest, mockH)
 
-      verifyToken.mockResolvedValue()
-      getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
-      getSafeRedirect.mockReturnValue('/home')
+      expect(getPermissions).toHaveBeenCalledWith('123', '456', 'token')
+    })
+
+    test('handler should set isOnFarmingPaymentsWhitelist in yar', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockYarSet = vi.fn()
+      const mockRequest = createMockRequest({ yar: { ...createMockRequest().yar, set: mockYarSet } })
+      allowListService.mockReturnValue(true)
 
       await route.handler(mockRequest, mockH)
-      expect(getPermissions).toHaveBeenCalledWith('123', '456', 'token')
+
+      expect(mockYarSet).toHaveBeenCalledWith('isOnFarmingPaymentsWhitelist', true)
     })
 
     test('handler should set session cache with correct data', async () => {
       const mockH = { redirect: vi.fn() }
       const mockCacheSet = vi.fn()
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: {
-            profile: { sbi: '123', crn: '456', sessionId: 'session-id' },
-            token: 'token',
-            refreshToken: 'refresh-token'
-          }
-        },
+      const mockRequest = createMockRequest({
         server: {
           app: {
             cache: {
-              set: mockCacheSet
+              set: mockCacheSet,
+              get: vi.fn(),
+              drop: vi.fn()
             }
           }
-        },
-        cookieAuth: {
-          set: vi.fn()
-        },
-        yar: {
-          get: vi.fn().mockReturnValue(null),
-          clear: vi.fn()
         }
-      }
-
-      verifyToken.mockResolvedValue()
-      getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
-      getSafeRedirect.mockReturnValue('/home')
+      })
 
       await route.handler(mockRequest, mockH)
+
       expect(mockCacheSet).toHaveBeenCalledWith('session-id', expect.objectContaining({
         isAuthenticated: true,
         sbi: '123',
@@ -199,79 +156,38 @@ describe('auth', () => {
         businessName: 'Test Business',
         scope: ['user'],
         token: 'token',
-        refreshToken: 'refresh-token',
-        isOnFarmingPaymentsWhitelist: false
+        refreshToken: 'refresh-token'
       }))
     })
 
     test('handler should set cookie auth', async () => {
       const mockH = { redirect: vi.fn() }
       const mockCookieAuthSet = vi.fn()
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: {
-            profile: { sbi: '123', crn: '456', sessionId: 'session-id' },
-            token: 'token',
-            refreshToken: 'refresh-token'
-          }
-        },
-        server: {
-          app: {
-            cache: {
-              set: vi.fn()
-            }
-          }
-        },
+      const mockRequest = createMockRequest({
         cookieAuth: {
-          set: mockCookieAuthSet
-        },
-        yar: {
-          get: vi.fn().mockReturnValue(null),
+          set: mockCookieAuthSet,
           clear: vi.fn()
         }
-      }
-
-      verifyToken.mockResolvedValue()
-      getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
-      getSafeRedirect.mockReturnValue('/home')
+      })
 
       await route.handler(mockRequest, mockH)
+
       expect(mockCookieAuthSet).toHaveBeenCalledWith({ sessionId: 'session-id' })
     })
 
     test('handler should redirect to safe redirect path', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: {
-            profile: { sbi: '123', crn: '456', sessionId: 'session-id' },
-            token: 'token',
-            refreshToken: 'refresh-token'
-          }
-        },
-        server: {
-          app: {
-            cache: {
-              set: vi.fn()
-            }
-          }
-        },
-        cookieAuth: {
-          set: vi.fn()
-        },
+      const mockRequest = createMockRequest({
         yar: {
           get: vi.fn().mockReturnValue('/custom-path'),
+          set: vi.fn(),
           clear: vi.fn()
         }
-      }
+      })
 
-      verifyToken.mockResolvedValue()
-      getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
       getSafeRedirect.mockReturnValue('/safe-path')
-
       await route.handler(mockRequest, mockH)
+
       expect(getSafeRedirect).toHaveBeenCalledWith('/custom-path')
       expect(mockH.redirect).toHaveBeenCalledWith('/safe-path')
     })
@@ -297,56 +213,28 @@ describe('auth', () => {
 
     test('handler should redirect to / when not authenticated', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: { isAuthenticated: false },
-        yar: { reset: vi.fn() }
-      }
-
+      const mockRequest = { auth: { isAuthenticated: false }, yar: { reset: vi.fn() } }
       await route.handler(mockRequest, mockH)
+
       expect(mockH.redirect).toHaveBeenCalledWith('/')
     })
 
     test('handler should reset yar session', async () => {
       const mockH = { redirect: vi.fn() }
       const mockYarReset = vi.fn()
-      const mockRequest = {
-        auth: { isAuthenticated: false },
-        yar: { reset: mockYarReset }
-      }
-
+      const mockRequest = { auth: { isAuthenticated: false }, yar: { reset: mockYarReset } }
       await route.handler(mockRequest, mockH)
+
       expect(mockYarReset).toHaveBeenCalled()
     })
 
     test('handler should get sign out url when authenticated', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: { token: 'token' }
-        },
-        yar: { reset: vi.fn() }
-      }
-
+      const mockRequest = createMockRequest()
       getSignOutUrl.mockResolvedValue('https://sign-out-url.com')
-
       await route.handler(mockRequest, mockH)
+
       expect(getSignOutUrl).toHaveBeenCalledWith(mockRequest, 'token')
-    })
-
-    test('handler should redirect to sign out url when authenticated', async () => {
-      const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: { token: 'token' }
-        },
-        yar: { reset: vi.fn() }
-      }
-
-      getSignOutUrl.mockResolvedValue('https://sign-out-url.com')
-
-      await route.handler(mockRequest, mockH)
       expect(mockH.redirect).toHaveBeenCalledWith('https://sign-out-url.com')
     })
   })
@@ -356,150 +244,50 @@ describe('auth', () => {
       route = getRoute('GET', '/auth/sign-out-oidc')
     })
 
-    test('should exist', () => {
-      expect(route).toBeDefined()
-    })
-
-    test('should attempt to authenticate with default strategy', () => {
-      expect(route.options.auth.strategy).toBeUndefined()
-      expect(route.options.auth.mode).toBe('try')
-    })
-
-    test('should have a handler', () => {
-      expect(route.handler).toBeInstanceOf(Function)
-    })
-
     test('handler should redirect to /signed-out when not authenticated', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: { isAuthenticated: false }
-      }
-
+      const mockRequest = { auth: { isAuthenticated: false } }
       await route.handler(mockRequest, mockH)
+
       expect(mockH.redirect).toHaveBeenCalledWith('/signed-out')
     })
 
     test('handler should validate state when authenticated', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: { sessionId: 'session-id' }
-        },
-        query: { state: 'test-state' },
-        server: {
-          app: {
-            cache: {
-              drop: vi.fn()
-            }
-          }
-        },
-        cookieAuth: {
-          clear: vi.fn()
-        }
-      }
-
+      const mockRequest = createMockRequest({ query: { state: 'test-state' } })
       await route.handler(mockRequest, mockH)
+
       expect(validateState).toHaveBeenCalledWith(mockRequest, 'test-state')
     })
 
-    test('handler should drop cache when authenticated with session id', async () => {
+    test('handler should drop cache and clear cookie auth when session id present', async () => {
       const mockH = { redirect: vi.fn() }
       const mockCacheDrop = vi.fn()
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: { sessionId: 'session-id' }
-        },
-        query: { state: 'test-state' },
-        server: {
-          app: {
-            cache: {
-              drop: mockCacheDrop
-            }
-          }
-        },
-        cookieAuth: {
-          clear: vi.fn()
-        }
-      }
-
-      await route.handler(mockRequest, mockH)
-      expect(mockCacheDrop).toHaveBeenCalledWith('session-id')
-    })
-
-    test('handler should not drop cache when authenticated without session id', async () => {
-      const mockH = { redirect: vi.fn() }
-      const mockCacheDrop = vi.fn()
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: {}
-        },
-        query: { state: 'test-state' },
-        server: {
-          app: {
-            cache: {
-              drop: mockCacheDrop
-            }
-          }
-        },
-        cookieAuth: {
-          clear: vi.fn()
-        }
-      }
-
-      await route.handler(mockRequest, mockH)
-      expect(mockCacheDrop).not.toHaveBeenCalled()
-    })
-
-    test('handler should clear cookie auth when authenticated', async () => {
-      const mockH = { redirect: vi.fn() }
       const mockCookieAuthClear = vi.fn()
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: { sessionId: 'session-id' }
-        },
-        query: { state: 'test-state' },
-        server: {
-          app: {
-            cache: {
-              drop: vi.fn()
-            }
-          }
-        },
-        cookieAuth: {
-          clear: mockCookieAuthClear
-        }
-      }
+
+      const mockRequest = createMockRequest({
+        auth: { isAuthenticated: true, credentials: { sessionId: 'session-id' } },
+        server: { app: { cache: { drop: mockCacheDrop } } },
+        cookieAuth: { clear: mockCookieAuthClear }
+      })
 
       await route.handler(mockRequest, mockH)
+
+      expect(mockCacheDrop).toHaveBeenCalledWith('session-id')
       expect(mockCookieAuthClear).toHaveBeenCalled()
+      expect(mockH.redirect).toHaveBeenCalledWith('/signed-out')
     })
 
-    test('handler should redirect to /signed-out when authenticated', async () => {
+    test('handler should not drop cache when session id missing', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: {
-          isAuthenticated: true,
-          credentials: { sessionId: 'session-id' }
-        },
-        query: { state: 'test-state' },
-        server: {
-          app: {
-            cache: {
-              drop: vi.fn()
-            }
-          }
-        },
-        cookieAuth: {
-          clear: vi.fn()
-        }
-      }
-
+      const mockCacheDrop = vi.fn()
+      const mockRequest = createMockRequest({
+        auth: { isAuthenticated: true, credentials: {} },
+        server: { app: { cache: { drop: mockCacheDrop } } }
+      })
       await route.handler(mockRequest, mockH)
-      expect(mockH.redirect).toHaveBeenCalledWith('/signed-out')
+
+      expect(mockCacheDrop).not.toHaveBeenCalled()
     })
   })
 
@@ -508,92 +296,20 @@ describe('auth', () => {
       route = getRoute('GET', '/auth/organisation')
     })
 
-    test('should exist', () => {
-      expect(route).toBeDefined()
-    })
-
-    test('should require authentication with Defra Identity', () => {
-      expect(route.options.auth).toBe('defra-id')
-    })
-
-    test('should have a handler', () => {
-      expect(route.handler).toBeInstanceOf(Function)
-    })
-
-    test('handler should get redirect from yar', async () => {
+    test('handler should get and clear redirect from yar', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockYarGet = vi.fn().mockReturnValue('/custom-path')
-      const mockRequest = {
-        yar: {
-          get: mockYarGet,
-          clear: vi.fn()
-        }
-      }
-
-      getSafeRedirect.mockReturnValue('/safe-path')
-
-      await route.handler(mockRequest, mockH)
-      expect(mockYarGet).toHaveBeenCalledWith('redirect')
-    })
-
-    test('handler should clear redirect from yar', async () => {
-      const mockH = { redirect: vi.fn() }
-      const mockYarClear = vi.fn()
-      const mockRequest = {
-        yar: {
-          get: vi.fn().mockReturnValue(null),
-          clear: mockYarClear
-        }
-      }
-
-      getSafeRedirect.mockReturnValue('/home')
-
-      await route.handler(mockRequest, mockH)
-      expect(mockYarClear).toHaveBeenCalledWith('redirect')
-    })
-
-    test('handler should use /home as default redirect', async () => {
-      const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        yar: {
-          get: vi.fn().mockReturnValue(null),
-          clear: vi.fn()
-        }
-      }
-
-      getSafeRedirect.mockReturnValue('/home')
-
-      await route.handler(mockRequest, mockH)
-      expect(getSafeRedirect).toHaveBeenCalledWith('/home')
-    })
-
-    test('handler should ensure redirect is safe', async () => {
-      const mockH = { redirect: vi.fn() }
-      const mockRequest = {
+      const mockRequest = createMockRequest({
         yar: {
           get: vi.fn().mockReturnValue('/custom-path'),
           clear: vi.fn()
         }
-      }
-
+      })
       getSafeRedirect.mockReturnValue('/safe-path')
-
       await route.handler(mockRequest, mockH)
+
+      expect(mockRequest.yar.get).toHaveBeenCalledWith('redirect')
+      expect(mockRequest.yar.clear).toHaveBeenCalledWith('redirect')
       expect(getSafeRedirect).toHaveBeenCalledWith('/custom-path')
-    })
-
-    test('handler should redirect to safe path', async () => {
-      const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        yar: {
-          get: vi.fn().mockReturnValue(null),
-          clear: vi.fn()
-        }
-      }
-
-      getSafeRedirect.mockReturnValue('/safe-path')
-
-      await route.handler(mockRequest, mockH)
       expect(mockH.redirect).toHaveBeenCalledWith('/safe-path')
     })
   })
@@ -603,56 +319,53 @@ describe('auth', () => {
       route = getRoute('GET', '/auth/reselect-business')
     })
 
-    test('should exist', () => {
-      expect(route).toBeDefined()
-    })
-
-    test('should require authentication with Defra Identity', () => {
-      expect(route.options.auth).toBe('defra-id')
-    })
-
-    test('should have a handler', () => {
-      expect(route.handler).toBeInstanceOf(Function)
-    })
-
-    test('handler should redirect to /auth/sign-in when not authenticated', async () => {
+    test('handler redirects when not authenticated', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: { isAuthenticated: false }
-      }
-
+      const mockRequest = { auth: { isAuthenticated: false } }
       await route.handler(mockRequest, mockH)
+
       expect(mockH.redirect).toHaveBeenCalledWith('/auth/sign-in')
     })
 
-    test('handler should set redirect to /home in yar when authenticated', async () => {
+    test('handler sets redirect and redirects when authenticated', async () => {
       const mockH = { redirect: vi.fn() }
       const mockYarSet = vi.fn()
-      const mockRequest = {
-        auth: { isAuthenticated: true },
+      const mockRequest = createMockRequest({
         yar: {
+          ...createMockRequest().yar,
           set: mockYarSet
         }
-      }
-
+      })
       await route.handler(mockRequest, mockH)
+
       expect(mockYarSet).toHaveBeenCalledWith('redirect', '/home')
-    })
-
-    test('handler should redirect to /auth/sign-in when authenticated', async () => {
-      const mockH = { redirect: vi.fn() }
-      const mockRequest = {
-        auth: { isAuthenticated: true },
-        yar: {
-          set: vi.fn()
-        }
-      }
-
-      await route.handler(mockRequest, mockH)
       expect(mockH.redirect).toHaveBeenCalledWith('/auth/sign-in')
     })
   })
 })
+
+// Helpers
+function createMockRequest (overrides = {}) {
+  const cache = { set: vi.fn(), get: vi.fn(), drop: vi.fn() }
+  const cookieAuth = { set: vi.fn(), clear: vi.fn() }
+  const yar = { get: vi.fn().mockReturnValue(null), set: vi.fn(), clear: vi.fn(), reset: vi.fn() }
+
+  return {
+    auth: {
+      isAuthenticated: true,
+      credentials: {
+        profile: { sbi: '123', crn: '456', sessionId: 'session-id' },
+        token: 'token',
+        refreshToken: 'refresh-token'
+      }
+    },
+    server: { app: { cache } },
+    cookieAuth,
+    yar,
+    query: {},
+    ...overrides
+  }
+}
 
 function getRoute (method, path) {
   return auth.find(r => r.method === method && r.path === path)

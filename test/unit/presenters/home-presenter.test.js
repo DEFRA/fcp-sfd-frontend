@@ -11,6 +11,7 @@ describe('homePresenter', () => {
   let data
   let permissionGroups
   let enrolmentCount
+  let isOnFarmingPaymentsWhitelist
 
   beforeEach(() => {
     data = {
@@ -27,11 +28,12 @@ describe('homePresenter', () => {
     }
     permissionGroups = ['BUSINESS_DETAILS:VIEW']
     enrolmentCount = 1
+    isOnFarmingPaymentsWhitelist = false
   })
 
   describe('when provided with home data and permission groups', () => {
     test('it correctly presents the data', () => {
-      const result = homePresenter(data, permissionGroups, enrolmentCount)
+      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist)
 
       expect(result).toEqual({
         pageTitle: 'Your business',
@@ -42,7 +44,13 @@ describe('homePresenter', () => {
           link: '/business-details',
           text: 'View your Business details'
         },
-        sbi: '123456789'
+        sbi: '123456789',
+        isOnFarmingPaymentsWhitelist: false,
+        farmingPayments: {
+          link: 'fp-check-your-details',
+          title: 'Farm Payments Technical Test',
+          status: 'do-not-show'
+        }
       })
     })
   })
@@ -54,7 +62,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -69,7 +77,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View and update your business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -86,7 +94,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return the choose another business link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist)
 
         expect(result.backLink).toEqual({
           text: 'Choose another business',
@@ -101,7 +109,7 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist)
 
         expect(result.backLink).toBeUndefined()
       })
@@ -113,9 +121,23 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist)
 
         expect(result.backLink).toBeUndefined()
+      })
+    })
+  })
+
+  describe('the "isOnFarmingPaymentsWhitelist" property', () => {
+    describe('when the user is on the whitelist', () => {
+      beforeEach(() => {
+        isOnFarmingPaymentsWhitelist = true
+      })
+
+      test('it should return true', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist)
+
+        expect(result.isOnFarmingPaymentsWhitelist).toBe(true)
       })
     })
   })

@@ -37,7 +37,7 @@ services:
       FARMING_PAYMENTS_ALLOWED_SBIS: ${FARMING_PAYMENTS_ALLOWED_SBIS}
 
   kits-mock:
-    image: defradigital/fcp-dal-upstream-mock:0.73.0
+    image: defradigital/fcp-dal-upstream-mock:0.74.0
     environment:
       MOCK_LOG_LEVEL: info
       MOCK_SERVER_COLLECTION: all

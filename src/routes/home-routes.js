@@ -18,9 +18,9 @@ const home = {
   handler: async (request, h) => {
     const { auth, yar } = request
 
-    const isOnFarmingPaymentsWhitelist = yar.get('isOnFarmingPaymentsWhitelist')
+    const isOnFarmingPaymentsAllowlist = yar.get('isOnFarmingPaymentsAllowlist')
     const data = await fetchPersonalBusinessDetailsService(auth.credentials)
-    const pageData = homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount, isOnFarmingPaymentsWhitelist)
+    const pageData = homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount, isOnFarmingPaymentsAllowlist)
 
     return h.view('home', pageData)
   }

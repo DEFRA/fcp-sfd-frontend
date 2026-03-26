@@ -5,7 +5,7 @@
 
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
 
-const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymentsWhitelist) => {
+const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowlist) => {
   const presentedData = {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
@@ -13,7 +13,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymen
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
     sbi: data.business.info.sbi,
-    isOnFarmingPaymentsWhitelist,
+    isOnFarmingPaymentsAllowlist,
     farmingPayments: {
       link: 'fp-check-your-details',
       title: 'Farm Payments Technical Test',

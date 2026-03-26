@@ -18,6 +18,7 @@ const getDalData = () => ({
       legalStatus: { code: 102111, type: 'Sole Proprietorship' },
       type: { code: 101443, type: 'Not Specified' },
       address: {
+        pafOrganisationName: 'Corp ltd',
         buildingNumberRange: '7',
         buildingName: 'STOCKWELL HALL',
         flatName: 'THE COACH HOUSE',
@@ -62,12 +63,14 @@ const getMappedData = () => ({
   },
   address: {
     lookup: {
+      pafOrganisationName: 'Corp ltd',
       flatName: 'THE COACH HOUSE',
       buildingNumberRange: '7',
       buildingName: 'STOCKWELL HALL',
+      dependentLocality: 'ELLICOMBE',
+      doubleDependentLocality: 'WOODTHORPE',
       street: 'HAREWOOD AVENUE',
       county: 'Dorset',
-      city: 'DARLINGTON',
       uprn: '12345'
     },
     manual: {
@@ -77,6 +80,7 @@ const getMappedData = () => ({
       line4: null,
       line5: null
     },
+    city: 'DARLINGTON',
     postcode: 'CO9 3LS',
     country: 'United Kingdom'
   },

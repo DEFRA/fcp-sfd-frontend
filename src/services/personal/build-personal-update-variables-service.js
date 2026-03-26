@@ -35,6 +35,8 @@ const buildPersonalUpdateVariablesService = (personalDetails) => {
   return { allFieldsInput }
 }
 
+const nullIfUndefined = (value) => value ?? null
+
 const buildPhoneInput = (change) => {
   return {
     phone: {
@@ -71,20 +73,23 @@ const buildDobInput = (change) => {
 const buildAddressInput = (change) => {
   return {
     address: {
+      pafOrganisationName: null,
       buildingNumberRange: null,
       buildingName: null,
       flatName: null,
       street: null,
-      city: change.city,
-      county: change.county ?? null,
-      postalCode: change.postcode,
-      country: change.country,
+      dependentLocality: null,
+      doubleDependentLocality: null,
+      uprn: null,
+      county: null,
       line1: change.address1,
-      line2: change.address2 ?? null,
-      line3: change.address3 ?? null,
-      line4: change.city,
-      line5: change.county ?? null,
-      uprn: null
+      line2: nullIfUndefined(change.address2),
+      line3: nullIfUndefined(change.address3),
+      line4: nullIfUndefined(change.county),
+      line5: null,
+      city: change.city,
+      postalCode: change.postcode,
+      country: change.country
     }
   }
 }

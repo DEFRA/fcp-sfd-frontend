@@ -81,8 +81,8 @@ const mapBusinessDetails = (businessDetails, hasUprn) => {
     flatBusinessDetails.address1 = businessDetails.address?.manual?.line1 ?? ''
     flatBusinessDetails.address2 = businessDetails.address?.manual?.line2 ?? ''
     flatBusinessDetails.address3 = businessDetails.address?.manual?.line3 ?? ''
-    flatBusinessDetails.city = businessDetails.address?.manual?.line4 ?? ''
-    flatBusinessDetails.county = businessDetails.address?.manual?.line5 ?? ''
+    flatBusinessDetails.county = businessDetails.address?.manual?.line4 ?? ''
+    flatBusinessDetails.city = businessDetails.address?.city ?? ''
     flatBusinessDetails.postcode = businessDetails.address?.postcode ?? ''
     flatBusinessDetails.country = businessDetails.address?.country ?? ''
   }

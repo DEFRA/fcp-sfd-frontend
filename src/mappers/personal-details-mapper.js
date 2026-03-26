@@ -34,11 +34,13 @@ export const mapPersonalDetails = (value) => {
     },
     address: {
       lookup: {
+        pafOrganisationName: value.customer.info.address.pafOrganisationName,
         buildingNumberRange: value.customer.info.address.buildingNumberRange,
         flatName: value.customer.info.address.flatName,
         buildingName: value.customer.info.address.buildingName,
+        dependentLocality: value.customer.info.address.dependentLocality,
+        doubleDependentLocality: value.customer.info.address.doubleDependentLocality,
         street: value.customer.info.address.street,
-        city: value.customer.info.address.city,
         county: value.customer.info.address.county,
         uprn: value.customer.info.address.uprn
       },
@@ -49,6 +51,7 @@ export const mapPersonalDetails = (value) => {
         line4: value.customer.info.address.line4,
         line5: value.customer.info.address.line5
       },
+      city: value.customer.info.address.city,
       postcode: value.customer.info.address.postalCode,
       country: value.customer.info.address.country
     },

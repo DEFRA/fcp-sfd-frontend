@@ -17,6 +17,7 @@ export const businessDetailsQuery = `
         type
       }
       address {
+        pafOrganisationName
         buildingNumberRange
         buildingName
         flatName

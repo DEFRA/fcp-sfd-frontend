@@ -118,25 +118,6 @@ describe('addressLookupSchema', () => {
       })
     })
 
-    describe('because "LOCAL_CUSTODIAN_CODE_DESCRIPTION" is missing', () => {
-      beforeEach(() => {
-        delete payload.properties.LOCAL_CUSTODIAN_CODE_DESCRIPTION
-      })
-
-      test('it fails validation', () => {
-        const { error, value } = schema.validate(payload, { abortEarly: false })
-
-        expect(error.details[0]).toEqual(
-          expect.objectContaining({
-            message: '"properties.LOCAL_CUSTODIAN_CODE_DESCRIPTION" is required',
-            path: ['properties', 'LOCAL_CUSTODIAN_CODE_DESCRIPTION'],
-            type: 'any.required'
-          })
-        )
-        expect(value).toEqual(payload)
-      })
-    })
-
     describe('because "COUNTRY_CODE" is missing', () => {
       beforeEach(() => {
         delete payload.properties.COUNTRY_CODE
@@ -167,6 +148,7 @@ describe('addressLookupSchema', () => {
         payload.properties.THOROUGHFARE_NAME = null
         payload.properties.DOUBLE_DEPENDENT_LOCALITY = null
         payload.properties.DEPENDENT_LOCALITY = null
+        payload.properties.LOCAL_CUSTODIAN_CODE_DESCRIPTION = null
       })
 
       test('it still passes validation', () => {

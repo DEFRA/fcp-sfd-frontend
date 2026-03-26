@@ -54,9 +54,12 @@ describe('businessDetailsPresenter', () => {
         userName: data.customer.userName,
         businessAddress: {
           value: [
+            'Corp ltd',
             'THE COACH HOUSE',
             'STOCKWELL HALL',
             '7 HAREWOOD AVENUE',
+            'WOODTHORPE',
+            'ELLICOMBE',
             'DARLINGTON',
             'Dorset',
             'CO9 3LS',

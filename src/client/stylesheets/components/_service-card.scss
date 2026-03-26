@@ -29,7 +29,7 @@ $govuk-border: #b1b4b6;
   position: relative;
 }
 
-// Responsive layout (optional but useful)
+// Responsive layout
 @media (min-width: 40.0625em) {
   .service-card__list {
     grid-template-columns: 1fr 1fr;

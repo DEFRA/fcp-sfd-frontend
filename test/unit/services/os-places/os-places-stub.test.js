@@ -5,7 +5,7 @@ import { describe, test, expect } from 'vitest'
 import { mockPostcode } from '../../../../src/services/os-places/os-places-stub.js'
 
 // Test helpers
-import { mockAddresses } from '../../../../src/mock-data/mock-os-places-addresses.js'
+import { mockAddresses } from '../../../../src/services/os-places/os-places-mock-addresses.js'
 
 describe('mockPostcode', () => {
   test('returns matching addresses for a valid postcode (ignoring case and spaces)', () => {

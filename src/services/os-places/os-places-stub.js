@@ -1,4 +1,4 @@
-import { mockAddresses } from '../../mock-data/mock-os-places-addresses.js'
+import { mockAddresses } from './os-places-mock-addresses.js'
 
 /**
  * Retrieves mock address data matching a given postcode.

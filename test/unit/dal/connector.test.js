@@ -1,17 +1,6 @@
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest'
-import { getServerInstance } from '../../../src/server.js'
-import { dalConnector } from '../../../src/dal/connector.js'
+import { createDalConnector } from '../../../src/dal/connector.js'
 import { exampleQuery } from '../../../src/dal/queries/example-query.js'
-
-vi.mock('../../../src/server.js', () => ({
-  getServerInstance: vi.fn().mockReturnValue({
-    app: {
-      cache: {
-        get: vi.fn().mockResolvedValue(null)
-      }
-    }
-  })
-}))
 
 vi.mock('../../../src/config/index.js', () => ({
   config: {
@@ -32,15 +21,22 @@ vi.mock('../../../src/services/DAL/token/get-token-service.js', () => ({
   getTokenService: vi.fn().mockResolvedValue('mocked-token')
 }))
 
-vi.mock('../../../src/utils/caching/token-cache.js', () => ({
-  getTokenCache: vi.fn().mockReturnValue('mocked-cache')
-}))
-
 describe('DAL (data access layer) connector', () => {
   const originalFetch = global.fetch
 
+  let mockSessionCache
+  let mockTokenCache
+  let dalConnector
+
   beforeEach(() => {
     vi.clearAllMocks()
+
+    mockSessionCache = { get: vi.fn().mockResolvedValue(null) }
+    mockTokenCache = {}
+    dalConnector = createDalConnector({
+      sessionCache: mockSessionCache,
+      tokenCache: mockTokenCache
+    })
   })
 
   afterEach(() => {
@@ -87,12 +83,12 @@ describe('DAL (data access layer) connector', () => {
 
     describe('when defraIdToken is not passed and session has a token', () => {
       test('should send token from session cache in x-forwarded-authorization', async () => {
-        getServerInstance().app.cache.get.mockResolvedValueOnce({ token: 'token-from-session' })
+        mockSessionCache.get.mockResolvedValueOnce({ token: 'token-from-session' })
         mockSuccessfulDalResponse()
 
         await dalConnector(exampleQuery, { sbi: 123456789 }, 'session-id-123')
 
-        expect(getServerInstance().app.cache.get).toHaveBeenCalledWith('session-id-123')
+        expect(mockSessionCache.get).toHaveBeenCalledWith('session-id-123')
         expect(global.fetch).toHaveBeenCalledTimes(1)
         const [, options] = global.fetch.mock.calls[0]
         expect(options.headers['x-forwarded-authorization']).toBe('token-from-session')

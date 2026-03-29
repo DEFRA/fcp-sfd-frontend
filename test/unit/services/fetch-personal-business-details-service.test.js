@@ -2,12 +2,12 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { dalConnector } from '../../../src/dal/connector.js'
 const mockMappedValue = vi.fn()
 const mockConfigGet = vi.fn()
+const mockDalConnector = vi.fn()
 
 vi.mock('../../../src/dal/connector.js', () => ({
-  dalConnector: vi.fn()
+  getDalConnector: vi.fn(() => mockDalConnector)
 }))
 
 vi.mock('../../../src/mappers/personal-business-details-mapper.js', () => ({
@@ -48,14 +48,14 @@ describe('fetchPersonalBusinessDetailsService', () => {
   describe('when DAL_CONNECTION is true', () => {
     beforeEach(async () => {
       mockConfigGet.mockReturnValue(true)
-      dalConnector.mockResolvedValue(data)
+      mockDalConnector.mockResolvedValue(data)
       mockMappedValue.mockResolvedValue(mappedDalData)
     })
 
     test('dalConnector is called', async () => {
       await fetchPersonalBusinessDetailsService(credentials)
 
-      expect(dalConnector).toHaveBeenCalled()
+      expect(mockDalConnector).toHaveBeenCalled()
     })
 
     test('it correctly returns mappedData if dalConnector response has object data', async () => {
@@ -66,7 +66,7 @@ describe('fetchPersonalBusinessDetailsService', () => {
 
     test('it returns the full response object if dalConnector response has no object data', async () => {
       const dalErrorResponse = { error: 'error response from dal' }
-      dalConnector.mockResolvedValue(dalErrorResponse)
+      mockDalConnector.mockResolvedValue(dalErrorResponse)
       const result = await fetchPersonalBusinessDetailsService(credentials)
 
       expect(result).toMatchObject(dalErrorResponse)
@@ -81,7 +81,7 @@ describe('fetchPersonalBusinessDetailsService', () => {
     test('dalConnector is not called', async () => {
       await fetchPersonalBusinessDetailsService(credentials)
 
-      expect(dalConnector).not.toHaveBeenCalled()
+      expect(mockDalConnector).not.toHaveBeenCalled()
     })
 
     test('it correctly returns data static data source', async () => {

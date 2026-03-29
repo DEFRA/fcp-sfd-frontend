@@ -1,5 +1,5 @@
 import { vi, describe, test, expect, beforeAll, afterAll } from 'vitest'
-import { dalConnector } from '../../../../src/dal/connector.js'
+import { getDalConnector } from '../../../../src/dal/connector.js'
 import { exampleQuery } from '../../../../src/dal/queries/example-query.js'
 
 const mockOidcConfig = {
@@ -29,10 +29,12 @@ const mockDefraIdToken =
 
 describe('Data access layer (DAL) connector integration', () => {
   let server
+  let dalConnector
 
   beforeAll(async () => {
     server = await createServer()
     await server.initialize()
+    dalConnector = getDalConnector()
   })
 
   afterAll(async () => {

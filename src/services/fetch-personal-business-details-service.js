@@ -4,7 +4,7 @@
  * @module fetchPersonalBusinessDetailsService
  */
 
-import { dalConnector } from '../dal/connector.js'
+import { getDalConnector } from '../dal/connector.js'
 import { personalBusinessDetailsQuery } from '../dal/queries/personal-business-details.js'
 import { mapPersonalBusinessDetails } from '../mappers/personal-business-details-mapper.js'
 import { config } from '../config/index.js'
@@ -21,6 +21,7 @@ const fetchPersonalBusinessDetailsService = async (credentials) => {
 const getFromDal = async (credentials) => {
   const { crn, sbi, sessionId } = credentials
 
+  const dalConnector = getDalConnector()
   const dalResponse = await dalConnector(personalBusinessDetailsQuery, { crn, sbi }, sessionId)
 
   if (dalResponse.data) {

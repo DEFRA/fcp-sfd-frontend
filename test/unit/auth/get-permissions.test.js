@@ -1,13 +1,13 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { getDalData, getMappedData } from '../../mocks/mock-permissions.js'
-import { dalConnector } from '../../../src/dal/connector.js'
 import { mapPermissions } from '../../../src/mappers/permissions-mapper.js'
 import { permissionsQuery } from '../../../src/dal/queries/permissions-query.js'
 
 const mockConfigGet = vi.fn()
+const mockDalConnector = vi.fn()
 
 vi.mock('../../../src/dal/connector.js', () => ({
-  dalConnector: vi.fn()
+  getDalConnector: vi.fn(() => mockDalConnector)
 }))
 
 vi.mock('../../../src/mappers/permissions-mapper.js', () => ({
@@ -37,7 +37,7 @@ describe('getPermissions', () => {
 
     mockConfigGet.mockReturnValue(true)
     mapPermissions.mockReturnValue(getMappedData())
-    dalConnector.mockResolvedValue({ data: getDalData() })
+    mockDalConnector.mockResolvedValue({ data: getDalData() })
   })
 
   describe('when DAL_CONNECTION is true', () => {
@@ -46,7 +46,7 @@ describe('getPermissions', () => {
     })
     test('should call dalConnector with getPermission parameters', async () => {
       await getPermissions(sbi, crn)
-      expect(dalConnector).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, null, undefined)
+      expect(mockDalConnector).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, null, undefined)
     })
     test('should call mapPermissions when dalConnector response has data', async () => {
       await getPermissions(sbi, crn)
@@ -59,14 +59,14 @@ describe('getPermissions', () => {
     })
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
-      dalConnector.mockResolvedValue({})
+      mockDalConnector.mockResolvedValue({})
       await getPermissions(sbi, crn)
       expect(mapPermissions).not.toHaveBeenCalled()
     })
 
     test('should return dalConnector response when dalConnector response has no data', async () => {
       const dalResponse = { response: 'no-dal-data' }
-      dalConnector.mockResolvedValue(dalResponse)
+      mockDalConnector.mockResolvedValue(dalResponse)
       const result = await getPermissions(sbi, crn)
       expect(result).toBe(dalResponse)
     })
@@ -78,7 +78,7 @@ describe('getPermissions', () => {
     })
     test('dalConnector is not called', async () => {
       await getPermissions(sbi, crn)
-      expect(dalConnector).not.toHaveBeenCalled()
+      expect(mockDalConnector).not.toHaveBeenCalled()
     })
 
     test('it correctly returns data static data source', async () => {

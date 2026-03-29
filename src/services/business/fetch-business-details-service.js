@@ -6,7 +6,7 @@
  * @module fetchBusinessDetailsService
  */
 
-import { dalConnector } from '../../dal/connector.js'
+import { getDalConnector } from '../../dal/connector.js'
 import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
@@ -29,6 +29,7 @@ const getFromDal = async (credentials, isCPHEnabled) => {
   const { sbi, crn, sessionId } = credentials
   const query = isCPHEnabled ? businessDetailsQuery : businessDetailsQueryWithoutCph
 
+  const dalConnector = getDalConnector()
   const dalResponse = await dalConnector(query, { sbi, crn }, sessionId)
 
   if (dalResponse.data) {

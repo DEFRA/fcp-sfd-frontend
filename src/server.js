@@ -9,9 +9,7 @@ import { setupProxy } from './utils/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 import { initTokenCache } from './utils/caching/token-cache.js'
-
-let serverInstance = null
-export const getServerInstance = () => serverInstance
+import { initDalConnector } from './dal/connector.js'
 
 moment.locale('en-gb') // Set moment locale globally
 
@@ -66,11 +64,15 @@ export const createServer = async () => {
 
   server.app.tokenCache = initTokenCache(server, CACHE_NAME)
 
+  initDalConnector({
+    sessionCache: server.app.cache,
+    tokenCache: server.app.tokenCache
+  })
+
   server.validator(Joi)
   await server.register(plugins)
 
   server.ext('onPreResponse', catchAll)
-  serverInstance = server
 
   return server
 }

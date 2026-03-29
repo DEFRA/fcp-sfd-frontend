@@ -28,8 +28,8 @@
 import { BUSINESS_CHANGE_LINKS } from '../../constants/change-links.js'
 import { config } from '../../config/index.js'
 
-const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
-  const interrupter = getInterrupterState(hasValidBusinessDetails, sectionsNeedingUpdate)
+const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate, options = {}) => {
+  const interrupter = getInterrupterState(hasValidBusinessDetails, sectionsNeedingUpdate, options)
 
   if (permissionLevel === 'view') {
     return {
@@ -121,8 +121,9 @@ const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
  * - `singleSection`: a string indicating the single section that needs updating,
  *   or null if more than one section needs fixing, or the interrupter is not active.
  */
-const getInterrupterState = (hasValidBusinessDetails, sectionsNeedingUpdate) => {
-  const enabled = config.get('featureToggle.businessDetailsInterrupterEnabled')
+const getInterrupterState = (hasValidBusinessDetails, sectionsNeedingUpdate, options = {}) => {
+  const enabled = options.businessDetailsInterrupterEnabled ??
+    config.get('featureToggle.businessDetailsInterrupterEnabled')
 
   return {
     active: enabled && !hasValidBusinessDetails && sectionsNeedingUpdate.length > 0,

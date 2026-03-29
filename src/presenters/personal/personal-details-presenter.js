@@ -7,8 +7,8 @@ import moment from 'moment'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { config } from '../../config/index.js'
 
-const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
-  const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
+const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, options = {}) => {
+  const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate, options)
   const { action: dobAction, formattedDob } = formatDob(data.info.dateOfBirth.full)
 
   return {
@@ -75,7 +75,7 @@ const getActionText = (value) => {
  * - If only one section needs updating, its normal change link is used
  * - Otherwise, all links point to the personal details fix journey
  */
-const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) => {
+const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = [], options = {}) => {
   const CHANGE_LINKS = {
     name: '/account-name-change',
     address: '/account-address-change',
@@ -84,7 +84,8 @@ const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) 
     dob: '/account-date-of-birth-change'
   }
 
-  const personalDetailsInterrupterEnabled = config.get('featureToggle.personalDetailsInterrupterEnabled')
+  const personalDetailsInterrupterEnabled = options.personalDetailsInterrupterEnabled ??
+    config.get('featureToggle.personalDetailsInterrupterEnabled')
 
   // Happy path – interrupter off or data is valid
   if (!personalDetailsInterrupterEnabled || hasValidPersonalDetails || sectionsNeedingUpdate.length === 0) {

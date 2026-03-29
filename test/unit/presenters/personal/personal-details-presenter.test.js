@@ -7,9 +7,6 @@ import { personalDetailsPresenter } from '../../../../src/presenters/personal/pe
 // Mock data
 import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
-// Mock dependencies
-import { config } from '../../../../src/config/index.js'
-
 // Mock imports
 vi.mock('../../../../src/config/index.js', () => ({
   config: {
@@ -25,9 +22,6 @@ describe('personalDetailsPresenter', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks()
-
-    // Default: interrupter OFF
-    config.get.mockReturnValue(true)
 
     data = getMappedData()
 
@@ -324,7 +318,9 @@ describe('personalDetailsPresenter', () => {
   describe('the change link properties', () => {
     describe('when the personal details interrupter is disabled', () => {
       test('all change links should point to their standard change link', () => {
-        const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+        const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+          personalDetailsInterrupterEnabled: false
+        })
 
         expect(result.personalName.changeLink).toBe('/account-name-change')
         expect(result.personalAddress.changeLink).toBe('/account-address-change')
@@ -335,14 +331,11 @@ describe('personalDetailsPresenter', () => {
     })
 
     describe('when the personal details interrupter is enabled', () => {
-      beforeEach(() => {
-        // Enable the personal details interrupter feature toggle
-        config.get.mockReturnValue(true)
-      })
-
       describe('and all details are valid', () => {
         test('all change links should point to their standard change link', () => {
-          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+            personalDetailsInterrupterEnabled: true
+          })
 
           expect(result.personalName.changeLink).toBe('/account-name-change')
           expect(result.personalAddress.changeLink).toBe('/account-address-change')
@@ -359,7 +352,9 @@ describe('personalDetailsPresenter', () => {
         })
 
         test('all links except the name points to the interrupter journey', () => {
-          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+            personalDetailsInterrupterEnabled: true
+          })
 
           expect(result.personalName.changeLink).toBe('/account-name-change')
           expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
@@ -376,7 +371,9 @@ describe('personalDetailsPresenter', () => {
         })
 
         test('all links except the address points to the interrupter journey', () => {
-          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+            personalDetailsInterrupterEnabled: true
+          })
 
           expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
           expect(result.personalAddress.changeLink).toBe('/account-address-change')
@@ -393,7 +390,9 @@ describe('personalDetailsPresenter', () => {
         })
 
         test('all links except the phone number points to the interrupter journey', () => {
-          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+            personalDetailsInterrupterEnabled: true
+          })
 
           expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
           expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
@@ -410,7 +409,9 @@ describe('personalDetailsPresenter', () => {
         })
 
         test('all links except the email points to the interrupter journey', () => {
-          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+            personalDetailsInterrupterEnabled: true
+          })
 
           expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
           expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
@@ -427,7 +428,9 @@ describe('personalDetailsPresenter', () => {
         })
 
         test('all links except the dob points to the interrupter journey', () => {
-          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+            personalDetailsInterrupterEnabled: true
+          })
 
           expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
           expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')
@@ -444,7 +447,9 @@ describe('personalDetailsPresenter', () => {
         })
 
         test('all links point to the interrupter journey', () => {
-          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+          const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate, {
+            personalDetailsInterrupterEnabled: true
+          })
 
           expect(result.personalName.changeLink).toBe('/personal-fix?source=name')
           expect(result.personalAddress.changeLink).toBe('/personal-fix?source=address')

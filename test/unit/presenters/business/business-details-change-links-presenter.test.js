@@ -7,15 +7,15 @@ import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/
 // Mock constants
 import { BUSINESS_CHANGE_LINKS } from '../../../../src/constants/change-links.js'
 
-// Mock dependencies
-import { config } from '../../../../src/config/index.js'
-
 // Mock imports
 vi.mock('../../../../src/config/index.js', () => ({
   config: {
     get: vi.fn()
   }
 }))
+
+const interrupterOn = { businessDetailsInterrupterEnabled: true }
+const interrupterOff = { businessDetailsInterrupterEnabled: false }
 
 describe('businessDetailsChangeLinksPresenter', () => {
   let permissionLevel
@@ -24,9 +24,6 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-
-    // Default: interrupter ON
-    config.get.mockReturnValue(true)
 
     permissionLevel = 'view'
     hasValidBusinessDetails = true
@@ -84,12 +81,16 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
     describe('when the interrupter feature toggle is ON', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(true)
         sectionsNeedingUpdate = ['name']
       })
 
       test('blocked sections still return placeholder links', () => {
-        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+        const result = businessDetailsChangeLinksPresenter(
+          permissionLevel,
+          hasValidBusinessDetails,
+          sectionsNeedingUpdate,
+          interrupterOn
+        )
 
         expect(result).toEqual({
           businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
@@ -137,7 +138,8 @@ describe('businessDetailsChangeLinksPresenter', () => {
             const result = businessDetailsChangeLinksPresenter(
               permissionLevel,
               hasValidBusinessDetails,
-              sectionsNeedingUpdate
+              sectionsNeedingUpdate,
+              interrupterOn
             )
 
             expect(result.vat).toBe('normal')
@@ -151,13 +153,23 @@ describe('businessDetailsChangeLinksPresenter', () => {
           })
 
           test('the single invalid section link points to the normal change page', () => {
-            const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+            const result = businessDetailsChangeLinksPresenter(
+              permissionLevel,
+              hasValidBusinessDetails,
+              sectionsNeedingUpdate,
+              interrupterOn
+            )
 
             expect(result.businessTelephone).toEqual(BUSINESS_CHANGE_LINKS.businessTelephone)
           })
 
           test('all other sections point to the business-fix page', () => {
-            const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+            const result = businessDetailsChangeLinksPresenter(
+              permissionLevel,
+              hasValidBusinessDetails,
+              sectionsNeedingUpdate,
+              interrupterOn
+            )
 
             expect(result.businessAddress).toEqual('/business-fix?source=address')
             expect(result.businessEmail).toEqual('/business-fix?source=email')
@@ -174,7 +186,12 @@ describe('businessDetailsChangeLinksPresenter', () => {
         })
 
         test('all sections point to the business-fix page', () => {
-          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+          const result = businessDetailsChangeLinksPresenter(
+            permissionLevel,
+            hasValidBusinessDetails,
+            sectionsNeedingUpdate,
+            interrupterOn
+          )
 
           expect(result.businessAddress).toEqual('/business-fix?source=address')
           expect(result.businessTelephone).toEqual('/business-fix?source=phone')
@@ -191,7 +208,12 @@ describe('businessDetailsChangeLinksPresenter', () => {
         })
 
         test('the name link points to normal change page, others point to business-fix', () => {
-          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+          const result = businessDetailsChangeLinksPresenter(
+            permissionLevel,
+            hasValidBusinessDetails,
+            sectionsNeedingUpdate,
+            interrupterOn
+          )
 
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
           expect(result.businessAddress).toBe('/business-fix?source=address')
@@ -211,7 +233,8 @@ describe('businessDetailsChangeLinksPresenter', () => {
           const result = businessDetailsChangeLinksPresenter(
             permissionLevel,
             hasValidBusinessDetails,
-            sectionsNeedingUpdate
+            sectionsNeedingUpdate,
+            interrupterOn
           )
 
           expect(result.businessAddress).toBe(BUSINESS_CHANGE_LINKS.businessAddress)
@@ -224,11 +247,6 @@ describe('businessDetailsChangeLinksPresenter', () => {
     })
 
     describe('and the interrupter feature toggle is OFF', () => {
-      beforeEach(() => {
-        // interrupter OFF
-        config.get.mockReturnValue(false)
-      })
-
       describe('all sections valid', () => {
         beforeEach(() => {
           hasValidBusinessDetails = true
@@ -236,7 +254,12 @@ describe('businessDetailsChangeLinksPresenter', () => {
         })
 
         test('all links point to their standard change pages', () => {
-          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+          const result = businessDetailsChangeLinksPresenter(
+            permissionLevel,
+            hasValidBusinessDetails,
+            sectionsNeedingUpdate,
+            interrupterOff
+          )
 
           expect(result.businessAddress).toBe(BUSINESS_CHANGE_LINKS.businessAddress)
           expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)
@@ -253,7 +276,12 @@ describe('businessDetailsChangeLinksPresenter', () => {
         })
 
         test('all links still point to their normal change pages', () => {
-          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+          const result = businessDetailsChangeLinksPresenter(
+            permissionLevel,
+            hasValidBusinessDetails,
+            sectionsNeedingUpdate,
+            interrupterOff
+          )
 
           expect(result.businessAddress).toBe(BUSINESS_CHANGE_LINKS.businessAddress)
           expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)

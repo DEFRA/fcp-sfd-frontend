@@ -10,7 +10,6 @@ import { getMappedData, getDalData } from '../../../mocks/mock-business-details.
 
 // Mock dependencies
 const mockMapBusinessDetails = vi.fn()
-const mockConfigValues = {}
 
 // Mock imports
 vi.mock('../../../../src/dal/connector.js', () => ({
@@ -23,7 +22,7 @@ vi.mock('../../../../src/mappers/business-details-mapper.js', () => ({
 
 vi.mock('../../../../src/config/index.js', () => ({
   config: {
-    get: (key) => mockConfigValues[key]
+    get: vi.fn()
   }
 }))
 
@@ -36,11 +35,6 @@ describe('fetchBusinessDetailsService', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
 
-    // Reset config values
-    Object.keys(mockConfigValues).forEach(key => {
-      delete mockConfigValues[key]
-    })
-
     credentials = {
       sbi: '132432422',
       crn: '64363553663',
@@ -51,15 +45,12 @@ describe('fetchBusinessDetailsService', () => {
 
   describe('when CPH_ENABLED is true', () => {
     beforeEach(() => {
-      Object.assign(mockConfigValues, {
-        'featureToggle.cphEnabled': true
-      })
       dalConnector.mockResolvedValue({ data: getDalData() })
       mockMapBusinessDetails.mockReturnValue(getMappedData())
     })
 
     test('should call dalConnector with businessDetailsQuery', async () => {
-      await fetchBusinessDetailsService(credentials)
+      await fetchBusinessDetailsService(credentials, { cphEnabled: true })
 
       expect(dalConnector).toHaveBeenCalledWith(
         businessDetailsQuery,
@@ -69,7 +60,7 @@ describe('fetchBusinessDetailsService', () => {
     })
 
     test('should map and return the DAL response when it contains data', async () => {
-      const result = await fetchBusinessDetailsService(credentials)
+      const result = await fetchBusinessDetailsService(credentials, { cphEnabled: true })
 
       expect(dalConnector).toHaveBeenCalled()
       expect(mockMapBusinessDetails).toHaveBeenCalledWith(getDalData())
@@ -80,7 +71,7 @@ describe('fetchBusinessDetailsService', () => {
       const errorResponse = { error: 'error response from dal' }
       dalConnector.mockResolvedValue(errorResponse)
 
-      const result = await fetchBusinessDetailsService(credentials)
+      const result = await fetchBusinessDetailsService(credentials, { cphEnabled: true })
 
       expect(mockMapBusinessDetails).not.toHaveBeenCalled()
       expect(result).toEqual(errorResponse)
@@ -89,15 +80,12 @@ describe('fetchBusinessDetailsService', () => {
 
   describe('when CPH_ENABLED is false', () => {
     beforeEach(() => {
-      Object.assign(mockConfigValues, {
-        'featureToggle.cphEnabled': false
-      })
       dalConnector.mockResolvedValue({ data: getDalData() })
       mockMapBusinessDetails.mockReturnValue(getMappedData())
     })
 
     test('should call dalConnector with businessDetailsQueryWithoutCph', async () => {
-      await fetchBusinessDetailsService(credentials)
+      await fetchBusinessDetailsService(credentials, { cphEnabled: false })
 
       expect(dalConnector).toHaveBeenCalledWith(
         businessDetailsQueryWithoutCph,
@@ -107,7 +95,7 @@ describe('fetchBusinessDetailsService', () => {
     })
 
     test('should map and return the DAL response when it contains data', async () => {
-      const result = await fetchBusinessDetailsService(credentials)
+      const result = await fetchBusinessDetailsService(credentials, { cphEnabled: false })
 
       expect(dalConnector).toHaveBeenCalled()
       expect(mockMapBusinessDetails).toHaveBeenCalledWith(getDalData())
@@ -118,7 +106,7 @@ describe('fetchBusinessDetailsService', () => {
       const errorResponse = { error: 'error response from dal' }
       dalConnector.mockResolvedValue(errorResponse)
 
-      const result = await fetchBusinessDetailsService(credentials)
+      const result = await fetchBusinessDetailsService(credentials, { cphEnabled: false })
 
       expect(mockMapBusinessDetails).not.toHaveBeenCalled()
       expect(result).toEqual(errorResponse)

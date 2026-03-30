@@ -62,7 +62,7 @@
     "aws-embedded-metrics": "4.2.0",
     "blankie": "5.0.0",
     "cheerio": "1.1.0",
-    "convict": "6.2.4",
+    "convict": "6.2.5",
     "cssnano": "7.0.6",
     "cssnano-preset-default": "7.0.6",
     "date-fns": "4.1.0",

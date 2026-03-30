@@ -11,9 +11,10 @@ import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../dal/
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
 import { mappedData, mappedDataWithoutCph } from '../../mock-data/mock-business-details.js'
+import { getConfigService } from '../get-config-service.js'
 
 const fetchBusinessDetailsService = async (credentials) => {
-  const cphEnabled = config.get('featureToggle.cphEnabled')
+  const cphEnabled = await getConfigService('featureToggle.cphEnabled')
   const dalConnectionEnabled = config.get('featureToggle.dalConnection')
 
   if (!dalConnectionEnabled) {

@@ -1,10 +1,11 @@
+import { constants } from 'node:http2'
 import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest'
-import { SCOPE } from '../../../../src/constants/scope/business-details.js'
 import '../../../mocks/setup-server-mocks.js'
 
 const { createServer } = await import('../../../../src/server.js')
 
 const CACHE_CONTROL_HEADER = 'cache-control'
+const { HTTP_STATUS_OK } = constants
 
 let server
 
@@ -112,15 +113,9 @@ describe('headers', () => {
 
   test('should override cache headers for non-index pages', async () => {
     const response = await server.inject({
-      url: '/home',
-      auth: {
-        strategy: 'session',
-        credentials: {
-          sessionId: 'session-id',
-          scope: SCOPE
-        }
-      }
+      url: '/signed-out'
     })
+    expect(response.statusCode).toBe(HTTP_STATUS_OK)
     expect(response.headers[CACHE_CONTROL_HEADER]).toBe('no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0')
     expect(response.headers.pragma).toBe('no-cache')
     expect(response.headers.expires).toBe('0')

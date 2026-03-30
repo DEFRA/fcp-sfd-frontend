@@ -9,18 +9,8 @@
 import { dalConnector } from '../../dal/connector.js'
 import { personalDetailsQuery } from '../../dal/queries/personal-details.js'
 import { mapPersonalDetails } from '../../mappers/personal-details-mapper.js'
-import { config } from '../../config/index.js'
-import { mappedData } from '../../mock-data/mock-personal-details.js'
 
 const fetchPersonalDetailsService = async (credentials) => {
-  if (!config.get('featureToggle.dalConnection')) {
-    return mappedData
-  }
-
-  return getFromDal(credentials)
-}
-
-const getFromDal = async (credentials) => {
   const { crn, sbi, sessionId } = credentials
 
   const dalResponse = await dalConnector(personalDetailsQuery, { crn, sbi }, sessionId)

@@ -158,4 +158,15 @@ describe('DAL (data access layer) connector', () => {
       )
     })
   })
+
+  describe('when the connector is initialised without session cache', () => {
+    test('should throw DAL connector session cache not initialised error', async () => {
+      vi.resetModules()
+      const { initDalConnector } = await import('../../../src/dal/connector.js')
+
+      expect(() => initDalConnector({ tokenCache: mockTokenCache })).toThrowError(
+        'DAL connector session cache not initialised.'
+      )
+    })
+  })
 })

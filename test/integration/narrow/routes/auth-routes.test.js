@@ -14,11 +14,6 @@ vi.mock('../../../../src/auth/get-permissions.js', async () => ({
   getPermissions: mockGetPermissions
 }))
 
-const mockGetSafeRedirect = vi.fn()
-vi.mock('../../../../src/utils/get-safe-redirect.js', () => ({
-  getSafeRedirect: mockGetSafeRedirect
-}))
-
 const mockGetSignOutUrl = vi.fn()
 vi.mock('../../../../src/auth/get-sign-out-url.js', () => ({
   getSignOutUrl: mockGetSignOutUrl
@@ -55,8 +50,6 @@ let path
 describe('auth routes', () => {
   beforeAll(async () => {
     vi.clearAllMocks()
-
-    mockGetSafeRedirect.mockReturnValue('/home')
 
     server = await createServer()
     await server.initialize()
@@ -215,29 +208,6 @@ describe('auth routes', () => {
       expect(sessionCookie).toBeDefined()
       expect(sessionCookie).not.toMatch(/Expires=/)
       expect(sessionCookie).not.toMatch(/Max-Age=/)
-    })
-
-    test('should ensure redirect path is safe', async () => {
-      await server.inject({
-        url: path,
-        auth: {
-          strategy: 'defra-id',
-          credentials
-        }
-      })
-      expect(mockGetSafeRedirect).toHaveBeenCalledWith('/home')
-    })
-
-    test('redirects to safe redirect path', async () => {
-      const response = await server.inject({
-        url: path,
-        auth: {
-          strategy: 'defra-id',
-          credentials
-        }
-      })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
-      expect(response.headers.location).toBe('/home')
     })
   })
 

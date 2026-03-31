@@ -138,4 +138,13 @@ describe('DAL (data access layer) connector', () => {
       expect(result.errors[0].message).toBe('Network error')
     })
   })
+
+  describe('when the connector is requested before it has been initialised', () => {
+    test('should throw DAL connector not initialised error', async () => {
+      vi.resetModules()
+      const { getDalConnector } = await import('../../../src/dal/connector.js')
+
+      expect(() => getDalConnector()).toThrowError('DAL connector not initialised.')
+    })
+  })
 })

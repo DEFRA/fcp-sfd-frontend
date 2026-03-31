@@ -3,7 +3,6 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
 const mockMappedValue = vi.fn()
-const mockConfigGet = vi.fn()
 const mockDalConnector = vi.fn()
 
 vi.mock('../../../../src/dal/connector.js', () => ({
@@ -12,12 +11,6 @@ vi.mock('../../../../src/dal/connector.js', () => ({
 
 vi.mock('../../../../src/mappers/personal-details-mapper.js', () => ({
   mapPersonalDetails: mockMappedValue
-}))
-
-vi.mock('../../../../src/config/index.js', () => ({
-  config: {
-    get: mockConfigGet
-  }
 }))
 
 // Test helpers
@@ -41,15 +34,15 @@ describe('fetchPersonalDetailsService', () => {
     credentials = {
       crn: '64363553663',
       email: 'test.farmer@test.farm.com',
-      sbi: '123456789'
+      sbi: '123456789',
+      sessionId: 'test-session-id'
     }
   })
 
-  describe('when DAL_CONNECTION is true', () => {
+  describe('when fetching from the DAL', () => {
     beforeEach(() => {
-      mockConfigGet.mockReturnValue(true)
       mockDalConnector.mockResolvedValue(data)
-      mockMappedValue.mockResolvedValue(mappedDalData)
+      mockMappedValue.mockReturnValue(mappedDalData)
     })
 
     test('dalConnector is called', async () => {
@@ -70,23 +63,6 @@ describe('fetchPersonalDetailsService', () => {
       const result = await fetchPersonalDetailsService(credentials)
 
       expect(result).toMatchObject(dalErrorResponse)
-    })
-  })
-
-  describe('when DAL_CONNECTION is false', () => {
-    beforeEach(() => {
-      mockConfigGet.mockReturnValue(false)
-    })
-    test('dalConnector is not called', async () => {
-      await fetchPersonalDetailsService(credentials)
-
-      expect(mockDalConnector).not.toHaveBeenCalled()
-    })
-
-    test('it correctly returns data static data source', async () => {
-      const result = await fetchPersonalDetailsService(credentials)
-
-      expect(result).toMatchObject(getMappedData())
     })
   })
 })

@@ -56,6 +56,10 @@ const createDalConnector = ({ sessionCache, tokenCache }) => {
 let instance = null
 
 const initDalConnector = (deps) => {
+  if (!deps?.tokenCache) {
+    throw new Error('DAL connector token cache not initialised.')
+  }
+
   instance = createDalConnector(deps)
   return instance
 }

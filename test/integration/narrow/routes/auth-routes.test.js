@@ -209,6 +209,19 @@ describe('auth routes', () => {
       expect(sessionCookie).not.toMatch(/Expires=/)
       expect(sessionCookie).not.toMatch(/Max-Age=/)
     })
+
+    test('redirects to the home route', async () => {
+      const response = await server.inject({
+        url: path,
+        auth: {
+          strategy: 'defra-id',
+          credentials
+        }
+      })
+
+      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.headers.location).toBe('/home')
+    })
   })
 
   describe('GET /auth/sign-out', () => {

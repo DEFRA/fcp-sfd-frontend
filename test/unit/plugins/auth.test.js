@@ -122,10 +122,7 @@ describe('auth', () => {
       beforeEach(() => {
         vi.clearAllMocks()
         request = {
-          query: {},
-          yar: {
-            set: vi.fn()
-          }
+          query: {}
         }
       })
 

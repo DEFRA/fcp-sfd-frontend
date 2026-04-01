@@ -6,7 +6,6 @@ import { getPermissions } from '../../../src/auth/get-permissions.js'
 import { getSignOutUrl } from '../../../src/auth/get-sign-out-url.js'
 import { validateState } from '../../../src/auth/state.js'
 import { verifyToken } from '../../../src/auth/verify-token.js'
-import { getSafeRedirect } from '../../../src/utils/get-safe-redirect.js'
 import { allowListService } from '../../../src/services/allow-list-service.js'
 
 // Thing under test
@@ -29,10 +28,6 @@ vi.mock('../../../src/auth/verify-token.js', () => ({
   verifyToken: vi.fn()
 }))
 
-vi.mock('../../../src/utils/get-safe-redirect.js', () => ({
-  getSafeRedirect: vi.fn()
-}))
-
 vi.mock('../../../src/services/allow-list-service.js', () => ({
   allowListService: vi.fn()
 }))
@@ -46,7 +41,6 @@ describe('auth', () => {
 
     verifyToken.mockResolvedValue()
     getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
-    getSafeRedirect.mockReturnValue('/home')
   })
 
   test('should return an array of routes', () => {
@@ -177,19 +171,11 @@ describe('auth', () => {
 
     test('handler should redirect to safe redirect path', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = createMockRequest({
-        yar: {
-          get: vi.fn().mockReturnValue('/custom-path'),
-          set: vi.fn(),
-          clear: vi.fn()
-        }
-      })
+      const mockRequest = createMockRequest()
 
-      getSafeRedirect.mockReturnValue('/safe-path')
       await route.handler(mockRequest, mockH)
 
-      expect(getSafeRedirect).toHaveBeenCalledWith('/custom-path')
-      expect(mockH.redirect).toHaveBeenCalledWith('/safe-path')
+      expect(mockH.redirect).toHaveBeenCalledWith('/home')
     })
   })
 
@@ -247,6 +233,7 @@ describe('auth', () => {
     test('handler should redirect to /signed-out when not authenticated', async () => {
       const mockH = { redirect: vi.fn() }
       const mockRequest = { auth: { isAuthenticated: false } }
+
       await route.handler(mockRequest, mockH)
 
       expect(mockH.redirect).toHaveBeenCalledWith('/signed-out')
@@ -296,21 +283,12 @@ describe('auth', () => {
       route = getRoute('GET', '/auth/organisation')
     })
 
-    test('handler should get and clear redirect from yar', async () => {
+    test('redirect to the home page', async () => {
       const mockH = { redirect: vi.fn() }
-      const mockRequest = createMockRequest({
-        yar: {
-          get: vi.fn().mockReturnValue('/custom-path'),
-          clear: vi.fn()
-        }
-      })
-      getSafeRedirect.mockReturnValue('/safe-path')
+      const mockRequest = createMockRequest()
       await route.handler(mockRequest, mockH)
 
-      expect(mockRequest.yar.get).toHaveBeenCalledWith('redirect')
-      expect(mockRequest.yar.clear).toHaveBeenCalledWith('redirect')
-      expect(getSafeRedirect).toHaveBeenCalledWith('/custom-path')
-      expect(mockH.redirect).toHaveBeenCalledWith('/safe-path')
+      expect(mockH.redirect).toHaveBeenCalledWith('/home')
     })
   })
 
@@ -338,7 +316,6 @@ describe('auth', () => {
       })
       await route.handler(mockRequest, mockH)
 
-      expect(mockYarSet).toHaveBeenCalledWith('redirect', '/home')
       expect(mockH.redirect).toHaveBeenCalledWith('/auth/sign-in')
     })
   })

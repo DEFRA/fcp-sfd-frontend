@@ -13,11 +13,6 @@ vi.mock('../../../src/config/index.js', () => ({
   }
 }))
 
-const mockGetSafeRedirect = vi.fn()
-vi.mock('../../../src/utils/get-safe-redirect.js', () => ({
-  getSafeRedirect: mockGetSafeRedirect
-}))
-
 const mockRefreshTokens = vi.fn()
 vi.mock('../../../src/auth/refresh-tokens.js', () => ({
   refreshTokens: mockRefreshTokens
@@ -126,29 +121,13 @@ describe('auth', () => {
 
       beforeEach(() => {
         vi.clearAllMocks()
-        mockGetSafeRedirect.mockReturnValue('/home')
         request = {
-          query: {},
-          yar: {
-            set: vi.fn()
-          }
+          query: {}
         }
       })
 
       test('should return redirectUrl from config', () => {
         expect(location(request)).toBe('mockRedirectUrl')
-      })
-
-      test('should check redirect link is safe if redirect query param is present', () => {
-        request.query.redirect = '/redirect'
-        location(request)
-        expect(mockGetSafeRedirect).toHaveBeenCalledWith('/redirect')
-      })
-
-      test('should set safe redirect path in session if redirect query param is present', () => {
-        request.query.redirect = '/redirect'
-        location(request)
-        expect(request.yar.set).toHaveBeenCalledWith('redirect', '/home')
       })
     })
 

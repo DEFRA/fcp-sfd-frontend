@@ -1,7 +1,6 @@
 import Jwt from '@hapi/jwt'
 import { getOidcConfig } from '../auth/get-oidc-config.js'
 import { refreshTokens } from '../auth/refresh-tokens.js'
-import { getSafeRedirect } from '../utils/get-safe-redirect.js'
 import { config } from '../config/index.js'
 import { getSbiFromRelationships } from '../auth/get-sbi-from-relationships.js'
 
@@ -43,14 +42,7 @@ function getBellOptions (oidcConfig) {
     clientSecret: config.get('defraId.clientSecret'),
     password: config.get('server.session.cookie.password'),
     isSecure: config.get('server.isProduction'),
-    location: function (request) {
-      // If request includes a redirect query parameter, store it in the session to allow redirection after authentication
-      if (request.query.redirect) {
-        // Ensure redirect is a relative path to prevent redirect attacks
-        const safeRedirect = getSafeRedirect(request.query.redirect)
-        request.yar.set('redirect', safeRedirect)
-      }
-
+    location: function (_request) {
       return config.get('defraId.redirectUrl')
     },
     providerParams: function (request) {

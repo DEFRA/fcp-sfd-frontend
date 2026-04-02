@@ -85,4 +85,4 @@ services:
     environment:
       AUTH_OVERRIDE_FILE: defra-id.data.json
     volumes:
-      - ./mock-data/defra-id.data.json:/data/defra-id.data.json
+      - ./defra-id.data.json:/data/defra-id.data.json

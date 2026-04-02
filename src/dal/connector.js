@@ -6,13 +6,26 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
-const createDalConnector = ({ sessionCache, tokenCache }) => {
-  return async (query, variables, sessionId, defraIdToken = null) => {
+class DalConnector {
+  constructor ({ sessionCache, tokenCache }) {
+    if (!sessionCache) {
+      throw new Error('DAL connector session cache not initialised.')
+    }
+
+    if (!tokenCache) {
+      throw new Error('DAL connector token cache not initialised.')
+    }
+
+    this.sessionCache = sessionCache
+    this.tokenCache = tokenCache
+  }
+
+  async query (query, variables, sessionId, defraIdToken = null) {
     try {
-      const bearerToken = await getTokenService(tokenCache)
+      const bearerToken = await getTokenService(this.tokenCache)
 
       if (defraIdToken === null) {
-        const sessionData = await sessionCache.get(sessionId)
+        const sessionData = await this.sessionCache.get(sessionId)
         defraIdToken = sessionData?.token
       }
 
@@ -53,17 +66,11 @@ const createDalConnector = ({ sessionCache, tokenCache }) => {
   }
 }
 
+const createDalConnector = (deps) => new DalConnector(deps)
+
 let instance = null
 
 const initDalConnector = (deps) => {
-  if (!deps?.sessionCache) {
-    throw new Error('DAL connector session cache not initialised.')
-  }
-
-  if (!deps?.tokenCache) {
-    throw new Error('DAL connector token cache not initialised.')
-  }
-
   instance = createDalConnector(deps)
   return instance
 }

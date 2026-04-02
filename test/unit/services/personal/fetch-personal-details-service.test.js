@@ -3,7 +3,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
 const mockMappedValue = vi.fn()
-const mockDalConnector = vi.fn()
+const mockDalConnector = { query: vi.fn() }
 
 vi.mock('../../../../src/dal/connector.js', () => ({
   getDalConnector: vi.fn(() => mockDalConnector)
@@ -41,14 +41,14 @@ describe('fetchPersonalDetailsService', () => {
 
   describe('when fetching from the DAL', () => {
     beforeEach(() => {
-      mockDalConnector.mockResolvedValue(data)
+      mockDalConnector.query.mockResolvedValue(data)
       mockMappedValue.mockReturnValue(mappedDalData)
     })
 
     test('dalConnector is called', async () => {
       await fetchPersonalDetailsService(credentials)
 
-      expect(mockDalConnector).toHaveBeenCalled()
+      expect(mockDalConnector.query).toHaveBeenCalled()
     })
 
     test('it correctly returns mappedData if dalConnector response has object data', async () => {
@@ -59,7 +59,7 @@ describe('fetchPersonalDetailsService', () => {
 
     test('it returns the full response object if dalConnector response has no object data', async () => {
       const dalErrorResponse = { error: 'error response from dal' }
-      mockDalConnector.mockResolvedValue(dalErrorResponse)
+      mockDalConnector.query.mockResolvedValue(dalErrorResponse)
       const result = await fetchPersonalDetailsService(credentials)
 
       expect(result).toMatchObject(dalErrorResponse)

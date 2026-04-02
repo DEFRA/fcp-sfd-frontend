@@ -4,6 +4,8 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 
 {% from "common/heading/macro.njk" import appHeading %}
+{% from "common/header/macro.njk" import appHeader %}
+{% from "common/footer/macro.njk" import appFooter %}
 {% set mainClasses = "app-main-wrapper" %}
 
 {% block head %}
@@ -15,12 +17,7 @@
 {% endblock %}
 
 {% block header %}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
-    useTudorCrown: true
-  }) }}
+  {{ appHeader() }}
 
   {{ govukServiceNavigation({
     serviceName: serviceName,
@@ -43,7 +40,7 @@
 {% block content %}{% endblock %}
 
 {% block footer %}
-  {{ govukFooter({
+  {{ appFooter({
     meta: {
       items: [
         {

@@ -64,10 +64,7 @@ export const createServer = async () => {
 
   server.app.tokenCache = initTokenCache(server, CACHE_NAME)
 
-  initDalConnector({
-    sessionCache: server.app.cache,
-    tokenCache: server.app.tokenCache
-  })
+  initDalConnector(server.app.cache, server.app.tokenCache)
 
   server.validator(Joi)
   await server.register(plugins)

@@ -7,7 +7,7 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 const logger = createLogger()
 
 class DalConnector {
-  constructor ({ sessionCache, tokenCache }) {
+  constructor (sessionCache, tokenCache) {
     if (!sessionCache) {
       throw new Error('DAL connector session cache not initialised.')
     }
@@ -66,12 +66,12 @@ class DalConnector {
   }
 }
 
-const createDalConnector = (deps) => new DalConnector(deps)
+const createDalConnector = (sessionCache, tokenCache) => new DalConnector(sessionCache, tokenCache)
 
 let instance = null
 
-const initDalConnector = (deps) => {
-  instance = createDalConnector(deps)
+const initDalConnector = (sessionCache, tokenCache) => {
+  instance = createDalConnector(sessionCache, tokenCache)
   return instance
 }
 

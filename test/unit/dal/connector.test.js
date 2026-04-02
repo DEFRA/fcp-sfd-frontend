@@ -33,10 +33,7 @@ describe('DAL (data access layer) connector', () => {
 
     mockSessionCache = { get: vi.fn().mockResolvedValue(null) }
     mockTokenCache = {}
-    dalConnector = createDalConnector({
-      sessionCache: mockSessionCache,
-      tokenCache: mockTokenCache
-    })
+    dalConnector = createDalConnector(mockSessionCache, mockTokenCache)
   })
 
   afterEach(() => {
@@ -153,7 +150,7 @@ describe('DAL (data access layer) connector', () => {
       vi.resetModules()
       const { initDalConnector } = await import('../../../src/dal/connector.js')
 
-      expect(() => initDalConnector({ sessionCache: mockSessionCache })).toThrowError(
+      expect(() => initDalConnector(mockSessionCache)).toThrowError(
         'DAL connector token cache not initialised.'
       )
     })
@@ -164,7 +161,7 @@ describe('DAL (data access layer) connector', () => {
       vi.resetModules()
       const { initDalConnector } = await import('../../../src/dal/connector.js')
 
-      expect(() => initDalConnector({ tokenCache: mockTokenCache })).toThrowError(
+      expect(() => initDalConnector(undefined, mockTokenCache)).toThrowError(
         'DAL connector session cache not initialised.'
       )
     })

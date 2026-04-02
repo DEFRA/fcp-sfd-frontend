@@ -83,7 +83,6 @@ const getDalConnector = () => {
 }
 
 export {
-  createDalConnector,
   initDalConnector,
   getDalConnector
 }

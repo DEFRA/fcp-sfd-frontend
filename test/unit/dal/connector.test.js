@@ -1,5 +1,5 @@
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest'
-import { createDalConnector } from '../../../src/dal/connector.js'
+import { initDalConnector, getDalConnector } from '../../../src/dal/connector.js'
 import { exampleQuery } from '../../../src/dal/queries/example-query.js'
 
 vi.mock('../../../src/config/index.js', () => ({
@@ -33,7 +33,8 @@ describe('DAL (data access layer) connector', () => {
 
     mockSessionCache = { get: vi.fn().mockResolvedValue(null) }
     mockTokenCache = {}
-    dalConnector = createDalConnector(mockSessionCache, mockTokenCache)
+    initDalConnector(mockSessionCache, mockTokenCache)
+    dalConnector = getDalConnector()
   })
 
   afterEach(() => {

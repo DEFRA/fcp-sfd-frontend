@@ -15,12 +15,15 @@
 {% endblock %}
 
 {% block header %}
-  {{ govukHeader({
-    homepageUrl: "https://www.gov.uk/",
-    classes: "app-header",
-    containerClasses: "govuk-width-container",
-    useTudorCrown: true
-  }) }}
+    <header class="govuk-header app-header" data-module="govuk-header" data-govuk-header-init="">
+      <div class="govuk-header__container govuk-width-container">
+        <div class="govuk-header__logo">
+          <a href="https://www.gov.uk/" class="govuk-header__link govuk-header__link--homepage">
+            GOV.UK
+          </a>
+        </div>
+      </div>
+    </header>
 
   {{ govukServiceNavigation({
     serviceName: serviceName,

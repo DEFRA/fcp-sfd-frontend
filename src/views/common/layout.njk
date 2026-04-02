@@ -4,6 +4,8 @@
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 
 {% from "common/heading/macro.njk" import appHeading %}
+{% from "common/header/macro.njk" import appHeader %}
+{% from "common/footer/macro.njk" import appFooter %}
 {% set mainClasses = "app-main-wrapper" %}
 
 {% block head %}
@@ -15,15 +17,7 @@
 {% endblock %}
 
 {% block header %}
-    <header class="govuk-header app-header" data-module="govuk-header" data-govuk-header-init="">
-      <div class="govuk-header__container govuk-width-container">
-        <div class="govuk-header__logo">
-          <a href="https://www.gov.uk/" class="govuk-header__link govuk-header__link--homepage">
-            GOV.UK
-          </a>
-        </div>
-      </div>
-    </header>
+  {{ appHeader() }}
 
   {{ govukServiceNavigation({
     serviceName: serviceName,
@@ -46,7 +40,7 @@
 {% block content %}{% endblock %}
 
 {% block footer %}
-  {{ govukFooter({
+  {{ appFooter({
     meta: {
       items: [
         {

@@ -66,7 +66,9 @@ class DalConnector {
   }
 }
 
-const createDalConnector = (sessionCache, tokenCache) => new DalConnector(sessionCache, tokenCache)
+const createDalConnector = (sessionCache, tokenCache) => {
+  return new DalConnector(sessionCache, tokenCache)
+}
 
 let instance = null
 

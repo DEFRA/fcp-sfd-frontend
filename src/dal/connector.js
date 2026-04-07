@@ -18,20 +18,15 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
-// Looks up the user's token from the session store using their session ID.
-const resolveUserToken = async (sessionCache, sessionId) => {
-  const sessionData = await sessionCache.get(sessionId)
-  return sessionData?.token
-}
-
-// Decides which user token to forward to the DAL — an explicit defraIdToken takes
-// priority; falls back to the session token for standard authenticated requests.
-const resolveAuthToken = async (sessionCache, sessionId, defraIdToken) => {
+// Determines which user token to forward to the DAL — an explicit defraIdToken
+// takes priority; otherwise looks up the token from the session store.
+const resolveForwardedToken = async (sessionCache, sessionId, defraIdToken) => {
   if (defraIdToken) {
     return defraIdToken
   }
 
-  return resolveUserToken(sessionCache, sessionId)
+  const sessionData = await sessionCache.get(sessionId)
+  return sessionData?.token
 }
 
 // Assembles the fetch options for a DAL GraphQL request.
@@ -46,7 +41,7 @@ const buildDalRequest = (bearerToken, userToken, graphqlQuery, variables) => ({
   body: JSON.stringify({ query: graphqlQuery, variables })
 })
 
-// Handles errors that prevent a DAL response from being received 
+// Handles errors that prevent a DAL response from being received
 // Logs the error and returns a 500 DAL failure shape.
 const handleDalFailure = (err) => {
   logger.error(err, 'Error connecting to DAL')
@@ -71,7 +66,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
     try {
       const bearerToken = await getTokenService(tokenCache)
 
-      const userToken = await resolveAuthToken(
+      const userToken = await resolveForwardedToken(
         sessionCache,
         sessionId,
         defraIdToken
@@ -95,7 +90,9 @@ const createDalConnector = (sessionCache, tokenCache) => {
   }
 
   return {
-    executeDalQuery
+    executeDalQuery,
+    // Backward-compatible alias for legacy callers/tests.
+    query: executeDalQuery
   }
 }
 

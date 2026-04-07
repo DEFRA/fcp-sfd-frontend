@@ -18,29 +18,23 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
-class DalConnector {
-  constructor (sessionCache, tokenCache) {
-    if (!sessionCache) {
-      throw new Error('DAL connector session cache not initialised.')
-    }
-
-    if (!tokenCache) {
-      throw new Error('DAL connector token cache not initialised.')
-    }
-
-    // `this.` means “this object”; we store these values so other methods can use them.
-    this.sessionCache = sessionCache
-    this.tokenCache = tokenCache
+const createDalConnector = (sessionCache, tokenCache) => {
+  if (!sessionCache) {
+    throw new Error('DAL connector session cache not initialised.')
   }
 
-  async query (query, variables, sessionId, defraIdToken = null) {
+  if (!tokenCache) {
+    throw new Error('DAL connector token cache not initialised.')
+  }
+
+  const query = async (query, variables, sessionId, defraIdToken = null) => {
     try {
       // Get a gateway token from the token cache
-      const bearerToken = await getTokenService(this.tokenCache)
+      const bearerToken = await getTokenService(tokenCache)
 
       // If no user token is provided, pull it from the session cache
       if (defraIdToken === null) {
-        const sessionData = await this.sessionCache.get(sessionId)
+        const sessionData = await sessionCache.get(sessionId)
         defraIdToken = sessionData?.token
       }
 
@@ -81,16 +75,13 @@ class DalConnector {
       })
     }
   }
-}
 
-const createDalConnector = (sessionCache, tokenCache) => {
-  return new DalConnector(sessionCache, tokenCache)
+  return { query }
 }
 
 let instance = null
 
 const initDalConnector = (sessionCache, tokenCache) => {
-  // Create a single shared connector for the whole app
   instance = createDalConnector(sessionCache, tokenCache)
   return instance
 }

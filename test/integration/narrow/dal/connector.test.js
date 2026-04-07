@@ -59,7 +59,7 @@ describe('DAL (data access layer) connector integration', () => {
 
   describe('when DAL responds successfully', () => {
     test('should return data without errors and status 200', async () => {
-      const result = await dalConnector.query(
+      const result = await dalConnector.executeDalQuery(
         exampleQuery,
         {
           sbi,
@@ -82,7 +82,7 @@ describe('DAL (data access layer) connector integration', () => {
       try {
         config.set('dalConfig.endpoint', invalidDalEndpoint)
 
-        const result = await dalConnector.query(exampleQuery, { sbi }, sessionId)
+        const result = await dalConnector.executeDalQuery(exampleQuery, { sbi }, sessionId)
 
         expect(result.data).toBeNull()
         expect(result.errors).toBeDefined()
@@ -103,7 +103,7 @@ describe('DAL (data access layer) connector integration', () => {
       }
     `
 
-      const result = await dalConnector.query(invalidQuery, { sbi }, sessionId)
+      const result = await dalConnector.executeDalQuery(invalidQuery, { sbi }, sessionId)
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -114,7 +114,7 @@ describe('DAL (data access layer) connector integration', () => {
 
   describe('when required query variables are missing', () => {
     test('should return 400 error', async () => {
-      const result = await dalConnector.query(exampleQuery, {}, sessionId)
+      const result = await dalConnector.executeDalQuery(exampleQuery, {}, sessionId)
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()

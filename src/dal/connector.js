@@ -31,7 +31,7 @@ const resolveAuthToken = async (sessionCache, sessionId, defraIdToken) => {
   return resolveUserToken(sessionCache, sessionId)
 }
 
-const buildDalRequest = (bearerToken, userToken, query, variables) => ({
+const buildDalRequest = (bearerToken, userToken, graphqlQuery, variables) => ({
   method: 'POST',
   headers: {
     'Content-type': 'application/json',
@@ -39,7 +39,7 @@ const buildDalRequest = (bearerToken, userToken, query, variables) => ({
     Authorization: bearerToken,
     'x-forwarded-authorization': userToken
   },
-  body: JSON.stringify({ query, variables })
+  body: JSON.stringify({ query: graphqlQuery, variables })
 })
 
 const handleDalFailure = (err) => {
@@ -60,7 +60,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
     throw new Error('DAL connector token cache not initialised.')
   }
 
-  const query = async (query, variables, sessionId, defraIdToken = null) => {
+  const executeDalQuery = async (graphqlQuery, variables, sessionId, defraIdToken = null) => {
     try {
       const bearerToken = await getTokenService(tokenCache)
 
@@ -70,7 +70,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
         defraIdToken
       )
 
-      const requestOptions = buildDalRequest(bearerToken, userToken, query, variables)
+      const requestOptions = buildDalRequest(bearerToken, userToken, graphqlQuery, variables)
 
       const response = await fetch(config.get('dalConfig.endpoint'), requestOptions)
 
@@ -87,7 +87,9 @@ const createDalConnector = (sessionCache, tokenCache) => {
     }
   }
 
-  return { query }
+  return {
+    executeDalQuery
+  }
 }
 
 let instance = null

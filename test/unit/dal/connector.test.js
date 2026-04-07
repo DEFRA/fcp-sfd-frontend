@@ -54,7 +54,7 @@ describe('DAL (data access layer) connector', () => {
     test('should return data and status without errors', async () => {
       mockSuccessfulDalResponse()
 
-      const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
+      const result = await dalConnector.executeDalQuery(exampleQuery, { sbi: 123456789 })
 
       expect(result.data).toBeDefined()
       expect(result.data.business.name).toBe('Test Business')
@@ -71,7 +71,7 @@ describe('DAL (data access layer) connector', () => {
       test('should send defraIdToken in x-forwarded-authorization', async () => {
         mockSuccessfulDalResponse()
 
-        await dalConnector.query(exampleQuery, { sbi: 123456789 }, null, 'mocked-defra-id-token')
+        await dalConnector.executeDalQuery(exampleQuery, { sbi: 123456789 }, null, 'mocked-defra-id-token')
 
         expect(global.fetch).toHaveBeenCalledTimes(1)
         const [, options] = global.fetch.mock.calls[0]
@@ -84,7 +84,7 @@ describe('DAL (data access layer) connector', () => {
         mockSessionCache.get.mockResolvedValueOnce({ token: 'token-from-session' })
         mockSuccessfulDalResponse()
 
-        await dalConnector.query(exampleQuery, { sbi: 123456789 }, 'session-id-123')
+        await dalConnector.executeDalQuery(exampleQuery, { sbi: 123456789 }, 'session-id-123')
 
         expect(mockSessionCache.get).toHaveBeenCalledWith('session-id-123')
         expect(global.fetch).toHaveBeenCalledTimes(1)
@@ -115,7 +115,7 @@ describe('DAL (data access layer) connector', () => {
         })
       })
 
-      const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
+      const result = await dalConnector.executeDalQuery(exampleQuery, { sbi: 123456789 })
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -129,7 +129,7 @@ describe('DAL (data access layer) connector', () => {
     test('returns a formatted error response', async () => {
       global.fetch = vi.fn().mockRejectedValue(new Error('Network error'))
 
-      const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
+      const result = await dalConnector.executeDalQuery(exampleQuery, { sbi: 123456789 })
 
       expect(result.data).toBeNull()
       expect(result.statusCode).toBe(500)

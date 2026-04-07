@@ -42,6 +42,15 @@ const buildDalRequest = (bearerToken, userToken, query, variables) => ({
   body: JSON.stringify({ query, variables })
 })
 
+const handleDalFailure = (err) => {
+  logger.error(err, 'Error connecting to DAL')
+
+  return formatDalResponse({
+    statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+    errors: [err]
+  })
+}
+
 const createDalConnector = (sessionCache, tokenCache) => {
   if (!sessionCache) {
     throw new Error('DAL connector session cache not initialised.')
@@ -74,13 +83,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
 
       return result
     } catch (err) {
-      // Network or unexpected errors are treated as internal failures
-      logger.error(err, 'Error connecting to DAL')
-
-      return formatDalResponse({
-        statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-        errors: [err]
-      })
+      return handleDalFailure(err)
     }
   }
 

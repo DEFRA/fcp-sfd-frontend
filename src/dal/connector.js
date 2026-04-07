@@ -13,7 +13,7 @@
 import { constants as httpConstants } from 'node:http2'
 import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
-import { formatDalResponse, mapDalErrors } from './dal-response.js'
+import { formatDalResponse, handleDalResponse } from './dal-response.js'
 import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
@@ -50,21 +50,13 @@ const createDalConnector = (sessionCache, tokenCache) => {
       })
 
       const responseBody = await response.json()
+      const result = handleDalResponse(responseBody)
 
-      if (responseBody.errors) {
-        // Normalize DAL errors into our standard API shape
-        const extendedErrors = mapDalErrors(responseBody.errors)
-
-        const formattedErrors = formatDalResponse({ statusCode: extendedErrors[0]?.statusCode, errors: extendedErrors })
-
-        logger.error('DAL responded with errors', formattedErrors)
-
-        return formattedErrors
+      if (result.errors) {
+        logger.error('DAL responded with errors', result)
       }
 
-      return formatDalResponse({
-        data: responseBody.data
-      })
+      return result
     } catch (err) {
       // Network or unexpected errors are treated as internal failures
       logger.error(err, 'Error connecting to DAL')

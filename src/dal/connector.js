@@ -31,6 +31,17 @@ const resolveAuthToken = async (sessionCache, sessionId, defraIdToken) => {
   return resolveUserToken(sessionCache, sessionId)
 }
 
+const buildDalRequest = (bearerToken, userToken, query, variables) => ({
+  method: 'POST',
+  headers: {
+    'Content-type': 'application/json',
+    'gateway-type': 'external',
+    Authorization: bearerToken,
+    'x-forwarded-authorization': userToken
+  },
+  body: JSON.stringify({ query, variables })
+})
+
 const createDalConnector = (sessionCache, tokenCache) => {
   if (!sessionCache) {
     throw new Error('DAL connector session cache not initialised.')
@@ -50,16 +61,9 @@ const createDalConnector = (sessionCache, tokenCache) => {
         defraIdToken
       )
 
-      const response = await fetch(config.get('dalConfig.endpoint'), {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-          'gateway-type': 'external',
-          Authorization: bearerToken,
-          'x-forwarded-authorization': userToken
-        },
-        body: JSON.stringify({ query, variables })
-      })
+      const requestOptions = buildDalRequest(bearerToken, userToken, query, variables)
+
+      const response = await fetch(config.get('dalConfig.endpoint'), requestOptions)
 
       const responseBody = await response.json()
       const result = handleDalResponse(responseBody)

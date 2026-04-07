@@ -18,8 +18,7 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
-// Determines which user token to forward to the DAL — an explicit defraIdToken
-// takes priority; otherwise looks up the token from the session store.
+// Determines which user token to forward to the DAL.
 const resolveForwardedToken = async (sessionCache, sessionId, defraIdToken) => {
   if (defraIdToken) {
     return defraIdToken
@@ -41,7 +40,7 @@ const buildDalRequest = (bearerToken, userToken, graphqlQuery, variables) => ({
   body: JSON.stringify({ query: graphqlQuery, variables })
 })
 
-// Handles errors that prevent a DAL response from being received
+// Handles errors that prevent a DAL response from being received.
 // Logs the error and returns a 500 DAL failure shape.
 const handleDalFailure = (err) => {
   logger.error(err, 'Error connecting to DAL')

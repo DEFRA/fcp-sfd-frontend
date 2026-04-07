@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 
 // Things we need to mock
-const mockDalConnector = { query: vi.fn() }
+const mockDalConnector = { executeDalQuery: vi.fn() }
 
 vi.mock('../../../../src/dal/connector.js', () => ({
   getDalConnector: vi.fn(() => mockDalConnector)
@@ -31,21 +31,21 @@ describe('updateDalService', () => {
 
   describe('when dalConnector resolves successfully', () => {
     beforeEach(() => {
-      mockDalConnector.query.mockResolvedValue(responseData)
+      mockDalConnector.executeDalQuery.mockResolvedValue(responseData)
     })
 
     test('it calls dalConnector with the correct arguments', async () => {
       await updateDalService(mutation, variables, sessionId)
 
-      expect(mockDalConnector.query).toHaveBeenCalledTimes(1)
-      expect(mockDalConnector.query).toHaveBeenCalledWith(mutation, variables, sessionId)
+      expect(mockDalConnector.executeDalQuery).toHaveBeenCalledTimes(1)
+      expect(mockDalConnector.executeDalQuery).toHaveBeenCalledWith(mutation, variables, sessionId)
     })
 
     test('it calls dalConnector with undefined sessionId when sessionId is not provided', async () => {
       await updateDalService(mutation, variables)
 
-      expect(mockDalConnector.query).toHaveBeenCalledTimes(1)
-      expect(mockDalConnector.query).toHaveBeenCalledWith(mutation, variables, undefined)
+      expect(mockDalConnector.executeDalQuery).toHaveBeenCalledTimes(1)
+      expect(mockDalConnector.executeDalQuery).toHaveBeenCalledWith(mutation, variables, undefined)
     })
 
     test('it returns the DAL response', async () => {
@@ -57,7 +57,7 @@ describe('updateDalService', () => {
 
   describe('when dalConnector returns an error', () => {
     beforeEach(() => {
-      mockDalConnector.query.mockResolvedValue({ errors: ['Some DAL error'] })
+      mockDalConnector.executeDalQuery.mockResolvedValue({ errors: ['Some DAL error'] })
     })
 
     test('it throws an error', async () => {

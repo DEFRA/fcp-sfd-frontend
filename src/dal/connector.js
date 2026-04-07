@@ -18,11 +18,14 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
+// Looks up the user's token from the session store using their session ID.
 const resolveUserToken = async (sessionCache, sessionId) => {
   const sessionData = await sessionCache.get(sessionId)
   return sessionData?.token
 }
 
+// Decides which user token to forward to the DAL — an explicit defraIdToken takes
+// priority; falls back to the session token for standard authenticated requests.
 const resolveAuthToken = async (sessionCache, sessionId, defraIdToken) => {
   if (defraIdToken) {
     return defraIdToken
@@ -31,6 +34,7 @@ const resolveAuthToken = async (sessionCache, sessionId, defraIdToken) => {
   return resolveUserToken(sessionCache, sessionId)
 }
 
+// Assembles the fetch options for a DAL GraphQL request.
 const buildDalRequest = (bearerToken, userToken, graphqlQuery, variables) => ({
   method: 'POST',
   headers: {
@@ -42,6 +46,8 @@ const buildDalRequest = (bearerToken, userToken, graphqlQuery, variables) => ({
   body: JSON.stringify({ query: graphqlQuery, variables })
 })
 
+// Handles errors that prevent a DAL response from being received 
+// Logs the error and returns a 500 DAL failure shape.
 const handleDalFailure = (err) => {
   logger.error(err, 'Error connecting to DAL')
 
@@ -51,6 +57,7 @@ const handleDalFailure = (err) => {
   })
 }
 
+// Creates a DAL connector bound to the provided session and token caches.
 const createDalConnector = (sessionCache, tokenCache) => {
   if (!sessionCache) {
     throw new Error('DAL connector session cache not initialised.')
@@ -92,13 +99,16 @@ const createDalConnector = (sessionCache, tokenCache) => {
   }
 }
 
+// Stores the single connector instance used by the app. Populated once at server startup.
 let instance = null
 
+// Initialises the shared DAL connector.
 const initDalConnector = (sessionCache, tokenCache) => {
   instance = createDalConnector(sessionCache, tokenCache)
   return instance
 }
 
+// Returns the shared DAL connector.
 const getDalConnector = () => {
   if (!instance) {
     throw new Error('DAL connector not initialised.')

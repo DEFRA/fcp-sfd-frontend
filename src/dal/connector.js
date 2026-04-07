@@ -18,6 +18,19 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
+const resolveUserToken = async (sessionCache, sessionId) => {
+  const sessionData = await sessionCache.get(sessionId)
+  return sessionData?.token
+}
+
+const resolveAuthToken = async (sessionCache, sessionId, defraIdToken) => {
+  if (defraIdToken) {
+    return defraIdToken
+  }
+
+  return resolveUserToken(sessionCache, sessionId)
+}
+
 const createDalConnector = (sessionCache, tokenCache) => {
   if (!sessionCache) {
     throw new Error('DAL connector session cache not initialised.')
@@ -29,14 +42,13 @@ const createDalConnector = (sessionCache, tokenCache) => {
 
   const query = async (query, variables, sessionId, defraIdToken = null) => {
     try {
-      // Get a gateway token from the token cache
       const bearerToken = await getTokenService(tokenCache)
 
-      // If no user token is provided, pull it from the session cache
-      if (defraIdToken === null) {
-        const sessionData = await sessionCache.get(sessionId)
-        defraIdToken = sessionData?.token
-      }
+      const userToken = await resolveAuthToken(
+        sessionCache,
+        sessionId,
+        defraIdToken
+      )
 
       const response = await fetch(config.get('dalConfig.endpoint'), {
         method: 'POST',
@@ -44,7 +56,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
           'Content-type': 'application/json',
           'gateway-type': 'external',
           Authorization: bearerToken,
-          'x-forwarded-authorization': defraIdToken
+          'x-forwarded-authorization': userToken
         },
         body: JSON.stringify({ query, variables })
       })

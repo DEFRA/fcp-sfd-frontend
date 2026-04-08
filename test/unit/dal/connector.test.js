@@ -67,8 +67,8 @@ describe('DAL (data access layer) connector', () => {
   })
 
   describe('x-forwarded-authorization header', () => {
-    describe('when defraIdToken is passed as an argument', () => {
-      test('should send defraIdToken in x-forwarded-authorization', async () => {
+    describe('when a forwarded user token is passed as an argument', () => {
+      test('should send the forwarded user token in x-forwarded-authorization', async () => {
         mockSuccessfulDalResponse()
 
         await dalConnector.query(exampleQuery, { sbi: 123456789 }, null, 'mocked-defra-id-token')
@@ -79,8 +79,8 @@ describe('DAL (data access layer) connector', () => {
       })
     })
 
-    describe('when defraIdToken is not passed and session has a token', () => {
-      test('should send token from session cache in x-forwarded-authorization', async () => {
+    describe('when a forwarded user token is not passed and session has a token', () => {
+      test('should send forwarded user token from session cache in x-forwarded-authorization', async () => {
         mockSessionCache.get.mockResolvedValueOnce({ token: 'token-from-session' })
         mockSuccessfulDalResponse()
 

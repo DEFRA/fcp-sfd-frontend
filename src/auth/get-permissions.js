@@ -2,7 +2,7 @@ import { getDalConnector } from '../dal/connector.js'
 import { permissionsQuery } from '../dal/queries/permissions-query.js'
 import { mapPermissions } from '../mappers/permissions-mapper.js'
 
-const getPermissions = async (sbi, crn, defraIdToken) => {
+const getPermissions = async (sbi, crn, forwardedUserToken) => {
   const variables = { sbi, crn }
 
   const dalConnector = getDalConnector()
@@ -10,7 +10,7 @@ const getPermissions = async (sbi, crn, defraIdToken) => {
     permissionsQuery,
     variables,
     null,
-    defraIdToken
+    forwardedUserToken
   )
 
   if (dalResponse.data) {

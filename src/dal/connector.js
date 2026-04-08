@@ -18,8 +18,8 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
 
-// Determines which user token to forward to the DAL.
-const resolveForwardedToken = async (sessionCache, sessionId, defraIdToken) => {
+// Determines which user token should be sent in x-forwarded-authorization.
+const resolveForwardedUserToken = async (sessionCache, sessionId, defraIdToken) => {
   if (defraIdToken) {
     return defraIdToken
   }
@@ -29,13 +29,13 @@ const resolveForwardedToken = async (sessionCache, sessionId, defraIdToken) => {
 }
 
 // Assembles the fetch options for a DAL GraphQL request.
-const buildDalRequest = (bearerToken, userToken, graphqlQuery, variables) => ({
+const buildDalRequest = (bearerToken, forwardedUserToken, graphqlQuery, variables) => ({
   method: 'POST',
   headers: {
     'Content-type': 'application/json',
     'gateway-type': 'external',
     Authorization: bearerToken,
-    'x-forwarded-authorization': userToken
+    'x-forwarded-authorization': forwardedUserToken
   },
   body: JSON.stringify({ query: graphqlQuery, variables })
 })
@@ -65,13 +65,18 @@ const createDalConnector = (sessionCache, tokenCache) => {
     try {
       const bearerToken = await getTokenService(tokenCache)
 
-      const userToken = await resolveForwardedToken(
+      const forwardedUserToken = await resolveForwardedUserToken(
         sessionCache,
         sessionId,
         defraIdToken
       )
 
-      const requestOptions = buildDalRequest(bearerToken, userToken, graphqlQuery, variables)
+      const requestOptions = buildDalRequest(
+        bearerToken,
+        forwardedUserToken,
+        graphqlQuery,
+        variables
+      )
 
       const response = await fetch(config.get('dalConfig.endpoint'), requestOptions)
 

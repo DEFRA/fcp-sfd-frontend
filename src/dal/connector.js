@@ -1,6 +1,9 @@
 /**
- * Shared DAL client used by services.
- * Keeps request construction and failure shaping in one place.
+ * DAL connector for GraphQL requests.
+ * Initialised once at server startup (`initDalConnector`) and accessed via
+ * `getDalConnector()` in services. Centralises request building, token
+ * resolution (`sessionId`/`forwardedUserToken`), and consistent DAL error
+ * shaping.
  * @module dal-connector
  */
 import { constants as httpConstants } from 'node:http2'
@@ -17,8 +20,8 @@ const resolveForwardedUserToken = async (sessionCache, sessionId, forwardedUserT
     return forwardedUserToken
   }
 
-  const sessionData = await sessionCache.get(sessionId)
-  return sessionData?.token
+  const session = await sessionCache.get(sessionId)
+  return session ? session.token : undefined
 }
 
 // Assembles the fetch options for a DAL GraphQL request.
@@ -33,8 +36,7 @@ const buildDalRequest = (bearerToken, forwardedUserToken, graphqlQuery, variable
   body: JSON.stringify({ query: graphqlQuery, variables })
 })
 
-// Handles errors that prevent a DAL response from being received.
-// Logs the error and returns a 500 DAL failure shape.
+// Logs DAL connection failures and returns a 500-formatted DAL response.
 const handleDalFailure = (err) => {
   logger.error(err, 'Error connecting to DAL')
 
@@ -44,7 +46,7 @@ const handleDalFailure = (err) => {
   })
 }
 
-// Builds a connector tied to server-owned caches configured at startup.
+// Factory for the DAL connector; injects startup caches so services use one shared, preconfigured instance.
 const createDalConnector = (sessionCache, tokenCache) => {
   if (!sessionCache) {
     throw new Error('DAL connector session cache not initialised.')
@@ -54,40 +56,38 @@ const createDalConnector = (sessionCache, tokenCache) => {
     throw new Error('DAL connector token cache not initialised.')
   }
 
-  const query = async (graphqlQuery, variables, { sessionId, forwardedUserToken } = {}) => {
-    try {
-      const bearerToken = await getTokenService(tokenCache)
-
-      const resolvedForwardedUserToken = await resolveForwardedUserToken(
-        sessionCache,
-        sessionId,
-        forwardedUserToken
-      )
-
-      const requestOptions = buildDalRequest(
-        bearerToken,
-        resolvedForwardedUserToken,
-        graphqlQuery,
-        variables
-      )
-
-      const response = await fetch(config.get('dalConfig.endpoint'), requestOptions)
-
-      const responseBody = await response.json()
-      const result = handleDalResponse(responseBody)
-
-      if (result.errors) {
-        logger.error('DAL responded with errors', result)
-      }
-
-      return result
-    } catch (err) {
-      return handleDalFailure(err)
-    }
-  }
-
   return {
-    query
+    query: async (graphqlQuery, variables, { sessionId, forwardedUserToken } = {}) => {
+      try {
+        const bearerToken = await getTokenService(tokenCache)
+
+        const resolvedForwardedUserToken = await resolveForwardedUserToken(
+          sessionCache,
+          sessionId,
+          forwardedUserToken
+        )
+
+        const requestOptions = buildDalRequest(
+          bearerToken,
+          resolvedForwardedUserToken,
+          graphqlQuery,
+          variables
+        )
+
+        const response = await fetch(config.get('dalConfig.endpoint'), requestOptions)
+
+        const responseBody = await response.json()
+        const result = handleDalResponse(responseBody)
+
+        if (result.errors) {
+          logger.error('DAL responded with errors', result)
+        }
+
+        return result
+      } catch (err) {
+        return handleDalFailure(err)
+      }
+    }
   }
 }
 

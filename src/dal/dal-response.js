@@ -5,10 +5,7 @@
  */
 import { constants as httpConstants } from 'node:http2'
 
-/**
- * Wraps data, errors, and status code into a standard response object.
- * Defaults to a 200 success with no data or errors if nothing is provided.
- */
+// Default contract expected by services and tests.
 const formatDalResponse = ({
   data = null,
   errors = null,
@@ -21,11 +18,7 @@ const formatDalResponse = ({
   }
 }
 
-/**
- * Converts raw GraphQL errors into a simpler shape with a status code.
- * Tries to extract a more detailed message and HTTP status from the
- * error extensions the DAL attaches, falling back to 400 Bad Request.
- */
+// Prefer status/message from DAL extensions, otherwise fall back to 400.
 const mapDalErrors = (responseErrors) => {
   return responseErrors.map(err => {
     const ext = err.extensions

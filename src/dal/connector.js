@@ -1,14 +1,7 @@
 /**
- * Wrapper for talking to the DAL
+ * Shared DAL client used by services.
+ * Keeps request construction and failure shaping in one place.
  * @module dal-connector
- *
- * This module lets the rest of the app ask for data without worrying about
- * login details or error formatting.
- *
- * It collects the right tokens in the background, sends the request,
- * and then returns results in a consistent, easy‑to‑handle shape.
- *
- * We create one shared instance when the app starts
  */
 import { constants as httpConstants } from 'node:http2'
 import { createLogger } from '../utils/logger.js'
@@ -51,7 +44,7 @@ const handleDalFailure = (err) => {
   })
 }
 
-// Creates a DAL connector bound to the provided session and token caches.
+// Builds a connector tied to server-owned caches configured at startup.
 const createDalConnector = (sessionCache, tokenCache) => {
   if (!sessionCache) {
     throw new Error('DAL connector session cache not initialised.')
@@ -101,7 +94,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
 // Stores the single connector instance used by the app. Populated once at server startup.
 let instance = null
 
-// Initialises the shared DAL connector.
+// Called once during server startup.
 const initDalConnector = (sessionCache, tokenCache) => {
   instance = createDalConnector(sessionCache, tokenCache)
   return instance

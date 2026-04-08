@@ -57,10 +57,14 @@ describe('updateDalService', () => {
 
   describe('when dalConnector returns an error', () => {
     beforeEach(() => {
-      mockDalConnector.query.mockResolvedValue({ errors: ['Some DAL error'] })
+      mockDalConnector.query.mockResolvedValue({
+        data: null,
+        errors: ['Some DAL error'],
+        statusCode: 500
+      })
     })
 
-    test('it throws an error', async () => {
+    test('it throws when DAL response includes errors', async () => {
       await expect(updateDalService(mutation, variables, sessionId)).rejects.toThrow('DAL error from mutation')
     })
   })

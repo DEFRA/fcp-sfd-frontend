@@ -64,6 +64,7 @@ export const createServer = async () => {
 
   server.app.tokenCache = initTokenCache(server, CACHE_NAME)
 
+  // DAL connector must be initialised during startup before any service calls getDalConnector().
   initDalConnector(server.app.cache, server.app.tokenCache)
 
   server.validator(Joi)

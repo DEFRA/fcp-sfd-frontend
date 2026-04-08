@@ -61,7 +61,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
     throw new Error('DAL connector token cache not initialised.')
   }
 
-  const executeDalQuery = async (graphqlQuery, variables, sessionId, defraIdToken = null) => {
+  const query = async (graphqlQuery, variables, sessionId, defraIdToken = null) => {
     try {
       const bearerToken = await getTokenService(tokenCache)
 
@@ -89,9 +89,7 @@ const createDalConnector = (sessionCache, tokenCache) => {
   }
 
   return {
-    executeDalQuery,
-    // Backward-compatible alias for legacy callers/tests.
-    query: executeDalQuery
+    query
   }
 }
 
@@ -104,10 +102,10 @@ const initDalConnector = (sessionCache, tokenCache) => {
   return instance
 }
 
-// Returns the shared DAL connector.
+// Returns the shared DAL connector after server startup initialises it.
 const getDalConnector = () => {
   if (!instance) {
-    throw new Error('DAL connector not initialised.')
+    throw new Error('DAL connector not initialised. Call initDalConnector during server startup first.')
   }
   return instance
 }

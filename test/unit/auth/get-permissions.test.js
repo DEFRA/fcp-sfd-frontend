@@ -3,7 +3,7 @@ import { getDalData, getMappedData } from '../../mocks/mock-permissions.js'
 import { mapPermissions } from '../../../src/mappers/permissions-mapper.js'
 import { permissionsQuery } from '../../../src/dal/queries/permissions-query.js'
 
-const mockDalConnector = { executeDalQuery: vi.fn() }
+const mockDalConnector = { query: vi.fn() }
 
 vi.mock('../../../src/dal/connector.js', () => ({
   getDalConnector: vi.fn(() => mockDalConnector)
@@ -29,13 +29,13 @@ describe('getPermissions', () => {
     crn = '987645433252'
 
     mapPermissions.mockReturnValue(getMappedData())
-    mockDalConnector.executeDalQuery.mockResolvedValue({ data: getDalData() })
+    mockDalConnector.query.mockResolvedValue({ data: getDalData() })
   })
 
   describe('when fetching from the DAL', () => {
     test('should call dalConnector with getPermission parameters', async () => {
       await getPermissions(sbi, crn)
-      expect(mockDalConnector.executeDalQuery).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, null, undefined)
+      expect(mockDalConnector.query).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, null, undefined)
     })
     test('should call mapPermissions when dalConnector response has data', async () => {
       await getPermissions(sbi, crn)
@@ -48,14 +48,14 @@ describe('getPermissions', () => {
     })
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
-      mockDalConnector.executeDalQuery.mockResolvedValue({})
+      mockDalConnector.query.mockResolvedValue({})
       await getPermissions(sbi, crn)
       expect(mapPermissions).not.toHaveBeenCalled()
     })
 
     test('should return dalConnector response when dalConnector response has no data', async () => {
       const dalResponse = { response: 'no-dal-data' }
-      mockDalConnector.executeDalQuery.mockResolvedValue(dalResponse)
+      mockDalConnector.query.mockResolvedValue(dalResponse)
       const result = await getPermissions(sbi, crn)
       expect(result).toBe(dalResponse)
     })

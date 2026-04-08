@@ -86,8 +86,7 @@ test/
 - Uses **OIDC** with Defra ID for sign-in
 - Session cached in **Catbox** (Redis in production, memory in dev)
 - Session ID passed to DAL in GraphQL requests to provide user context
-- Defra ID token stored in session cache via `getDefraIdToken(sessionId)`
-- Server instance accessed globally via `getServerInstance()` to retrieve token from cache when needed
+- Defra ID token is read from `server.app.cache` when no explicit token is provided to DAL connector
 
 ### DAL Integration (GraphQL)
 - `src/dal/connector.js` handles all GraphQL requests to DAL
@@ -199,10 +198,10 @@ export const mapBusinessDetails = (dalData) => {
 
 ### Adding a New Service
 1. Create `src/services/{domain}/my-service.js`
-2. Import `dalConnector` and mappers
+2. Import `getDalConnector` and mappers
 3. Accept `credentials` parameter
 4. Extract `sessionId` and other needed fields
-5. Call DAL if needed; map response
+5. Call DAL via `const dalConnector = getDalConnector()` and `dalConnector.query(...)`; map response
 6. Export the service function
 
 ### Adding a New Route

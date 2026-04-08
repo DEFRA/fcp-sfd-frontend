@@ -17,7 +17,7 @@ const fetchBusinessDetailsService = async (credentials) => {
   const query = cphEnabled ? businessDetailsQuery : businessDetailsQueryWithoutCph
 
   const dalConnector = getDalConnector()
-  const dalResponse = await dalConnector.executeDalQuery(query, { sbi, crn }, sessionId)
+  const dalResponse = await dalConnector.query(query, { sbi, crn }, sessionId)
 
   if (dalResponse.data) {
     const mappedResponse = mapBusinessDetails(dalResponse.data)

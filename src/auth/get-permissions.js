@@ -6,7 +6,7 @@ const getPermissions = async (sbi, crn, defraIdToken) => {
   const variables = { sbi, crn }
 
   const dalConnector = getDalConnector()
-  const dalResponse = await dalConnector.executeDalQuery(
+  const dalResponse = await dalConnector.query(
     permissionsQuery,
     variables,
     null,

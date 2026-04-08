@@ -14,7 +14,7 @@ export const businessPhoneSchema = Joi.object({
     .messages({
       'string.min': `Business telephone number must be ${PHONE_NUMBER_MIN} characters or more`,
       'string.max': `Business telephone number must be ${PHONE_NUMBER_MAX} characters or less`,
-      'string.pattern.base': 'Business telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +'
+      'string.pattern.base': 'Business telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and + (if included, + must be at the start)'
     }),
   businessMobile: Joi.string()
     .empty('')
@@ -24,7 +24,7 @@ export const businessPhoneSchema = Joi.object({
     .messages({
       'string.min': `Business mobile phone number must be ${PHONE_NUMBER_MIN} characters or more`,
       'string.max': `Business mobile phone number must be ${PHONE_NUMBER_MAX} characters or less`,
-      'string.pattern.base': 'Business mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +'
+      'string.pattern.base': 'Business mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and + (if included, + must be at the start)'
     })
 })
   .or('businessTelephone', 'businessMobile')

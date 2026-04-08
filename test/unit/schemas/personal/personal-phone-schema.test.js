@@ -175,7 +175,25 @@ describe('personal phone schema', () => {
         expect(value).toEqual(payload)
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
+          message: 'Personal telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and + (if included, + must be at the start)',
+          path: ['personalTelephone'],
+          type: 'string.pattern.base'
+        }))
+      })
+    })
+
+    describe('because "personalTelephone" contains a + in the middle', () => {
+      beforeEach(() => {
+        payload.personalTelephone = '0123+4567890'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Personal telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and + (if included, + must be at the start)',
           path: ['personalTelephone'],
           type: 'string.pattern.base'
         }))
@@ -229,7 +247,25 @@ describe('personal phone schema', () => {
         expect(value).toEqual(payload)
 
         expect(error.details[0]).toEqual(expect.objectContaining({
-          message: 'Personal mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
+          message: 'Personal mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and + (if included, + must be at the start)',
+          path: ['personalMobile'],
+          type: 'string.pattern.base'
+        }))
+      })
+    })
+
+    describe('because "personalMobile" contains a + in the middle', () => {
+      beforeEach(() => {
+        payload.personalMobile = '0123+4567890'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Personal mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and + (if included, + must be at the start)',
           path: ['personalMobile'],
           type: 'string.pattern.base'
         }))

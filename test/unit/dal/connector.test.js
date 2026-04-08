@@ -71,11 +71,15 @@ describe('DAL (data access layer) connector', () => {
       test('should send the forwarded user token in x-forwarded-authorization', async () => {
         mockSuccessfulDalResponse()
 
-        await dalConnector.query(exampleQuery, { sbi: 123456789 }, null, 'mocked-defra-id-token')
+        await dalConnector.query(
+          exampleQuery,
+          { sbi: 123456789 },
+          { forwardedUserToken: 'mocked-forwarded-user-token' }
+        )
 
         expect(global.fetch).toHaveBeenCalledTimes(1)
         const [, options] = global.fetch.mock.calls[0]
-        expect(options.headers['x-forwarded-authorization']).toBe('mocked-defra-id-token')
+        expect(options.headers['x-forwarded-authorization']).toBe('mocked-forwarded-user-token')
       })
     })
 
@@ -84,7 +88,11 @@ describe('DAL (data access layer) connector', () => {
         mockSessionCache.get.mockResolvedValueOnce({ token: 'token-from-session' })
         mockSuccessfulDalResponse()
 
-        await dalConnector.query(exampleQuery, { sbi: 123456789 }, 'session-id-123')
+        await dalConnector.query(
+          exampleQuery,
+          { sbi: 123456789 },
+          { sessionId: 'session-id-123' }
+        )
 
         expect(mockSessionCache.get).toHaveBeenCalledWith('session-id-123')
         expect(global.fetch).toHaveBeenCalledTimes(1)

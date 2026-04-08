@@ -35,7 +35,11 @@ describe('getPermissions', () => {
   describe('when fetching from the DAL', () => {
     test('should call DAL connector query with expected token argument', async () => {
       await getPermissions(sbi, crn)
-      expect(mockDalConnector.query).toHaveBeenCalledWith(permissionsQuery, { sbi, crn }, null, undefined)
+      expect(mockDalConnector.query).toHaveBeenCalledWith(
+        permissionsQuery,
+        { sbi, crn },
+        { forwardedUserToken: undefined }
+      )
     })
     test('should call mapPermissions when dalConnector response has data', async () => {
       await getPermissions(sbi, crn)
@@ -67,8 +71,7 @@ describe('getPermissions', () => {
       expect(mockDalConnector.query).toHaveBeenCalledWith(
         permissionsQuery,
         { sbi, crn },
-        null,
-        forwardedUserToken
+        { forwardedUserToken }
       )
     })
   })

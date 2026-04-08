@@ -12,9 +12,9 @@ import { getTokenService } from '../services/DAL/token/get-token-service.js'
 const logger = createLogger()
 
 // Determines which user token should be sent in x-forwarded-authorization.
-const resolveForwardedUserToken = async (sessionCache, sessionId, defraIdToken) => {
-  if (defraIdToken) {
-    return defraIdToken
+const resolveForwardedUserToken = async (sessionCache, sessionId, forwardedUserToken) => {
+  if (forwardedUserToken) {
+    return forwardedUserToken
   }
 
   const sessionData = await sessionCache.get(sessionId)
@@ -54,19 +54,19 @@ const createDalConnector = (sessionCache, tokenCache) => {
     throw new Error('DAL connector token cache not initialised.')
   }
 
-  const query = async (graphqlQuery, variables, sessionId, defraIdToken = null) => {
+  const query = async (graphqlQuery, variables, { sessionId, forwardedUserToken } = {}) => {
     try {
       const bearerToken = await getTokenService(tokenCache)
 
-      const forwardedUserToken = await resolveForwardedUserToken(
+      const resolvedForwardedUserToken = await resolveForwardedUserToken(
         sessionCache,
         sessionId,
-        defraIdToken
+        forwardedUserToken
       )
 
       const requestOptions = buildDalRequest(
         bearerToken,
-        forwardedUserToken,
+        resolvedForwardedUserToken,
         graphqlQuery,
         variables
       )

@@ -15,7 +15,7 @@ const fetchPersonalBusinessDetailsService = async (credentials) => {
   const dalResponse = await dalConnector.query(
     personalBusinessDetailsQuery,
     { crn, sbi },
-    sessionId
+    { sessionId }
   )
 
   if (dalResponse.data) {

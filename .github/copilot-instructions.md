@@ -115,7 +115,7 @@ const getHandler = async (request, h) => {
 // Service (where logic goes)
 const myService = async (credentials) => {
   const { sbi, crn, sessionId } = credentials
-  const response = await dalConnector.query(query, variables, sessionId)
+  const response = await dalConnector.query(query, variables, { sessionId })
   return mapResponse(response)
 }
 ```
@@ -123,7 +123,7 @@ const myService = async (credentials) => {
 ### Credentials Pattern
 - `credentials` object passed through the stack contains: `sbi`, `crn`, `sessionId` (and sometimes `email`, `token`)
 - Extract in services: `const { sbi, crn, sessionId } = credentials`
-- Always pass `sessionId` to `dalConnector.query()` for authenticated DAL calls
+- Always pass `{ sessionId }` to `dalConnector.query()` for authenticated DAL calls
 
 ### DAL Connector Usage
 ```javascript
@@ -132,13 +132,13 @@ import { getDalConnector } from '../../dal/connector.js'
 const dalConnector = getDalConnector()
 
 // Fetch query
-const response = await dalConnector.query(query, variables, sessionId)
+const response = await dalConnector.query(query, variables, { sessionId })
 
 // Update mutation
-const response = await dalConnector.query(mutation, variables, sessionId)
+const response = await dalConnector.query(mutation, variables, { sessionId })
 
 // During OIDC sign-in (before session cache populated)
-const response = await dalConnector.query(query, variables, null, defraIdToken)
+const response = await dalConnector.query(query, variables, { forwardedUserToken })
 ```
 
 ### Mappers
@@ -228,7 +228,7 @@ When users need to switch between multiple enrollments/businesses:
 1. Create `src/dal/queries/my-query.js`
 2. Export GraphQL query string
 3. Import in service: `import { myQuery } from '../../dal/queries/my-query.js'`
-4. Pass to `dalConnector.query(myQuery, variables, sessionId)`
+4. Pass to `dalConnector.query(myQuery, variables, { sessionId })`
 
 ### Testing a Single Feature
 ```bash

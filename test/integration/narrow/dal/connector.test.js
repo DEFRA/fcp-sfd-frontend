@@ -34,7 +34,7 @@ vi.mock('../../../../src/services/DAL/token/get-token-service.js', async () => {
 })
 
 // Test constants
-const mockDefraIdToken =
+const mockForwardedUserToken =
   'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb250YWN0SWQiOjMwMjAwMDAwMDAsInJlbGF0aW9uc2hpcHMiOlsiMzAwOTAwMDozMDA5MDAwMDE6Q2xlYW4gY29udHJvbCAtIGV4YW1wbGUgMToxOkV4dGVybmFsOjAiXSwicm9sZXMiOlsiMzAwOTAwMDpBZ2VudDozIl19.mock-signature'
 const sbi = '300900001'
 const crn = '3020000000'
@@ -65,8 +65,7 @@ describe('DAL (data access layer) connector integration', () => {
           sbi,
           crn
         },
-        null,
-        mockDefraIdToken
+        { forwardedUserToken: mockForwardedUserToken }
       )
 
       expect(result.data).toBeDefined()
@@ -82,7 +81,11 @@ describe('DAL (data access layer) connector integration', () => {
       try {
         config.set('dalConfig.endpoint', invalidDalEndpoint)
 
-        const result = await dalConnector.query(exampleQuery, { sbi }, sessionId)
+        const result = await dalConnector.query(
+          exampleQuery,
+          { sbi },
+          { sessionId }
+        )
 
         expect(result.data).toBeNull()
         expect(result.errors).toBeDefined()
@@ -103,7 +106,11 @@ describe('DAL (data access layer) connector integration', () => {
       }
     `
 
-      const result = await dalConnector.query(invalidQuery, { sbi }, sessionId)
+      const result = await dalConnector.query(
+        invalidQuery,
+        { sbi },
+        { sessionId }
+      )
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -114,7 +121,11 @@ describe('DAL (data access layer) connector integration', () => {
 
   describe('when required query variables are missing', () => {
     test('should return 400 error', async () => {
-      const result = await dalConnector.query(exampleQuery, {}, sessionId)
+      const result = await dalConnector.query(
+        exampleQuery,
+        {},
+        { sessionId }
+      )
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()

@@ -9,8 +9,7 @@ const getPermissions = async (sbi, crn, forwardedUserToken) => {
   const dalResponse = await dalConnector.query(
     permissionsQuery,
     variables,
-    null,
-    forwardedUserToken
+    { forwardedUserToken }
   )
 
   if (dalResponse.data) {

@@ -51,7 +51,7 @@ describe('fetchPersonalDetailsService', () => {
       expect(mockDalConnector.query).toHaveBeenCalledWith(
         expect.any(String),
         { crn: credentials.crn, sbi: credentials.sbi },
-        credentials.sessionId
+        { sessionId: credentials.sessionId }
       )
     })
 

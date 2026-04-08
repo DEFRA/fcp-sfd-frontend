@@ -64,7 +64,7 @@ describe('fetchBusinessDetailsService', () => {
       expect(mockDalConnector.query).toHaveBeenCalledWith(
         businessDetailsQuery,
         { sbi: credentials.sbi, crn: credentials.crn },
-        credentials.sessionId
+        { sessionId: credentials.sessionId }
       )
     })
 
@@ -108,7 +108,7 @@ describe('fetchBusinessDetailsService', () => {
       expect(mockDalConnector.query).toHaveBeenCalledWith(
         businessDetailsQueryWithoutCph,
         { sbi: credentials.sbi, crn: credentials.crn },
-        credentials.sessionId
+        { sessionId: credentials.sessionId }
       )
     })
 

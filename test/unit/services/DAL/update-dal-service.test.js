@@ -38,14 +38,22 @@ describe('updateDalService', () => {
       await updateDalService(mutation, variables, sessionId)
 
       expect(mockDalConnector.query).toHaveBeenCalledTimes(1)
-      expect(mockDalConnector.query).toHaveBeenCalledWith(mutation, variables, sessionId)
+      expect(mockDalConnector.query).toHaveBeenCalledWith(
+        mutation,
+        variables,
+        { sessionId }
+      )
     })
 
     test('it calls dalConnector with undefined sessionId when sessionId is not provided', async () => {
       await updateDalService(mutation, variables)
 
       expect(mockDalConnector.query).toHaveBeenCalledTimes(1)
-      expect(mockDalConnector.query).toHaveBeenCalledWith(mutation, variables, undefined)
+      expect(mockDalConnector.query).toHaveBeenCalledWith(
+        mutation,
+        variables,
+        { sessionId: undefined }
+      )
     })
 
     test('it returns the DAL response', async () => {

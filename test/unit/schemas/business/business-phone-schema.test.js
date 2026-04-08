@@ -181,6 +181,42 @@ describe('business phone schema', () => {
       })
     })
 
+    describe('because "businessTelephone" contains a + in the middle', () => {
+      beforeEach(() => {
+        payload.businessTelephone = '0123+4567890'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
+          path: ['businessTelephone'],
+          type: 'string.pattern.base'
+        }))
+      })
+    })
+
+    describe('because "businessTelephone" contains a + at the end', () => {
+      beforeEach(() => {
+        payload.businessTelephone = '01234567890+'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business telephone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
+          path: ['businessTelephone'],
+          type: 'string.pattern.base'
+        }))
+      })
+    })
+
     describe('because "businessMobile" is too short', () => {
       beforeEach(() => {
         payload.businessMobile = '012'
@@ -220,6 +256,42 @@ describe('business phone schema', () => {
     describe('because "businessMobile" contains invalid special characters', () => {
       beforeEach(() => {
         payload.businessMobile = '0123@#$%^&*abcdef'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
+          path: ['businessMobile'],
+          type: 'string.pattern.base'
+        }))
+      })
+    })
+
+    describe('because "businessMobile" contains a + in the middle', () => {
+      beforeEach(() => {
+        payload.businessMobile = '0123+4567890'
+      })
+
+      test('it fails validation', () => {
+        const { error, value } = schema.validate(payload, { abortEarly: false })
+
+        expect(value).toEqual(payload)
+
+        expect(error.details[0]).toEqual(expect.objectContaining({
+          message: 'Business mobile phone number must only include numbers 0 to 9 and special characters such as spaces, brackets and +',
+          path: ['businessMobile'],
+          type: 'string.pattern.base'
+        }))
+      })
+    })
+
+    describe('because "businessMobile" contains a + at the end', () => {
+      beforeEach(() => {
+        payload.businessMobile = '01234567890+'
       })
 
       test('it fails validation', () => {

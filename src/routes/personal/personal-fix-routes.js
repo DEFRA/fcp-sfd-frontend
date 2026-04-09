@@ -1,16 +1,10 @@
 import { personalFixPresenter } from '../../presenters/personal/personal-fix-presenter.js'
 import { initialiseFixJourneyService } from '../../services/initialise-fix-journey-service.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
-import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
-
-const PERSONAL_DETAILS_ROUTE = '/personal-details'
 
 const getPersonalFix = {
   method: 'GET',
   path: '/personal-fix',
-  options: {
-    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', PERSONAL_DETAILS_ROUTE)]
-  },
   handler: async (request, h) => {
     const { yar, query, auth } = request
 

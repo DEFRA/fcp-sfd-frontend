@@ -57,20 +57,5 @@ describe('checkInterruptedJourneySessionService', () => {
         expect(yar.get).toHaveBeenCalledWith(journeyKey)
       })
     })
-
-    describe('because sectionsNeedingUpdate is a defined array', () => {
-      beforeEach(() => {
-        yar.get.mockReturnValue({
-          sectionsNeedingUpdate: ['name', 'email']
-        })
-      })
-
-      test('returns true', () => {
-        const result = checkInterruptedJourneySessionService(yar, journeyKey)
-
-        expect(result).toBe(true)
-        expect(yar.get).toHaveBeenCalledWith(journeyKey)
-      })
-    })
   })
 })

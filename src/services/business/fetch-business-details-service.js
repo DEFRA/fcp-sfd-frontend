@@ -9,11 +9,11 @@
 import { dalConnector } from '../../dal/connector.js'
 import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
-import { config } from '../../config/index.js'
+import { getConfigService } from '../get-config-service.js'
 
 const fetchBusinessDetailsService = async (credentials) => {
   const { sbi, crn, sessionId } = credentials
-  const cphEnabled = config.get('featureToggle.cphEnabled')
+  const cphEnabled = await getConfigService('featureToggle.cphEnabled')
   const query = cphEnabled ? businessDetailsQuery : businessDetailsQueryWithoutCph
 
   const dalResponse = await dalConnector(query, { sbi, crn }, sessionId)

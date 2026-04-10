@@ -11,6 +11,7 @@ import { getMappedData, getDalData } from '../../../mocks/mock-business-details.
 // Mock dependencies
 const mockMapBusinessDetails = vi.fn()
 const mockConfigValues = {}
+const mockGetConfigService = vi.fn()
 
 // Mock imports
 vi.mock('../../../../src/dal/connector.js', () => ({
@@ -19,6 +20,10 @@ vi.mock('../../../../src/dal/connector.js', () => ({
 
 vi.mock('../../../../src/mappers/business-details-mapper.js', () => ({
   mapBusinessDetails: mockMapBusinessDetails
+}))
+
+vi.mock('../../../../src/services/get-config-service.js', () => ({
+  getConfigService: mockGetConfigService
 }))
 
 vi.mock('../../../../src/config/index.js', () => ({
@@ -54,6 +59,7 @@ describe('fetchBusinessDetailsService', () => {
       Object.assign(mockConfigValues, {
         'featureToggle.cphEnabled': true
       })
+      mockGetConfigService.mockResolvedValue(true)
       dalConnector.mockResolvedValue({ data: getDalData() })
       mockMapBusinessDetails.mockReturnValue(getMappedData())
     })
@@ -92,6 +98,7 @@ describe('fetchBusinessDetailsService', () => {
       Object.assign(mockConfigValues, {
         'featureToggle.cphEnabled': false
       })
+      mockGetConfigService.mockResolvedValue(false)
       dalConnector.mockResolvedValue({ data: getDalData() })
       mockMapBusinessDetails.mockReturnValue(getMappedData())
     })

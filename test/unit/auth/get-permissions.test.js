@@ -35,6 +35,7 @@ describe('getPermissions', () => {
   describe('when fetching from the DAL', () => {
     test('should call DAL connector query with expected token argument', async () => {
       await getPermissions(sbi, crn)
+
       expect(mockDalConnector.query).toHaveBeenCalledWith(
         permissionsQuery,
         { sbi, crn },
@@ -43,17 +44,20 @@ describe('getPermissions', () => {
     })
     test('should call mapPermissions when dalConnector response has data', async () => {
       await getPermissions(sbi, crn)
+
       expect(mapPermissions).toHaveBeenCalledWith(getDalData())
     })
 
     test('should return mapped data when dalConnector response has data', async () => {
       const result = await getPermissions(sbi, crn)
+
       expect(result).toEqual(getMappedData())
     })
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
       mockDalConnector.query.mockResolvedValue({})
       await getPermissions(sbi, crn)
+
       expect(mapPermissions).not.toHaveBeenCalled()
     })
 
@@ -61,6 +65,7 @@ describe('getPermissions', () => {
       const dalResponse = { response: 'no-dal-data' }
       mockDalConnector.query.mockResolvedValue(dalResponse)
       const result = await getPermissions(sbi, crn)
+
       expect(result).toBe(dalResponse)
     })
 

@@ -1,5 +1,10 @@
+// Test framework dependencies
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest'
+
+// Thing under test
 import { initDalConnector, getDalConnector } from '../../../src/dal/connector.js'
+
+// Test helpers
 import { exampleQuery } from '../../../src/dal/queries/example-query.js'
 
 vi.mock('../../../src/config/index.js', () => ({

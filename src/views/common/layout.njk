@@ -8,10 +8,12 @@
 {% from "common/footer/macro.njk" import appFooter %}
 {% set mainClasses = "app-main-wrapper" %}
 
-{% block head %}
+{% block headIcons %}
   <link rel="icon" href="{{ getAssetPath('assets/images/favicon.png') }}?v=1">
   <link rel="apple-touch-icon" href="{{ getAssetPath('assets/images/favicon.png') }}?v=1">
+{% endblock %}
 
+{% block head %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
 
   {% if metaDescription %}

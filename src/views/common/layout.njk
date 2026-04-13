@@ -9,6 +9,9 @@
 {% set mainClasses = "app-main-wrapper" %}
 
 {% block head %}
+  <link rel="icon" href="{{ getAssetPath('assets/images/favicon.png') }}?v=1">
+  <link rel="apple-touch-icon" href="{{ getAssetPath('assets/images/favicon.png') }}?v=1">
+
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
 
   {% if metaDescription %}

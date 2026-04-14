@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import { config } from './config/index.js'
 import { plugins } from './plugins/index.js'
-import { setupProxy } from './utils/setup-proxy.js'
+import { setupProxy } from './server/common/helpers/proxy/setup-proxy.js'
 import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 import { initTokenCache } from './utils/caching/token-cache.js'

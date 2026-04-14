@@ -1,9 +1,12 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
 import { config } from '../../../src/config/index.js'
+import { setupProxy } from '../../../src/server/common/helpers/proxy/setup-proxy.js'
 
-const mockSetGlobalDispatcher = vi.fn()
-const mockBootstrap = vi.fn()
-const mockLoggerInfo = vi.fn()
+const { mockSetGlobalDispatcher, mockBootstrap, mockLoggerInfo } = vi.hoisted(() => ({
+  mockSetGlobalDispatcher: vi.fn(),
+  mockBootstrap: vi.fn(),
+  mockLoggerInfo: vi.fn()
+}))
 
 vi.mock('undici', () => ({
   ProxyAgent: vi.fn(),
@@ -28,7 +31,6 @@ describe('setupProxy', () => {
   })
 
   test('should not setup proxy when httpProxy is not set', async () => {
-    const { setupProxy } = await import('../../../src/utils/setup-proxy.js')
     setupProxy()
 
     expect(mockLoggerInfo).not.toHaveBeenCalled()
@@ -40,7 +42,6 @@ describe('setupProxy', () => {
     const proxyUrl = 'http://proxy.example.com'
     config.set('server.httpProxy', proxyUrl)
 
-    const { setupProxy } = await import('../../../src/utils/setup-proxy.js')
     setupProxy()
 
     expect(mockLoggerInfo).toHaveBeenCalledWith('setting up global proxies')

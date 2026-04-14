@@ -1,17 +1,11 @@
+// Test framework dependencies
 import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest'
-import { getServerInstance } from '../../../src/server.js'
-import { dalConnector } from '../../../src/dal/connector.js'
-import { exampleQuery } from '../../../src/dal/queries/example-query.js'
 
-vi.mock('../../../src/server.js', () => ({
-  getServerInstance: vi.fn().mockReturnValue({
-    app: {
-      cache: {
-        get: vi.fn().mockResolvedValue(null)
-      }
-    }
-  })
-}))
+// Thing under test
+import { initDalConnector, getDalConnector } from '../../../src/dal/connector.js'
+
+// Test helpers
+import { exampleQuery } from '../../../src/dal/queries/example-query.js'
 
 vi.mock('../../../src/config/index.js', () => ({
   config: {
@@ -32,15 +26,20 @@ vi.mock('../../../src/services/DAL/token/get-token-service.js', () => ({
   getTokenService: vi.fn().mockResolvedValue('mocked-token')
 }))
 
-vi.mock('../../../src/utils/caching/token-cache.js', () => ({
-  getTokenCache: vi.fn().mockReturnValue('mocked-cache')
-}))
-
 describe('DAL (data access layer) connector', () => {
   const originalFetch = global.fetch
 
+  let mockSessionCache
+  let mockTokenCache
+  let dalConnector
+
   beforeEach(() => {
     vi.clearAllMocks()
+
+    mockSessionCache = { get: vi.fn().mockResolvedValue(null) }
+    mockTokenCache = {}
+    initDalConnector(mockSessionCache, mockTokenCache)
+    dalConnector = getDalConnector()
   })
 
   afterEach(() => {
@@ -60,7 +59,7 @@ describe('DAL (data access layer) connector', () => {
     test('should return data and status without errors', async () => {
       mockSuccessfulDalResponse()
 
-      const result = await dalConnector(exampleQuery, { sbi: 123456789 })
+      const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
 
       expect(result.data).toBeDefined()
       expect(result.data.business.name).toBe('Test Business')
@@ -73,26 +72,34 @@ describe('DAL (data access layer) connector', () => {
   })
 
   describe('x-forwarded-authorization header', () => {
-    describe('when defraIdToken is passed as an argument', () => {
-      test('should send defraIdToken in x-forwarded-authorization', async () => {
+    describe('when a forwarded user token is passed as an argument', () => {
+      test('should send the forwarded user token in x-forwarded-authorization', async () => {
         mockSuccessfulDalResponse()
 
-        await dalConnector(exampleQuery, { sbi: 123456789 }, null, 'mocked-defra-id-token')
+        await dalConnector.query(
+          exampleQuery,
+          { sbi: 123456789 },
+          { forwardedUserToken: 'mocked-forwarded-user-token' }
+        )
 
         expect(global.fetch).toHaveBeenCalledTimes(1)
         const [, options] = global.fetch.mock.calls[0]
-        expect(options.headers['x-forwarded-authorization']).toBe('mocked-defra-id-token')
+        expect(options.headers['x-forwarded-authorization']).toBe('mocked-forwarded-user-token')
       })
     })
 
-    describe('when defraIdToken is not passed and session has a token', () => {
-      test('should send token from session cache in x-forwarded-authorization', async () => {
-        getServerInstance().app.cache.get.mockResolvedValueOnce({ token: 'token-from-session' })
+    describe('when a forwarded user token is not passed and session has a token', () => {
+      test('should send forwarded user token from session cache in x-forwarded-authorization', async () => {
+        mockSessionCache.get.mockResolvedValueOnce({ token: 'token-from-session' })
         mockSuccessfulDalResponse()
 
-        await dalConnector(exampleQuery, { sbi: 123456789 }, 'session-id-123')
+        await dalConnector.query(
+          exampleQuery,
+          { sbi: 123456789 },
+          { sessionId: 'session-id-123' }
+        )
 
-        expect(getServerInstance().app.cache.get).toHaveBeenCalledWith('session-id-123')
+        expect(mockSessionCache.get).toHaveBeenCalledWith('session-id-123')
         expect(global.fetch).toHaveBeenCalledTimes(1)
         const [, options] = global.fetch.mock.calls[0]
         expect(options.headers['x-forwarded-authorization']).toBe('token-from-session')
@@ -121,7 +128,7 @@ describe('DAL (data access layer) connector', () => {
         })
       })
 
-      const result = await dalConnector(exampleQuery, { sbi: 123456789 })
+      const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
 
       expect(result.data).toBeNull()
       expect(result.errors).toBeDefined()
@@ -135,11 +142,44 @@ describe('DAL (data access layer) connector', () => {
     test('returns a formatted error response', async () => {
       global.fetch = vi.fn().mockRejectedValue(new Error('Network error'))
 
-      const result = await dalConnector(exampleQuery, { sbi: 123456789 })
+      const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
 
       expect(result.data).toBeNull()
       expect(result.statusCode).toBe(500)
       expect(result.errors[0].message).toBe('Network error')
+    })
+  })
+
+  describe('when the connector is requested before it has been initialised', () => {
+    test('should throw DAL connector not initialised error', async () => {
+      vi.resetModules()
+      const { getDalConnector } = await import('../../../src/dal/connector.js')
+
+      expect(() => getDalConnector()).toThrowError(
+        'DAL connector not initialised. Call initDalConnector during server startup first.'
+      )
+    })
+  })
+
+  describe('when the connector is initialised without token cache', () => {
+    test('should throw DAL connector token cache not initialised error', async () => {
+      vi.resetModules()
+      const { initDalConnector } = await import('../../../src/dal/connector.js')
+
+      expect(() => initDalConnector(mockSessionCache)).toThrowError(
+        'DAL connector token cache not initialised.'
+      )
+    })
+  })
+
+  describe('when the connector is initialised without session cache', () => {
+    test('should throw DAL connector session cache not initialised error', async () => {
+      vi.resetModules()
+      const { initDalConnector } = await import('../../../src/dal/connector.js')
+
+      expect(() => initDalConnector(undefined, mockTokenCache)).toThrowError(
+        'DAL connector session cache not initialised.'
+      )
     })
   })
 })

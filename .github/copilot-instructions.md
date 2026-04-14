@@ -80,14 +80,13 @@ test/
 4. **Nunjucks template** (`src/views/`) renders HTML response
 
 **Example:** Business details fetch:
-- `routes/business/business-routes.js` → `services/business/fetch-business-details-service.js` → `dalConnector()` (GraphQL) → `mapBusinessDetails()` → template
+- `routes/business/business-routes.js` → `services/business/fetch-business-details-service.js` → `dalConnector.query()` (GraphQL) → `mapBusinessDetails()` → template
 
 ### Authentication & Session
 - Uses **OIDC** with Defra ID for sign-in
 - Session cached in **Catbox** (Redis in production, memory in dev)
 - Session ID passed to DAL in GraphQL requests to provide user context
-- Defra ID token stored in session cache via `getDefraIdToken(sessionId)`
-- Server instance accessed globally via `getServerInstance()` to retrieve token from cache when needed
+- Defra ID token is read from `server.app.cache` when no explicit token is provided to DAL connector
 
 ### DAL Integration (GraphQL)
 - `src/dal/connector.js` handles all GraphQL requests to DAL
@@ -116,7 +115,7 @@ const getHandler = async (request, h) => {
 // Service (where logic goes)
 const myService = async (credentials) => {
   const { sbi, crn, sessionId } = credentials
-  const response = await dalConnector(query, variables, sessionId)
+  const response = await dalConnector.query(query, variables, { sessionId })
   return mapResponse(response)
 }
 ```
@@ -124,20 +123,22 @@ const myService = async (credentials) => {
 ### Credentials Pattern
 - `credentials` object passed through the stack contains: `sbi`, `crn`, `sessionId` (and sometimes `email`, `token`)
 - Extract in services: `const { sbi, crn, sessionId } = credentials`
-- Always pass `sessionId` to `dalConnector()` for authenticated DAL calls
+- Always pass `{ sessionId }` to `dalConnector.query()` for authenticated DAL calls
 
 ### DAL Connector Usage
 ```javascript
-import { dalConnector } from '../../dal/connector.js'
+import { getDalConnector } from '../../dal/connector.js'
+
+const dalConnector = getDalConnector()
 
 // Fetch query
-const response = await dalConnector(query, variables, sessionId)
+const response = await dalConnector.query(query, variables, { sessionId })
 
 // Update mutation
-const response = await dalConnector(mutation, variables, sessionId)
+const response = await dalConnector.query(mutation, variables, { sessionId })
 
 // During OIDC sign-in (before session cache populated)
-const response = await dalConnector(query, variables, null, defraIdToken)
+const response = await dalConnector.query(query, variables, { forwardedUserToken })
 ```
 
 ### Mappers
@@ -197,10 +198,10 @@ export const mapBusinessDetails = (dalData) => {
 
 ### Adding a New Service
 1. Create `src/services/{domain}/my-service.js`
-2. Import `dalConnector` and mappers
+2. Import `getDalConnector` and mappers
 3. Accept `credentials` parameter
 4. Extract `sessionId` and other needed fields
-5. Call DAL if needed; map response
+5. Call DAL via `const dalConnector = getDalConnector()` and `dalConnector.query(...)`; map response
 6. Export the service function
 
 ### Adding a New Route
@@ -227,7 +228,7 @@ When users need to switch between multiple enrollments/businesses:
 1. Create `src/dal/queries/my-query.js`
 2. Export GraphQL query string
 3. Import in service: `import { myQuery } from '../../dal/queries/my-query.js'`
-4. Pass to `dalConnector(myQuery, variables, sessionId)`
+4. Pass to `dalConnector.query(myQuery, variables, { sessionId })`
 
 ### Testing a Single Feature
 ```bash

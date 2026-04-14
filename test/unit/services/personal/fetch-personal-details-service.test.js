@@ -2,11 +2,11 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-import { dalConnector } from '../../../../src/dal/connector.js'
 const mockMappedValue = vi.fn()
+const mockDalConnector = { query: vi.fn() }
 
 vi.mock('../../../../src/dal/connector.js', () => ({
-  dalConnector: vi.fn()
+  getDalConnector: vi.fn(() => mockDalConnector)
 }))
 
 vi.mock('../../../../src/mappers/personal-details-mapper.js', () => ({
@@ -41,28 +41,39 @@ describe('fetchPersonalDetailsService', () => {
 
   describe('when fetching from the DAL', () => {
     beforeEach(() => {
-      dalConnector.mockResolvedValue(data)
+      mockDalConnector.query.mockResolvedValue(data)
       mockMappedValue.mockReturnValue(mappedDalData)
     })
 
-    test('dalConnector is called', async () => {
+    test('calls DAL connector with credentials values', async () => {
       await fetchPersonalDetailsService(credentials)
 
-      expect(dalConnector).toHaveBeenCalled()
+      expect(mockDalConnector.query).toHaveBeenCalledWith(
+        expect.any(String),
+        { crn: credentials.crn, sbi: credentials.sbi },
+        { sessionId: credentials.sessionId }
+      )
     })
 
-    test('it correctly returns mappedData if dalConnector response has object data', async () => {
+    test('returns mapped data when DAL response includes data', async () => {
       const result = await fetchPersonalDetailsService(credentials)
 
       expect(result).toMatchObject(mappedDalData)
     })
 
-    test('it returns the full response object if dalConnector response has no object data', async () => {
-      const dalErrorResponse = { error: 'error response from dal' }
-      dalConnector.mockResolvedValue(dalErrorResponse)
+    test('returns raw DAL response when data is missing', async () => {
+      const dalErrorResponse = {
+        data: null,
+        errors: [{ message: 'error response from dal' }],
+        statusCode: 500
+      }
+      mockDalConnector.query.mockResolvedValue(dalErrorResponse)
       const result = await fetchPersonalDetailsService(credentials)
 
+      expect(mockMappedValue).not.toHaveBeenCalled()
       expect(result).toMatchObject(dalErrorResponse)
+      expect(result.errors).toBeDefined()
+      expect(result.statusCode).toBe(500)
     })
   })
 })

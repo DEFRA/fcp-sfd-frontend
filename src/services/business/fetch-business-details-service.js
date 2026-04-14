@@ -6,7 +6,7 @@
  * @module fetchBusinessDetailsService
  */
 
-import { dalConnector } from '../../dal/connector.js'
+import { getDalConnector } from '../../dal/connector.js'
 import { businessDetailsQuery, businessDetailsQueryWithoutCph } from '../../dal/queries/business-details.js'
 import { mapBusinessDetails } from '../../mappers/business-details-mapper.js'
 import { config } from '../../config/index.js'
@@ -16,7 +16,8 @@ const fetchBusinessDetailsService = async (credentials) => {
   const cphEnabled = config.get('featureToggle.cphEnabled')
   const query = cphEnabled ? businessDetailsQuery : businessDetailsQueryWithoutCph
 
-  const dalResponse = await dalConnector(query, { sbi, crn }, sessionId)
+  const dalConnector = getDalConnector()
+  const dalResponse = await dalConnector.query(query, { sbi, crn }, { sessionId })
 
   if (dalResponse.data) {
     const mappedResponse = mapBusinessDetails(dalResponse.data)

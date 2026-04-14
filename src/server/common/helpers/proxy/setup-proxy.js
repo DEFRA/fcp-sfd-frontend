@@ -3,7 +3,6 @@ import { bootstrap } from 'global-agent'
 import { config } from '../../../../config/index.js'
 import { createLogger } from '../../../../utils/logger.js'
 
-
 const logger = createLogger()
 
 /**

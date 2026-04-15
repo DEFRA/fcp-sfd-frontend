@@ -3,8 +3,6 @@
  * @module personalFixCheckPresenter
  */
 
-import moment from 'moment'
-
 const personalFixCheckPresenter = (personalDetails) => {
   const {
     orderedSectionsToFix,
@@ -36,9 +34,17 @@ const personalFixCheckPresenter = (personalDetails) => {
 const formatDob = (dob) => {
   if (dob) {
     const { day, month, year } = dob
-    const personalDob = new Date(`${month}/${day}/${year}`)
+    const personalDob = new Date(Number(year), Number(month) - 1, Number(day))
 
-    return moment(personalDob).format('D MMMM YYYY')
+    if (Number.isNaN(personalDob.getTime())) {
+      return null
+    }
+
+    return new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }).format(personalDob)
   }
 
   return null

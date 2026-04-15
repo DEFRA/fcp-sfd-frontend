@@ -3,11 +3,9 @@
  * @module personalDobCheckPresenter
  */
 
-import moment from 'moment'
-
 const personalDobCheckPresenter = (personalDetails) => {
   const { day, month, year } = personalDetails.changePersonalDob
-  const personalDob = new Date([`${month}/${day}/${year}`])
+  const personalDob = new Date(Number(year), Number(month) - 1, Number(day))
 
   return {
     backLink: { href: '/account-date-of-birth-change' },
@@ -15,7 +13,11 @@ const personalDobCheckPresenter = (personalDetails) => {
     metaDescription: 'Check the date of birth for your personal account is correct.',
     userName: personalDetails.info.userName ?? null,
     changeLink: '/account-date-of-birth-change',
-    dateOfBirth: moment(personalDob).format('D MMMM YYYY')
+    dateOfBirth: new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }).format(personalDob)
   }
 }
 

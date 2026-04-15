@@ -3,7 +3,6 @@
  * @module personalDetailsPresenter
  */
 
-import moment from 'moment'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { config } from '../../config/index.js'
 
@@ -108,14 +107,29 @@ const formatDob = (dob) => {
     return { formattedDob: 'Not added', action: 'Add' }
   }
 
-  const dobMoment = moment(dob)
+  const parsedDob = new Date(dob)
+  const isValidDob = !Number.isNaN(parsedDob.getTime())
+  const today = new Date()
+  const isFutureDob = isValidDob && parsedDob > new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    23,
+    59,
+    59,
+    999
+  )
 
-  if (!dobMoment.isValid() || dobMoment.isAfter(moment(), 'day')) {
+  if (!isValidDob || isFutureDob) {
     return { formattedDob: 'Not added', action: 'Add' }
   }
 
   return {
-    formattedDob: dobMoment.format('D MMMM YYYY'),
+    formattedDob: new Intl.DateTimeFormat('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }).format(parsedDob),
     action: 'Change'
   }
 }

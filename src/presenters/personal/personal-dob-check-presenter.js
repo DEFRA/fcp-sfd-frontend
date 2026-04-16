@@ -3,6 +3,8 @@
  * @module personalDobCheckPresenter
  */
 
+import { formatGbDate } from '../../utils/format-gb-date.js'
+
 const personalDobCheckPresenter = (personalDetails) => {
   const { day, month, year } = personalDetails.changePersonalDob
   const personalDob = new Date(Number(year), Number(month) - 1, Number(day))
@@ -13,11 +15,7 @@ const personalDobCheckPresenter = (personalDetails) => {
     metaDescription: 'Check the date of birth for your personal account is correct.',
     userName: personalDetails.info.userName ?? null,
     changeLink: '/account-date-of-birth-change',
-    dateOfBirth: new Intl.DateTimeFormat('en-GB', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    }).format(personalDob)
+    dateOfBirth: formatGbDate(personalDob)
   }
 }
 

@@ -3,6 +3,8 @@
  * @module personalFixCheckPresenter
  */
 
+import { formatGbDate } from '../../utils/format-gb-date.js'
+
 const personalFixCheckPresenter = (personalDetails) => {
   const {
     orderedSectionsToFix,
@@ -40,11 +42,7 @@ const formatDob = (dob) => {
       return null
     }
 
-    return new Intl.DateTimeFormat('en-GB', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    }).format(personalDob)
+    return formatGbDate(personalDob)
   }
 
   return null

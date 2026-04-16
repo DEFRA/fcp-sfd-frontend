@@ -1,16 +1,18 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
-import { config } from '../../../src/config/index.js'
-import { setupProxy } from '../../../src/server/common/helpers/proxy/setup-proxy.js'
+import { config } from '../../../../../../src/config/index.js'
+import { setupProxy } from '../../../../../../src/server/common/helpers/proxy/setup-proxy.js'
 
-const mockSetGlobalDispatcher = vi.fn()
-const mockLoggerInfo = vi.fn()
+const { mockSetGlobalDispatcher, mockLoggerInfo } = vi.hoisted(() => ({
+  mockSetGlobalDispatcher: vi.fn(),
+  mockLoggerInfo: vi.fn()
+}))
 
 vi.mock('undici', () => ({
   ProxyAgent: vi.fn(),
   setGlobalDispatcher: (...args) => mockSetGlobalDispatcher(...args)
 }))
 
-vi.mock('../../../src/utils/logger.js', () => ({
+vi.mock('../../../../../../src/utils/logger.js', () => ({
   createLogger: () => ({
     info: mockLoggerInfo
   })

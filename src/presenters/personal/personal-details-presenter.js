@@ -2,6 +2,11 @@ import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { config } from '../../config/index.js'
 import { formatGbDate } from '../../utils/format-gb-date.js'
 
+const END_OF_DAY_HOURS = 23
+const END_OF_DAY_MINUTES = 59
+const END_OF_DAY_SECONDS = 59
+const END_OF_DAY_MILLISECONDS = 999
+
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
   const { action: dobAction, formattedDob } = formatDob(data.info.dateOfBirth.full)
@@ -110,10 +115,10 @@ const formatDob = (dob) => {
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
-    23,
-    59,
-    59,
-    999
+    END_OF_DAY_HOURS,
+    END_OF_DAY_MINUTES,
+    END_OF_DAY_SECONDS,
+    END_OF_DAY_MILLISECONDS
   )
 
   if (!isValidDob || isFutureDob) {

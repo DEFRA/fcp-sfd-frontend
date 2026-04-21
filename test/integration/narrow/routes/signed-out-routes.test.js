@@ -1,4 +1,5 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest'
+import { JSDOM } from 'jsdom'
 import '../../../mocks/setup-server-mocks.js'
 
 const { createServer } = await import('../../../../src/server.js')
@@ -25,11 +26,9 @@ describe('signed out route integration', async () => {
   })
 
   test('Ensure that page title is "You have signed out"', async () => {
-    const pageTitleMatch = response.result.match(
-      /<main[^>]*id="main-content"[\s\S]*?<h1[^>]*>([^<]+)<\/h1>/i
-    )
-    const pageTitle = pageTitleMatch?.[1]?.trim()
+    const dom = new JSDOM(response.result)
+    const h1 = dom.window.document.querySelector('main#main-content h1')
 
-    expect(pageTitle).toEqual('You have signed out')
+    expect(h1?.textContent).toEqual('You have signed out')
   })
 })

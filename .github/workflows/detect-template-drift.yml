@@ -1,9 +1,6 @@
 name: Detect CDP Template Drift
 
 on:
-  push:
-    branches:
-      - sfd2-1047-create-github-action-to-detect-cdp-template-drift
   schedule:
     - cron: "0 8 * * 1" # Every Monday at 08:00 UTC
   workflow_dispatch:

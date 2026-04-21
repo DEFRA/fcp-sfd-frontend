@@ -1,6 +1,7 @@
 // Test framework dependencies
 import { describe, test, expect } from 'vitest'
 
+// Thing under test
 import { formatGbDate } from '../../../src/utils/format-gb-date.js'
 
 describe('formatGbDate', () => {

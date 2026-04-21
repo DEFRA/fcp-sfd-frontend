@@ -1,3 +1,8 @@
+/**
+ * Formats data ready for presenting in the `/personal-details` page
+ * @module personalDetailsPresenter
+ */
+
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { config } from '../../config/index.js'
 import { formatGbDate } from '../../utils/format-gb-date.js'

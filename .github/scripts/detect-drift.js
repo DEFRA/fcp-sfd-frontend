@@ -110,7 +110,7 @@ function formatVal(val) {
 const lines = [
   '# CDP Template Drift Report\n',
   `**Template**: \`${config.templateRepo}\` (\`${config.templateBranch}\`)`,
-  `**Detected on**: ${new Date().toISOString().split('T')[0]}\n`,
+  `**Detected on**: ${new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}\n`,
   '---\n'
 ]
 

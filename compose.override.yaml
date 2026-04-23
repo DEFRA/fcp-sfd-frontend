@@ -1,3 +1,4 @@
+name: fcp-sfd
 services:
   fcp-sfd-frontend:
     ports:
@@ -16,7 +17,7 @@ services:
       - fcp-sfd
 
   fcp-dal-api:
-    ports: 
+    ports:
       - 3005:3005
     networks:
       - fcp-sfd

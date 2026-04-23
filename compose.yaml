@@ -3,6 +3,8 @@ services:
     build:
       context: .
       target: development
+    env_file:
+      - .env
     links:
       - 'redis:redis'
     depends_on:

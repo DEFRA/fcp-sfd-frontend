@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { getDalConnector } from '../dal/connector.js'
 import { permissionsQuery } from '../dal/queries/permissions-query.js'
 import { mapPermissions } from '../mappers/permissions-mapper.js'
@@ -18,7 +19,7 @@ const getPermissions = async (sbi, crn, forwardedUserToken) => {
     return mappedResponse
   }
 
-  return dalResponse
+  throw Boom.forbidden('Failed to retrieve permissions')
 }
 
 export { getPermissions }

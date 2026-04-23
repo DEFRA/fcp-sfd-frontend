@@ -1,5 +1,6 @@
 // Test framework dependencies
 import { vi, describe, beforeEach, test, expect } from 'vitest'
+import Boom from '@hapi/boom'
 
 // Things we need to mock
 import { getPermissions } from '../../../src/auth/get-permissions.js'
@@ -176,6 +177,48 @@ describe('auth', () => {
       await route.handler(mockRequest, mockH)
 
       expect(mockH.redirect).toHaveBeenCalledWith('/home')
+    })
+
+    test('handler should bubble forbidden error when getPermissions throws', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockRequest = createMockRequest()
+      getPermissions.mockRejectedValue(Boom.forbidden('Failed to retrieve permissions'))
+
+      await expect(route.handler(mockRequest, mockH)).rejects.toMatchObject({
+        isBoom: true,
+        output: {
+          statusCode: 403
+        }
+      })
+
+      expect(mockH.redirect).not.toHaveBeenCalled()
+    })
+
+    test('handler should throw forbidden when getPermissions returns invalid payload', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockCacheSet = vi.fn()
+      const mockRequest = createMockRequest({
+        server: {
+          app: {
+            cache: {
+              set: mockCacheSet,
+              get: vi.fn(),
+              drop: vi.fn()
+            }
+          }
+        }
+      })
+      getPermissions.mockResolvedValue({ privileges: undefined, businessName: undefined })
+
+      await expect(route.handler(mockRequest, mockH)).rejects.toMatchObject({
+        isBoom: true,
+        output: {
+          statusCode: 403
+        }
+      })
+
+      expect(mockCacheSet).not.toHaveBeenCalled()
+      expect(mockH.redirect).not.toHaveBeenCalled()
     })
   })
 

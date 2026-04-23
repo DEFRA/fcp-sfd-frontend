@@ -100,6 +100,14 @@ describe('business details', () => {
           sectionsNeedingUpdate: ['name']
         })
       })
+
+      test('bubbles error when fetch service fails and does not render success view', async () => {
+        fetchBusinessDetailsService.mockRejectedValue(new Error('Failed to retrieve business details'))
+
+        await expect(getBusinessDetails.handler(request, h)).rejects.toThrowError('Failed to retrieve business details')
+
+        expect(h.view).not.toHaveBeenCalled()
+      })
     })
   })
 })

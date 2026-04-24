@@ -19,7 +19,7 @@
         govuk-grid-column-{% if backLink %}one-third{% else %}full{% endif %}
         govuk-!-text-align-right
       ">
-        <a href="/auth/sign-out" class="govuk-link govuk-link--no-visited-state">Sign out</a>
+        <a href="{{ signOutLink }}" class="govuk-link govuk-link--no-visited-state">Sign out</a>
       </div>
     {% endif %}
   </div>
@@ -57,7 +57,7 @@
 
     <h3 class="govuk-heading-m">Personal details</h3>
     <p>
-      <a href="/personal-details" class="govuk-link govuk-link--no-visited-state">View and update your personal details</a>
+      <a href="{{ personalDetails.link }}" class="govuk-link govuk-link--no-visited-state">{{ personalDetails.text }}</a>
     </p>
   </div>
 </div>

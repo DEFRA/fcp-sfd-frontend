@@ -28,6 +28,7 @@ describe('businessAddressChangePresenter', () => {
 
       expect(result).toEqual({
         backLink: { href: '/business-details' },
+        manualAddressLink: '/business-address-enter',
         pageTitle: 'What is your business address?',
         metaDescription: 'Update the address for your business.',
         postcode: 'SK22 1DL',

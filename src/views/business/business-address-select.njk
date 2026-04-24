@@ -32,7 +32,7 @@
           <div class="govuk-form-group govuk-body">
             <span class="govuk-!-margin-bottom govuk-!-font-weight-bold">UK postcode</span>
             <div class="govuk-!-margin-bottom-">{{postcode}}</div>
-            <a href="/business-address-change" class="govuk-link govuk-link--no-visited-state">Change <span class="govuk-visually-hidden">postcode</span></a>
+            <a href="{{ postcodeChangeLink }}" class="govuk-link govuk-link--no-visited-state">Change <span class="govuk-visually-hidden">postcode</span></a>
           </div>
 
           {{ govukSelect({
@@ -48,7 +48,7 @@
           }) }}
         </fieldset>
 
-        <p class="govuk-body"><a href="/business-address-enter" class="govuk-link govuk-link--no-visited-state">Enter address manually</a></p>
+        <p class="govuk-body"><a href="{{ manualAddressLink }}" class="govuk-link govuk-link--no-visited-state">Enter address manually</a></p>
 
         {{ govukButton({ text: "Continue", preventDoubleClick: true }) }}
       </form>

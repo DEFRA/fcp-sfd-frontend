@@ -182,6 +182,8 @@ const getMockData = () => {
 const getPageData = () => {
   return {
     backLink: { href: '/business-address-change' },
+    postcodeChangeLink: '/business-address-change',
+    manualAddressLink: '/business-address-enter',
     pageTitle: 'Choose your business address',
     metaDescription: 'Choose the address for your business.',
     businessName: 'Agile Farm Ltd',
@@ -206,6 +208,8 @@ const getPageData = () => {
 const getPageDataError = () => {
   return {
     backLink: { href: '/business-address-change' },
+    postcodeChangeLink: '/business-address-change',
+    manualAddressLink: '/business-address-enter',
     pageTitle: 'Choose your business address',
     metaDescription: 'Choose the address for your business.',
     businessName: 'Agile Farm Ltd',

@@ -6,6 +6,7 @@
 const businessLegalStatusChangePresenter = (data) => {
   return {
     backLink: { href: '/business-details' },
+    returnToBusinessDetailsLink: '/business-details',
     pageTitle: 'Change your legal status',
     metaDescription: 'Update the legal status of your business.',
     userName: data.customer.userName ?? null,

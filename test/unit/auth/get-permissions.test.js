@@ -63,17 +63,25 @@ describe('getPermissions', () => {
 
     test('should not call mapPermissions when dalConnector response has no data', async () => {
       mockDalConnector.query.mockResolvedValue({})
-      await getPermissions(sbi, crn)
+      await expect(getPermissions(sbi, crn)).rejects.toThrowError('Failed to retrieve permissions')
 
       expect(mapPermissions).not.toHaveBeenCalled()
     })
 
-    test('should return dalConnector response when dalConnector response has no data', async () => {
+    test('should throw forbidden when dalConnector response has no data', async () => {
       const dalResponse = { response: 'no-dal-data' }
       mockDalConnector.query.mockResolvedValue(dalResponse)
-      const result = await getPermissions(sbi, crn)
+      await expect(getPermissions(sbi, crn)).rejects.toThrowError('Failed to retrieve permissions')
+    })
 
-      expect(result).toBe(dalResponse)
+    test('should throw forbidden when dalConnector returns errors', async () => {
+      mockDalConnector.query.mockResolvedValue({
+        data: null,
+        errors: [{ message: 'DAL failed' }],
+        statusCode: 500
+      })
+
+      await expect(getPermissions(sbi, crn)).rejects.toThrowError('Failed to retrieve permissions')
     })
 
     test('should pass through forwarded user token when provided', async () => {

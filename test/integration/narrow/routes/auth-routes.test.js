@@ -37,9 +37,6 @@ const credentials = {
   refreshToken: 'DEFRA-ID-REFRESH-TOKEN'
 }
 
-const role = 'Farmer'
-const scope = ['user']
-
 const signOutUrl = 'https://oidc.example.com/sign-out'
 
 const { createServer } = await import('../../../../src/server.js')
@@ -102,7 +99,10 @@ describe('auth routes', () => {
   describe('GET /auth/sign-in-oidc', () => {
     beforeEach(() => {
       path = '/auth/sign-in-oidc'
-      mockGetPermissions.mockResolvedValue({ role, scope })
+      mockGetPermissions.mockResolvedValue({
+        privileges: ['FARMER:FULL'],
+        businessName: 'Test Business'
+      })
     })
 
     test('redirects to oidc sign in page if unauthenticated', async () => {

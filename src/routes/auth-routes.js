@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
@@ -40,6 +41,10 @@ const signInOidc = {
     // These calls are authenticated using the token returned from Defra Identity
     const { sbi, crn, sessionId } = profile
     const { privileges, businessName } = await getPermissions(sbi, crn, token)
+
+    if (!privileges || !businessName) {
+      throw Boom.forbidden('Failed to retrieve permissions')
+    }
 
     const isOnFarmingPaymentsAllowList = allowListService(sbi, crn, 'farmingPayments')
 

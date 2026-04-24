@@ -99,6 +99,14 @@ describe('personal details', () => {
         }
         )
       })
+
+      test('bubbles error when fetch service fails and does not render success view', async () => {
+        fetchPersonalDetailsService.mockRejectedValue(new Error('Failed to retrieve personal details'))
+
+        await expect(getPersonalDetails.handler(request, h)).rejects.toThrowError('Failed to retrieve personal details')
+
+        expect(h.view).not.toHaveBeenCalled()
+      })
     })
   })
 })

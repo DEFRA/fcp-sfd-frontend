@@ -35,7 +35,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
     presentedData.woodlandManagement = {
       link: `${woodlandManagementLink}?ssoOrgId=${data.business.info.organisationId}`,
       title: 'Woodland management grant plan',
-      // Status hidden for now; endpoint from FPTT not available yet. Will update in a future ticket.
+      // Status hidden for now; endpoint from grants not available yet. Will update in a future ticket.
       status: 'do-not-show'
     }
   }

@@ -4,8 +4,9 @@
  */
 
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
+import { config } from '../config/index.js'
 
-const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList) => {
+const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList) => {
   const presentedData = {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
@@ -18,7 +19,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymen
       text: 'View and update your personal details'
     },
     sbi: data.business.info.sbi,
-    isOnFarmingPaymentsAllowList
+    isOnWoodlandManagementAllowList
   }
 
   if (enrolmentCount && enrolmentCount > 1) {
@@ -28,12 +29,13 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymen
     }
   }
 
-  if (isOnFarmingPaymentsAllowList) {
-    presentedData.farmingPayments = {
-      // Link is currently a placegolder until endpoint is available from FPTT, will update in a future ticket
-      link: 'fp-check-your-details',
-      title: 'Farm Payments Technical Test',
-      // Status hidden for now; endpoint from FPTT not available yet. Will update in a future ticket.
+  if (isOnWoodlandManagementAllowList) {
+    const woodlandManagementLink = config.get('servicesConfig.WMPEndpoint')
+
+    presentedData.woodlandManagement = {
+      link: `${woodlandManagementLink}?ssoOrgId=${data.business.info.organisationId}`,
+      title: 'Woodland management grant plan',
+      // Status hidden for now; endpoint from grants not available yet. Will update in a future ticket.
       status: 'do-not-show'
     }
   }

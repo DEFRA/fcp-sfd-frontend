@@ -19,6 +19,7 @@ services:
       PERSONAL_DETAILS_INTERRUPTER_ENABLED: false
       BUSINESS_DETAILS_INTERRUPTER_ENABLED: false
       CPH_ENABLED: false
+      WMP_ENDPOINT: https://grants-ui.test.cdp-int.defra.cloud/woodland
     depends_on:
       fcp-dal-api:
         condition: service_started

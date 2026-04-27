@@ -32,7 +32,7 @@ describe('allowListService', () => {
     })
 
     test('it returns true', () => {
-      const result = allowListService(sbi, crn, 'farmingPayments')
+      const result = allowListService(sbi, crn, 'woodlandManagement')
 
       expect(result).toBe(true)
     })
@@ -45,7 +45,7 @@ describe('allowListService', () => {
     })
 
     test('it returns false', () => {
-      const result = allowListService(sbi, crn, 'farmingPayments')
+      const result = allowListService(sbi, crn, 'woodlandManagement')
 
       expect(result).toBe(false)
     })
@@ -58,7 +58,7 @@ describe('allowListService', () => {
     })
 
     test('it returns false', () => {
-      const result = allowListService(sbi, crn, 'farmingPayments')
+      const result = allowListService(sbi, crn, 'woodlandManagement')
 
       expect(result).toBe(false)
     })
@@ -79,7 +79,7 @@ describe('allowListService', () => {
     })
 
     test('it returns false', () => {
-      const result = allowListService(sbi, crn, 'farmingPayments')
+      const result = allowListService(sbi, crn, 'woodlandManagement')
 
       expect(result).toBe(false)
     })
@@ -92,7 +92,7 @@ describe('allowListService', () => {
     })
 
     test('it returns false', () => {
-      const result = allowListService(sbi, crn, 'farmingPayments')
+      const result = allowListService(sbi, crn, 'woodlandManagement')
 
       expect(result).toBe(false)
     })

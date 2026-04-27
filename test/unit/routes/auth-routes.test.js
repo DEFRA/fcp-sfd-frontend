@@ -115,7 +115,7 @@ describe('auth', () => {
       expect(getPermissions).toHaveBeenCalledWith('123', '456', 'token')
     })
 
-    test('handler should set isOnFarmingPaymentsAllowList in yar', async () => {
+    test('handler should set isOnWoodlandManagementAllowList in yar', async () => {
       const mockH = { redirect: vi.fn() }
       const mockYarSet = vi.fn()
       const mockRequest = createMockRequest({ yar: { ...createMockRequest().yar, set: mockYarSet } })
@@ -123,7 +123,7 @@ describe('auth', () => {
 
       await route.handler(mockRequest, mockH)
 
-      expect(mockYarSet).toHaveBeenCalledWith('isOnFarmingPaymentsAllowList', true)
+      expect(mockYarSet).toHaveBeenCalledWith('isOnWoodlandManagementAllowList', true)
     })
 
     test('handler should set session cache with correct data', async () => {

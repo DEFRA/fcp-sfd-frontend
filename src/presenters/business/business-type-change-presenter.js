@@ -6,6 +6,7 @@
 const businessTypeChangePresenter = (data) => {
   return {
     backLink: { href: '/business-details' },
+    returnToBusinessDetailsLink: '/business-details',
     pageTitle: 'Change your business type',
     metaDescription: 'Update the type of your business.',
     userName: data.customer.userName ?? null,

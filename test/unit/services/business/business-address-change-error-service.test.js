@@ -59,6 +59,7 @@ describe('businessAddressChangeErrorService', () => {
 
       expect(result).toEqual({
         backLink: { href: '/business-details' },
+        manualAddressLink: '/business-address-enter',
         pageTitle: 'What is your business address?',
         metaDescription: 'Update the address for your business.',
         postcode: 'AB12 3CD',

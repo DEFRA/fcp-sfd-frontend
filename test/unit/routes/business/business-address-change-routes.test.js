@@ -184,6 +184,7 @@ describe('business address change routes', () => {
 const getPageData = () => {
   return {
     backLink: { href: '/business-details' },
+    manualAddressLink: '/business-address-enter',
     pageTitle: 'What is your business address?',
     metaDescription: 'Update the address for your business.',
     postcode: 'SK22 1DL',
@@ -196,6 +197,7 @@ const getPageData = () => {
 const getPageDataError = () => {
   return {
     backLink: { href: '/business-details' },
+    manualAddressLink: '/business-address-enter',
     pageTitle: 'What is your business address?',
     metaDescription: 'Update the address for your business.',
     postcode: 'SK22 1DL',

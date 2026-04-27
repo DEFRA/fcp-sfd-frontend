@@ -10,8 +10,13 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnFarmingPaymen
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
     userName: data.info.userName,
+    signOutLink: '/auth/sign-out',
     businessName: data.business.info.name,
     businessDetails: setBusinessDetails(permissionGroups),
+    personalDetails: {
+      link: '/personal-details',
+      text: 'View and update your personal details'
+    },
     sbi: data.business.info.sbi,
     isOnFarmingPaymentsAllowList
   }

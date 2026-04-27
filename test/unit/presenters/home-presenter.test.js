@@ -39,10 +39,15 @@ describe('homePresenter', () => {
         pageTitle: 'Your business',
         metaDescription: 'Home page for your business\'s schemes and details.',
         userName: 'Alfred Waldron',
+        signOutLink: '/auth/sign-out',
         businessName: 'Test Farm Ltd',
         businessDetails: {
           link: '/business-details',
           text: 'View your Business details'
+        },
+        personalDetails: {
+          link: '/personal-details',
+          text: 'View and update your personal details'
         },
         sbi: '123456789',
         isOnFarmingPaymentsAllowList: false

@@ -34,7 +34,7 @@
   </div>
 </div>
 
-{% if isOnFarmingPaymentsAllowList %}
+{% if isOnWoodlandManagementAllowList %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h2 class="govuk-heading-m">Apply for schemes and grants</h2>
@@ -42,9 +42,9 @@
   </div>
 
   {{ serviceCard({
-    title: farmingPayments.title,
-    status: farmingPayments.status,
-    link: farmingPayments.link
+    title: woodlandManagement.title,
+    status: woodlandManagement.status,
+    link: woodlandManagement.link
   }) }}
 {% endif %}
 

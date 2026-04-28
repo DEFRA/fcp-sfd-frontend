@@ -7,7 +7,7 @@ import { homePresenter } from '../../../src/presenters/home-presenter.js'
 
 // Thing under test
 import { homeRoutes } from '../../../src/routes/home-routes.js'
-const [startPage, home] = homeRoutes
+const [start, home] = homeRoutes
 
 // Mocks
 vi.mock('../../../src/services/fetch-personal-business-details-service.js', () => ({
@@ -29,25 +29,25 @@ describe('Root endpoint', () => {
   })
 
   test('should return an object', () => {
-    expect(startPage).toBeInstanceOf(Object)
+    expect(start).toBeInstanceOf(Object)
   })
 
   test('should return GET / route', () => {
-    expect(startPage.method).toBe('GET')
-    expect(startPage.path).toBe('/')
+    expect(start.method).toBe('GET')
+    expect(start.path).toBe('/')
   })
 
   test('should try and authenticate using default strategy', () => {
-    expect(startPage.options.auth.strategy).toBeUndefined()
-    expect(startPage.options.auth.mode).toBe('try')
+    expect(start.options.auth.strategy).toBeUndefined()
+    expect(start.options.auth.mode).toBe('try')
   })
 
   test('should have a handler', () => {
-    expect(startPage.handler).toBeInstanceOf(Function)
+    expect(start.handler).toBeInstanceOf(Function)
   })
 
   test('renders start view with page title', () => {
-    startPage.handler({}, h)
+    start.handler({}, h)
 
     expect(h.view).toHaveBeenCalledWith('start', { pageTitle: 'Start using the Farm and Land Service' })
   })

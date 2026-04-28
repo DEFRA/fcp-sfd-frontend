@@ -1,7 +1,7 @@
 import { homePresenter } from '../presenters/home-presenter.js'
 import { fetchPersonalBusinessDetailsService } from '../services/fetch-personal-business-details-service.js'
 
-const startPage = {
+const start = {
   method: 'GET',
   path: '/',
   options: {
@@ -27,6 +27,6 @@ const home = {
 }
 
 export const homeRoutes = [
-  startPage,
+  start,
   home
 ]

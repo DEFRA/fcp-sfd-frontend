@@ -37,6 +37,10 @@ services:
   mongo:
     networks:
       - fcp-sfd
+    attach: false
+    command: ["--quiet"]
+    logging:
+      driver: "none"
 
 networks:
   fcp-sfd:

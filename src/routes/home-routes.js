@@ -8,7 +8,7 @@ const index = {
     auth: { mode: 'try' }
   },
   handler: (_request, h) => {
-    return h.view('index')
+    return h.view('index', { pageTitle: 'Start using the Farm and Land Service' })
   }
 }
 

@@ -19,8 +19,13 @@ vi.mock('../../../src/presenters/home-presenter.js', () => ({
 }))
 
 describe('Root endpoint', () => {
+  let h
+
   beforeEach(() => {
     vi.clearAllMocks()
+    h = {
+      view: vi.fn().mockReturnValue({})
+    }
   })
 
   test('should return an object', () => {
@@ -39,6 +44,12 @@ describe('Root endpoint', () => {
 
   test('should have a handler', () => {
     expect(index.handler).toBeInstanceOf(Function)
+  })
+
+  test('renders index view with page title', () => {
+    index.handler({}, h)
+
+    expect(h.view).toHaveBeenCalledWith('index', { pageTitle: 'Start using the Farm and Land Service' })
   })
 })
 

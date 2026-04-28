@@ -1,5 +1,6 @@
 import { constants } from 'node:http2'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
+import * as cheerio from 'cheerio'
 import '../../../mocks/setup-server-mocks.js'
 
 const { HTTP_STATUS_OK, HTTP_STATUS_FOUND } = constants
@@ -28,6 +29,15 @@ describe('index route', () => {
     })
     expect(response.statusCode).toBe(HTTP_STATUS_OK)
     expect(response.request.response.source.template).toBe('index')
+  })
+
+  test('GET / renders the full GOV.UK page title', async () => {
+    const response = await server.inject({
+      url: '/'
+    })
+    const $ = cheerio.load(response.result)
+
+    expect($('title').text().trim()).toBe('Start using the Farm and Land Service - Farm and Land Service - GOV.UK')
   })
 })
 

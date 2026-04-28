@@ -1,14 +1,14 @@
 import { homePresenter } from '../presenters/home-presenter.js'
 import { fetchPersonalBusinessDetailsService } from '../services/fetch-personal-business-details-service.js'
 
-const index = {
+const startPage = {
   method: 'GET',
   path: '/',
   options: {
     auth: { mode: 'try' }
   },
   handler: (_request, h) => {
-    return h.view('index', { pageTitle: 'Start using the Farm and Land Service' })
+    return h.view('start', { pageTitle: 'Start using the Farm and Land Service' })
   }
 }
 
@@ -27,6 +27,6 @@ const home = {
 }
 
 export const homeRoutes = [
-  index,
+  startPage,
   home
 ]

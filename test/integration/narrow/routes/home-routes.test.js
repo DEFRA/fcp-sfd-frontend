@@ -28,7 +28,7 @@ describe('index route', () => {
       url: '/'
     })
     expect(response.statusCode).toBe(HTTP_STATUS_OK)
-    expect(response.request.response.source.template).toBe('index')
+    expect(response.request.response.source.template).toBe('start')
   })
 
   test('GET / renders the full GOV.UK page title', async () => {

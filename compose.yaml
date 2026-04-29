@@ -37,7 +37,7 @@ services:
       WMP_ENDPOINT: ${WMP_ENDPOINT:-https://grants-ui.test.cdp-int.defra.cloud/woodland}
 
   kits-mock:
-    image: defradigital/fcp-dal-upstream-mock:0.75.0
+    image: defradigital/fcp-dal-upstream-mock:0.76.0
     environment:
       MOCK_LOG_LEVEL: info
       MOCK_SERVER_COLLECTION: all

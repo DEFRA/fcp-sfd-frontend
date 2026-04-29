@@ -19,7 +19,7 @@
     "lint:scss": "stylelint \"src/**/*.scss\" --cache --cache-location .cache/stylelint --cache-strategy content --color --ignore-path .gitignore",
     "postversion": "git add package.json package-lock.json && git commit -m $npm_package_version",
     "pretest": "npm run test:lint",
-    "docker:debug": "docker compose -f compose.yaml -f compose.debug.yaml -p \"fcp-sfd-frontend\" up",
+    "docker:debug": "docker compose -f compose.yaml -f compose.override.yaml -f compose.debug.yaml -p \"fcp-sfd-frontend\" up",
     "docker:dev": "docker compose up",
     "docker:test": "npm run lint && mkdir -p coverage 2>/dev/null || true docker compose -p fcp-sfd-frontend-test down -v && docker compose -f compose.yaml -f compose.test.yaml -p fcp-sfd-frontend-test run --build --rm fcp-sfd-frontend",
     "docker:test:watch": "docker compose -p fcp-sfd-frontend-test down -v && docker compose -f compose.yaml -f compose.test.yaml -f compose.test.watch.yaml -p fcp-sfd-frontend-test run --build --rm fcp-sfd-frontend",

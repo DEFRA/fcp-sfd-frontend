@@ -37,6 +37,8 @@ services:
   mongo:
     networks:
       - fcp-sfd
+    attach: false
+    command: ["--quiet"]
 
 networks:
   fcp-sfd:

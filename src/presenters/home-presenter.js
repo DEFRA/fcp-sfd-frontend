@@ -34,7 +34,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
 
     presentedData.woodlandManagement = {
       link: `${woodlandManagementLink}?ssoOrgId=${data.business.info.organisationId}`,
-      title: 'Woodland management grant plan',
+      title: 'Woodland Management Plan',
       // Status hidden for now; endpoint from grants not available yet. Will update in a future ticket.
       status: 'do-not-show'
     }

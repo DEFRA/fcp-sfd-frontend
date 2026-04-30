@@ -145,7 +145,7 @@ describe('homePresenter', () => {
 
         expect(result.woodlandManagement).toEqual({
           link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
-          title: 'Woodland management grant plan',
+          title: 'Woodland Management Plan',
           status: 'do-not-show'
         })
       })

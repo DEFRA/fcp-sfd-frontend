@@ -9,7 +9,6 @@
  * @module updatePersonalDobChangeService
  */
 
-import moment from 'moment'
 import { updatePersonalDobMutation } from '../../dal/mutations/personal/update-personal-dob.js'
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
@@ -23,12 +22,11 @@ const updatePersonalDobChangeService = async (yar, credentials) => {
   }
 
   const { day, month, year } = personalDetails.changePersonalDob
-  const personalDob = new Date([`${month}/${day}/${year}`])
-  moment.locale('en-ca')
+  const formatDatePart = (value) => String(value).padStart(2, '0')
 
   const variables = {
     input: {
-      dateOfBirth: moment(personalDob).format('L'),
+      dateOfBirth: `${year}-${formatDatePart(month)}-${formatDatePart(day)}`,
       crn: personalDetails.crn
     }
   }

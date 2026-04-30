@@ -1,6 +1,5 @@
 import { URL } from 'node:url'
 import { ProxyAgent } from 'undici'
-import { HttpsProxyAgent } from 'https-proxy-agent'
 
 import { config } from '../config/index.js'
 import { createLogger } from './logger.js'
@@ -30,8 +29,7 @@ const provideProxy = () => {
       keepAliveTimeout: 10,
       keepAliveMaxTimeout: 10,
       allowH2: false
-    }),
-    httpAndHttpsProxyAgent: new HttpsProxyAgent(url)
+    })
   }
 }
 

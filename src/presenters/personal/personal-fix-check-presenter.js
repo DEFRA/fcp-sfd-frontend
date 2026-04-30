@@ -3,7 +3,7 @@
  * @module personalFixCheckPresenter
  */
 
-import moment from 'moment'
+import { formatGbDate } from '../../utils/format-gb-date.js'
 
 const personalFixCheckPresenter = (personalDetails) => {
   const {
@@ -36,9 +36,13 @@ const personalFixCheckPresenter = (personalDetails) => {
 const formatDob = (dob) => {
   if (dob) {
     const { day, month, year } = dob
-    const personalDob = new Date(`${month}/${day}/${year}`)
+    const personalDob = new Date(Number(year), Number(month) - 1, Number(day))
 
-    return moment(personalDob).format('D MMMM YYYY')
+    if (Number.isNaN(personalDob.getTime())) {
+      return null
+    }
+
+    return formatGbDate(personalDob)
   }
 
   return null

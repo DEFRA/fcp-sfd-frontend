@@ -36,4 +36,36 @@ describe('#formatDate', () => {
       ).toBe('11:40 am on Wednesday 1st February 2023')
     })
   })
+
+  describe('ordinal suffixes', () => {
+    test('should use "nd" suffix for 2nd', () => {
+      expect(formatDate('2023-02-02')).toBe('Thu 2nd February 2023')
+    })
+
+    test('should use "rd" suffix for 3rd', () => {
+      expect(formatDate('2023-02-03')).toBe('Fri 3rd February 2023')
+    })
+
+    test('should use "th" suffix for 4th', () => {
+      expect(formatDate('2023-02-04')).toBe('Sat 4th February 2023')
+    })
+
+    test('should use "th" suffix for 11th', () => {
+      expect(formatDate('2023-02-11')).toBe('Sat 11th February 2023')
+    })
+
+    test('should use "th" suffix for 12th', () => {
+      expect(formatDate('2023-02-12')).toBe('Sun 12th February 2023')
+    })
+
+    test('should use "th" suffix for 13th', () => {
+      expect(formatDate('2023-02-13')).toBe('Mon 13th February 2023')
+    })
+  })
+
+  describe('With invalid date', () => {
+    test('should return empty string for invalid date string', () => {
+      expect(formatDate('not-a-date')).toBe('')
+    })
+  })
 })

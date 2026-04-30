@@ -3,9 +3,14 @@
  * @module personalDetailsPresenter
  */
 
-import moment from 'moment'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { config } from '../../config/index.js'
+import { formatGbDate } from '../../utils/format-gb-date.js'
+
+const END_OF_DAY_HOURS = 23
+const END_OF_DAY_MINUTES = 59
+const END_OF_DAY_SECONDS = 59
+const END_OF_DAY_MILLISECONDS = 999
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
@@ -108,14 +113,25 @@ const formatDob = (dob) => {
     return { formattedDob: 'Not added', action: 'Add' }
   }
 
-  const dobMoment = moment(dob)
+  const parsedDob = new Date(dob)
+  const isValidDob = !Number.isNaN(parsedDob.getTime())
+  const today = new Date()
+  const isFutureDob = isValidDob && parsedDob > new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    END_OF_DAY_HOURS,
+    END_OF_DAY_MINUTES,
+    END_OF_DAY_SECONDS,
+    END_OF_DAY_MILLISECONDS
+  )
 
-  if (!dobMoment.isValid() || dobMoment.isAfter(moment(), 'day')) {
+  if (!isValidDob || isFutureDob) {
     return { formattedDob: 'Not added', action: 'Add' }
   }
 
   return {
-    formattedDob: dobMoment.format('D MMMM YYYY'),
+    formattedDob: formatGbDate(parsedDob),
     action: 'Change'
   }
 }

@@ -63,7 +63,7 @@
     "blankie": "5.0.0",
     "cheerio": "1.2.0",
     "convict": "6.2.5",
-    "cssnano": "7.0.6",
+    "cssnano": "7.1.9",
     "cssnano-preset-default": "7.0.6",
     "date-fns": "4.1.0",
     "global-agent": "3.0.0",

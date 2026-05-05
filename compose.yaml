@@ -73,7 +73,7 @@ services:
     image: redis:7.2.3-alpine3.18
 
   mongo:
-    image: mongo:7.0
+    image: mongo:8.2
 
   fcp-defra-id-stub:
     image: defradigital/fcp-defra-id-stub

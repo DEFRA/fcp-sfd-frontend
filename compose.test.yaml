@@ -23,8 +23,8 @@ services:
     depends_on:
       fcp-dal-api:
         condition: service_started
-      kits-mock:
-        condition: service_started
+      upstream-mock:
+        condition: service_healthy
     volumes:
       - ./src/:/home/node/src
       - ./test/:/home/node/test

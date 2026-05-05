@@ -10,7 +10,7 @@ services:
       - ./src:/home/node/src
       - ./package.json:/home/node/package.json
 
-  kits-mock:
+  upstream-mock:
     ports:
       - '3100:3100'
     networks:

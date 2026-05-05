@@ -31,7 +31,7 @@ This document provides essential information to help Copilot assist effectively 
 - **Debug:** `npm run docker:debug` - Docker stack with debug configuration
 
 ### Local Testing Note
-Vitest tests run locally without Docker. Docker tests (`npm run docker:test`) require the full Docker Compose stack (includes DAL API and kits-mock services) because the code integrates with the Data Access Layer (DAL).
+Vitest tests run locally without Docker. Docker tests (`npm run docker:test`) require the full Docker Compose stack (includes DAL API and upstream-mock services) because the code integrates with the Data Access Layer (DAL).
 
 ---
 

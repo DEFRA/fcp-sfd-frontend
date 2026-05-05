@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout service repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Read drift config
         id: config
@@ -25,7 +25,7 @@ jobs:
           echo "templateBranch=$(jq -r '.templateBranch' .github/drift-config.json)" >> "$GITHUB_OUTPUT"
 
       - name: Checkout CDP template
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ steps.config.outputs.templateRepo }}
           ref: ${{ steps.config.outputs.templateBranch }}

@@ -59,9 +59,3 @@ Webpack bundles `src/client/` → `.public/`. Entry point is `src/client/javascr
 - ESM (`"type": "module"`) throughout — use `import`/`export`, not `require`.
 - StandardJS for linting (no semicolons, 2-space indent).
 - Node >= 22.
-
-## Jira
-
-- **Project key**: SFD2
-- **Label for this repo**: `fcp-sfd-frontend`
-- **Tech Debt epic**: SFD2-150

@@ -9,7 +9,7 @@ vi.mock('../../../src/dal/connector.js', () => ({
   getDalConnector: vi.fn(() => mockDalConnector)
 }))
 
-vi.mock('../../../src/mappers/personal-business-details-mapper.js', () => ({
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   mapPersonalBusinessDetails: mockMappedValue
 }))
 

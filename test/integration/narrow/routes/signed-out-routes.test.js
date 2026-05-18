@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeAll, afterAll } from 'vitest'
-import { JSDOM } from 'jsdom'
+import * as cheerio from 'cheerio'
 import '../../../mocks/setup-server-mocks.js'
 
 const { createServer } = await import('../../../../src/server.js')
@@ -26,9 +26,10 @@ describe('signed out route integration', async () => {
   })
 
   test('Ensure that page title is "You have signed out"', async () => {
-    const dom = new JSDOM(response.result)
-    const h1 = dom.window.document.querySelector('main#main-content h1')
+    const $ = cheerio.load(response.result)
+    const mainContent = $('#main-content')
+    const pageTitle = mainContent.find('h1').text()
 
-    expect(h1?.textContent).toEqual('You have signed out')
+    expect(pageTitle).toEqual('You have signed out')
   })
 })

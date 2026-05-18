@@ -97,6 +97,22 @@ describe('personalFixCheckPresenter', () => {
         expect(result.dateOfBirth).toBeNull()
       })
     })
+
+    describe('when changePersonalDob contains invalid values', () => {
+      beforeEach(() => {
+        personalDetails.changePersonalDob = {
+          day: 'invalid',
+          month: 'invalid',
+          year: 'invalid'
+        }
+      })
+
+      test('it should return null', () => {
+        const result = personalFixCheckPresenter(personalDetails)
+
+        expect(result.dateOfBirth).toBeNull()
+      })
+    })
   })
 
   describe('the "personalEmail" property', () => {

@@ -1,10 +1,9 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
-import { config } from '../../../src/config/index.js'
-import { setupProxy } from '../../../src/server/common/helpers/proxy/setup-proxy.js'
+import { config } from '../../../../../../src/config/index.js'
+import { setupProxy } from '../../../../../../src/server/common/helpers/proxy/setup-proxy.js'
 
-const { mockSetGlobalDispatcher, mockBootstrap, mockLoggerInfo } = vi.hoisted(() => ({
+const { mockSetGlobalDispatcher, mockLoggerInfo } = vi.hoisted(() => ({
   mockSetGlobalDispatcher: vi.fn(),
-  mockBootstrap: vi.fn(),
   mockLoggerInfo: vi.fn()
 }))
 
@@ -13,11 +12,7 @@ vi.mock('undici', () => ({
   setGlobalDispatcher: (...args) => mockSetGlobalDispatcher(...args)
 }))
 
-vi.mock('global-agent', () => ({
-  bootstrap: () => mockBootstrap()
-}))
-
-vi.mock('../../../src/utils/logger.js', () => ({
+vi.mock('../../../../../../src/utils/logger.js', () => ({
   createLogger: () => ({
     info: mockLoggerInfo
   })
@@ -27,7 +22,6 @@ describe('setupProxy', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     config.set('server.httpProxy', null)
-    globalThis.GLOBAL_AGENT = {}
   })
 
   test('should not setup proxy when httpProxy is not set', async () => {
@@ -35,7 +29,6 @@ describe('setupProxy', () => {
 
     expect(mockLoggerInfo).not.toHaveBeenCalled()
     expect(mockSetGlobalDispatcher).not.toHaveBeenCalled()
-    expect(mockBootstrap).not.toHaveBeenCalled()
   })
 
   test('should setup proxy when httpProxy is set', async () => {
@@ -46,7 +39,5 @@ describe('setupProxy', () => {
 
     expect(mockLoggerInfo).toHaveBeenCalledWith('setting up global proxies')
     expect(mockSetGlobalDispatcher).toHaveBeenCalled()
-    expect(mockBootstrap).toHaveBeenCalled()
-    expect(globalThis.GLOBAL_AGENT.HTTP_PROXY).toBe(proxyUrl)
   })
 })

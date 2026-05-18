@@ -1,7 +1,6 @@
 import path from 'node:path'
 import hapi from '@hapi/hapi'
 import Joi from 'joi'
-import moment from 'moment'
 
 import { config } from './config/index.js'
 import { plugins } from './plugins/index.js'
@@ -10,8 +9,6 @@ import { catchAll } from './utils/errors.js'
 import { getCacheEngine } from './utils/caching/cache-engine.js'
 import { initTokenCache } from './utils/caching/token-cache.js'
 import { initDalConnector } from './dal/connector.js'
-
-moment.locale('en-gb') // Set moment locale globally
 
 export const createServer = async () => {
   setupProxy()

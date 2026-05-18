@@ -1,6 +1,11 @@
-import { StatusCodes } from 'http-status-codes'
 import { catchAll } from '../../../src/utils/errors.js'
 import { vi, describe, test, expect, beforeEach } from 'vitest'
+import {
+  BAD_REQUEST,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND,
+  SERVICE_UNAVAILABLE
+} from '../../../src/constants/status-codes.js'
 
 describe('#catchAll', () => {
   const mockErrorLogger = vi.fn()
@@ -34,59 +39,59 @@ describe('#catchAll', () => {
   })
 
   test('Should provide expected "Service-unavailable" page', () => {
-    catchAll(mockRequest(StatusCodes.SERVICE_UNAVAILABLE), mockToolkit)
+    catchAll(mockRequest(SERVICE_UNAVAILABLE), mockToolkit)
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('errors/service-unavailable')
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      StatusCodes.SERVICE_UNAVAILABLE
+      SERVICE_UNAVAILABLE
     )
   })
 
   test('Should NOT render service-unavailable page for INTERNAL_SERVER_ERROR', () => {
-    catchAll(mockRequest(StatusCodes.INTERNAL_SERVER_ERROR), mockToolkit)
+    catchAll(mockRequest(INTERNAL_SERVER_ERROR), mockToolkit)
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).not.toHaveBeenCalledWith('errors/service-unavailable')
     expect(mockToolkitView).toHaveBeenCalledWith('errors/service-problem')
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      StatusCodes.INTERNAL_SERVER_ERROR
+      INTERNAL_SERVER_ERROR
     )
   })
 
   test('Should provide expected service problem page and log error for internalServerError', () => {
     catchAll(
-      mockRequest(StatusCodes.INTERNAL_SERVER_ERROR),
+      mockRequest(INTERNAL_SERVER_ERROR),
       mockToolkit
     )
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('errors/service-problem')
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      StatusCodes.INTERNAL_SERVER_ERROR
+      INTERNAL_SERVER_ERROR
     )
   })
 
   test('Should provide expected page-not-found page and log error for NOT_FOUND', () => {
     catchAll(
-      mockRequest(StatusCodes.NOT_FOUND),
+      mockRequest(NOT_FOUND),
       mockToolkit
     )
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('errors/page-not-found')
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      StatusCodes.NOT_FOUND
+      NOT_FOUND
     )
   })
 
   test('Should provide page-not-found page for other status codes (fallback)', () => {
-    catchAll(mockRequest(StatusCodes.BAD_REQUEST), mockToolkit)
+    catchAll(mockRequest(BAD_REQUEST), mockToolkit)
 
     expect(mockErrorLogger).toHaveBeenCalledWith(mockStack)
     expect(mockToolkitView).toHaveBeenCalledWith('errors/page-not-found')
     expect(mockToolkitCode).toHaveBeenCalledWith(
-      StatusCodes.BAD_REQUEST
+      BAD_REQUEST
     )
   })
 

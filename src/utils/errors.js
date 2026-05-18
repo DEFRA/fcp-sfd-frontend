@@ -1,8 +1,4 @@
-import {
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND,
-  SERVICE_UNAVAILABLE
-} from '../constants/status-codes.js'
+import { StatusCodes } from 'http-status-codes'
 
 export const catchAll = (request, h) => {
   if (!request.response || !('isBoom' in request.response)) {
@@ -12,9 +8,9 @@ export const catchAll = (request, h) => {
   const statusCode = request.response.output.statusCode
 
   const errorViewMap = {
-    [SERVICE_UNAVAILABLE]: 'errors/service-unavailable',
-    [NOT_FOUND]: 'errors/page-not-found',
-    [INTERNAL_SERVER_ERROR]: 'errors/service-problem'
+    [StatusCodes.SERVICE_UNAVAILABLE]: 'errors/service-unavailable',
+    [StatusCodes.NOT_FOUND]: 'errors/page-not-found',
+    [StatusCodes.INTERNAL_SERVER_ERROR]: 'errors/service-problem'
   }
 
   const viewPath = errorViewMap[statusCode] || 'errors/page-not-found'

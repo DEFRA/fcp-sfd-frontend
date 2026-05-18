@@ -3,11 +3,11 @@
  * @module personalDobCheckPresenter
  */
 
-import { formatGbDate } from '../../utils/format-gb-date.js'
+import moment from 'moment'
 
 const personalDobCheckPresenter = (personalDetails) => {
   const { day, month, year } = personalDetails.changePersonalDob
-  const personalDob = new Date(Number(year), Number(month) - 1, Number(day))
+  const personalDob = new Date([`${month}/${day}/${year}`])
 
   return {
     backLink: { href: '/account-date-of-birth-change' },
@@ -15,7 +15,7 @@ const personalDobCheckPresenter = (personalDetails) => {
     metaDescription: 'Check the date of birth for your personal account is correct.',
     userName: personalDetails.info.userName ?? null,
     changeLink: '/account-date-of-birth-change',
-    dateOfBirth: formatGbDate(personalDob)
+    dateOfBirth: moment(personalDob).format('D MMMM YYYY')
   }
 }
 

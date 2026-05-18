@@ -1,3 +1,4 @@
+name: fcp-sfd
 services:
   fcp-sfd-frontend:
     ports:
@@ -9,14 +10,14 @@ services:
       - ./src:/home/node/src
       - ./package.json:/home/node/package.json
 
-  kits-mock:
+  upstream-mock:
     ports:
       - '3100:3100'
     networks:
       - fcp-sfd
 
   fcp-dal-api:
-    ports: 
+    ports:
       - 3005:3005
     networks:
       - fcp-sfd
@@ -36,6 +37,8 @@ services:
   mongo:
     networks:
       - fcp-sfd
+    attach: false
+    command: ["--quiet"]
 
 networks:
   fcp-sfd:

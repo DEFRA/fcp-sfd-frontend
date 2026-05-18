@@ -1,3 +1,6 @@
 services:
   fcp-sfd-frontend:
     command: npm run start:debug
+  mongo:
+    attach: true
+    command: null

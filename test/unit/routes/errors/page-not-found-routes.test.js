@@ -28,7 +28,12 @@ describe('Page Not Found Route', () => {
     pageNotFound.handler(mockRequest, mockH)
     expect(mockH.view).toHaveBeenCalledWith(
       'errors/page-not-found',
-      { backLink: '/previous-page' }
+      {
+        backLink: '/previous-page',
+        pageTitle: 'Page not found',
+        metaDescription: 'We could not find this page. Check the web address is correct and try again.',
+        contactHelpLink: '/contact-help'
+      }
     )
   })
 

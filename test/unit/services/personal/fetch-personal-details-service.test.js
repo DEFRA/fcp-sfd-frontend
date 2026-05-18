@@ -61,19 +61,17 @@ describe('fetchPersonalDetailsService', () => {
       expect(result).toMatchObject(mappedDalData)
     })
 
-    test('returns raw DAL response when data is missing', async () => {
+    test('throws when DAL response contains errors', async () => {
       const dalErrorResponse = {
         data: null,
         errors: [{ message: 'error response from dal' }],
         statusCode: 500
       }
       mockDalConnector.query.mockResolvedValue(dalErrorResponse)
-      const result = await fetchPersonalDetailsService(credentials)
+      await expect(fetchPersonalDetailsService(credentials))
+        .rejects.toThrowError('Failed to retrieve personal details')
 
       expect(mockMappedValue).not.toHaveBeenCalled()
-      expect(result).toMatchObject(dalErrorResponse)
-      expect(result.errors).toBeDefined()
-      expect(result.statusCode).toBe(500)
     })
   })
 })

@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
@@ -41,7 +42,11 @@ const signInOidc = {
     const { sbi, crn, sessionId } = profile
     const { privileges, businessName } = await getPermissions(sbi, crn, token)
 
-    const isOnFarmingPaymentsAllowList = allowListService(sbi, crn, 'farmingPayments')
+    if (!privileges || !businessName) {
+      throw Boom.forbidden('Failed to retrieve permissions')
+    }
+
+    const isOnWoodlandManagementAllowList = allowListService(sbi, crn, 'woodlandManagement')
 
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(sessionId, {
@@ -55,7 +60,7 @@ const signInOidc = {
     })
 
     // Store lightweight flags like allow list in Yar for easy access
-    request.yar.set('isOnFarmingPaymentsAllowList', isOnFarmingPaymentsAllowList)
+    request.yar.set('isOnWoodlandManagementAllowList', isOnWoodlandManagementAllowList)
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
     request.cookieAuth.set({ sessionId })

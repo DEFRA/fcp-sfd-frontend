@@ -81,6 +81,7 @@ const getMockData = () => {
 const getPageData = () => {
   return {
     backLink: { href: '/business-details' },
+    returnToBusinessDetailsLink: '/business-details',
     pageTitle: 'Change your legal status',
     metaDescription: 'Update the legal status of your business.',
     businessName: 'HENLEY, RE',

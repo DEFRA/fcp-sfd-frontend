@@ -52,9 +52,13 @@ const buildDalRequest = (bearerToken, forwardedUserToken, graphqlQuery, variable
 const handleDalFailure = (err) => {
   logger.error(err, 'Error connecting to DAL')
 
+  const error = err instanceof Error
+    ? { message: err.message }
+    : { message: 'Error connecting to DAL' }
+
   return formatDalResponse({
     statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
-    errors: [err]
+    errors: [error]
   })
 }
 

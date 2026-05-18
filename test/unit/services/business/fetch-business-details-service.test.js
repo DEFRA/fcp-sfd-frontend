@@ -76,7 +76,7 @@ describe('fetchBusinessDetailsService', () => {
       expect(result).toEqual(getMappedData())
     })
 
-    test('should return raw DAL response when data is missing', async () => {
+    test('should throw when DAL response contains errors', async () => {
       const errorResponse = {
         data: null,
         errors: [{ message: 'error response from dal' }],
@@ -84,12 +84,10 @@ describe('fetchBusinessDetailsService', () => {
       }
       mockDalConnector.query.mockResolvedValue(errorResponse)
 
-      const result = await fetchBusinessDetailsService(credentials)
+      await expect(fetchBusinessDetailsService(credentials))
+        .rejects.toThrowError('Failed to retrieve business details')
 
       expect(mockMapBusinessDetails).not.toHaveBeenCalled()
-      expect(result).toEqual(errorResponse)
-      expect(result.errors).toBeDefined()
-      expect(result.statusCode).toBe(500)
     })
   })
 
@@ -120,7 +118,7 @@ describe('fetchBusinessDetailsService', () => {
       expect(result).toEqual(getMappedData())
     })
 
-    test('should return raw DAL response when data is missing', async () => {
+    test('should throw when DAL response contains errors', async () => {
       const errorResponse = {
         data: null,
         errors: [{ message: 'error response from dal' }],
@@ -128,12 +126,10 @@ describe('fetchBusinessDetailsService', () => {
       }
       mockDalConnector.query.mockResolvedValue(errorResponse)
 
-      const result = await fetchBusinessDetailsService(credentials)
+      await expect(fetchBusinessDetailsService(credentials))
+        .rejects.toThrowError('Failed to retrieve business details')
 
       expect(mockMapBusinessDetails).not.toHaveBeenCalled()
-      expect(result).toEqual(errorResponse)
-      expect(result.errors).toBeDefined()
-      expect(result.statusCode).toBe(500)
     })
   })
 })

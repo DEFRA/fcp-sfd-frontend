@@ -25,7 +25,7 @@ const fetchBusinessDetailsService = async (credentials) => {
     return mappedResponse
   }
 
-  return dalResponse
+  throw new Error('Failed to retrieve business details')
 }
 
 export {

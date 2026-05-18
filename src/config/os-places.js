@@ -4,6 +4,7 @@ export const osPlacesConfig = {
       doc: 'Client ID for authenticating with OS Places',
       format: String,
       default: null,
+      nullable: true,
       env: 'OS_PLACES_CLIENT_ID'
     },
     osPlacesStub: {

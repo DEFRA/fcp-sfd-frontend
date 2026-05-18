@@ -81,6 +81,7 @@ const getMockData = () => {
 const getPageData = () => {
   return {
     backLink: { href: '/business-details' },
+    returnToBusinessDetailsLink: '/business-details',
     pageTitle: 'Change your business type',
     metaDescription: 'Update the type of your business.',
     businessName: 'Agile Farm Ltd',

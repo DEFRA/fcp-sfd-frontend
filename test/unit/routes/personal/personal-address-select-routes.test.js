@@ -176,6 +176,8 @@ const getMockData = () => {
 const getPageData = () => {
   return {
     backLink: { href: '/account-address-change' },
+    postcodeChangeLink: '/account-address-change',
+    manualAddressLink: '/account-address-enter',
     pageTitle: 'Choose your personal address',
     metaDescription: 'Choose the address for your personal account.',
     userName: 'Alfred Waldron',
@@ -198,6 +200,8 @@ const getPageData = () => {
 const getPageDataError = () => {
   return {
     backLink: { href: '/account-address-change' },
+    postcodeChangeLink: '/account-address-change',
+    manualAddressLink: '/account-address-enter',
     pageTitle: 'Choose your personal address',
     metaDescription: 'Choose the address for your personal account.',
     userName: 'Alfred Waldron',

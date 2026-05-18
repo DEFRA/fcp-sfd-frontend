@@ -136,6 +136,33 @@ describe('DAL (data access layer) connector', () => {
       expect(result.errors[0].extensions.code).toBe('NOT_FOUND')
       expect(result.statusCode).toBe(404)
     })
+
+    test('should treat partial success responses as a failure', async () => {
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          data: { business: { sbi: 123456789 } },
+          errors: [
+            {
+              message: 'Partial failure',
+              extensions: {
+                response: {
+                  status: 503
+                }
+              }
+            }
+          ]
+        })
+      })
+
+      const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
+
+      expect(result.data).toBeNull()
+      expect(result.errors).toHaveLength(1)
+      expect(result.errors[0].message).toBe('Partial failure')
+      expect(result.statusCode).toBe(503)
+    })
   })
 
   describe('when a network error occurs', () => {
@@ -144,6 +171,8 @@ describe('DAL (data access layer) connector', () => {
 
       const result = await dalConnector.query(exampleQuery, { sbi: 123456789 })
 
+      expect(result).toBeDefined()
+      expect(result.errors).toBeDefined()
       expect(result.data).toBeNull()
       expect(result.statusCode).toBe(500)
       expect(result.errors[0].message).toBe('Network error')

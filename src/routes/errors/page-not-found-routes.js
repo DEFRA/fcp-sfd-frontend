@@ -1,3 +1,5 @@
+import { pageNotFoundPresenter } from '../../presenters/errors/page-not-found-presenter.js'
+
 export const pageNotFound = {
   method: 'GET',
   path: '/page-not-found',
@@ -6,6 +8,6 @@ export const pageNotFound = {
   },
   handler: (request, h) => {
     const backLink = request.headers.referer
-    return h.view('errors/page-not-found', { backLink })
+    return h.view('errors/page-not-found', pageNotFoundPresenter(backLink))
   }
 }

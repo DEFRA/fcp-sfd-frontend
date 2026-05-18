@@ -11,7 +11,7 @@ describe('homePresenter', () => {
   let data
   let permissionGroups
   let enrolmentCount
-  let isOnFarmingPaymentsAllowList
+  let isOnWoodlandManagementAllowList
 
   beforeEach(() => {
     data = {
@@ -28,24 +28,29 @@ describe('homePresenter', () => {
     }
     permissionGroups = ['BUSINESS_DETAILS:VIEW']
     enrolmentCount = 1
-    isOnFarmingPaymentsAllowList = false
+    isOnWoodlandManagementAllowList = false
   })
 
   describe('when provided with home data and permission groups', () => {
     test('it correctly presents the data', () => {
-      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
       expect(result).toEqual({
         pageTitle: 'Your business',
         metaDescription: 'Home page for your business\'s schemes and details.',
         userName: 'Alfred Waldron',
+        signOutLink: '/auth/sign-out',
         businessName: 'Test Farm Ltd',
         businessDetails: {
           link: '/business-details',
           text: 'View your Business details'
         },
+        personalDetails: {
+          link: '/personal-details',
+          text: 'View and update your personal details'
+        },
         sbi: '123456789',
-        isOnFarmingPaymentsAllowList: false
+        isOnWoodlandManagementAllowList: false
       })
     })
   })
@@ -57,7 +62,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -72,7 +77,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return text "View and update your business details"', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
         expect(result.businessDetails).toEqual({
           link: '/business-details',
@@ -89,7 +94,7 @@ describe('homePresenter', () => {
       })
 
       test('it should return the choose another business link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
         expect(result.backLink).toEqual({
           text: 'Choose another business',
@@ -104,7 +109,7 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
         expect(result.backLink).toBeUndefined()
       })
@@ -116,31 +121,31 @@ describe('homePresenter', () => {
       })
 
       test('it should not return the business selection link', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
         expect(result.backLink).toBeUndefined()
       })
     })
   })
 
-  describe('the "isOnFarmingPaymentsAllowList" property', () => {
+  describe('the "isOnWoodlandManagementAllowList" property', () => {
     describe('when the user is on the allow list', () => {
       beforeEach(() => {
-        isOnFarmingPaymentsAllowList = true
+        isOnWoodlandManagementAllowList = true
       })
 
       test('it should return true', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
-        expect(result.isOnFarmingPaymentsAllowList).toBe(true)
+        expect(result.isOnWoodlandManagementAllowList).toBe(true)
       })
 
-      test('it should return farming payments data', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnFarmingPaymentsAllowList)
+      test('it should return woodland management data', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
-        expect(result.farmingPayments).toEqual({
-          link: 'fp-check-your-details',
-          title: 'Farm Payments Technical Test',
+        expect(result.woodlandManagement).toEqual({
+          link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
+          title: 'Woodland Management Plan',
           status: 'do-not-show'
         })
       })

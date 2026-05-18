@@ -1,0 +1,50 @@
+{% extends 'common/layout.njk' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Start using the Farm and Land Service</h1>
+      <p class="govuk-body">Use the Farm and Land Service to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>update your personal details</li>
+        <li>update your business details</li>
+      </ul>
+      <p class="govuk-body">You’ll need your Rural Payments service customer reference number (CRN) and password to sign in.</p>
+
+      {{ govukButton({
+        text: "Start now",
+        href: "/auth/sign-in",
+        isStartButton: true,
+        preventDoubleClick: true
+      }) }}
+
+      <h2 class="govuk-heading-l">What the Farm and Land Service is</h2>
+      <p class="govuk-body">The Farm and Land Service is being developed to:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>replace the Rural Payments service, improving the design and technology that people use to manage their account with the Rural Payments Agency</li>
+        <li>provide a single place for people to interact with the government about anything to do on their farm or land</li>
+      </ul>
+      <p class="govuk-body">At the moment, you can only use the Farm and Land Service to update some of your account information.</p>
+      <p class="govuk-body">
+        Over time, the Farm and Land Service will provide farmers and land owners with access to all the services they need to manage their farm or land.
+        It will be accessed through a single sign in, as a single account, and offer a single menu of choices.
+      </p>
+
+      <h2 class="govuk-heading-l">What you'll be able to use the service for in future</h2>
+      <p class="govuk-body">In the future people will be able to do a range of tasks including:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>applying for or managing agri-environment schemes such as the Sustainable Farming Incentive</li>
+        <li>finding new grants and funding opportunities that are relevant to their business</li>
+        <li>managing the business account including who can act for the business</li>
+        <li>managing land</li>
+        <li>tracking when a payment is due and what it is for</li>
+        <li>applying for permissions to carry out activities on their farm or land</li>
+      </ul>
+
+      <h2 class="govuk-heading-l">Contact the Rural Payments Agency for help</h2>
+      {% include 'common/contact/contact-us.njk' %}
+    </div>
+  </div>
+
+{% endblock %}

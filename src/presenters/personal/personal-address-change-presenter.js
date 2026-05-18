@@ -6,6 +6,7 @@
 const personalAddressChangePresenter = (data, payload) => {
   return {
     backLink: { href: '/personal-details' },
+    manualAddressLink: '/account-address-enter',
     pageTitle: 'What is your personal address?',
     metaDescription: 'Update the address for your personal account.',
     userName: data.info.userName ?? null,

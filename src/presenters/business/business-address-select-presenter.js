@@ -8,6 +8,8 @@ import { formatDisplayAddresses } from '../base-presenter.js'
 const businessAddressSelectPresenter = (data) => {
   return {
     backLink: { href: '/business-address-change' },
+    postcodeChangeLink: '/business-address-change',
+    manualAddressLink: '/business-address-enter',
     pageTitle: 'Choose your business address',
     metaDescription: 'Choose the address for your business.',
     userName: data.customer.userName ?? null,

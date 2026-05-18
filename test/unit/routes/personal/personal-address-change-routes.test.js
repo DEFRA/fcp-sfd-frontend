@@ -178,6 +178,7 @@ describe('personal address change routes', () => {
 const getPageData = () => {
   return {
     backLink: { href: '/personal-details' },
+    manualAddressLink: '/account-address-enter',
     pageTitle: 'What is your personal address?',
     metaDescription: 'Update the address for your personal account.',
     postcode: 'SK22 1DL',
@@ -188,6 +189,7 @@ const getPageData = () => {
 const getPageDataError = () => {
   return {
     backLink: { href: '/personal-details' },
+    manualAddressLink: '/account-address-enter',
     pageTitle: 'What is your personal address?',
     metaDescription: 'Update the address for your personal account.',
     postcode: 'SK22 1DL',

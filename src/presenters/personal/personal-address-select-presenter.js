@@ -8,6 +8,8 @@ import { formatDisplayAddresses } from '../base-presenter.js'
 const personalAddressSelectPresenter = (data) => {
   return {
     backLink: { href: '/account-address-change' },
+    postcodeChangeLink: '/account-address-change',
+    manualAddressLink: '/account-address-enter',
     pageTitle: 'Choose your personal address',
     metaDescription: 'Choose the address for your personal account.',
     userName: data.info.userName ?? null,

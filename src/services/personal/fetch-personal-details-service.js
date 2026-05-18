@@ -26,7 +26,7 @@ const fetchPersonalDetailsService = async (credentials) => {
     return mappedResponse
   }
 
-  return dalResponse
+  throw new Error('Failed to retrieve personal details')
 }
 
 export {

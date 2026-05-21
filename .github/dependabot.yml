@@ -29,6 +29,72 @@ updates:
         applies-to: security-updates
         patterns:
           - "*"
+      hapi:
+        applies-to: version-updates
+        patterns:
+          - "@hapi/*"
+          - "hapi-*"
+          - "@defra/hapi-tracing"
+          - "blankie"
+      logging:
+        applies-to: version-updates
+        patterns:
+          - "pino"
+          - "pino-*"
+          - "hapi-pino"
+          - "@elastic/ecs-pino-format"
+      build:
+        applies-to: version-updates
+        patterns:
+          - "webpack"
+          - "webpack-*"
+          - "terser-webpack-plugin"
+          - "copy-webpack-plugin"
+          - "clean-webpack-plugin"
+      css:
+        applies-to: version-updates
+        patterns:
+          - "sass-embedded"
+          - "sass-loader"
+          - "postcss-*"
+          - "autoprefixer"
+          - "cssnano"
+          - "cssnano-preset-default"
+      lint:
+        applies-to: version-updates
+        patterns:
+          - "eslint"
+          - "neostandard"
+          - "standard"
+          - "stylelint"
+          - "stylelint-*"
+      tools:
+        applies-to: version-updates
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+          - "jsdom"
+          - "nodemon"
+          - "npm-run-all"
+      types:
+        applies-to: version-updates
+        patterns:
+          - "@types/*"
+      npm-production:
+        applies-to: version-updates
+        dependency-type: "production"
+        patterns:
+          - "*"
+      npm-development:
+        applies-to: version-updates
+        dependency-type: "development"
+        patterns:
+          - "*"
+    groups:
+      npm-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
       build:
         applies-to: version-updates
         patterns:

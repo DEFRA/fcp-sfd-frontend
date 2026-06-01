@@ -1,5 +1,6 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { personalDobSchema } from '../../schemas/personal/personal-dob-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalDobChangePresenter } from '../../presenters/personal/personal-dob-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
@@ -26,7 +27,7 @@ const postPersonalDobChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
         const pageData = personalDobChangePresenter(personalDetails, payload)
 

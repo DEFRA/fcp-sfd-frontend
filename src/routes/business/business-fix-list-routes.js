@@ -1,7 +1,8 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { setBusinessFixSessionDataService } from '../../services/business/set-business-fix-session-data-service.js'
 import { businessFixListPresenter } from '../../presenters/business/business-fix-list-presenter.js'
 import { validateFixDetailsService } from '../../services/validate-fix-details-service.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { businessDetailsSchema } from '../../schemas/business/business-details-schema.js'
 import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
@@ -37,7 +38,7 @@ const postBusinessFixList = {
     const validation = validateFixDetailsService(payload, sessionData.orderedSectionsToFix, businessDetailsSchema)
 
     if (validation.error) {
-      const errors = formatValidationErrors(validation.error.details || [])
+      const errors = utils.formatValidationErrors(validation.error.details || [])
       const businessDetails = await fetchBusinessFixService(auth.credentials, sessionData)
       const pageData = businessFixListPresenter(businessDetails, payload, errors)
 

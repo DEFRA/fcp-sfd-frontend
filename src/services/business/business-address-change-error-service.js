@@ -15,12 +15,13 @@
  * @module businessAddressChangeErrorService
  */
 
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { businessAddressChangePresenter } from '../../presenters/business/business-address-change-presenter.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 
 const businessAddressChangeErrorService = async (yar, credentials, postcode, error = []) => {
-  const errors = formatValidationErrors(error)
+  const errors = utils.formatValidationErrors(error)
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessPostcode')
   const pageData = businessAddressChangePresenter(businessDetails, postcode)
 

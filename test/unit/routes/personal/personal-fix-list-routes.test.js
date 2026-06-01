@@ -4,7 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setPersonalFixSessionDataService } from '../../../../src/services/personal/set-personal-fix-session-data-service.js'
 import { validateFixDetailsService } from '../../../../src/services/validate-fix-details-service.js'
-import { formatValidationErrors } from '../../../../src/utils/format-validation-errors.js'
+import { utils } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 import { personalFixListPresenter } from '../../../../src/presenters/personal/personal-fix-list-presenter.js'
 
@@ -21,8 +21,8 @@ vi.mock('../../../../src/services/validate-fix-details-service.js', () => ({
   validateFixDetailsService: vi.fn()
 }))
 
-vi.mock('../../../../src/utils/format-validation-errors.js', () => ({
-  formatValidationErrors: vi.fn()
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  utils: { formatValidationErrors: vi.fn() }
 }))
 
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
@@ -139,7 +139,7 @@ describe('personal fix list routes', () => {
           ]
 
           validateFixDetailsService.mockReturnValue({ error: validationError })
-          formatValidationErrors.mockReturnValue(errors)
+          utils.formatValidationErrors.mockReturnValue(errors)
           fetchPersonalFixService.mockResolvedValue({ some: 'data' })
           personalFixListPresenter.mockReturnValue({ page: 'data', errors })
         })
@@ -147,7 +147,7 @@ describe('personal fix list routes', () => {
         test('it formats validation errors', async () => {
           await postPersonalFixList.handler(request, h)
 
-          expect(formatValidationErrors).toHaveBeenCalledWith(validationError.details)
+          expect(utils.formatValidationErrors).toHaveBeenCalledWith(validationError.details)
         })
 
         test('it fetches personal fix data', async () => {

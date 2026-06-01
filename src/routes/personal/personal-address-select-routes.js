@@ -1,8 +1,9 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { personalAddressSelectPresenter } from '../../presenters/personal/personal-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressesSchema } from '../../schemas/os-places/addresses-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getPersonalAddressSelect = {
@@ -27,7 +28,7 @@ const postPersonalAddressSelect = {
       failAction: async (request, h, err) => {
         const { yar, auth } = request
 
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, ['changePersonalPostcode', 'changePersonalAddresses'])
         const pageData = personalAddressSelectPresenter(personalDetails)
 

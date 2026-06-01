@@ -6,7 +6,7 @@
 
 import { getDalConnector } from '../dal/connector.js'
 import { personalBusinessDetailsQuery } from '../dal/queries/personal-business-details.js'
-import { mapPersonalBusinessDetails } from '@defra/fcp-sfd-frontend-engine'
+import { mappers } from '@defra/fcp-sfd-frontend-engine'
 
 const fetchPersonalBusinessDetailsService = async (credentials) => {
   const { crn, sbi, sessionId } = credentials
@@ -19,7 +19,7 @@ const fetchPersonalBusinessDetailsService = async (credentials) => {
   )
 
   if (dalResponse.data) {
-    const mappedResponse = mapPersonalBusinessDetails(dalResponse.data)
+    const mappedResponse = mappers.mapPersonalBusinessDetails(dalResponse.data)
 
     return mappedResponse
   }

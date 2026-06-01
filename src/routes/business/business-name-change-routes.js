@@ -1,7 +1,8 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessNameChangePresenter } from '../../presenters/business/business-name-change-presenter.js'
 import { businessNameSchema } from '../../schemas/business/business-name-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
@@ -32,7 +33,7 @@ const postBusinessNameChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
         const pageData = businessNameChangePresenter(businessDetails, payload.businessName)
 

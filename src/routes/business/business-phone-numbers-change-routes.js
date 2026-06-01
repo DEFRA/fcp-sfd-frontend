@@ -1,5 +1,6 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { businessPhoneSchema } from '../../schemas/business/business-phone-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessPhoneNumbersChangePresenter } from '../../presenters/business/business-phone-numbers-change-presenter.js'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
@@ -32,7 +33,7 @@ const postBusinessPhoneNumbersChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessPhoneNumbers')
         const pageData = businessPhoneNumbersChangePresenter(businessDetails, payload)
 

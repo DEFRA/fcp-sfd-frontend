@@ -4,7 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setBusinessFixSessionDataService } from '../../../../src/services/business/set-business-fix-session-data-service.js'
 import { validateFixDetailsService } from '../../../../src/services/validate-fix-details-service.js'
-import { formatValidationErrors } from '../../../../src/utils/format-validation-errors.js'
+import { utils } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
 import { businessFixListPresenter } from '../../../../src/presenters/business/business-fix-list-presenter.js'
 
@@ -21,8 +21,8 @@ vi.mock('../../../../src/services/validate-fix-details-service.js', () => ({
   validateFixDetailsService: vi.fn()
 }))
 
-vi.mock('../../../../src/utils/format-validation-errors.js', () => ({
-  formatValidationErrors: vi.fn()
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  utils: { formatValidationErrors: vi.fn() }
 }))
 
 vi.mock('../../../../src/services/business/fetch-business-fix-service.js', () => ({
@@ -139,7 +139,7 @@ describe('business fix list routes', () => {
           ]
 
           validateFixDetailsService.mockReturnValue({ error: validationError })
-          formatValidationErrors.mockReturnValue(errors)
+          utils.formatValidationErrors.mockReturnValue(errors)
           fetchBusinessFixService.mockResolvedValue({ some: 'data' })
           businessFixListPresenter.mockReturnValue({ page: 'data', errors })
         })
@@ -147,7 +147,7 @@ describe('business fix list routes', () => {
         test('it formats validation errors', async () => {
           await postBusinessFixList.handler(request, h)
 
-          expect(formatValidationErrors).toHaveBeenCalledWith(validationError.details)
+          expect(utils.formatValidationErrors).toHaveBeenCalledWith(validationError.details)
         })
 
         test('it fetches business fix data', async () => {

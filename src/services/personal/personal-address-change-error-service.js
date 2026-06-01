@@ -15,12 +15,13 @@
  * @module personalAddressChangeErrorService
  */
 
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { personalAddressChangePresenter } from '../../presenters/personal/personal-address-change-presenter.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 
 const personalAddressChangeErrorService = async (yar, credentials, postcode, error = []) => {
-  const errors = formatValidationErrors(error)
+  const errors = utils.formatValidationErrors(error)
   const personalDetails = await fetchPersonalChangeService(yar, credentials, 'changePersonalPostcode')
   const pageData = personalAddressChangePresenter(personalDetails, postcode)
 

@@ -10,7 +10,7 @@ vi.mock('../../../src/dal/connector.js', () => ({
 }))
 
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
-  mapPersonalBusinessDetails: mockMappedValue
+  mappers: { mapPersonalBusinessDetails: mockMappedValue }
 }))
 
 // Test helpers

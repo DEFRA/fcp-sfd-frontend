@@ -1,7 +1,8 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { personalEmailChangePresenter } from '../../presenters/personal/personal-email-change-presenter.js'
 import { personalEmailSchema } from '../../schemas/personal/personal-email-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 
@@ -27,7 +28,7 @@ const postPersonalEmailChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalEmail')
         const pageData = personalEmailChangePresenter(personalDetails, payload.personalEmail)
 

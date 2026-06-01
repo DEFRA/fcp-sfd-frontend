@@ -1,8 +1,9 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { updateBusinessVatRemoveService } from '../../services/business/update-business-vat-remove-service.js'
 import { businessVatRemovePresenter } from '../../presenters/business/business-vat-remove-presenter.js'
 import { businessVatRemoveSchema } from '../../schemas/business/business-vat-remove-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
@@ -29,7 +30,7 @@ const postBusinessVatRemove = {
       payload: businessVatRemoveSchema,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
         const pageData = businessVatRemovePresenter(businessDetails)
 

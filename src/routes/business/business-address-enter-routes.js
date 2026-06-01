@@ -1,6 +1,7 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { addressSchema } from '../../schemas/address-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessAddressEnterPresenter } from '../../presenters/business/business-address-enter-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
@@ -32,7 +33,7 @@ const postBusinessAddressEnter = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessAddress')
         const pageData = businessAddressEnterPresenter(businessDetails, payload)
 

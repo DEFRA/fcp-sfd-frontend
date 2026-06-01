@@ -3,7 +3,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
-import { formatValidationErrors } from '../../../../src/utils/format-validation-errors.js'
+import { utils } from '@defra/fcp-sfd-frontend-engine'
 
 // Thing under test
 import { personalAddressChangeErrorService } from '../../../../src/services/personal/personal-address-change-error-service.js'
@@ -13,8 +13,8 @@ vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', ()
   fetchPersonalChangeService: vi.fn()
 }))
 
-vi.mock('../../../../src/utils/format-validation-errors.js', () => ({
-  formatValidationErrors: vi.fn()
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  utils: { formatValidationErrors: vi.fn() }
 }))
 
 describe('personalAddressChangeErrorService', () => {
@@ -30,7 +30,7 @@ describe('personalAddressChangeErrorService', () => {
     postcode = 'AB12 3CD'
 
     fetchPersonalChangeService.mockResolvedValue(mockPersonalDetails())
-    formatValidationErrors.mockReturnValue([{ text: 'An error occurred' }])
+    utils.formatValidationErrors.mockReturnValue([{ text: 'An error occurred' }])
   })
 
   describe('when called with an error', () => {
@@ -41,7 +41,7 @@ describe('personalAddressChangeErrorService', () => {
     test('it formats the errors', async () => {
       await personalAddressChangeErrorService(yar, credentials, postcode, error)
 
-      expect(formatValidationErrors).toHaveBeenCalledWith(error)
+      expect(utils.formatValidationErrors).toHaveBeenCalledWith(error)
     })
 
     test('it fetches personal details including changePersonalPostcode', async () => {
@@ -75,7 +75,7 @@ describe('personalAddressChangeErrorService', () => {
     test('it defaults errors to an empty array', async () => {
       await personalAddressChangeErrorService(yar, credentials, postcode)
 
-      expect(formatValidationErrors).toHaveBeenCalledWith([])
+      expect(utils.formatValidationErrors).toHaveBeenCalledWith([])
     })
   })
 })

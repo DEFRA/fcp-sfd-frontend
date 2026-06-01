@@ -1,7 +1,8 @@
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessVatChangePresenter } from '../../presenters/business/business-vat-change-presenter.js'
 import { businessVatSchema } from '../../schemas/business/business-vat-schema.js'
-import { formatValidationErrors } from '../../utils/format-validation-errors.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
@@ -32,7 +33,7 @@ const postBusinessVatChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
-        const errors = formatValidationErrors(err.details || [])
+        const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
         const pageData = businessVatChangePresenter(businessDetails, payload.vatNumber)
 

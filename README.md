@@ -53,7 +53,7 @@ You can either run this service independently or alternatively run the [fcp-sfd-
 
 ### Building the Docker image
 
-Container images are built using Docker Compose. It's important to note that in order to successfully run the [fcp-dal-api](https://github.com/defra/fcp-dal-api) and its [upstream-mock](https://github.com/defra/fcp-dal-upstream-mock) to interact with the Data Access Layer (DAL), you _must_ run this service as a Docker container. This is because the [Docker Compose configuration](./compose.yaml) for this repository pulls and runs the Docker images for the `fcp-dal-api` and `fcp-dal-upstream-mock` (a.k.a. the `kits-mock`) from the Docker registry.
+Container images are built using Docker Compose. It's important to note that in order to successfully run the [fcp-dal-api](https://github.com/defra/fcp-dal-api) and its [upstream-mock](https://github.com/defra/fcp-dal-upstream-mock) to interact with the Data Access Layer (DAL), you _must_ run this service as a Docker container. This is because the [Docker Compose configuration](./compose.yaml) for this repository pulls and runs the Docker images for the `fcp-dal-api` and `fcp-dal-upstream-mock` (a.k.a. the DAL or KITS mock) from the Docker registry.
 
 First, build the Docker image:
 ```
@@ -62,13 +62,40 @@ docker compose build
 
 ### Starting the Docker container
 
-After building the image, run the service locally in a container alongside `fcp-dal-api` and `fcp-dal-upstream-mock`:
+The recommended way to start the stack is via the **⬆️ Up Frontend** VS Code task (provided by [`fcp-sfd-dev-environment`](https://github.com/DEFRA/fcp-sfd-dev-environment)), or by running:
 ```
 docker compose up
 ```
-Use the `-d` at the end of the above command to run in detached mode e.g. if you wish to view logs in another application such as Docker Desktop.
+This starts `fcp-sfd-frontend`, `fcp-dal-api`, `fcp-dal-upstream-mock`, Redis, and MongoDB. By default it connects to the **real Defra ID** — you'll need valid `DEFRA_ID_*` credentials in your `.env`.
+
+Use the `-d` flag to run in detached mode e.g. if you wish to view logs in another application such as Docker Desktop.
 
 You can find further information on how SFD integrates with the DAL on [Confluence](https://eaflood.atlassian.net/wiki/spaces/SFD/pages/5712838853/Single+Front+Door+Integration+with+Data+Access+Layer).
+
+### Using the Defra ID stub
+
+If you don't have real Defra ID credentials, or want a faster sign-in loop during development, use the **🥸🧪 Run with stubs (DefraID + published DAL mock)** VS Code task. This starts the full stack with an in-built Defra ID stub instead of the real Defra ID service. The stub is configured via [`defra-id.data.json`](./defra-id.data.json).
+
+You can also toggle the stub on/off on an already-running stack using the **🥸 DefraID: Enable stub** and **🤡 DefraID: Disable stub** VS Code tasks.
+
+### Running with a local upstream mock
+
+If you need to modify mock responses or the upstream deployed environments are unavailable, you can build `fcp-dal-upstream-mock` from a local checkout instead of using the published Docker image.
+
+1. Clone the upstream mock repository:
+   ```
+   git clone https://github.com/DEFRA/fcp-dal-upstream-mock.git
+   ```
+2. Add the path to your `.env` file:
+   ```
+   DAL_UPSTREAM_MOCK_LOCAL_PATH=/path/to/fcp-dal-upstream-mock
+   ```
+3. Start the stack using the local mock:
+   ```
+   npm run docker:dal-local
+   ```
+
+> **Note:** a VS Code task for this is provided by [`fcp-sfd-dev-environment`](https://github.com/DEFRA/fcp-sfd-dev-environment) — see the **🥸🧪🔧 Run with stubs (DefraID + local DAL mock)** task.
 
 ### Accessing the application
 

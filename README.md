@@ -62,13 +62,21 @@ docker compose build
 
 ### Starting the Docker container
 
-After building the image, run the service locally in a container alongside `fcp-dal-api` and `fcp-dal-upstream-mock`:
+The recommended way to start the stack is via the **⬆️ Up Frontend** VS Code task (provided by [`fcp-sfd-dev-environment`](https://github.com/DEFRA/fcp-sfd-dev-environment)), or by running:
 ```
 docker compose up
 ```
-Use the `-d` at the end of the above command to run in detached mode e.g. if you wish to view logs in another application such as Docker Desktop.
+This starts `fcp-sfd-frontend`, `fcp-dal-api`, `fcp-dal-upstream-mock`, Redis, and MongoDB. By default it connects to the **real Defra ID** — you'll need valid `DEFRA_ID_*` credentials in your `.env`.
+
+Use the `-d` flag to run in detached mode e.g. if you wish to view logs in another application such as Docker Desktop.
 
 You can find further information on how SFD integrates with the DAL on [Confluence](https://eaflood.atlassian.net/wiki/spaces/SFD/pages/5712838853/Single+Front+Door+Integration+with+Data+Access+Layer).
+
+### Using the Defra ID stub
+
+If you don't have real Defra ID credentials, or want a faster sign-in loop during development, use the **🥸🧪 Run with stubs (DefraID + published DAL mock)** VS Code task. This starts the full stack with an in-built Defra ID stub instead of the real Defra ID service. The stub is configured via [`defra-id.data.json`](./defra-id.data.json).
+
+You can also toggle the stub on/off on an already-running stack using the **🥸 DefraID: Enable stub** and **🤡 DefraID: Disable stub** VS Code tasks.
 
 ### Running with a local upstream mock
 
@@ -87,7 +95,7 @@ If you need to modify mock responses or the upstream deployed environments are u
    npm run docker:dal-local
    ```
 
-> **Note:** a VS Code task for running the local mock is provided by [`fcp-sfd-dev-environment`](https://github.com/DEFRA/fcp-sfd-dev-environment) — see the **🧪🔧 Run with local DAL mock** task.
+> **Note:** a VS Code task for this is provided by [`fcp-sfd-dev-environment`](https://github.com/DEFRA/fcp-sfd-dev-environment) — see the **🥸🧪🔧 Run with stubs (DefraID + local DAL mock)** task.
 
 ### Accessing the application
 

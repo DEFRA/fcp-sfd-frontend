@@ -26,12 +26,14 @@ vi.mock('undici', () => {
 })
 
 vi.mock('https-proxy-agent', () => {
-  const mockHttpsProxyAgent = vi.fn().mockImplementation((url) => {
-    return { url }
-  })
+  class MockHttpsProxyAgent {
+    constructor (url) {
+      this.url = url
+    }
+  }
 
   return {
-    HttpsProxyAgent: mockHttpsProxyAgent
+    HttpsProxyAgent: MockHttpsProxyAgent
   }
 })
 

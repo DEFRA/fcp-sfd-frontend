@@ -24,30 +24,19 @@ describe('businessDetailsMapper', () => {
     })
 
     describe('customer.userName', () => {
+      beforeEach(() => {
+        dalData.customer.info.name = {
+          first: 'Software',
+          last: 'Developer',
+          middle: null
+        }
+      })
+
       test('it should build the userName correctly', () => {
-        const result = mapBusinessDetails(
-          dalWithName(dalData, { first: 'Software', last: 'Developer' })
-        )
+        const result = mapBusinessDetails(dalData)
 
         expect(result.customer.userName).toEqual('Software Developer')
       })
     })
   })
 })
-
-const dalWithName = (base, name) => {
-  return {
-    ...base,
-    customer: {
-      ...base.customer,
-      info: {
-        ...base.customer.info,
-        name: {
-          first: name.first,
-          last: name.last,
-          middle: name.middle ?? null
-        }
-      }
-    }
-  }
-}

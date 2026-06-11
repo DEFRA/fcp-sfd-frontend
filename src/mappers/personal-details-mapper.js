@@ -5,16 +5,15 @@
  * @returns {Object} Formatted personal details data
  */
 
+import { mappers } from '@defra/fcp-sfd-frontend-engine'
+
 export const mapPersonalDetails = (value) => {
   const [year, month, day] = value.customer.info.dateOfBirth ? value.customer.info.dateOfBirth.split('-') : []
 
   return {
     crn: value.customer.crn,
     info: {
-      userName: [
-        value.customer.info.name.first,
-        value.customer.info.name.last
-      ].filter(Boolean).join(' '),
+      userName: mappers.customerName(value.customer.info.name).userName,
       fullName: {
         first: value.customer.info.name.first,
         last: value.customer.info.name.last,
@@ -32,29 +31,7 @@ export const mapPersonalDetails = (value) => {
         year: year ?? null
       }
     },
-    address: {
-      lookup: {
-        pafOrganisationName: value.customer.info.address.pafOrganisationName,
-        buildingNumberRange: value.customer.info.address.buildingNumberRange,
-        flatName: value.customer.info.address.flatName,
-        buildingName: value.customer.info.address.buildingName,
-        dependentLocality: value.customer.info.address.dependentLocality,
-        doubleDependentLocality: value.customer.info.address.doubleDependentLocality,
-        street: value.customer.info.address.street,
-        county: value.customer.info.address.county,
-        uprn: value.customer.info.address.uprn
-      },
-      manual: {
-        line1: value.customer.info.address.line1,
-        line2: value.customer.info.address.line2,
-        line3: value.customer.info.address.line3,
-        line4: value.customer.info.address.line4,
-        line5: value.customer.info.address.line5
-      },
-      city: value.customer.info.address.city,
-      postcode: value.customer.info.address.postalCode,
-      country: value.customer.info.address.country
-    },
+    address: mappers.address(value.customer.info.address),
     contact: {
       email: value.customer.info.email.address,
       telephone: value.customer.info.phone.landline ?? null,

@@ -24,20 +24,32 @@ describe('personalDetailsMapper', () => {
     })
 
     describe('info.userName', () => {
+      beforeEach(() => {
+        dalData.customer.info.name = {
+          first: 'Software',
+          last: 'Developer',
+          middle: null
+        }
+      })
+
       test('it should build the userName correctly', () => {
-        const result = mapPersonalDetails(
-          dalWithName(dalData, { first: 'Software', last: 'Developer', middle: null })
-        )
+        const result = mapPersonalDetails(dalData)
 
         expect(result.info.userName).toEqual('Software Developer')
       })
     })
 
     describe('info.fullName', () => {
+      beforeEach(() => {
+        dalData.customer.info.name = {
+          first: 'Software',
+          last: 'Developer',
+          middle: 'Engineer'
+        }
+      })
+
       test('it should build the fullName object correctly', () => {
-        const result = mapPersonalDetails(
-          dalWithName(dalData, { first: 'Software', last: 'Developer', middle: 'Engineer' })
-        )
+        const result = mapPersonalDetails(dalData)
 
         expect(result.info.fullName).toEqual({
           first: 'Software',
@@ -48,67 +60,55 @@ describe('personalDetailsMapper', () => {
     })
 
     describe('info.fullNameJoined', () => {
+      beforeEach(() => {
+        dalData.customer.info.name = {
+          first: 'Software',
+          last: 'Developer',
+          middle: 'Engineer'
+        }
+      })
+
       test('it should build the fullNameJoined string correctly', () => {
-        const result = mapPersonalDetails(
-          dalWithName(dalData, { first: 'Software', last: 'Developer', middle: 'Engineer' })
-        )
+        const result = mapPersonalDetails(dalData)
 
         expect(result.info.fullNameJoined).toEqual('Software Engineer Developer')
       })
     })
 
     describe('info.dateOfBirth', () => {
-      test('it should build the date of birth correctly when it exists', () => {
-        const result = mapPersonalDetails(dalWithDateOfBirth(dalData, '1990-01-01'))
+      describe('when date of birth exists', () => {
+        beforeEach(() => {
+          dalData.customer.info.dateOfBirth = '1990-01-01'
+        })
 
-        expect(result.info.dateOfBirth).toEqual({
-          full: '1990-01-01',
-          day: '01',
-          month: '01',
-          year: '1990'
+        test('it should build the date of birth correctly when it exists', () => {
+          const result = mapPersonalDetails(dalData)
+
+          expect(result.info.dateOfBirth).toEqual({
+            full: '1990-01-01',
+            day: '01',
+            month: '01',
+            year: '1990'
+          })
         })
       })
 
-      test('it should build the date of birth correctly when it does not exist', () => {
-        const result = mapPersonalDetails(dalWithDateOfBirth(dalData, null))
+      describe('when date of birth does not exist', () => {
+        beforeEach(() => {
+          dalData.customer.info.dateOfBirth = null
+        })
 
-        expect(result.info.dateOfBirth).toEqual({
-          full: null,
-          day: null,
-          month: null,
-          year: null
+        test('it should build the date of birth correctly when it does not exist', () => {
+          const result = mapPersonalDetails(dalData)
+
+          expect(result.info.dateOfBirth).toEqual({
+            full: null,
+            day: null,
+            month: null,
+            year: null
+          })
         })
       })
     })
   })
 })
-
-const dalWithName = (base, name) => {
-  return {
-    ...base,
-    customer: {
-      ...base.customer,
-      info: {
-        ...base.customer.info,
-        name: {
-          first: name.first,
-          last: name.last,
-          middle: name.middle ?? null
-        }
-      }
-    }
-  }
-}
-
-const dalWithDateOfBirth = (base, value) => {
-  return {
-    ...base,
-    customer: {
-      ...base.customer,
-      info: {
-        ...base.customer.info,
-        dateOfBirth: value
-      }
-    }
-  }
-}

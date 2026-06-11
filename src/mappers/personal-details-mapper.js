@@ -13,7 +13,7 @@ export const mapPersonalDetails = (value) => {
   return {
     crn: value.customer.crn,
     info: {
-      userName: mappers.customerName(value.customer.info.name),
+      userName: mappers.customerName(value.customer.info.name).userName,
       fullName: {
         first: value.customer.info.name.first,
         last: value.customer.info.name.last,

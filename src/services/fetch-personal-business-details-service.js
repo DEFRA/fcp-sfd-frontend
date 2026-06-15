@@ -19,7 +19,7 @@ const fetchPersonalBusinessDetailsService = async (credentials) => {
   )
 
   if (dalResponse.data) {
-    const mappedResponse = mappers.mapPersonalBusinessDetails(dalResponse.data)
+    const mappedResponse = mappers.personalBusinessDetails(dalResponse.data)
 
     return mappedResponse
   }

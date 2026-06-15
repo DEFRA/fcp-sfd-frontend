@@ -9,10 +9,6 @@ vi.mock('../../../src/dal/connector.js', () => ({
   getDalConnector: vi.fn(() => mockDalConnector)
 }))
 
-vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
-  mappers: { mapPersonalBusinessDetails: mockMappedValue }
-}))
-
 // Test helpers
 const { getMappedData, getDalData } = await import('../../mocks/mock-personal-business-details.js')
 

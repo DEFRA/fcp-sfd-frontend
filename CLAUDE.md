@@ -13,8 +13,8 @@ Frontend service for the Single Front Door (SFD) on DEFRA's Future Farming and C
 - `npm test` — Run all tests with coverage (vitest)
 - `npm run test:watch` — Run tests in watch mode
 - `npx vitest run test/unit/routes/personal/personal-email-change-routes.test.js` — Run a single test file
-- `npm run lint` — Run StandardJS + stylelint
-- `npm run lint:fix` — Auto-fix StandardJS issues
+- `npm run lint` — Run neostandard (via eslint) + stylelint
+- `npm run lint:fix` — Auto-fix neostandard issues
 - `docker compose up` — Run with DAL, upstream-mock, Redis, Mongo, and Defra ID stub
 - `docker compose build` — Rebuild Docker image
 
@@ -24,7 +24,7 @@ Frontend service for the Single Front Door (SFD) on DEFRA's Future Farming and C
 
 Routes → Services → DAL Connector → fcp-dal-api (GraphQL) → KITS upstream
 
-- **Routes** (`src/routes/`): Hapi route definitions with GET/POST handlers. Organized by domain (personal/, business/, footer/).
+- **Routes** (`src/routes/`): Hapi route definitions with GET/POST handlers. Organized by domain (personal/, business/, footer/, errors/).
 - **Services** (`src/services/`): Business logic layer. Fetch data, orchestrate mutations, manage session state. Grouped by domain + shared services.
 - **DAL** (`src/dal/`): GraphQL connector singleton initialized at server startup. Uses closure over session/token caches. All GraphQL queries and mutations live in `queries/` and `mutations/`.
 - **Presenters** (`src/presenters/`): Transform data for view rendering. `base-presenter.js` has shared formatting (addresses, phone numbers, back links).
@@ -58,4 +58,4 @@ Webpack bundles `src/client/` → `.public/`. Entry point is `src/client/javascr
 
 - ESM (`"type": "module"`) throughout — use `import`/`export`, not `require`.
 - StandardJS for linting (no semicolons, 2-space indent).
-- Node >= 22.
+- Node >= 24.

@@ -54,7 +54,7 @@ for (const key of Object.keys(templatePkg)) {
 // Compare dependency-like objects (dependencies, devDependencies, overrides)
 // Only flags packages that exist in the template — service-only packages are
 // intentional additions and are NOT considered drift.
-function compareDeps(templateDeps, serviceDeps, ignored) {
+function compareDeps (templateDeps, serviceDeps, ignored) {
   const mismatched = []
   const missing = []
 
@@ -99,7 +99,7 @@ if (!hasDrift) {
 }
 
 // Build Markdown report
-function formatVal(val) {
+function formatVal (val) {
   if (val === '_(not set)_') return val
   if (typeof val === 'object' && val !== null) {
     return '`' + JSON.stringify(val) + '`'
@@ -128,7 +128,7 @@ if (topLevelDiffs.length > 0) {
 }
 
 // Dependency section helper
-function addDepsSection(title, drift) {
+function addDepsSection (title, drift) {
   if (drift.mismatched.length === 0 && drift.missing.length === 0) return
 
   lines.push(`## ${title}\n`)

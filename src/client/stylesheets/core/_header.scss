@@ -5,7 +5,7 @@
 .app-header {
   border-bottom-color: $app-light-grey;
   // Override the default GOV.UK header homepage link style 
-  a.govuk-header__link.govuk-header__link--homepage {
+  .govuk-header__link.govuk-header__link--homepage {
     font-weight: bold;
   }
 }

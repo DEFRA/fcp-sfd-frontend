@@ -54,8 +54,12 @@ Webpack bundles `src/client/` → `.public/`. Entry point is `src/client/javascr
 - **Integration tests** (`test/integration/narrow/`): Spin up a real Hapi server (with Redis mocked to CatboxMemory). Use `server.inject()` to test routes end-to-end. Import `test/mocks/setup-server-mocks.js` for OIDC/Redis stubbing.
 - Test files must match `**/test/**/*.test.js` pattern.
 
+## Shared Engine
+
+`fcp-sfd-frontend-engine` is an npm package (`@defra/fcp-sfd-frontend-engine`) that holds code shared between `fcp-sfd-frontend` and `fcp-sfd-frontend-internal`. As the internal service is built out to align with the external, shared logic is progressively moved into the engine rather than duplicated. When adding or refactoring logic that exists in both services, consider whether it belongs in the engine instead.
+
 ## Style
 
 - ESM (`"type": "module"`) throughout — use `import`/`export`, not `require`.
-- StandardJS for linting (no semicolons, 2-space indent).
+- Neostandard for linting (no semicolons, 2-space indent).
 - Node >= 24.

@@ -16,3 +16,4 @@ drift-report.md
 .github/skills
 .github/agents
 CLAUDE.local.md
+.claude/settings.local.json

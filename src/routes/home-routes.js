@@ -1,5 +1,6 @@
 import { homePresenter } from '../presenters/home-presenter.js'
 import { fetchPersonalBusinessDetailsService } from '../services/fetch-personal-business-details-service.js'
+import { metricsCounter } from '../utils/metrics.js'
 
 const start = {
   method: 'GET',
@@ -21,6 +22,8 @@ const home = {
     const isOnWoodlandManagementAllowList = yar.get('isOnWoodlandManagementAllowList')
     const data = await fetchPersonalBusinessDetailsService(auth.credentials)
     const pageData = homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount, isOnWoodlandManagementAllowList)
+
+    await metricsCounter('users.active')
 
     return h.view('home', pageData)
   }

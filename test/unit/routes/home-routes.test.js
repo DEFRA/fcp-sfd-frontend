@@ -4,6 +4,7 @@ import { vi, beforeEach, describe, test, expect } from 'vitest'
 // Things we need to mock
 import { fetchPersonalBusinessDetailsService } from '../../../src/services/fetch-personal-business-details-service.js'
 import { homePresenter } from '../../../src/presenters/home-presenter.js'
+import { metricsCounter } from '../../../src/utils/metrics.js'
 
 // Thing under test
 import { homeRoutes } from '../../../src/routes/home-routes.js'
@@ -16,6 +17,10 @@ vi.mock('../../../src/services/fetch-personal-business-details-service.js', () =
 
 vi.mock('../../../src/presenters/home-presenter.js', () => ({
   homePresenter: vi.fn()
+}))
+
+vi.mock('../../../src/utils/metrics.js', () => ({
+  metricsCounter: vi.fn()
 }))
 
 describe('Root endpoint', () => {
@@ -97,6 +102,7 @@ describe('Home endpoint', () => {
 
         expect(fetchPersonalBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
         expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope, request.auth.credentials.enrolmentCount, true)
+        expect(metricsCounter).toHaveBeenCalledWith('users.active')
         expect(h.view).toHaveBeenCalledWith('home', pageData)
       })
     })

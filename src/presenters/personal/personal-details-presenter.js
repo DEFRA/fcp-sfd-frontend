@@ -3,13 +3,13 @@
  * @module personalDetailsPresenter
  */
 
-import moment from 'moment'
+import { utils } from '@defra/fcp-sfd-frontend-engine'
 import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
 import { config } from '../../config/index.js'
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
-  const { action: dobAction, formattedDob } = formatDob(data.info.dateOfBirth.full)
+  const { action: dobAction, formattedDob } = utils.formatDob(data.info.dateOfBirth.full)
 
   return {
     backLink: {
@@ -100,23 +100,6 @@ const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) 
     phone: singleSection === 'phone' ? CHANGE_LINKS.phone : '/personal-fix?source=phone',
     email: singleSection === 'email' ? CHANGE_LINKS.email : '/personal-fix?source=email',
     dob: singleSection === 'dob' ? CHANGE_LINKS.dob : '/personal-fix?source=dob'
-  }
-}
-
-const formatDob = (dob) => {
-  if (!dob) {
-    return { formattedDob: 'Not added', action: 'Add' }
-  }
-
-  const dobMoment = moment(dob)
-
-  if (!dobMoment.isValid() || dobMoment.isAfter(moment(), 'day')) {
-    return { formattedDob: 'Not added', action: 'Add' }
-  }
-
-  return {
-    formattedDob: dobMoment.format('D MMMM YYYY'),
-    action: 'Change'
   }
 }
 

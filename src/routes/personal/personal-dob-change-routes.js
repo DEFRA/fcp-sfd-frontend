@@ -1,6 +1,4 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
-
-import { personalDobSchema } from '../../schemas/personal/personal-dob-schema.js'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalDobChangePresenter } from '../../presenters/personal/personal-dob-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
@@ -22,7 +20,7 @@ const postPersonalDobChange = {
   path: '/account-date-of-birth-change',
   options: {
     validate: {
-      payload: personalDobSchema,
+      payload: schemas.personal.dob,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

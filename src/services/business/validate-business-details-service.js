@@ -30,8 +30,9 @@
  * @module validateBusinessDetailsService
  */
 
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 import { businessDetailsSchema } from '../../schemas/business/business-details-schema.js'
-import { validateDetailsService } from '../validate-details-service.js'
 
 const validateBusinessDetailsService = (businessDetails) => {
   const hasUprn = Boolean(businessDetails.address?.lookup?.uprn)
@@ -39,7 +40,7 @@ const validateBusinessDetailsService = (businessDetails) => {
 
   const schemasToValidate = getSchemasToValidate(hasUprn)
 
-  const { isValid: hasValidBusinessDetails, sectionsNeedingUpdate } = validateDetailsService(schemasToValidate, mappedBusinessDetails)
+  const { isValid: hasValidBusinessDetails, sectionsNeedingUpdate } = utils.validateDetailsService(schemasToValidate, mappedBusinessDetails)
 
   return {
     hasValidBusinessDetails,

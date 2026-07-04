@@ -1,6 +1,4 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
-
-import { personalPhoneSchema } from '../../schemas/personal/personal-phone-schema.js'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalPhoneNumbersChangePresenter } from '../../presenters/personal/personal-phone-numbers-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
@@ -23,7 +21,7 @@ const postPersonalPhoneNumbersChange = {
   path: '/account-phone-numbers-change',
   options: {
     validate: {
-      payload: personalPhoneSchema,
+      payload: schemas.personal.phone,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

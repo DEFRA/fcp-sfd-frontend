@@ -10,15 +10,16 @@
  * 3. Add it to this map
  */
 
+import { schemas } from '@defra/fcp-sfd-frontend-engine'
+
 import { businessEmailSchema } from './business-email-schema.js'
 import { businessNameSchema } from './business-name-schema.js'
-import { addressSchema } from './../address-schema.js'
 import { businessPhoneSchema } from './business-phone-schema.js'
 import { businessOptionalVatSchema } from './business-optional-vat-schema.js'
 
 export const businessDetailsSchema = {
   name: businessNameSchema,
-  address: addressSchema,
+  address: schemas.business.address,
   phone: businessPhoneSchema,
   email: businessEmailSchema,
   vat: businessOptionalVatSchema

@@ -1,5 +1,5 @@
 /**
- * Formats data ready for presenting in the `/personal-phone-numbers-change` page
+ * Formats data ready for presenting in the '/account-phone-numbers-change' page
  * @module personalPhoneNumbersChangePresenter
  */
 

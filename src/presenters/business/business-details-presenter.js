@@ -3,7 +3,8 @@
  * @module businessDetailsPresenter
  */
 
-import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
+
 import { BUSINESS_CHANGE_LINKS } from '../../constants/change-links.js'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 
@@ -13,7 +14,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
 
   return {
     backLink: {
-      text: data.info.businessName ? formatBackLink(data.info.businessName) : 'Back',
+      text: data.info.businessName ? presenters.formatBackLink(data.info.businessName) : 'Back',
       href: '/home'
     },
     businessNameHeader: data.info.businessName ?? null,
@@ -66,7 +67,7 @@ const formatAddress = (businessAddress) => {
   let addressText = 'Not added'
 
   if (businessAddress.lookup?.uprn || businessAddress.manual?.line1) {
-    addressText = formatDisplayAddress(businessAddress)
+    addressText = presenters.formatDisplayAddress(businessAddress)
   }
 
   return addressText

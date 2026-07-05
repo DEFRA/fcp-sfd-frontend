@@ -3,12 +3,13 @@
  * @module personalFixListPresenter
  */
 
-import { formatNumber, formatChangedAddress, sortErrorsBySectionOrder } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
+
 import { PERSONAL_SECTION_FIELD_ORDER } from '../../constants/interrupter-journey.js'
 
 const personalFixListPresenter = (personalDetails, payload, errors = null) => {
   const { day, month, year } = formatDateOfBirth(personalDetails, payload)
-  const sortedErrors = errors ? sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER) : null
+  const sortedErrors = errors ? presenters.sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER) : null
 
   return {
     userName: personalDetails.info?.userName ?? null,
@@ -22,8 +23,8 @@ const personalFixListPresenter = (personalDetails, payload, errors = null) => {
       month,
       year
     },
-    personalTelephone: formatNumber(payload?.personalTelephone, personalDetails.changePersonalPhoneNumbers?.personalTelephone, personalDetails.contact.telephone),
-    personalMobile: formatNumber(payload?.personalMobile, personalDetails.changePersonalPhoneNumbers?.personalMobile, personalDetails.contact.mobile),
+    personalTelephone: presenters.formatNumber(payload?.personalTelephone, personalDetails.changePersonalPhoneNumbers?.personalTelephone, personalDetails.contact.telephone),
+    personalMobile: presenters.formatNumber(payload?.personalMobile, personalDetails.changePersonalPhoneNumbers?.personalMobile, personalDetails.contact.mobile),
     personalEmail: payload?.personalEmail ?? personalDetails.changePersonalEmail?.personalEmail ?? personalDetails.contact.email,
     address: formatAddress(payload, personalDetails.changePersonalAddress),
     errors: sortedErrors
@@ -63,7 +64,7 @@ const formatAddress = (payload, changePersonalAddress) => {
   }
 
   if (changePersonalAddress) {
-    return formatChangedAddress(changePersonalAddress)
+    return presenters.formatChangedAddress(changePersonalAddress)
   }
 
   return null

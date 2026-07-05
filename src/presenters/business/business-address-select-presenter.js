@@ -3,7 +3,7 @@
  * @module businessAddressSelectPresenter
  */
 
-import { formatDisplayAddresses } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
 const businessAddressSelectPresenter = (data) => {
   return {
@@ -16,7 +16,7 @@ const businessAddressSelectPresenter = (data) => {
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null,
     postcode: data.changeBusinessPostcode.postcode,
-    displayAddresses: formatDisplayAddresses(data.changeBusinessAddresses, data.changeBusinessAddress)
+    displayAddresses: presenters.formatDisplayAddresses(data.changeBusinessAddresses, data.changeBusinessAddress)
   }
 }
 

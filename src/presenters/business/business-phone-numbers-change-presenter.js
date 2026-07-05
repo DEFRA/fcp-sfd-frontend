@@ -3,7 +3,7 @@
  * @module businessPhoneNumberChangePresenter
  */
 
-import { formatNumber } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
 const businessPhoneNumbersChangePresenter = (data, payload) => {
   return {
@@ -13,8 +13,8 @@ const businessPhoneNumbersChangePresenter = (data, payload) => {
     userName: data.customer.userName ?? null,
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null,
-    businessTelephone: formatNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.contact.landline),
-    businessMobile: formatNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.contact.mobile)
+    businessTelephone: presenters.formatNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.contact.landline),
+    businessMobile: presenters.formatNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.contact.mobile)
   }
 }
 

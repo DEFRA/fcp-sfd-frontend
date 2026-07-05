@@ -3,7 +3,7 @@
  * @module businessAddressEnterPresenter
  */
 
-import { formatOriginalAddress, formatChangedAddress } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
 const businessAddressEnterPresenter = (data, payload) => {
   return {
@@ -50,11 +50,11 @@ const formatAddress = (payload, changeBusinessAddress, originalAddress) => {
   }
 
   if (changeBusinessAddress) {
-    return formatChangedAddress(changeBusinessAddress)
+    return presenters.formatChangedAddress(changeBusinessAddress)
   }
 
   if (originalAddress) {
-    return formatOriginalAddress(originalAddress)
+    return presenters.formatOriginalAddress(originalAddress)
   }
 
   return null

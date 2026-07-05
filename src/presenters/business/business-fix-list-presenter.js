@@ -3,11 +3,11 @@
  * @module businessFixListPresenter
  */
 
-import { formatNumber, formatChangedAddress, sortErrorsBySectionOrder } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 import { BUSINESS_SECTION_FIELD_ORDER } from '../../constants/interrupter-journey.js'
 
 const businessFixListPresenter = (businessDetails, payload, errors = null) => {
-  const sortedErrors = errors ? sortErrorsBySectionOrder(errors, businessDetails.orderedSectionsToFix, BUSINESS_SECTION_FIELD_ORDER) : null
+  const sortedErrors = errors ? presenters.sortErrorsBySectionOrder(errors, businessDetails.orderedSectionsToFix, BUSINESS_SECTION_FIELD_ORDER) : null
 
   return {
     backLink: { href: `/business-fix?source=${businessDetails.source}` },
@@ -18,8 +18,8 @@ const businessFixListPresenter = (businessDetails, payload, errors = null) => {
     businessName: businessDetails.info.businessName ?? null,
     changeBusinessName: payload?.businessName ?? businessDetails.changeBusinessName?.businessName ?? businessDetails.info?.businessName ?? null,
     sbi: businessDetails.info?.sbi ?? null,
-    businessTelephone: formatNumber(payload?.businessTelephone, businessDetails.changeBusinessPhoneNumbers?.businessTelephone, businessDetails.contact.landline),
-    businessMobile: formatNumber(payload?.businessMobile, businessDetails.changeBusinessPhoneNumbers?.businessMobile, businessDetails.contact.mobile),
+    businessTelephone: presenters.formatNumber(payload?.businessTelephone, businessDetails.changeBusinessPhoneNumbers?.businessTelephone, businessDetails.contact.landline),
+    businessMobile: presenters.formatNumber(payload?.businessMobile, businessDetails.changeBusinessPhoneNumbers?.businessMobile, businessDetails.contact.mobile),
     businessEmail: payload?.businessEmail ?? businessDetails.changeBusinessEmail?.businessEmail ?? businessDetails.contact.email,
     address: formatAddress(payload, businessDetails.changeBusinessAddress),
     vatNumber: payload?.vatNumber ?? businessDetails.changeBusinessVat?.vatNumber ?? businessDetails.info?.vat,
@@ -43,7 +43,7 @@ const formatAddress = (payload, changeBusinessAddress) => {
   }
 
   if (changeBusinessAddress) {
-    return formatChangedAddress(changeBusinessAddress)
+    return presenters.formatChangedAddress(changeBusinessAddress)
   }
 
   return null

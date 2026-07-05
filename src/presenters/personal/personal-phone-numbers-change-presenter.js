@@ -3,7 +3,7 @@
  * @module personalPhoneNumbersChangePresenter
  */
 
-import { formatNumber } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
 const personalPhoneNumbersChangePresenter = (data, payload) => {
   return {
@@ -11,8 +11,8 @@ const personalPhoneNumbersChangePresenter = (data, payload) => {
     pageTitle: 'What are your personal phone numbers?',
     metaDescription: 'Update the phone numbers for your personal account.',
     userName: data.info.userName ?? null,
-    personalTelephone: formatNumber(payload?.personalTelephone, data.changePersonalPhoneNumbers?.personalTelephone, data.contact.telephone),
-    personalMobile: formatNumber(payload?.personalMobile, data.changePersonalPhoneNumbers?.personalMobile, data.contact.mobile)
+    personalTelephone: presenters.formatNumber(payload?.personalTelephone, data.changePersonalPhoneNumbers?.personalTelephone, data.contact.telephone),
+    personalMobile: presenters.formatNumber(payload?.personalMobile, data.changePersonalPhoneNumbers?.personalMobile, data.contact.mobile)
   }
 }
 

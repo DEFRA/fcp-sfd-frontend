@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { validateFixDetailsService } from '../../../src/services/validate-fix-details-service.js'
 
 // Test helpers
-import { personalDetailsSchema } from '../../../src/schemas/personal/personal-details-schema.js'
+import { schemas as engineSchemas } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsSchema } from '../../../src/schemas/business/business-details-schema.js'
 
 describe('validateFixDetailsService', () => {
@@ -15,7 +15,7 @@ describe('validateFixDetailsService', () => {
 
   describe('when the personal details schema is passed in', () => {
     beforeEach(() => {
-      schemas = personalDetailsSchema
+      schemas = engineSchemas.personal
     })
 
     describe('when `name` is a section on orderedSectionsToFix', () => {

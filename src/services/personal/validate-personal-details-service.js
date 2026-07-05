@@ -31,15 +31,14 @@
  * @module validatePersonalDetailsService
  */
 
-import { personalDetailsSchema } from '../../schemas/personal/personal-details-schema.js'
-import { validateDetailsService } from '../validate-details-service.js'
+import { schemas, utils } from '@defra/fcp-sfd-frontend-engine'
 
 const validatePersonalDetailsService = (personalDetails) => {
   const hasUprn = Boolean(personalDetails.address?.lookup?.uprn)
   const mappedPersonalDetails = mapPersonalDetails(personalDetails, hasUprn)
 
   const schemasToValidate = getSchemasToValidate(hasUprn)
-  const { isValid: hasValidPersonalDetails, sectionsNeedingUpdate } = validateDetailsService(schemasToValidate, mappedPersonalDetails)
+  const { isValid: hasValidPersonalDetails, sectionsNeedingUpdate } = utils.validateDetailsService(schemasToValidate, mappedPersonalDetails)
 
   return {
     hasValidPersonalDetails,
@@ -48,18 +47,18 @@ const validatePersonalDetailsService = (personalDetails) => {
 }
 
 const getSchemasToValidate = (hasUprn) => {
-  const schemas = [
-    personalDetailsSchema.name,
-    personalDetailsSchema.dob,
-    personalDetailsSchema.phone,
-    personalDetailsSchema.email
+  const schemasToValidate = [
+    schemas.personal.name,
+    schemas.personal.dob,
+    schemas.personal.phone,
+    schemas.personal.email
   ]
 
   if (!hasUprn) {
-    schemas.push(personalDetailsSchema.address)
+    schemasToValidate.push(schemas.personal.address)
   }
 
-  return schemas
+  return schemasToValidate
 }
 
 /**

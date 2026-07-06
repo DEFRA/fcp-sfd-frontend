@@ -22,7 +22,8 @@ vi.mock('../../../../src/services/validate-fix-details-service.js', () => ({
 }))
 
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
-  utils: { formatValidationErrors: vi.fn() }
+  utils: { formatValidationErrors: vi.fn() },
+  schemas: { business: {} }
 }))
 
 vi.mock('../../../../src/services/business/fetch-business-fix-service.js', () => ({

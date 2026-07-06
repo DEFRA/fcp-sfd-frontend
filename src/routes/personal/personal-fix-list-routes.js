@@ -1,10 +1,9 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 
 import { setPersonalFixSessionDataService } from '../../services/personal/set-personal-fix-session-data-service.js'
 import { personalFixListPresenter } from '../../presenters/personal/personal-fix-list-presenter.js'
 import { validateFixDetailsService } from '../../services/validate-fix-details-service.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
-import { personalDetailsSchema } from '../../schemas/personal/personal-details-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
 
@@ -35,7 +34,7 @@ const postPersonalFixList = {
     const { yar, auth, payload } = request
 
     const sessionData = yar.get('personalDetailsValidation')
-    const validation = validateFixDetailsService(payload, sessionData.orderedSectionsToFix, personalDetailsSchema)
+    const validation = validateFixDetailsService(payload, sessionData.orderedSectionsToFix, schemas.personal)
 
     if (validation.error) {
       const errors = utils.formatValidationErrors(validation.error.details || [])

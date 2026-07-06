@@ -1,8 +1,7 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { personalEmailChangePresenter } from '../../presenters/personal/personal-email-change-presenter.js'
-import { personalEmailSchema } from '../../schemas/personal/personal-email-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 
@@ -23,7 +22,7 @@ const postPersonalEmailChange = {
   path: '/account-email-change',
   options: {
     validate: {
-      payload: personalEmailSchema,
+      payload: schemas.personal.email,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

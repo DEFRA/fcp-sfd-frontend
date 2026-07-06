@@ -1,6 +1,5 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 
-import { personalNameSchema } from '../../schemas/personal/personal-name-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalNameChangePresenter } from '../../presenters/personal/personal-name-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
@@ -23,7 +22,7 @@ const postPersonalNameChange = {
   path: '/account-name-change',
   options: {
     validate: {
-      payload: personalNameSchema,
+      payload: schemas.personal.name,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

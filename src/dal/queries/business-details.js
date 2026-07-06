@@ -77,6 +77,7 @@ export const businessDetailsQueryWithoutCph = `
         type
       }
       address {
+        pafOrganisationName
         buildingNumberRange
         buildingName
         flatName

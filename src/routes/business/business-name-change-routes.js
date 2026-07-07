@@ -1,8 +1,7 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessNameChangePresenter } from '../../presenters/business/business-name-change-presenter.js'
-import { businessNameSchema } from '../../schemas/business/business-name-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
@@ -28,7 +27,7 @@ const postBusinessNameChange = {
   options: {
     auth: { scope: FULL_PERMISSIONS },
     validate: {
-      payload: businessNameSchema,
+      payload: schemas.business.details.name,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

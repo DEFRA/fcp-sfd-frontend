@@ -1,6 +1,5 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 
-import { businessPhoneSchema } from '../../schemas/business/business-phone-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessPhoneNumbersChangePresenter } from '../../presenters/business/business-phone-numbers-change-presenter.js'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
@@ -28,7 +27,7 @@ const postBusinessPhoneNumbersChange = {
   options: {
     auth: { scope: AMEND_PERMISSIONS },
     validate: {
-      payload: businessPhoneSchema,
+      payload: schemas.business.details.phone,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

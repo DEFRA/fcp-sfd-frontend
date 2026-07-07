@@ -4,7 +4,7 @@
  */
 
 import moment from 'moment'
-import { formatBackLink, formatDisplayAddress } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
@@ -13,7 +13,7 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
 
   return {
     backLink: {
-      text: data.business.info.name ? formatBackLink(data.business.info.name) : 'Back',
+      text: data.business.info.name ? presenters.formatBackLink(data.business.info.name) : 'Back',
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,
@@ -54,7 +54,7 @@ const formatAddress = (personalAddress) => {
   let addressText = 'Not added'
 
   if (personalAddress.lookup?.uprn || personalAddress.manual?.line1) {
-    addressText = formatDisplayAddress(personalAddress)
+    addressText = presenters.formatDisplayAddress(personalAddress)
   }
 
   return addressText

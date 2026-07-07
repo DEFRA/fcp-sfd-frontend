@@ -3,7 +3,7 @@
  * @module personalAddressSelectPresenter
  */
 
-import { formatDisplayAddresses } from '../base-presenter.js'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
 const personalAddressSelectPresenter = (data) => {
   return {
@@ -14,7 +14,7 @@ const personalAddressSelectPresenter = (data) => {
     metaDescription: 'Choose the address for your personal account.',
     userName: data.info.userName ?? null,
     postcode: data.changePersonalPostcode.postcode,
-    displayAddresses: formatDisplayAddresses(data.changePersonalAddresses, data.changePersonalAddress)
+    displayAddresses: presenters.formatDisplayAddresses(data.changePersonalAddresses, data.changePersonalAddress)
   }
 }
 

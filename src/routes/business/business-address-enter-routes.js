@@ -1,7 +1,6 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
 
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
-import { addressSchema } from '../../schemas/address-schema.js'
 import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessAddressEnterPresenter } from '../../presenters/business/business-address-enter-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
@@ -28,7 +27,7 @@ const postBusinessAddressEnter = {
   options: {
     auth: { scope: AMEND_PERMISSIONS },
     validate: {
-      payload: addressSchema,
+      payload: schemas.business.address,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

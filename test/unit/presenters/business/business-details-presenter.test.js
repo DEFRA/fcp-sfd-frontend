@@ -449,10 +449,10 @@ describe('businessDetailsPresenter', () => {
         data.info.countyParishHoldingNumbers = []
       })
 
-      test('it should return "County Parish Holding (CPH) number"', () => {
+      test('it should return "County Parish Holding (CPH) numbers"', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) number')
+        expect(result.countyParishHoldingNumbersText).toEqual('County Parish Holding (CPH) numbers')
       })
     })
 

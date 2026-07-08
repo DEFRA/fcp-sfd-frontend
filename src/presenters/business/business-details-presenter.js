@@ -4,13 +4,12 @@
  */
 
 import { presenters } from '@defra/fcp-sfd-frontend-engine'
-
 import { BUSINESS_CHANGE_LINKS } from '../../constants/change-links.js'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
-  const countyParishHoldingNumbers = formatCph(data.info.countyParishHoldingNumbers)
+  const countyParishHoldingNumbers = presenters.formatCph(data.info.countyParishHoldingNumbers)
 
   return {
     backLink: {
@@ -26,22 +25,22 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     businessAddress: {
       value: formatAddress(data.address),
       changeLink: changeLinks.businessAddress,
-      action: getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
+      action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
     },
     businessName: {
       value: data.info.businessName || 'Not added',
       changeLink: changeLinks.businessName,
-      action: getActionText(data.info.businessName)
+      action: presenters.getActionText(data.info.businessName)
     },
     businessTelephone: {
       telephone: data.contact.landline || 'Not added',
       mobile: data.contact.mobile || 'Not added',
-      action: getActionText(data.contact.landline || data.contact.mobile),
+      action: presenters.getActionText(data.contact.landline || data.contact.mobile),
       changeLink: changeLinks.businessTelephone
     },
     businessEmail: {
       value: data.contact.email || 'Not added',
-      action: getActionText(data.contact.email),
+      action: presenters.getActionText(data.contact.email),
       changeLink: changeLinks.businessEmail
     },
     sbi: data.info.sbi,
@@ -49,28 +48,23 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     tradeNumber: data.info.traderNumber ?? null,
     vendorRegistrationNumber: data.info.vendorNumber ?? null,
     countyParishHoldingNumbers,
-    countyParishHoldingNumbersText: `County Parish Holding (CPH) number${countyParishHoldingNumbers.length > 1 ? 's' : ''}`,
+    countyParishHoldingNumbersText: presenters.formatCphText(countyParishHoldingNumbers.length),
     businessLegalStatus: {
       value: data.info.legalStatus ?? 'Not added',
-      action: getActionText(data.info.legalStatus),
+      action: presenters.getActionText(data.info.legalStatus),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegal : null
     },
     businessType: {
       value: data.info.type ?? 'Not added',
-      action: getActionText(data.info.type),
+      action: presenters.getActionText(data.info.type),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessType : null
     }
   }
 }
 
 const formatAddress = (businessAddress) => {
-  let addressText = 'Not added'
-
-  if (businessAddress.lookup?.uprn || businessAddress.manual?.line1) {
-    addressText = presenters.formatDisplayAddress(businessAddress)
-  }
-
-  return addressText
+  const lines = presenters.formatBusinessAddress(businessAddress)
+  return lines.length > 0 ? lines : 'Not added'
 }
 
 /**
@@ -190,12 +184,6 @@ const setPermissionsText = (permissionLevel) => {
   }
 
   return null
-}
-
-const formatCph = (countyParishHoldings) => {
-  return (countyParishHoldings || [])
-    .filter(cph => cph?.cphNumber) // removes null objects & null/undefined cphNumber
-    .map(cph => cph.cphNumber)
 }
 
 export {

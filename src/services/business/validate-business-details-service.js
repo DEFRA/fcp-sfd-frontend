@@ -30,7 +30,7 @@
  * @module validateBusinessDetailsService
  */
 
-import { businessDetailsSchema } from '../../schemas/business/business-details-schema.js'
+import { schemas } from '@defra/fcp-sfd-frontend-engine'
 import { validateDetailsService } from '../validate-details-service.js'
 
 const validateBusinessDetailsService = (businessDetails) => {
@@ -48,18 +48,18 @@ const validateBusinessDetailsService = (businessDetails) => {
 }
 
 const getSchemasToValidate = (hasUprn) => {
-  const schemas = [
-    businessDetailsSchema.name,
-    businessDetailsSchema.phone,
-    businessDetailsSchema.email,
-    businessDetailsSchema.vat
+  const schemasToRun = [
+    schemas.business.details.name,
+    schemas.business.details.phone,
+    schemas.business.details.email,
+    schemas.business.details.vat
   ]
 
   if (!hasUprn) {
-    schemas.push(businessDetailsSchema.address)
+    schemasToRun.push(schemas.business.details.address)
   }
 
-  return schemas
+  return schemasToRun
 }
 
 /**

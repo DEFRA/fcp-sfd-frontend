@@ -6,7 +6,6 @@ import { validateFixDetailsService } from '../../../src/services/validate-fix-de
 
 // Test helpers
 import { schemas as engineSchemas } from '@defra/fcp-sfd-frontend-engine'
-import { businessDetailsSchema } from '../../../src/schemas/business/business-details-schema.js'
 
 describe('validateFixDetailsService', () => {
   let payload
@@ -351,7 +350,7 @@ describe('validateFixDetailsService', () => {
 
   describe('when the business details schema is passed in', () => {
     beforeEach(() => {
-      schemas = businessDetailsSchema
+      schemas = engineSchemas.business.details
     })
 
     describe('when `name` is a section on orderedSectionsToFix', () => {

@@ -1,5 +1,4 @@
-import { constants } from 'node:http2'
-const { HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 
 export const errors = {
   plugin: {
@@ -13,15 +12,15 @@ export const errors = {
 
           let template = 'errors/service-problem'
 
-          if (statusCode === HTTP_STATUS_FORBIDDEN) {
+          if (statusCode === constants.statusCodes.FORBIDDEN) {
             template = 'unauthorised'
           }
 
-          if (statusCode === HTTP_STATUS_NOT_FOUND) {
+          if (statusCode === constants.statusCodes.NOT_FOUND) {
             template = 'errors/page-not-found'
           }
 
-          if (statusCode >= HTTP_STATUS_INTERNAL_SERVER_ERROR) {
+          if (statusCode >= constants.statusCodes.INTERNAL_SERVER_ERROR) {
             request.log('error', {
               statusCode,
               message: response.message,

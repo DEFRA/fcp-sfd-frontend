@@ -23,7 +23,8 @@ vi.mock('../../../../src/services/validate-fix-details-service.js', () => ({
 
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   utils: { formatValidationErrors: vi.fn() },
-  schemas: { personal: {} }
+  schemas: { personal: {} },
+  constants: { statusCodes: { BAD_REQUEST: 400 } }
 }))
 
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({

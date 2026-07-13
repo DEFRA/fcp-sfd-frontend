@@ -1,11 +1,10 @@
-import { constants } from 'node:http2'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest'
 import '../../../mocks/setup-server-mocks.js'
 
 const { createServer } = await import('../../../../src/server.js')
 
 const CACHE_CONTROL_HEADER = 'cache-control'
-const { HTTP_STATUS_OK } = constants
 
 let server
 
@@ -115,7 +114,7 @@ describe('headers', () => {
     const response = await server.inject({
       url: '/signed-out'
     })
-    expect(response.statusCode).toBe(HTTP_STATUS_OK)
+    expect(response.statusCode).toBe(constants.statusCodes.OK)
     expect(response.headers[CACHE_CONTROL_HEADER]).toBe('no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0')
     expect(response.headers.pragma).toBe('no-cache')
     expect(response.headers.expires).toBe('0')

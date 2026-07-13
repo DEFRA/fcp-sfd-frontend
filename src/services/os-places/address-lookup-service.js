@@ -13,7 +13,7 @@ import { config } from '../../config/index.js'
 import { createLogger } from '../../utils/logger.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { placesAPI } from 'osdatahub'
-import { constants as httpConstants } from 'node:http2'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { addressLookupMapper } from '../../mappers/address-lookup-mapper.js'
 import { mockPostcode } from '../../services/os-places/os-places-stub.js'
 
@@ -57,7 +57,7 @@ const fetchAddressesFromPostcodeLookup = async (postcode) => {
     logger.error(error, 'Error connecting to Postcode lookup API')
 
     return {
-      statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+      statusCode: constants.statusCodes.INTERNAL_SERVER_ERROR,
       errors: [error]
     }
   }

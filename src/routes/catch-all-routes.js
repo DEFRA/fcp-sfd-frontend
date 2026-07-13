@@ -1,4 +1,4 @@
-import { NOT_FOUND } from '../constants/status-codes.js'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 
 export const catchAllNotFound = {
   method: '*',
@@ -7,6 +7,6 @@ export const catchAllNotFound = {
     auth: { strategy: 'session', mode: 'try' }
   },
   handler: (_request, h) => {
-    return h.view('errors/page-not-found').code(NOT_FOUND)
+    return h.view('errors/page-not-found').code(constants.statusCodes.NOT_FOUND)
   }
 }

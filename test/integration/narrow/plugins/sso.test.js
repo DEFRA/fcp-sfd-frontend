@@ -1,8 +1,6 @@
-import { constants } from 'node:http2'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
 import '../../../mocks/setup-server-mocks.js'
-
-const { HTTP_STATUS_FOUND } = constants
 
 const { createServer } = await import('../../../../src/server.js')
 
@@ -34,7 +32,7 @@ describe('sso', () => {
         }
       }
     })
-    expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+    expect(response.statusCode).toBe(constants.statusCodes.FOUND)
     expect(response.headers.location).toBe('/auth/organisation?organisationId=12345&redirect=/home')
   })
 
@@ -48,7 +46,7 @@ describe('sso', () => {
         }
       }
     })
-    expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+    expect(response.statusCode).toBe(constants.statusCodes.FOUND)
     expect(response.headers.location).not.toMatch(/ssoOrgId=/)
   })
 
@@ -62,7 +60,7 @@ describe('sso', () => {
         }
       }
     })
-    expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+    expect(response.statusCode).toBe(constants.statusCodes.FOUND)
     expect(response.headers.location).toMatch(/otherParam=value/)
   })
 })

@@ -1,6 +1,5 @@
-import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalNameChangePresenter } from '../../presenters/personal/personal-name-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
@@ -31,7 +30,7 @@ const postPersonalNameChange = {
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalName')
         const pageData = personalNameChangePresenter(personalDetails, payload)
 
-        return h.view('personal/personal-name-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('personal/personal-name-change', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

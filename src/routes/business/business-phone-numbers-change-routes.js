@@ -1,6 +1,5 @@
-import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { businessPhoneNumbersChangePresenter } from '../../presenters/business/business-phone-numbers-change-presenter.js'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
@@ -36,7 +35,7 @@ const postBusinessPhoneNumbersChange = {
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessPhoneNumbers')
         const pageData = businessPhoneNumbersChangePresenter(businessDetails, payload)
 
-        return h.view('business/business-phone-numbers-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-phone-numbers-change', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {

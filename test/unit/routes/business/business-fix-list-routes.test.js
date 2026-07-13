@@ -33,7 +33,8 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
         vat: {}
       }
     }
-  }
+  },
+  constants: { statusCodes: { BAD_REQUEST: 400 } }
 }))
 
 vi.mock('../../../../src/services/business/fetch-business-fix-service.js', () => ({

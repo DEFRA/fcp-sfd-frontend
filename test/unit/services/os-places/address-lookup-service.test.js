@@ -5,7 +5,7 @@ import { vi, describe, test, expect, beforeEach } from 'vitest'
 import { addressLookupMapper } from '../../../../src/mappers/address-lookup-mapper.js'
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { placesAPI } from 'osdatahub'
-import { constants as httpConstants } from 'node:http2'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { mockPostcode } from '../../../../src/services/os-places/os-places-stub.js'
 
 const mockConfigGet = vi.fn()
@@ -132,7 +132,7 @@ describe('addressLookupService', () => {
         const result = await addressLookupService(postcode, yar)
 
         expect(result).toEqual({
-          statusCode: httpConstants.HTTP_STATUS_INTERNAL_SERVER_ERROR,
+          statusCode: constants.statusCodes.INTERNAL_SERVER_ERROR,
           errors: [error]
         })
         expect(addressLookupMapper).not.toHaveBeenCalled()

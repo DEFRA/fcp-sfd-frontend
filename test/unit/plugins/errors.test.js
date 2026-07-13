@@ -1,8 +1,7 @@
-import { constants } from 'http2'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { errors } from '../../../src/plugins/errors.js'
-const { HTTP_STATUS_FORBIDDEN, HTTP_STATUS_NOT_FOUND, HTTP_STATUS_INTERNAL_SERVER_ERROR } = constants
 
 describe('errors', () => {
   test('should return an object', () => {
@@ -41,7 +40,7 @@ describe('errors', () => {
         log: vi.fn(),
         response: {
           isBoom: true,
-          output: { statusCode: HTTP_STATUS_INTERNAL_SERVER_ERROR },
+          output: { statusCode: constants.statusCodes.INTERNAL_SERVER_ERROR },
           headers: {
             'x-test': 'value',
             'content-type': 'application/json'
@@ -69,7 +68,7 @@ describe('errors', () => {
       expect(errorHandler).toBeDefined()
     })
 
-    test('should preserve non-content headers if error code is HTTP_STATUS_INTERNAL_SERVER_ERROR', () => {
+    test('should preserve non-content headers if error code is INTERNAL_SERVER_ERROR', () => {
       const result = errorHandler(mockRequest, mockH)
 
       expect(mockViewResponse.header).toHaveBeenCalledWith('x-test', 'value')
@@ -77,8 +76,8 @@ describe('errors', () => {
       expect(result).toBe(mockViewResponse)
     })
 
-    test('should preserve non-content headers if error code is HTTP_STATUS_FORBIDDEN', () => {
-      mockRequest.response.output.statusCode = HTTP_STATUS_FORBIDDEN
+    test('should preserve non-content headers if error code is FORBIDDEN', () => {
+      mockRequest.response.output.statusCode = constants.statusCodes.FORBIDDEN
 
       const result = errorHandler(mockRequest, mockH)
 
@@ -87,8 +86,8 @@ describe('errors', () => {
       expect(result).toBe(mockViewResponse)
     })
 
-    test('should preserve non-content headers if error code is HTTP_STATUS_NOT_FOUND', () => {
-      mockRequest.response.output.statusCode = HTTP_STATUS_NOT_FOUND
+    test('should preserve non-content headers if error code is NOT_FOUND', () => {
+      mockRequest.response.output.statusCode = constants.statusCodes.NOT_FOUND
 
       const result = errorHandler(mockRequest, mockH)
 

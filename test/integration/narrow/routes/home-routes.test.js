@@ -1,9 +1,7 @@
-import { constants } from 'node:http2'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
 import * as cheerio from 'cheerio'
 import '../../../mocks/setup-server-mocks.js'
-
-const { HTTP_STATUS_OK, HTTP_STATUS_FOUND } = constants
 
 const { createServer } = await import('../../../../src/server.js')
 
@@ -27,7 +25,7 @@ describe('index route', () => {
     const response = await server.inject({
       url: '/'
     })
-    expect(response.statusCode).toBe(HTTP_STATUS_OK)
+    expect(response.statusCode).toBe(constants.statusCodes.OK)
     expect(response.request.response.source.template).toBe('start')
   })
 
@@ -60,7 +58,7 @@ describe('home route', () => {
       method: 'GET',
       url: '/home'
     })
-    expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+    expect(response.statusCode).toBe(constants.statusCodes.FOUND)
     expect(response.headers.location).toBe('/auth/sign-in?redirect=/home')
   })
 })

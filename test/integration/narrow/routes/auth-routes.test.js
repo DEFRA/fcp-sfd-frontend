@@ -1,8 +1,6 @@
-import { constants } from 'node:http2'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { vi, beforeEach, describe, beforeAll, afterAll, test, expect } from 'vitest'
 import { mockOidcConfig } from '../../../mocks/setup-server-mocks.js'
-
-const { HTTP_STATUS_FOUND } = constants
 
 const mockVerifyToken = vi.fn()
 vi.mock('../../../../src/auth/verify-token.js', async () => ({
@@ -71,7 +69,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/home')
     })
 
@@ -82,7 +80,7 @@ describe('auth routes', () => {
       const redirect = new URL(response.headers.location)
       const params = new URLSearchParams(redirect.search)
 
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(redirect.origin).toBe('https://oidc.example.com')
       expect(redirect.pathname).toBe('/authorize')
       expect(params.get('serviceId')).toBe(process.env.DEFRA_ID_SERVICE_ID)
@@ -109,7 +107,7 @@ describe('auth routes', () => {
       const response = await server.inject({
         url: path
       })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location.startsWith(mockOidcConfig.authorization_endpoint)).toBe(true)
     })
 
@@ -219,7 +217,7 @@ describe('auth routes', () => {
         }
       })
 
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/home')
     })
   })
@@ -238,7 +236,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe(signOutUrl)
     })
 
@@ -246,7 +244,7 @@ describe('auth routes', () => {
       const response = await server.inject({
         url: path
       })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/')
     })
   })
@@ -327,7 +325,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/signed-out')
     })
 
@@ -335,7 +333,7 @@ describe('auth routes', () => {
       const response = await server.inject({
         url: path
       })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/signed-out')
     })
   })
@@ -353,7 +351,7 @@ describe('auth routes', () => {
       const redirect = new URL(response.headers.location)
       const params = new URLSearchParams(redirect.search)
 
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(redirect.origin).toBe('https://oidc.example.com')
       expect(redirect.pathname).toBe('/authorize')
       expect(params.get('serviceId')).toBe(process.env.DEFRA_ID_SERVICE_ID)
@@ -395,7 +393,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/home')
     })
   })
@@ -413,7 +411,7 @@ describe('auth routes', () => {
       const redirect = new URL(response.headers.location)
       const params = new URLSearchParams(redirect.search)
 
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(redirect.origin).toBe('https://oidc.example.com')
       expect(redirect.pathname).toBe('/authorize')
       expect(params.get('serviceId')).toBe(process.env.DEFRA_ID_SERVICE_ID)
@@ -435,7 +433,7 @@ describe('auth routes', () => {
         }
       })
 
-      expect(response.statusCode).toBe(HTTP_STATUS_FOUND)
+      expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/auth/sign-in')
     })
   })

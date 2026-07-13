@@ -1,10 +1,8 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
-
+import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessAddressSelectPresenter } from '../../presenters/business/business-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressesSchema } from '../../schemas/os-places/addresses-schema.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessAddressSelect = {
@@ -37,7 +35,7 @@ const postBusinessAddressSelect = {
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses'])
         const pageData = businessAddressSelectPresenter(businessDetails)
 
-        return h.view('business/business-address-select', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-address-select', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

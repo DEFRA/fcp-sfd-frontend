@@ -1,7 +1,7 @@
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { ukPostcodeSchema } from '../../schemas/os-places/uk-postcode-schema.js'
 import { personalAddressChangePresenter } from '../../presenters/personal/personal-address-change-presenter.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
 import { personalAddressChangeErrorService } from '../../services/personal/personal-address-change-error-service.js'
@@ -29,7 +29,7 @@ const postPersonalAddressChange = {
         const { yar, auth, payload } = request
         const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.postcode, err.details)
 
-        return h.view('personal/personal-address-change', pageData).code(BAD_REQUEST).takeover()
+        return h.view('personal/personal-address-change', pageData).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     }
   },
@@ -42,7 +42,7 @@ const postPersonalAddressChange = {
     if (addresses.error) {
       const pageData = await personalAddressChangeErrorService(yar, auth.credentials, payload.postcode, addresses.error)
 
-      return h.view('personal/personal-address-change', pageData).code(BAD_REQUEST).takeover()
+      return h.view('personal/personal-address-change', pageData).code(constants.statusCodes.BAD_REQUEST).takeover()
     }
 
     return h.redirect('/account-address-select')

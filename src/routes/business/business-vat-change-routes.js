@@ -1,9 +1,7 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
-
+import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessVatChangePresenter } from '../../presenters/business/business-vat-change-presenter.js'
 import { businessVatSchema } from '../../schemas/business/business-vat-schema.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
@@ -37,7 +35,7 @@ const postBusinessVatChange = {
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
         const pageData = businessVatChangePresenter(businessDetails, payload.vatNumber)
 
-        return h.view('business/business-vat-registration-number-change', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-vat-registration-number-change', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

@@ -1,10 +1,9 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
 
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { personalAddressSelectPresenter } from '../../presenters/personal/personal-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressesSchema } from '../../schemas/os-places/addresses-schema.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getPersonalAddressSelect = {
   method: 'GET',
@@ -32,7 +31,7 @@ const postPersonalAddressSelect = {
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, ['changePersonalPostcode', 'changePersonalAddresses'])
         const pageData = personalAddressSelectPresenter(personalDetails)
 
-        return h.view('personal/personal-address-select', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('personal/personal-address-select', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

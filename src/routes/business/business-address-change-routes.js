@@ -1,7 +1,7 @@
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { ukPostcodeSchema } from '../../schemas/os-places/uk-postcode-schema.js'
 import { businessAddressChangePresenter } from '../../presenters/business/business-address-change-presenter.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
 import { businessAddressChangeErrorService } from '../../services/business/business-address-change-error-service.js'
@@ -34,7 +34,7 @@ const postBusinessAddressChange = {
         const { yar, auth, payload } = request
         const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.postcode, err.details)
 
-        return h.view('business/business-address-change', pageData).code(BAD_REQUEST).takeover()
+        return h.view('business/business-address-change', pageData).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     }
   },
@@ -47,7 +47,7 @@ const postBusinessAddressChange = {
     if (addresses.error) {
       const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.postcode, addresses.error)
 
-      return h.view('business/business-address-change', pageData).code(BAD_REQUEST).takeover()
+      return h.view('business/business-address-change', pageData).code(constants.statusCodes.BAD_REQUEST).takeover()
     }
 
     return h.redirect('/business-address-select')

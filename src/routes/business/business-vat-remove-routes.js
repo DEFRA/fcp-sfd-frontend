@@ -1,10 +1,9 @@
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
 
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { updateBusinessVatRemoveService } from '../../services/business/update-business-vat-remove-service.js'
 import { businessVatRemovePresenter } from '../../presenters/business/business-vat-remove-presenter.js'
 import { businessVatRemoveSchema } from '../../schemas/business/business-vat-remove-schema.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessVatRemove = {
@@ -34,7 +33,7 @@ const postBusinessVatRemove = {
         const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
         const pageData = businessVatRemovePresenter(businessDetails)
 
-        return h.view('business/business-vat-registration-remove', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('business/business-vat-registration-remove', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {

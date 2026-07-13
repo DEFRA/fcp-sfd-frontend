@@ -1,7 +1,5 @@
-import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
-
+import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { personalAddressEnterPresenter } from '../../presenters/personal/personal-address-enter-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 
@@ -31,7 +29,7 @@ const postPersonalAddressEnter = {
         const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalAddress')
         const pageData = personalAddressEnterPresenter(personalDetails, payload)
 
-        return h.view('personal/personal-address-enter', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+        return h.view('personal/personal-address-enter', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: (request, h) => {

@@ -1,10 +1,9 @@
-import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 
 import { setPersonalFixSessionDataService } from '../../services/personal/set-personal-fix-session-data-service.js'
 import { personalFixListPresenter } from '../../presenters/personal/personal-fix-list-presenter.js'
 import { validateFixDetailsService } from '../../services/validate-fix-details-service.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
 
 const getPersonalFixList = {
@@ -41,7 +40,7 @@ const postPersonalFixList = {
       const personalDetails = await fetchPersonalFixService(auth.credentials, sessionData)
       const pageData = personalFixListPresenter(personalDetails, payload, errors)
 
-      return h.view('personal/personal-fix-list.njk', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+      return h.view('personal/personal-fix-list.njk', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
     }
 
     setPersonalFixSessionDataService(yar, sessionData, payload)

@@ -1,11 +1,10 @@
-import { utils, schemas } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 
 import { setBusinessFixSessionDataService } from '../../services/business/set-business-fix-session-data-service.js'
 import { businessFixListPresenter } from '../../presenters/business/business-fix-list-presenter.js'
 import { validateFixDetailsService } from '../../services/validate-fix-details-service.js'
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
-import { BAD_REQUEST } from '../../constants/status-codes.js'
 
 const getBusinessFixList = {
   method: 'GET',
@@ -41,7 +40,7 @@ const postBusinessFixList = {
       const businessDetails = await fetchBusinessFixService(auth.credentials, sessionData)
       const pageData = businessFixListPresenter(businessDetails, payload, errors)
 
-      return h.view('business/business-fix-list.njk', { ...pageData, errors }).code(BAD_REQUEST).takeover()
+      return h.view('business/business-fix-list.njk', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
     }
 
     setBusinessFixSessionDataService(yar, sessionData, payload)

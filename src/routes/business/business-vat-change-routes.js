@@ -1,7 +1,6 @@
-import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
+import { utils, constants, schemas } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessVatChangePresenter } from '../../presenters/business/business-vat-change-presenter.js'
-import { businessVatSchema } from '../../schemas/business/business-vat-schema.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
@@ -26,7 +25,7 @@ const postBusinessVatChange = {
   options: {
     auth: { scope: FULL_PERMISSIONS },
     validate: {
-      payload: businessVatSchema,
+      payload: schemas.business.details.vat,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

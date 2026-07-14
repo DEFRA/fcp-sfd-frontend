@@ -1,6 +1,5 @@
-import { constants } from '@defra/fcp-sfd-frontend-engine'
+import { constants, schemas } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
-import { ukPostcodeSchema } from '../../schemas/os-places/uk-postcode-schema.js'
 import { personalAddressChangePresenter } from '../../presenters/personal/personal-address-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
@@ -23,7 +22,7 @@ const postPersonalAddressChange = {
   path: '/account-address-change',
   options: {
     validate: {
-      payload: ukPostcodeSchema,
+      payload: schemas.osPlaces.ukPostcode,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

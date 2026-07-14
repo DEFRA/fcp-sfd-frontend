@@ -29,7 +29,7 @@ const businessAddressCheckPresenter = (businessDetails) => {
  *
  * When there is no pending change, the address falls back to the business address mapped
  * from the DAL. This has a nested `{ lookup, manual, ... }` shape, so it is formatted with
- * the shared `formatDisplayAddress` helper to avoid rendering `[object Object]`.
+ * the shared `formatDisplayAddress` helper.
  */
 const formatAddress = (changeBusinessAddress, address) => {
   if (!changeBusinessAddress) {

@@ -1,9 +1,8 @@
-import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
+import { utils, constants, schemas } from '@defra/fcp-sfd-frontend-engine'
 
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { personalAddressSelectPresenter } from '../../presenters/personal/personal-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
-import { addressesSchema } from '../../schemas/os-places/addresses-schema.js'
 
 const getPersonalAddressSelect = {
   method: 'GET',
@@ -22,7 +21,7 @@ const postPersonalAddressSelect = {
   path: '/account-address-select',
   options: {
     validate: {
-      payload: addressesSchema,
+      payload: schemas.osPlaces.addresses,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth } = request

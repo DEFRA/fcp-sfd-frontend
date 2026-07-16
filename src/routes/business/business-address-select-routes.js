@@ -13,6 +13,11 @@ const getBusinessAddressSelect = {
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses', 'changeBusinessAddress'])
+
+    if (!businessDetails.changeBusinessPostcode || !businessDetails.changeBusinessAddresses) {
+      return h.redirect('/business-address-change')
+    }
+
     const pageData = businessAddressSelectPresenter(businessDetails)
 
     return h.view('business/business-address-select', pageData)

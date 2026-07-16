@@ -78,6 +78,32 @@ describe('business address select change', () => {
         expect(h.view).toHaveBeenCalledWith('business/business-address-select', getPageData())
       })
     })
+
+    describe('when the postcode has not been set in session', () => {
+      beforeEach(() => {
+        fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessPostcode: undefined })
+      })
+
+      test('it redirects to /business-details', async () => {
+        await getBusinessAddressSelect.handler(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(h.view).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the addresses have not been set in session', () => {
+      beforeEach(() => {
+        fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessAddresses: undefined })
+      })
+
+      test('it redirects to /business-details', async () => {
+        await getBusinessAddressSelect.handler(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(h.view).not.toHaveBeenCalled()
+      })
+    })
   })
 
   describe('POST /business-address-select', () => {

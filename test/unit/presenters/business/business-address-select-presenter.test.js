@@ -109,6 +109,20 @@ describe('businessAddressSelectPresenter', () => {
     })
   })
 
+  describe('the "postcode" property', () => {
+    describe('when the changeBusinessPostcode property is missing', () => {
+      beforeEach(() => {
+        delete data.changeBusinessPostcode
+      })
+
+      test('it should return postcode as null', () => {
+        const result = businessAddressSelectPresenter(data)
+
+        expect(result.postcode).toEqual(null)
+      })
+    })
+  })
+
   describe('the "displayAddresses" property', () => {
     describe('when provided with an additional address', () => {
       beforeEach(() => {
@@ -153,6 +167,24 @@ describe('businessAddressSelectPresenter', () => {
 
         expect(result.displayAddresses[0].selected).toBe(false)
         expect(result.displayAddresses[2].selected).toBe(true)
+      })
+    })
+
+    describe('when the changeBusinessAddresses property is missing', () => {
+      beforeEach(() => {
+        delete data.changeBusinessAddresses
+      })
+
+      test('it should return an empty display summary option', () => {
+        const result = businessAddressSelectPresenter(data)
+
+        expect(result.displayAddresses).toEqual([
+          {
+            value: 'display',
+            text: '0 addresses found',
+            selected: true
+          }
+        ])
       })
     })
   })

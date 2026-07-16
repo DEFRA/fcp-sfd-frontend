@@ -15,8 +15,8 @@ const businessAddressSelectPresenter = (data) => {
     userName: data.customer.userName ?? null,
     businessName: data.info.businessName ?? null,
     sbi: data.info.sbi ?? null,
-    postcode: data.changeBusinessPostcode.postcode,
-    displayAddresses: presenters.formatDisplayAddresses(data.changeBusinessAddresses, data.changeBusinessAddress)
+    postcode: data.changeBusinessPostcode?.postcode ?? null,
+    displayAddresses: presenters.formatDisplayAddresses(data.changeBusinessAddresses ?? [], data.changeBusinessAddress)
   }
 }
 

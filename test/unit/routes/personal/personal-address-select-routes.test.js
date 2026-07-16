@@ -73,6 +73,32 @@ describe('personal address select routes', () => {
         expect(h.view).toHaveBeenCalledWith('personal/personal-address-select', getPageData())
       })
     })
+
+    describe('when the postcode has not been set in session', () => {
+      beforeEach(() => {
+        fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalPostcode: undefined })
+      })
+
+      test('it redirects to /personal-details', async () => {
+        await getPersonalAddressSelect.handler(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(h.view).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the addresses have not been set in session', () => {
+      beforeEach(() => {
+        fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalAddresses: undefined })
+      })
+
+      test('it redirects to /personal-details', async () => {
+        await getPersonalAddressSelect.handler(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(h.view).not.toHaveBeenCalled()
+      })
+    })
   })
 
   describe('POST /account-address-select', () => {

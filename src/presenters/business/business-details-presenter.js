@@ -170,10 +170,6 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
   }
 }
 
-const getActionText = (value) => {
-  return value ? 'Change' : 'Add'
-}
-
 const setPermissionsText = (permissionLevel) => {
   if (permissionLevel === 'amend') {
     return 'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'

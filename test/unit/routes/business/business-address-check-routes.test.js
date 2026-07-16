@@ -101,10 +101,25 @@ describe('business address check', () => {
 const getMockData = () => {
   return {
     address: {
-      address1: '10 Skirbeck Way',
-      address2: '',
+      lookup: {
+        pafOrganisationName: null,
+        buildingNumberRange: null,
+        flatName: null,
+        buildingName: null,
+        dependentLocality: null,
+        doubleDependentLocality: null,
+        street: null,
+        county: null,
+        uprn: null
+      },
+      manual: {
+        line1: '10 Skirbeck Way',
+        line2: null,
+        line3: null,
+        line4: null,
+        line5: null
+      },
       city: 'Maidstone',
-      county: '',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },

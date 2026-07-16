@@ -3,6 +3,8 @@
  * @module personalAddressCheckPresenter
  */
 
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
+
 const personalAddressCheckPresenter = (personalDetails) => {
   const { changePersonalAddress, address, info } = personalDetails
 
@@ -12,23 +14,33 @@ const personalAddressCheckPresenter = (personalDetails) => {
     pageTitle: 'Check your personal address is correct before submitting',
     metaDescription: 'Check the address for your personal account is correct.',
     userName: info.userName ?? null,
-    address: formatAddress(changePersonalAddress ?? address)
+    address: formatAddress(changePersonalAddress, address)
   }
 }
 
 /**
  * Formats the personal address into an array of address parts.
- * - Removes falsy values (null, undefined, empty strings)
- * - When from postcode lookup, excludes `uprn`, `displayAddress` and `postcodeLookup` keys
+ *
+ * When the user has a pending change in the session (`changePersonalAddress`) that flat
+ * address is used, removing falsy values and, for postcode lookup selections, the `uprn`,
+ * `displayAddress` and `postcodeLookup` keys.
+ *
+ * When there is no pending change, the address falls back to the personal address mapped
+ * from the DAL. This has a nested `{ lookup, manual, ... }` shape, so it is formatted with
+ * the shared `formatDisplayAddress` helper.
  */
-const formatAddress = (personalAddress) => {
-  if (personalAddress.postcodeLookup) {
-    const { uprn, displayAddress, postcodeLookup, ...addressParts } = personalAddress
+const formatAddress = (changePersonalAddress, address) => {
+  if (!changePersonalAddress) {
+    return presenters.formatDisplayAddress(address)
+  }
+
+  if (changePersonalAddress.postcodeLookup) {
+    const { uprn, displayAddress, postcodeLookup, ...addressParts } = changePersonalAddress
 
     return Object.values(addressParts).filter(Boolean)
-  } else {
-    return Object.values(personalAddress).filter(Boolean)
   }
+
+  return Object.values(changePersonalAddress).filter(Boolean)
 }
 
 const backLink = (postcodeLookup) => {

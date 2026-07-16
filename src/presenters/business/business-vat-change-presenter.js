@@ -1,6 +1,6 @@
 /**
- * Formats data ready for presenting in the `/business-VAT-registration-number-change` page
- * @module businessVatEnterPresenter
+ * Formats data ready for presenting in the `/business-vat-registration-number-change` page
+ * @module businessVatChangePresenter
  */
 
 const businessVatChangePresenter = (data, payload) => {

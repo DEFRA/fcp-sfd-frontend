@@ -25,7 +25,7 @@ const postBusinessVatRemove = {
   options: {
     auth: { scope: FULL_PERMISSIONS },
     validate: {
-      payload: schemas.business.vatRemove,
+      payload: schemas.business.vat.remove,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const errors = utils.formatValidationErrors(err.details || [])

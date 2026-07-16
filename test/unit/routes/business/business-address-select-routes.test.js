@@ -84,10 +84,10 @@ describe('business address select change', () => {
         fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessPostcode: undefined })
       })
 
-      test('it redirects to /business-address-change', async () => {
+      test('it redirects to /business-details', async () => {
         await getBusinessAddressSelect.handler(request, h)
 
-        expect(h.redirect).toHaveBeenCalledWith('/business-address-change')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
         expect(h.view).not.toHaveBeenCalled()
       })
     })
@@ -97,10 +97,10 @@ describe('business address select change', () => {
         fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessAddresses: undefined })
       })
 
-      test('it redirects to /business-address-change', async () => {
+      test('it redirects to /business-details', async () => {
         await getBusinessAddressSelect.handler(request, h)
 
-        expect(h.redirect).toHaveBeenCalledWith('/business-address-change')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
         expect(h.view).not.toHaveBeenCalled()
       })
     })

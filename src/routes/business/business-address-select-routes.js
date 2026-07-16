@@ -15,7 +15,7 @@ const getBusinessAddressSelect = {
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses', 'changeBusinessAddress'])
 
     if (!businessDetails.changeBusinessPostcode || !businessDetails.changeBusinessAddresses) {
-      return h.redirect('/business-address-change')
+      return h.redirect('/business-details')
     }
 
     const pageData = businessAddressSelectPresenter(businessDetails)

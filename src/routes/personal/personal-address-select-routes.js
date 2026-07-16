@@ -12,7 +12,7 @@ const getPersonalAddressSelect = {
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, ['changePersonalPostcode', 'changePersonalAddresses', 'changePersonalAddress'])
 
     if (!personalDetails.changePersonalPostcode || !personalDetails.changePersonalAddresses) {
-      return h.redirect('/account-address-change')
+      return h.redirect('/personal-details')
     }
 
     const pageData = personalAddressSelectPresenter(personalDetails)

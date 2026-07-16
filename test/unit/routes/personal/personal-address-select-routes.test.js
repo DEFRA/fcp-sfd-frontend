@@ -79,10 +79,10 @@ describe('personal address select routes', () => {
         fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalPostcode: undefined })
       })
 
-      test('it redirects to /account-address-change', async () => {
+      test('it redirects to /personal-details', async () => {
         await getPersonalAddressSelect.handler(request, h)
 
-        expect(h.redirect).toHaveBeenCalledWith('/account-address-change')
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
         expect(h.view).not.toHaveBeenCalled()
       })
     })
@@ -92,10 +92,10 @@ describe('personal address select routes', () => {
         fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalAddresses: undefined })
       })
 
-      test('it redirects to /account-address-change', async () => {
+      test('it redirects to /personal-details', async () => {
         await getPersonalAddressSelect.handler(request, h)
 
-        expect(h.redirect).toHaveBeenCalledWith('/account-address-change')
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
         expect(h.view).not.toHaveBeenCalled()
       })
     })

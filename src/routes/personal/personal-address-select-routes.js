@@ -10,6 +10,11 @@ const getPersonalAddressSelect = {
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, ['changePersonalPostcode', 'changePersonalAddresses', 'changePersonalAddress'])
+
+    if (!personalDetails.changePersonalPostcode || !personalDetails.changePersonalAddresses) {
+      return h.redirect('/personal-details')
+    }
+
     const pageData = personalAddressSelectPresenter(personalDetails)
 
     return h.view('personal/personal-address-select', pageData)

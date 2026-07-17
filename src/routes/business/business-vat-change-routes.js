@@ -25,7 +25,7 @@ const postBusinessVatChange = {
   options: {
     auth: { scope: FULL_PERMISSIONS },
     validate: {
-      payload: schemas.business.details.vat,
+      payload: schemas.business.vat.change,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request

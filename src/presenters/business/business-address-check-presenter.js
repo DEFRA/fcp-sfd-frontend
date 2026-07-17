@@ -3,6 +3,8 @@
  * @module businessAddressCheckPresenter
  */
 
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
+
 const businessAddressCheckPresenter = (businessDetails) => {
   const { changeBusinessAddress, address, info, customer } = businessDetails
 
@@ -12,7 +14,7 @@ const businessAddressCheckPresenter = (businessDetails) => {
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
     userName: customer.userName ?? null,
-    address: formatAddress(changeBusinessAddress ?? address),
+    address: formatAddress(changeBusinessAddress, address),
     businessName: info.businessName ?? null,
     sbi: info.sbi ?? null
   }
@@ -20,17 +22,27 @@ const businessAddressCheckPresenter = (businessDetails) => {
 
 /**
  * Formats the business address into an array of address parts.
- * - Removes falsy values (null, undefined, empty strings)
- * - When from postcode lookup, excludes `uprn`, `displayAddress` and `postcodeLookup` keys
+ *
+ * When the user has a pending change in the session (`changeBusinessAddress`) that flat
+ * address is used, removing falsy values and, for postcode lookup selections, the `uprn`,
+ * `displayAddress` and `postcodeLookup` keys.
+ *
+ * When there is no pending change, the address falls back to the business address mapped
+ * from the DAL. This has a nested `{ lookup, manual, ... }` shape, so it is formatted with
+ * the shared `formatDisplayAddress` helper.
  */
-const formatAddress = (businessAddress) => {
-  if (businessAddress.postcodeLookup) {
-    const { uprn, displayAddress, postcodeLookup, ...addressParts } = businessAddress
+const formatAddress = (changeBusinessAddress, address) => {
+  if (!changeBusinessAddress) {
+    return presenters.formatDisplayAddress(address)
+  }
+
+  if (changeBusinessAddress.postcodeLookup) {
+    const { uprn, displayAddress, postcodeLookup, ...addressParts } = changeBusinessAddress
 
     return Object.values(addressParts).filter(Boolean)
-  } else {
-    return Object.values(businessAddress).filter(Boolean)
   }
+
+  return Object.values(changeBusinessAddress).filter(Boolean)
 }
 
 const backLink = (postcodeLookup) => {

@@ -79,6 +79,20 @@ describe('personalAddressSelectPresenter', () => {
     })
   })
 
+  describe('the "postcode" property', () => {
+    describe('when the changePersonalPostcode property is missing', () => {
+      beforeEach(() => {
+        delete data.changePersonalPostcode
+      })
+
+      test('it should return postcode as null', () => {
+        const result = personalAddressSelectPresenter(data)
+
+        expect(result.postcode).toEqual(null)
+      })
+    })
+  })
+
   describe('the "displayAddresses" property', () => {
     describe('when provided with an additional address', () => {
       beforeEach(() => {
@@ -123,6 +137,24 @@ describe('personalAddressSelectPresenter', () => {
 
         expect(result.displayAddresses[0].selected).toBe(false)
         expect(result.displayAddresses[2].selected).toBe(true)
+      })
+    })
+
+    describe('when the changePersonalAddresses property is missing', () => {
+      beforeEach(() => {
+        delete data.changePersonalAddresses
+      })
+
+      test('it should return an empty display summary option', () => {
+        const result = personalAddressSelectPresenter(data)
+
+        expect(result.displayAddresses).toEqual([
+          {
+            value: 'display',
+            text: '0 addresses found',
+            selected: true
+          }
+        ])
       })
     })
   })

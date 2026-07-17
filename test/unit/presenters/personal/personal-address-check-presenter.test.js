@@ -17,10 +17,25 @@ describe('personalAddressCheckPresenter', () => {
         }
       },
       address: {
-        address1: '10 Skirbeck Way',
-        address2: 'Lonely Lane',
+        lookup: {
+          pafOrganisationName: null,
+          buildingNumberRange: null,
+          flatName: null,
+          buildingName: null,
+          dependentLocality: null,
+          doubleDependentLocality: null,
+          street: null,
+          county: null,
+          uprn: null
+        },
+        manual: {
+          line1: '10 Skirbeck Way',
+          line2: 'Lonely Lane',
+          line3: null,
+          line4: 'Somerset',
+          line5: null
+        },
         city: 'Maidstone',
-        county: 'Somerset',
         postcode: 'SK22 1DL',
         country: 'United Kingdom'
       }
@@ -113,6 +128,56 @@ describe('personalAddressCheckPresenter', () => {
           'BA12 CBA',
           'United Kingdom'
         ])
+      })
+    })
+
+    describe('when there is no pending change in the session', () => {
+      describe('and the mapped personal address was selected from the postcode lookup', () => {
+        beforeEach(() => {
+          data.address = {
+            lookup: {
+              pafOrganisationName: null,
+              buildingNumberRange: '18',
+              flatName: 'Flat 3',
+              buildingName: 'Fake Court',
+              dependentLocality: null,
+              doubleDependentLocality: null,
+              street: 'Maple Road',
+              county: 'Bristol',
+              uprn: '100000111111'
+            },
+            manual: {
+              line1: null,
+              line2: null,
+              line3: null,
+              line4: null,
+              line5: null
+            },
+            city: 'Westfield',
+            postcode: 'BS1 4AB',
+            country: 'United Kingdom'
+          }
+        })
+
+        test('it formats the nested DAL address as a flat array of strings', () => {
+          const result = personalAddressCheckPresenter(data)
+
+          expect(result.address).toEqual([
+            'Flat 3',
+            'Fake Court',
+            '18 Maple Road',
+            'Westfield',
+            'Bristol',
+            'BS1 4AB',
+            'United Kingdom'
+          ])
+        })
+
+        test('it does not render any address line as "[object Object]"', () => {
+          const result = personalAddressCheckPresenter(data)
+
+          expect(result.address.every((line) => typeof line === 'string')).toBe(true)
+        })
       })
     })
   })

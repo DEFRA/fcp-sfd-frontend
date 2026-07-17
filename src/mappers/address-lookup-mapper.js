@@ -6,12 +6,12 @@
  * @module addressLookupMapper
  */
 
+import { schemas } from '@defra/fcp-sfd-frontend-engine'
 import { COUNTRY_NAMES } from '../constants/country-names.js'
-import { addressLookupSchema } from '../schemas/os-places/address-lookup-schema.js'
 
 const addressLookupMapper = (addresses) => {
   return addresses.map((address) => {
-    const { error } = addressLookupSchema.validate(address)
+    const { error } = schemas.osPlaces.addressLookup.validate(address)
 
     if (error) {
       return null

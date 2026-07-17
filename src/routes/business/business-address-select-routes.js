@@ -1,8 +1,7 @@
-import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
+import { utils, constants, schemas } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessAddressSelectPresenter } from '../../presenters/business/business-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
-import { addressesSchema } from '../../schemas/os-places/addresses-schema.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessAddressSelect = {
@@ -14,6 +13,11 @@ const getBusinessAddressSelect = {
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses', 'changeBusinessAddress'])
+
+    if (!businessDetails.changeBusinessPostcode || !businessDetails.changeBusinessAddresses) {
+      return h.redirect('/business-details')
+    }
+
     const pageData = businessAddressSelectPresenter(businessDetails)
 
     return h.view('business/business-address-select', pageData)
@@ -26,7 +30,7 @@ const postBusinessAddressSelect = {
   options: {
     auth: { scope: AMEND_PERMISSIONS },
     validate: {
-      payload: addressesSchema,
+      payload: schemas.osPlaces.addresses,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth } = request

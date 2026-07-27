@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updateBusinessEmailMutation } from '../../../../src/dal/mutations/business/update-business-email.js'
+import { mutations } from '@defra/fcp-sfd-frontend-engine'
 
 // Test helpers
 import { getMappedData } from '../../../mocks/mock-business-details.js'
@@ -55,7 +55,7 @@ describe('updateBusinessEmailChangeService', () => {
     test('it calls updateDalService with correct mutation and variables', async () => {
       await updateBusinessEmailChangeService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updateBusinessEmailMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(mutations.updateBusinessEmail, {
         input: { email: { address: 'new-email@test.com' }, sbi: '107183280' }
       }, credentials.sessionId)
     })

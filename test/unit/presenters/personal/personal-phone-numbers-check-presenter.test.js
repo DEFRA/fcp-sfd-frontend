@@ -86,4 +86,19 @@ describe('personalPhoneNumbersCheckPresenter', () => {
       })
     })
   })
+
+  describe('when there is no pending change in the session', () => {
+    beforeEach(() => {
+      delete data.changePersonalPhoneNumbers
+    })
+
+    test('it falls back to the saved phone numbers', () => {
+      const result = personalPhoneNumbersCheckPresenter(data)
+
+      expect(result.personalTelephone).toEqual({
+        telephone: '01234567890',
+        mobile: null
+      })
+    })
+  })
 })

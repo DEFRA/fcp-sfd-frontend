@@ -3,10 +3,16 @@
  * @module businessEmailEnterPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
-
 const businessEmailChangePresenter = (data, payload) => {
-  return presenters.businessEmailChange(data, payload, { href: '/business-details' })
+  return {
+    backLink: { href: '/business-details' },
+    pageTitle: 'What is your business email address?',
+    metaDescription: 'Update the email address for your business.',
+    userName: data.customer.userName ?? null,
+    businessEmail: payload ?? data.changeBusinessEmail ?? data.contact.email,
+    businessName: data.info.businessName ?? null,
+    sbi: data.info.sbi ?? null
+  }
 }
 
 export {

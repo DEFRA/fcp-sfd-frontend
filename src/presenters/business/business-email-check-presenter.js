@@ -3,10 +3,17 @@
  * @module businessEmailCheckPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
-
 const businessEmailCheckPresenter = (data) => {
-  return presenters.businessEmailCheck(data, { href: '/business-email-change' }, '/business-email-change')
+  return {
+    backLink: { href: '/business-email-change' },
+    changeLink: '/business-email-change',
+    pageTitle: 'Check your business email address is correct before submitting',
+    metaDescription: 'Check the email address for your business is correct.',
+    userName: data.customer.userName ?? null,
+    businessEmail: data.changeBusinessEmail ?? data.contact.email,
+    businessName: data.info.businessName ?? null,
+    sbi: data.info.sbi ?? null
+  }
 }
 
 export {

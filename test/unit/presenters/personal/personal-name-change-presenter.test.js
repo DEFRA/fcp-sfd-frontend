@@ -46,6 +46,7 @@ describe('personalNameChangePresenter', () => {
 
       test('it should return userName as null', () => {
         const result = personalNameChangePresenter(data)
+
         expect(result.userName).toEqual(null)
       })
     })
@@ -102,6 +103,7 @@ describe('personalNameChangePresenter', () => {
         expect(result.middle).toEqual('P')
       })
     })
+
     describe('when no payload is provided but a changed middle names', () => {
       beforeEach(() => {
         data.changePersonalName.middle = 'A'

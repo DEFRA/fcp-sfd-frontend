@@ -3,6 +3,8 @@
  * @module personalNameCheckPresenter
  */
 
+import { utils } from '@defra/fcp-sfd-frontend-engine'
+
 const personalNameCheckPresenter = (personalDetails) => {
   return {
     backLink: { href: '/account-name-change' },
@@ -10,16 +12,8 @@ const personalNameCheckPresenter = (personalDetails) => {
     pageTitle: 'Check your name is correct before submitting',
     metaDescription: 'Check the full name for your personal account is correct.',
     userName: personalDetails.info.userName ?? null,
-    fullName: formatFullName(personalDetails.changePersonalName ?? personalDetails.info.fullName)
+    fullName: utils.formatFullName(personalDetails.changePersonalName ?? personalDetails.info.fullName)
   }
-}
-
-const formatFullName = (nameData) => {
-  return [
-    nameData.first,
-    nameData.middle,
-    nameData.last
-  ].filter(Boolean).join(' ')
 }
 
 export {

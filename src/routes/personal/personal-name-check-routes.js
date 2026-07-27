@@ -1,6 +1,6 @@
+import { personalNameCheckPresenter } from '../../presenters/personal/personal-name-check-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalNameChangeService } from '../../services/personal/update-personal-name-change-service.js'
-import { personalNameCheckPresenter } from '../../presenters/personal/personal-name-check-presenter.js'
 
 const getPersonalNameCheck = {
   method: 'GET',

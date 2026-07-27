@@ -15,12 +15,7 @@
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
-      errorList: [
-        {
-          text: errors.personalEmail.text,
-          href: "#personal-email"
-        }
-      ]
+      errorList: errors | toErrorList
     }) }}
   {% endif %}
 
@@ -36,7 +31,7 @@
               isPageHeading: true
             },
             classes: "govuk-input--width-20",
-            id: "personal-email",
+            id: "personalEmail",
             name: "personalEmail",
             value: personalEmail,
             errorMessage: errors.personalEmail and {

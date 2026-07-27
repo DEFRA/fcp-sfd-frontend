@@ -9,7 +9,8 @@
  * @module updatePersonalNameChangeService
  */
 
-import { updatePersonalNameMutation } from '../../dal/mutations/personal/update-personal-name.js'
+import { mutations } from '@defra/fcp-sfd-frontend-engine'
+
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
@@ -30,7 +31,7 @@ const updatePersonalNameChangeService = async (yar, credentials) => {
     }
   }
 
-  await updateDalService(updatePersonalNameMutation, variables, credentials.sessionId)
+  await updateDalService(mutations.updateCustomerName, variables, credentials.sessionId)
 
   yar.clear('personalDetailsUpdate')
 

@@ -4,6 +4,11 @@
  */
 
 const personalPhoneNumbersCheckPresenter = (personalDetails) => {
+  const phoneNumbers = personalDetails.changePersonalPhoneNumbers ?? {
+    personalTelephone: personalDetails.contact.telephone,
+    personalMobile: personalDetails.contact.mobile
+  }
+
   return {
     backLink: { href: '/account-phone-numbers-change' },
     changeLink: '/account-phone-numbers-change',
@@ -11,8 +16,8 @@ const personalPhoneNumbersCheckPresenter = (personalDetails) => {
     metaDescription: 'Check the phone numbers for your personal account are correct.',
     userName: personalDetails.info.userName ?? null,
     personalTelephone: {
-      telephone: personalDetails.changePersonalPhoneNumbers.personalTelephone ?? null,
-      mobile: personalDetails.changePersonalPhoneNumbers.personalMobile ?? null
+      telephone: phoneNumbers.personalTelephone ?? null,
+      mobile: phoneNumbers.personalMobile ?? null
     }
   }
 }

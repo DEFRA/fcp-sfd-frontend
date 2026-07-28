@@ -10,7 +10,7 @@
  */
 
 import moment from 'moment'
-import { updatePersonalDobMutation } from '../../dal/mutations/personal/update-personal-dob.js'
+import { mutations } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
@@ -33,7 +33,7 @@ const updatePersonalDobChangeService = async (yar, credentials) => {
     }
   }
 
-  await updateDalService(updatePersonalDobMutation, variables, credentials.sessionId)
+  await updateDalService(mutations.updateCustomerDob, variables, credentials.sessionId)
 
   yar.clear('personalDetailsUpdate')
 

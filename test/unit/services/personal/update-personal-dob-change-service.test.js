@@ -2,10 +2,10 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
+import { mutations } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updatePersonalDobMutation } from '../../../../src/dal/mutations/personal/update-personal-dob.js'
 
 // Test helpers
 import { getMappedData } from '../../../mocks/mock-personal-details.js'
@@ -60,7 +60,7 @@ describe('updatePersonalDobChangeService', () => {
     test('it calls updateDalService with correct mutation and variables', async () => {
       await updatePersonalDobChangeService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updatePersonalDobMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(mutations.updateCustomerDob, {
         input: {
           dateOfBirth: '1964-07-23',
           crn: data.crn

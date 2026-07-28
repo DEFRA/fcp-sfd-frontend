@@ -49,4 +49,17 @@ describe('personalDobCheckPresenter', () => {
       })
     })
   })
+
+  describe('when there is no changePersonalDob in the session', () => {
+    beforeEach(() => {
+      delete data.changePersonalDob
+      data.info.dateOfBirth = { day: '01', month: '05', year: '1990' }
+    })
+
+    test('it falls back to the date of birth on record', () => {
+      const result = personalDobCheckPresenter(data)
+
+      expect(result.dateOfBirth).toEqual('1 May 1990')
+    })
+  })
 })

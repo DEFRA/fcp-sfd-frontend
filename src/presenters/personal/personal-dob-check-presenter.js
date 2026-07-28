@@ -6,7 +6,8 @@
 import moment from 'moment'
 
 const personalDobCheckPresenter = (personalDetails) => {
-  const { day, month, year } = personalDetails.changePersonalDob
+  const dob = personalDetails.changePersonalDob ?? personalDetails.info.dateOfBirth
+  const { day, month, year } = dob
   const personalDob = new Date([`${month}/${day}/${year}`])
 
   return {

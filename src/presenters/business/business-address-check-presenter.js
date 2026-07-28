@@ -9,8 +9,8 @@ const businessAddressCheckPresenter = (businessDetails) => {
   const { changeBusinessAddress, address, info, customer } = businessDetails
 
   return {
-    backLink: backLink(changeBusinessAddress?.postcodeLookup),
-    changeLink: changeLink(changeBusinessAddress?.postcodeLookup),
+    backLink: presenters.addressBackLink(changeBusinessAddress?.postcodeLookup, 'business'),
+    changeLink: presenters.addressChangeLink(changeBusinessAddress?.postcodeLookup, 'business'),
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
     userName: customer.userName ?? null,
@@ -43,22 +43,6 @@ const formatAddress = (changeBusinessAddress, address) => {
   }
 
   return Object.values(changeBusinessAddress).filter(Boolean)
-}
-
-const backLink = (postcodeLookup) => {
-  if (postcodeLookup) {
-    return { href: '/business-address-select' }
-  } else {
-    return { href: '/business-address-enter' }
-  }
-}
-
-const changeLink = (postcodeLookup) => {
-  if (postcodeLookup) {
-    return '/business-address-change'
-  } else {
-    return '/business-address-enter'
-  }
 }
 
 export {

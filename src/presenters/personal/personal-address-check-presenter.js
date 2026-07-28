@@ -9,8 +9,8 @@ const personalAddressCheckPresenter = (personalDetails) => {
   const { changePersonalAddress, address, info } = personalDetails
 
   return {
-    backLink: backLink(changePersonalAddress?.postcodeLookup),
-    changeLink: changeLink(changePersonalAddress?.postcodeLookup),
+    backLink: presenters.addressBackLink(changePersonalAddress?.postcodeLookup, 'personal'),
+    changeLink: presenters.addressChangeLink(changePersonalAddress?.postcodeLookup, 'personal'),
     pageTitle: 'Check your personal address is correct before submitting',
     metaDescription: 'Check the address for your personal account is correct.',
     userName: info.userName ?? null,
@@ -41,22 +41,6 @@ const formatAddress = (changePersonalAddress, address) => {
   }
 
   return Object.values(changePersonalAddress).filter(Boolean)
-}
-
-const backLink = (postcodeLookup) => {
-  if (postcodeLookup) {
-    return { href: '/account-address-select' }
-  } else {
-    return { href: '/account-address-enter' }
-  }
-}
-
-const changeLink = (postcodeLookup) => {
-  if (postcodeLookup) {
-    return '/account-address-change'
-  } else {
-    return '/account-address-enter'
-  }
 }
 
 export {

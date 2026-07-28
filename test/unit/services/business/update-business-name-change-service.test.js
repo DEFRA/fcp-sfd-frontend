@@ -5,13 +5,9 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updateBusinessNameMutation } from '../../../../src/dal/mutations/business/update-business-name.js'
 
 // Test helpers
 import { getMappedData } from '../../../mocks/mock-business-details.js'
-
-// Thing under test
-import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
@@ -25,6 +21,19 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
   updateDalService: vi.fn().mockResolvedValue({})
 }))
+
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  mutations: { updateBusinessName: 'update-business-name-mutation' },
+  utils: {
+    buildUpdateBusinessNameVariables: (name, sbi) => ({ input: { name, sbi } })
+  },
+  constants: {
+    successMessages: { BUSINESS_NAME: 'You have updated your business name' }
+  }
+}))
+
+// Thing under test
+const { updateBusinessNameChangeService } = await import('../../../../src/services/business/update-business-name-change-service.js')
 
 describe('updateBusinessNameChangeService', () => {
   let yar
@@ -55,12 +64,11 @@ describe('updateBusinessNameChangeService', () => {
     test('it calls updateDalService with correct mutation and variables', async () => {
       await updateBusinessNameChangeService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updateBusinessNameMutation, {
-        input: {
-          name: 'New business ltd',
-          sbi: data.info.sbi
-        }
-      }, credentials.sessionId)
+      expect(updateDalService).toHaveBeenCalledWith(
+        'update-business-name-mutation',
+        { input: { name: 'New business ltd', sbi: data.info.sbi } },
+        credentials.sessionId
+      )
     })
 
     test('it clears the businessDetails from session', async () => {

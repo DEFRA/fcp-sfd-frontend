@@ -61,5 +61,13 @@ describe('personalDobCheckPresenter', () => {
 
       expect(result.dateOfBirth).toEqual('1 May 1990')
     })
+
+    test('it returns null if date of birth on record is incomplete', () => {
+      data.info.dateOfBirth = { day: null, month: '05', year: '1990' }
+
+      const result = personalDobCheckPresenter(data)
+
+      expect(result.dateOfBirth).toEqual(null)
+    })
   })
 })

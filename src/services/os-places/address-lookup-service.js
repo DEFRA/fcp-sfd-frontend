@@ -1,10 +1,12 @@
 /**
- * Service to fetch, map and store addresses from the OS Places API based on a UK postcode.
+ * Wrapper service that calls the OS Places address lookup service from the frontend engine.
  *
- *  The service:
- * - Calls the OS Places API via the official `osdatahub` package to search for addresses for a given postcode
- * - Maps the returned address properties into a format suitable for front-end display and for updating via the DAL.
- * - Stores the mapped addresses in the user's session for later retrieval
+ * This wrapper:
+ * - Gets the OS Places configuration from the application config
+ * - Calls the engine's addressLookupService with the configuration
+ * - Logs any errors for observability
+ * - Handles session storage of the returned addresses
+ * - Maintains backward compatibility with existing route handlers
  *
  * @module addressLookupService
  */
@@ -12,65 +14,33 @@
 import { config } from '../../config/index.js'
 import { createLogger } from '../../utils/logger.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
-import { placesAPI } from 'osdatahub'
-import { constants } from '@defra/fcp-sfd-frontend-engine'
-import { addressLookupMapper } from '../../mappers/address-lookup-mapper.js'
-import { mockPostcode } from '../../services/os-places/os-places-stub.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const logger = createLogger()
 
+/**
+ * Fetch, map and store addresses from OS Places API based on postcode.
+ *
+ * @param {string} postcode - The UK postcode to search for
+ * @param {object} yar - Hapi yar session object
+ * @param {string} context - Context identifier ('business' or 'personal')
+ * @returns {Promise<Array|object>} Array of addresses or error object
+ */
 const addressLookupService = async (postcode, yar, context) => {
-  const addresses = await fetchAddressesFromPostcodeLookup(postcode)
+  const osPlacesConfig = config.get('osPlacesConfig')
+  const addresses = await services.addressLookup(postcode, osPlacesConfig)
 
-  if (addresses.errors) {
+  // Log and return early if there are errors
+  if (addresses.error) {
+    logger.error(addresses.error[0].message, 'Error connecting to OS Places API')
     return addresses
   }
 
-  if (!addresses?.length) {
-    // Create a Joi-like error object to indicate that the postcode lookup returned no addresses
-    return {
-      error: [
-        {
-          message: 'No addresses found for this postcode',
-          path: ['postcode']
-        }
-      ]
-    }
-  }
-
-  const mappedAddresses = addressLookupMapper(addresses)
+  // Store the addresses in the session for later retrieval
   const changeAddress = context === 'business' ? 'changeBusinessAddresses' : 'changePersonalAddresses'
+  setSessionData(yar, `${context}DetailsUpdate`, `${changeAddress}`, addresses)
 
-  setSessionData(yar, `${context}DetailsUpdate`, `${changeAddress}`, mappedAddresses)
-
-  return mappedAddresses
-}
-
-const fetchAddressesFromPostcodeLookup = async (postcode) => {
-  try {
-    const { clientId } = config.get('osPlacesConfig')
-
-    const response = await fetchAddresses(clientId, postcode, { limit: 150 })
-
-    return response.features ?? []
-  } catch (error) {
-    logger.error(error, 'Error connecting to Postcode lookup API')
-
-    return {
-      statusCode: constants.statusCodes.INTERNAL_SERVER_ERROR,
-      errors: [error]
-    }
-  }
-}
-
-const fetchAddresses = async (clientId, postcode, options = {}) => {
-  const { osPlacesStub } = config.get('osPlacesConfig')
-
-  if (osPlacesStub) {
-    return mockPostcode(postcode)
-  }
-
-  return placesAPI.postcode(clientId, postcode, options)
+  return addresses
 }
 
 export {

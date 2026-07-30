@@ -41,7 +41,7 @@ describe('personal address select routes', () => {
     }
 
     h = {
-      redirect: vi.fn(),
+      redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }),
       view: vi.fn(() => responseStub)
     }
   })
@@ -131,6 +131,19 @@ describe('personal address select routes', () => {
             }
           )
           expect(h.redirect).toHaveBeenCalledWith('/account-address-check')
+        })
+      })
+
+      describe('when the selected address is not found in session', () => {
+        beforeEach(() => {
+          request.payload.addresses = '9999999Non-existent Address'
+        })
+
+        test('it redirects back to the address select page', async () => {
+          await postPersonalAddressSelect.options.handler(request, h)
+
+          expect(setSessionData).not.toHaveBeenCalled()
+          expect(h.redirect).toHaveBeenCalledWith('/account-address-select')
         })
       })
     })

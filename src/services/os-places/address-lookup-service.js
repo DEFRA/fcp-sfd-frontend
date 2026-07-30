@@ -19,7 +19,7 @@ import { services } from '@defra/fcp-sfd-frontend-engine'
 const logger = createLogger()
 
 /**
- * Fetch, map and store addresses from OS Places API based on postcode.
+ * Fetch and store addresses from OS Places API based on postcode.
  *
  * @param {string} postcode - The UK postcode to search for
  * @param {object} yar - Hapi yar session object

@@ -14,7 +14,7 @@ import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
-import { buildUprnAddress, buildManualAddress } from '../build-address-variables-service.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessAddress')
@@ -80,9 +80,9 @@ const businessAddressVariables = (businessDetails) => {
 
   // Business addresses use withUprn/withoutUprn structure (unlike personal addresses)
   if (change.uprn) {
-    baseVariables.input.address.withUprn = buildUprnAddress(change)
+    baseVariables.input.address.withUprn = services.buildUprnAddress(change)
   } else {
-    baseVariables.input.address.withoutUprn = buildManualAddress(change)
+    baseVariables.input.address.withoutUprn = services.buildManualAddress(change)
   }
 
   return baseVariables

@@ -3,7 +3,7 @@
  * @module personalFixCheckPresenter
  */
 
-import moment from 'moment'
+import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
 const personalFixCheckPresenter = (personalDetails) => {
   const {
@@ -36,9 +36,10 @@ const personalFixCheckPresenter = (personalDetails) => {
 const formatDob = (dob) => {
   if (dob) {
     const { day, month, year } = dob
-    const personalDob = new Date(`${month}/${day}/${year}`)
+    // new Date() needs the format YYYY-MM-DD with leading zeros e.g. '1990-04-05' not '1990-4-5'
+    const personalDob = new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`)
 
-    return moment(personalDob).format('D MMMM YYYY')
+    return presenters.formatLongDate(personalDob)
   }
 
   return null

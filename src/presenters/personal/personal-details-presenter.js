@@ -115,7 +115,7 @@ const formatDob = (dob) => {
   }
 
   return {
-    formattedDob: presenters.formatLongDate(date),
+    formattedDob: date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
     action: 'Change'
   }
 }

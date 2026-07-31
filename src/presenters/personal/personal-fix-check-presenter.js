@@ -3,8 +3,6 @@
  * @module personalFixCheckPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
-
 const personalFixCheckPresenter = (personalDetails) => {
   const {
     orderedSectionsToFix,
@@ -39,7 +37,7 @@ const formatDob = (dob) => {
     // new Date() needs the format YYYY-MM-DD with leading zeros e.g. '1990-04-05' not '1990-4-5'
     const personalDob = new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`)
 
-    return presenters.formatLongDate(personalDob)
+    return personalDob.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
   }
 
   return null

@@ -3,8 +3,6 @@
  * @module personalDobCheckPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
-
 const personalDobCheckPresenter = (personalDetails) => {
   const { day, month, year } = personalDetails.changePersonalDob
   // new Date() needs the format YYYY-MM-DD with leading zeros e.g. '1990-04-05' not '1990-4-5'
@@ -16,7 +14,7 @@ const personalDobCheckPresenter = (personalDetails) => {
     metaDescription: 'Check the date of birth for your personal account is correct.',
     userName: personalDetails.info.userName ?? null,
     changeLink: '/account-date-of-birth-change',
-    dateOfBirth: presenters.formatLongDate(personalDob)
+    dateOfBirth: personalDob.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
   }
 }
 

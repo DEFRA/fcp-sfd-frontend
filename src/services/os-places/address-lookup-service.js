@@ -32,7 +32,7 @@ const addressLookupService = async (postcode, yar, context) => {
 
   // Log and return early if there are errors
   if (addresses.error) {
-    logger.error(addresses.error[0].message, 'Error connecting to OS Places API')
+    logger.error(addresses.error?.[0]?.message || 'Unknown error', 'Error connecting to OS Places API')
     return addresses
   }
 

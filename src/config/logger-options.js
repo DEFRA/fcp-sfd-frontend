@@ -51,7 +51,7 @@ export const loggerOptions = {
   getChildBindings: (request) => {
     const bindings = { req: request }
     const credentials = request.auth?.credentials
-    if (!credentials) return bindings
+    if (!credentials) { return bindings }
     return {
       ...bindings,
       sbi: credentials.sbi,

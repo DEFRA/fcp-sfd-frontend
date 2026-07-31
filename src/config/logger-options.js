@@ -1,6 +1,7 @@
 import { ecsFormat } from '@elastic/ecs-pino-format'
 import { getTraceId } from '@defra/hapi-tracing'
 import { config } from './index.js'
+import { maskCrn } from '../utils/mask-crn.js'
 
 const logConfig = config.get('server.log')
 const serviceName = config.get('server.serviceName')
@@ -46,5 +47,16 @@ export const loggerOptions = {
       mixinValues.trace = { id: traceId }
     }
     return mixinValues
+  },
+  getChildBindings: (request) => {
+    const bindings = { req: request }
+    const credentials = request.auth?.credentials
+    if (!credentials) return bindings
+    return {
+      ...bindings,
+      sbi: credentials.sbi,
+      crn: maskCrn(credentials.crn),
+      session_id: credentials.sessionId
+    }
   }
 }

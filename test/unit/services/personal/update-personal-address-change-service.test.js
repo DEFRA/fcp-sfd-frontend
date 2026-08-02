@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updatePersonalAddressMutation } from '../../../../src/dal/mutations/personal/update-personal-address.js'
+import { mutations } from '@defra/fcp-sfd-frontend-engine'
 
 // Test helpers
 import { getMappedData } from '../../../mocks/mock-personal-details.js'
@@ -61,7 +61,7 @@ describe('updatePersonalAddressChangeService', () => {
     test('it calls the updateDalService with correct mutation and variables', async () => {
       await updatePersonalAddressChangeService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updatePersonalAddressMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(mutations.updateCustomerAddress, {
         input: {
           crn: '123456890',
           address: {
@@ -118,7 +118,7 @@ describe('updatePersonalAddressChangeService', () => {
     test('it calls the updateDalService with correct lookup variables', async () => {
       await updatePersonalAddressChangeService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updatePersonalAddressMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(mutations.updateCustomerAddress, {
         input: {
           crn: '123456890',
           address: {

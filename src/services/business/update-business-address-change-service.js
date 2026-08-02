@@ -12,9 +12,8 @@
 
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
-import { updateBusinessAddressMutation } from '../../dal/mutations/business/update-business-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
-import { services } from '@defra/fcp-sfd-frontend-engine'
+import { services, mutations } from '@defra/fcp-sfd-frontend-engine'
 
 const updateBusinessAddressChangeService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessChangeService(yar, credentials, 'changeBusinessAddress')
@@ -25,7 +24,7 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
 
   const variables = businessAddressVariables(businessDetails)
 
-  await updateDalService(updateBusinessAddressMutation, variables, credentials.sessionId)
+  await updateDalService(mutations.updateBusinessAddress, variables, credentials.sessionId)
 
   yar.clear('businessDetailsUpdate')
 

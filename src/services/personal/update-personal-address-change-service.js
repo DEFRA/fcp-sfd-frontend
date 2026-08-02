@@ -13,9 +13,8 @@
 
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
-import { updatePersonalAddressMutation } from '../../dal/mutations/personal/update-personal-address.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
-import { services } from '@defra/fcp-sfd-frontend-engine'
+import { services, mutations } from '@defra/fcp-sfd-frontend-engine'
 
 const updatePersonalAddressChangeService = async (yar, credentials) => {
   const personalDetails = await fetchPersonalChangeService(yar, credentials, 'changePersonalAddress')
@@ -26,7 +25,7 @@ const updatePersonalAddressChangeService = async (yar, credentials) => {
 
   const variables = personalAddressVariables(personalDetails)
 
-  await updateDalService(updatePersonalAddressMutation, variables, credentials.sessionId)
+  await updateDalService(mutations.updateCustomerAddress, variables, credentials.sessionId)
 
   yar.clear('personalDetailsUpdate')
 

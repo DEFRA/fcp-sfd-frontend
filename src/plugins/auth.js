@@ -121,7 +121,7 @@ async function validateToken (request, session) {
 
   // Set the user's details on the request object and allow the request to continue
   // Depending on the service, additional checks can be performed here before returning `isValid: true`
-  return { isValid: true, credentials: userSession }
+  return { isValid: true, credentials: { ...userSession, sessionId: session.sessionId } }
 }
 
 export { getBellOptions, getCookieOptions }

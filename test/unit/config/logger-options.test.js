@@ -37,12 +37,14 @@ describe('logger-options', () => {
   })
 
   describe('getChildBindings', () => {
-    test('Should map credentials to ECS schema fields for an authenticated request', () => {
+    test('Should map credentials to tenant.message for an authenticated request', () => {
       const mockRequest = {
         auth: {
           credentials: {
-            sbi: 123456789,
-            crn: 1234567890,
+            profile: {
+              sbi: 123456789,
+              crn: 1234567890
+            },
             sessionId: 'abc-session-123'
           }
         }
@@ -51,15 +53,11 @@ describe('logger-options', () => {
       const result = loggerOptions.getChildBindings(mockRequest)
 
       expect(result).toMatchObject({
-        event: {
-          reference: 'crn-******7890',
-          category: 'sbi-123456789',
-          type: 'session_id-abc-session-123'
+        tenant: {
+          message: 'crn=******7890 sbi=123456789 session_id=abc-session-123'
         }
       })
-      expect(result).not.toHaveProperty('sbi')
-      expect(result).not.toHaveProperty('crn')
-      expect(result).not.toHaveProperty('session_id')
+      expect(result).not.toHaveProperty('event')
     })
 
     test('Should return only req binding for an unauthenticated request', () => {
@@ -68,11 +66,25 @@ describe('logger-options', () => {
       const result = loggerOptions.getChildBindings(mockRequest)
 
       expect(result).toEqual({ req: mockRequest })
-      expect(result).not.toHaveProperty('event')
+      expect(result).not.toHaveProperty('tenant')
     })
 
     test('Should return only req binding when auth is absent', () => {
       const mockRequest = {}
+
+      const result = loggerOptions.getChildBindings(mockRequest)
+
+      expect(result).toEqual({ req: mockRequest })
+    })
+
+    test('Should return only req binding when profile is absent', () => {
+      const mockRequest = {
+        auth: {
+          credentials: {
+            sessionId: 'abc-session-123'
+          }
+        }
+      }
 
       const result = loggerOptions.getChildBindings(mockRequest)
 

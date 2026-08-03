@@ -384,7 +384,7 @@ describe('auth', () => {
 
       test('should add credentials as session data to request if session exists and token is valid', async () => {
         const result = await validate(request, session)
-        expect(result.credentials).toEqual(userSession)
+        expect(result.credentials).toEqual({ ...userSession, sessionId: session.sessionId })
       })
 
       test('should return invalid state if session does not exist', async () => {

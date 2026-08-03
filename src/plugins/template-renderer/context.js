@@ -23,7 +23,7 @@ export const context = async (request) => {
     }
   }
   const ctx = request.response.source?.context || {}
-  const serverAuth = request.auth?.isAuthenticated ? await request.server.app.cache.get(request.auth.credentials.sessionId) : null
+  const serverAuth = (request.auth?.isAuthenticated && request.auth.credentials?.sessionId) ? await request.server.app.cache.get(request.auth.credentials.sessionId) : null
   return {
     ...ctx,
     assetPath: `${assetPath}/assets/rebrand`,

@@ -56,11 +56,9 @@ export const loggerOptions = {
     if (!profile) { return bindings }
     return {
       ...bindings,
-      event: {
-        reference: profile.crn ? `crn-${maskCrn(profile.crn)}` : undefined,
-        category: profile.sbi ? `sbi-${profile.sbi}` : undefined,
-        type: credentials.sessionId ? `session_id-${credentials.sessionId}` : undefined
-      }
+      'event.reference': profile.crn ? `crn-${maskCrn(profile.crn)}` : undefined,
+      'event.category': profile.sbi ? `sbi-${profile.sbi}` : undefined,
+      'event.type': credentials.sessionId ? `session_id-${credentials.sessionId}` : undefined
     }
   }
 }

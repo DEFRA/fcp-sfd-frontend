@@ -53,13 +53,11 @@ describe('logger-options', () => {
       const result = loggerOptions.getChildBindings(mockRequest)
 
       expect(result).toMatchObject({
-        event: {
-          reference: 'crn-******7890',
-          category: 'sbi-123456789',
-          type: 'session_id-abc-session-123'
-        }
+        'event.reference': 'crn-******7890',
+        'event.category': 'sbi-123456789',
+        'event.type': 'session_id-abc-session-123'
       })
-      expect(result).not.toHaveProperty('tenant')
+      expect(result).not.toHaveProperty('event')
     })
 
     test('Should return only req binding for an unauthenticated request', () => {

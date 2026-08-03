@@ -37,7 +37,7 @@ describe('logger-options', () => {
   })
 
   describe('getChildBindings', () => {
-    test('Should include sbi, masked crn and session_id for an authenticated request', () => {
+    test('Should map credentials to ECS schema fields for an authenticated request', () => {
       const mockRequest = {
         auth: {
           credentials: {
@@ -51,10 +51,15 @@ describe('logger-options', () => {
       const result = loggerOptions.getChildBindings(mockRequest)
 
       expect(result).toMatchObject({
-        sbi: 123456789,
-        crn: '******7890',
-        session_id: 'abc-session-123'
+        event: {
+          reference: 'crn-******7890',
+          category: 'sbi-123456789',
+          type: 'session_id-abc-session-123'
+        }
       })
+      expect(result).not.toHaveProperty('sbi')
+      expect(result).not.toHaveProperty('crn')
+      expect(result).not.toHaveProperty('session_id')
     })
 
     test('Should return only req binding for an unauthenticated request', () => {
@@ -63,9 +68,7 @@ describe('logger-options', () => {
       const result = loggerOptions.getChildBindings(mockRequest)
 
       expect(result).toEqual({ req: mockRequest })
-      expect(result).not.toHaveProperty('sbi')
-      expect(result).not.toHaveProperty('crn')
-      expect(result).not.toHaveProperty('session_id')
+      expect(result).not.toHaveProperty('event')
     })
 
     test('Should return only req binding when auth is absent', () => {

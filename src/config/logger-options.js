@@ -52,11 +52,17 @@ export const loggerOptions = {
     const bindings = { req: request }
     const credentials = request.auth?.credentials
     if (!credentials) { return bindings }
+    // Map to existing ECS schema fields for OpenSearch queryability:
+    // - crn → event.reference (enables: SELECT DISTINCT event.reference = unique users)
+    // - sbi → event.category (enables: GROUP BY event.category = requests per business)
+    // - session_id → event.type (enables: GROUP BY event.type = requests per session)
     return {
       ...bindings,
-      sbi: credentials.sbi,
-      crn: maskCrn(credentials.crn),
-      session_id: credentials.sessionId
+      event: {
+        reference: `crn-${maskCrn(credentials.crn)}`,
+        category: credentials.sbi ? `sbi-${credentials.sbi}` : undefined,
+        type: credentials.sessionId ? `session_id-${credentials.sessionId}` : undefined
+      }
     }
   }
 }

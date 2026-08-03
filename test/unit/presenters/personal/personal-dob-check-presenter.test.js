@@ -10,7 +10,12 @@ describe('personalDobCheckPresenter', () => {
   beforeEach(() => {
     data = {
       info: {
-        dateOfBirth: '1990-05-01',
+        dateOfBirth: {
+          full: '1990-05-01',
+          day: '1',
+          month: '5',
+          year: '1990'
+        },
         userName: 'Alfred Waldron',
         fullName: {
           first: 'Alfred',
@@ -33,6 +38,18 @@ describe('personalDobCheckPresenter', () => {
         metaDescription: 'Check the date of birth for your personal account is correct.',
         dateOfBirth: '25 June 1984'
       })
+    })
+  })
+
+  describe('when there is no changePersonalDob', () => {
+    beforeEach(() => {
+      delete data.changePersonalDob
+    })
+
+    test('it falls back to the date of birth from the DAL', () => {
+      const result = personalDobCheckPresenter(data)
+
+      expect(result.dateOfBirth).toEqual('1 May 1990')
     })
   })
 

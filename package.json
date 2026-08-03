@@ -88,9 +88,9 @@
   },
   "devDependencies": {
     "@types/convict": "6.1.6",
-    "@types/node": "26.1.0",
+    "@types/node": "26.1.1",
     "@types/nunjucks": "3.2.6",
-    "@types/webpack-assets-manifest": "5.1.4",
+    "@types/webpack-assets-manifest": "6.0.0",
     "@vitest/coverage-v8": "4.1.10",
     "autoprefixer": "10.5.2",
     "clean-webpack-plugin": "4.0.0",

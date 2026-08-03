@@ -55,9 +55,9 @@ export const loggerOptions = {
     const profile = credentials.profile
     if (!profile) { return bindings }
     const parts = []
-    if (profile.crn) parts.push(`crn=${maskCrn(profile.crn)}`)
-    if (profile.sbi) parts.push(`sbi=${profile.sbi}`)
-    if (credentials.sessionId) parts.push(`session_id=${credentials.sessionId}`)
+    if (profile.crn) { parts.push(`crn=${maskCrn(profile.crn)}`) }
+    if (profile.sbi) { parts.push(`sbi=${profile.sbi}`) }
+    if (credentials.sessionId) { parts.push(`session_id=${credentials.sessionId}`) }
     if (!parts.length) { return bindings }
     return {
       ...bindings,

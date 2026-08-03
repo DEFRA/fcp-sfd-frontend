@@ -54,15 +54,12 @@ export const loggerOptions = {
     if (!credentials) { return bindings }
     const profile = credentials.profile
     if (!profile) { return bindings }
-    const parts = []
-    if (profile.crn) { parts.push(`crn=${maskCrn(profile.crn)}`) }
-    if (profile.sbi) { parts.push(`sbi=${profile.sbi}`) }
-    if (credentials.sessionId) { parts.push(`session_id=${credentials.sessionId}`) }
-    if (!parts.length) { return bindings }
     return {
       ...bindings,
-      tenant: {
-        message: parts.join(' ')
+      event: {
+        reference: profile.crn ? `crn-${maskCrn(profile.crn)}` : undefined,
+        category: profile.sbi ? `sbi-${profile.sbi}` : undefined,
+        type: credentials.sessionId ? `session_id-${credentials.sessionId}` : undefined
       }
     }
   }

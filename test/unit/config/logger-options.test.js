@@ -37,7 +37,7 @@ describe('logger-options', () => {
   })
 
   describe('getChildBindings', () => {
-    test('Should map credentials to tenant.message for an authenticated request', () => {
+    test('Should map credentials to ECS event fields for an authenticated request', () => {
       const mockRequest = {
         auth: {
           credentials: {
@@ -53,11 +53,13 @@ describe('logger-options', () => {
       const result = loggerOptions.getChildBindings(mockRequest)
 
       expect(result).toMatchObject({
-        tenant: {
-          message: 'crn=******7890 sbi=123456789 session_id=abc-session-123'
+        event: {
+          reference: 'crn-******7890',
+          category: 'sbi-123456789',
+          type: 'session_id-abc-session-123'
         }
       })
-      expect(result).not.toHaveProperty('event')
+      expect(result).not.toHaveProperty('tenant')
     })
 
     test('Should return only req binding for an unauthenticated request', () => {
@@ -66,7 +68,7 @@ describe('logger-options', () => {
       const result = loggerOptions.getChildBindings(mockRequest)
 
       expect(result).toEqual({ req: mockRequest })
-      expect(result).not.toHaveProperty('tenant')
+      expect(result).not.toHaveProperty('event')
     })
 
     test('Should return only req binding when auth is absent', () => {

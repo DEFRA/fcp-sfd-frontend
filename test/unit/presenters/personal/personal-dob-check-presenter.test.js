@@ -74,7 +74,7 @@ describe('personalDobCheckPresenter', () => {
       test('it should return userName as null', () => {
         const result = personalDobCheckPresenter(data)
 
-        expect(result.userName).toEqual(null)
+        expect(result.userName).toBeNull()
       })
     })
   })
@@ -96,7 +96,7 @@ describe('personalDobCheckPresenter', () => {
 
       const result = personalDobCheckPresenter(data)
 
-      expect(result.dateOfBirth).toEqual(null)
+      expect(result.dateOfBirth).toBeNull()
     })
   })
 })

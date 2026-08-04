@@ -53,6 +53,18 @@ describe('personalDobCheckPresenter', () => {
     })
   })
 
+  describe('when the year is not 4 digits', () => {
+    beforeEach(() => {
+      data.changePersonalDob = { day: '25', month: '06', year: '33' }
+    })
+
+    test('it does not interpret the year as 2033', () => {
+      const result = personalDobCheckPresenter(data)
+
+      expect(result.dateOfBirth).toEqual('25 June 33')
+    })
+  })
+
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {

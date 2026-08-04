@@ -86,6 +86,18 @@ describe('personalFixCheckPresenter', () => {
   })
 
   describe('the "dateOfBirth" property', () => {
+    describe('when the year is not 4 digits', () => {
+      beforeEach(() => {
+        personalDetails.changePersonalDob = { day: '5', month: '7', year: '33' }
+      })
+
+      test('it does not interpret the year as 2033', () => {
+        const result = personalFixCheckPresenter(personalDetails)
+
+        expect(result.dateOfBirth).toEqual('5 July 33')
+      })
+    })
+
     describe('when changePersonalDob is missing', () => {
       beforeEach(() => {
         delete personalDetails.changePersonalDob

@@ -8,7 +8,9 @@ import { presenters } from '@defra/fcp-sfd-frontend-engine'
 const personalDobCheckPresenter = (personalDetails) => {
   const { day, month, year } = personalDetails.changePersonalDob ?? personalDetails.info.dateOfBirth
   // new Date() needs the format YYYY-MM-DD with leading zeros e.g. '1990-04-05' not '1990-4-5'
-  const personalDob = new Date(`${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`)
+  const personalDob = new Date(
+    `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+  )
 
   return {
     backLink: { href: '/account-date-of-birth-change' },

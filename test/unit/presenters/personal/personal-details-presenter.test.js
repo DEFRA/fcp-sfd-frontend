@@ -276,6 +276,20 @@ describe('personalDetailsPresenter', () => {
         expect(result.dob.fullDateOfBirth).toEqual('1 January 2000')
       })
     })
+
+    describe('when dateOfBirth is in the future', () => {
+      test('it should return the text "Not added"', () => {
+        const futureDate = new Date()
+        futureDate.setFullYear(futureDate.getFullYear() + 1)
+        const yyyy = futureDate.getFullYear()
+        const mm = String(futureDate.getMonth() + 1).padStart(2, '0')
+        const dd = String(futureDate.getDate()).padStart(2, '0')
+        data.info.dateOfBirth.full = `${yyyy}-${mm}-${dd}`
+        const result = personalDetailsPresenter(data, yar)
+
+        expect(result.dob.fullDateOfBirth).toEqual('Not added')
+      })
+    })
   })
 
   describe('the "dob.action" property', () => {

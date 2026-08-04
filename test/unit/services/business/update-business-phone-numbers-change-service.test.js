@@ -49,7 +49,6 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   }
 }))
 
-const updateBusinessPhoneNumbersChangeService = await import('../../../../src/services/business/update-business-phone-numbers-change-service.js')
 
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar

@@ -5,7 +5,6 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updateBusinessPhoneNumbersMutation } from '../../../../src/dal/mutations/business/update-business-phone-numbers.js'
 
 // Test helpers
 import { getMappedData } from '../../../mocks/mock-business-details.js'
@@ -32,12 +31,14 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   },
   utils: {
     buildUpdateBusinessPhoneNumbersVariables: (businessTelephone, businessMobile, sbi) => {
-      input: {
-        phone: {
-          landline,
-            mobile
-        },
-        sbi
+      return {
+        input: {
+          phone: {
+            landline: businessTelephone,
+            mobile: businessMobile
+          },
+          sbi
+        }
       }
     }
   },

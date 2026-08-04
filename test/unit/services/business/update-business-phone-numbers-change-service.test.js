@@ -26,6 +26,30 @@ vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
   updateDalService: vi.fn().mockResolvedValue({})
 }))
 
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  mutations: {
+    updateBusinessPhoneNumbers: 'update-business-phone-numbers-mutation'
+  },
+  utils: {
+    buildUpdateBusinessPhoneNumbersVariables: (businessTelephone, businessMobile, sbi) => {
+      input: {
+        phone: {
+          landline,
+            mobile
+        },
+        sbi
+      }
+    }
+  },
+  constants: {
+    successMessages: {
+      BUSINESS_PHONE_NUMBERS: 'You have updated your business phone numbers'
+    }
+  }
+}))
+
+const updateBusinessPhoneNumbersChangeService = await import('../../../../src/services/business/update-business-phone-numbers-change-service.js')
+
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar
   let credentials
@@ -59,15 +83,17 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
     test('it calls updateDalService with correct mutation and variables', async () => {
       await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updateBusinessPhoneNumbersMutation, {
-        input: {
-          phone: {
-            landline: null,
-            mobile: null
-          },
-          sbi: data.info.sbi
-        }
-      }, credentials.sessionId)
+      expect(updateDalService).toHaveBeenCalledWith(
+        'update-business-phone-numbers-mutation',
+        {
+          input: {
+            phone: {
+              landline: null,
+              mobile: null
+            },
+            sbi: data.info.sbi
+          }
+        }, credentials.sessionId)
     })
 
     test('it clears the businessDetails from session', async () => {

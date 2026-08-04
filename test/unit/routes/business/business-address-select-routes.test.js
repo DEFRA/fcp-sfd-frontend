@@ -45,7 +45,7 @@ describe('business address select change', () => {
     }
 
     h = {
-      redirect: vi.fn(),
+      redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }),
       view: vi.fn(() => responseStub)
     }
   })
@@ -137,6 +137,19 @@ describe('business address select change', () => {
             }
           )
           expect(h.redirect).toHaveBeenCalledWith('/business-address-check')
+        })
+      })
+
+      describe('when the selected address is not found in session', () => {
+        beforeEach(() => {
+          request.payload.addresses = '9999999Non-existent Address'
+        })
+
+        test('it redirects back to the address select page', async () => {
+          await postBusinessAddressSelect.options.handler(request, h)
+
+          expect(setSessionData).not.toHaveBeenCalled()
+          expect(h.redirect).toHaveBeenCalledWith('/business-address-select')
         })
       })
     })

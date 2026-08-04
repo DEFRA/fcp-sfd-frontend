@@ -46,8 +46,15 @@ const postBusinessAddressSelect = {
       const businessDetails = await fetchBusinessChangeService(request.yar, request.auth.credentials, 'changeBusinessAddresses')
 
       const selectedAddress = businessDetails.changeBusinessAddresses.find((address) => {
+        // Concatenate UPRN and displayAddress to create a unique identifier.
+        // Multiple addresses can share the same UPRN (e.g., multiple units in a building),
+        // so UPRN alone is not unique. Using both properties ensures each address is truly distinct.
         return `${address.uprn}${address.displayAddress}` === request.payload.addresses
       })
+
+      if (!selectedAddress) {
+        return h.redirect('/business-address-select').takeover()
+      }
 
       selectedAddress.postcodeLookup = true
 

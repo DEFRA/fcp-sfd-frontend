@@ -14,6 +14,7 @@ import { router } from './router.js'
 import { pulse } from './pulse.js'
 import { session } from './session.js'
 import { sso } from './sso.js'
+import { requestContext } from './request-context.js'
 
 export const plugins = [
   Crumb,
@@ -31,5 +32,6 @@ export const plugins = [
   pulse,
   vision,
   router,
-  sso
+  sso,
+  requestContext
 ]

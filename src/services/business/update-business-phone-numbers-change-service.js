@@ -9,7 +9,7 @@
  * @module updateBusinessPhoneNumbersChangeService
  */
 
-import { updateBusinessPhoneNumbersMutation } from '../../dal/mutations/business/update-business-phone-numbers.js'
+import { mutations, utils, constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
@@ -21,21 +21,17 @@ const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
     return
   }
 
-  const variables = {
-    input: {
-      phone: {
-        landline: businessDetails.changeBusinessPhoneNumbers.businessTelephone ?? null,
-        mobile: businessDetails.changeBusinessPhoneNumbers.businessMobile ?? null
-      },
-      sbi: businessDetails.info.sbi
-    }
-  }
+  const variables = utils.buildUpdateBusinessPhoneNumbersVariables(
+    businessDetails.changeBusinessPhoneNumbers.businessTelephone,
+    businessDetails.changeBusinessPhoneNumbers.businessMobile,
+    businessDetails.info.sbi
+  )
 
-  await updateDalService(updateBusinessPhoneNumbersMutation, variables, credentials.sessionId)
+  await updateDalService(mutations.updateBusinessPhoneNumbers, variables, credentials.sessionId)
 
   yar.clear('businessDetailsUpdate')
 
-  flashNotification(yar, 'Success', 'You have updated your business phone numbers')
+  flashNotification(yar, 'Success', constants.successMessages.BUSINESS_PHONE_NUMBERS)
 }
 
 export {

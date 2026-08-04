@@ -5,7 +5,6 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updateBusinessPhoneNumbersMutation } from '../../../../src/dal/mutations/business/update-business-phone-numbers.js'
 
 // Test helpers
 import { getMappedData } from '../../../mocks/mock-business-details.js'
@@ -25,6 +24,31 @@ vi.mock('../../../../src/utils/notifications/flash-notification.js', () => ({
 vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
   updateDalService: vi.fn().mockResolvedValue({})
 }))
+
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  mutations: {
+    updateBusinessPhoneNumbers: 'update-business-phone-numbers-mutation'
+  },
+  utils: {
+    buildUpdateBusinessPhoneNumbersVariables: (businessTelephone, businessMobile, sbi) => {
+      return {
+        input: {
+          phone: {
+            landline: businessTelephone,
+            mobile: businessMobile
+          },
+          sbi
+        }
+      }
+    }
+  },
+  constants: {
+    successMessages: {
+      BUSINESS_PHONE_NUMBERS: 'You have updated your business phone numbers'
+    }
+  }
+}))
+
 
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar
@@ -59,15 +83,17 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
     test('it calls updateDalService with correct mutation and variables', async () => {
       await updateBusinessPhoneNumbersChangeService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updateBusinessPhoneNumbersMutation, {
-        input: {
-          phone: {
-            landline: null,
-            mobile: null
-          },
-          sbi: data.info.sbi
-        }
-      }, credentials.sessionId)
+      expect(updateDalService).toHaveBeenCalledWith(
+        'update-business-phone-numbers-mutation',
+        {
+          input: {
+            phone: {
+              landline: null,
+              mobile: null
+            },
+            sbi: data.info.sbi
+          }
+        }, credentials.sessionId)
     })
 
     test('it clears the businessDetails from session', async () => {

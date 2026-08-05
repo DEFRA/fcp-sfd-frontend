@@ -10,6 +10,7 @@ services:
         required: false
     environment:
       ALLOW_ERROR_VIEWS: false
+      AWS_EMF_ENVIRONMENT: Local
       DAL_ENDPOINT: http://fcp-dal-api:3005/graphql
       DEFRA_ID_WELL_KNOWN_URL: https://accounts.test.com/.well-known/openid-configuration
       DEFRA_ID_CLIENT_ID: test-client-id

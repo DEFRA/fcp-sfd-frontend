@@ -1,111 +1,21 @@
-import { vi, describe, test, expect, beforeEach } from 'vitest'
-
-const mockPutMetric = vi.fn()
-const mockFlush = vi.fn().mockResolvedValue(undefined)
-const mockLoggerError = vi.fn()
-
-vi.mock('aws-embedded-metrics', () => {
-  return {
-    createMetricsLogger: () => ({
-      putMetric: mockPutMetric,
-      flush: mockFlush
-    }),
-    Unit: {
-      Count: 'Count'
-    },
-    StorageResolution: {
-      Standard: 'Standard'
-    }
-  }
-})
+import { describe, test, expect, vi } from 'vitest'
+import { Metrics } from '@defra/cdp-metrics'
 
 vi.mock('../../../src/utils/logger.js', () => ({
-  createLogger: () => ({
-    error: (...args) => mockLoggerError(...args)
-  })
+  createLogger: () => ({ info: vi.fn(), warn: vi.fn(), error: vi.fn() })
 }))
 
-const { config } = await import('../../../src/config/index.js')
-const { metricsCounter } = await import('../../../src/utils/metrics.js')
-const { Unit, StorageResolution } = await import('aws-embedded-metrics')
+describe('metrics', () => {
+  test('exports a shared cdp-metrics instance', async () => {
+    const { metrics } = await import('../../../src/utils/metrics.js')
 
-const mockMetricsName = 'mock-metrics-name'
-const defaultMetricsValue = 1
-const mockValue = 200
-
-describe('#metrics', () => {
-  beforeEach(() => {
-    vi.clearAllMocks()
-    mockPutMetric.mockClear()
-    mockFlush.mockClear()
-    mockLoggerError.mockClear()
+    expect(metrics).toBeInstanceOf(Metrics)
   })
 
-  describe('When metrics is not enabled', () => {
-    beforeEach(async () => {
-      config.set('server.isMetricsEnabled', false)
-      await metricsCounter(mockMetricsName, mockValue)
-    })
+  test('exposes the counter and millis methods used by the DAL token service', async () => {
+    const { metrics } = await import('../../../src/utils/metrics.js')
 
-    test('Should not call metric', () => {
-      expect(mockPutMetric).not.toHaveBeenCalled()
-    })
-
-    test('Should not call flush', () => {
-      expect(mockFlush).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('When metrics is enabled', () => {
-    beforeEach(() => {
-      config.set('server.isMetricsEnabled', true)
-    })
-
-    test('Should send metric with default value', async () => {
-      await metricsCounter(mockMetricsName)
-
-      expect(mockPutMetric).toHaveBeenCalledWith(
-        mockMetricsName,
-        defaultMetricsValue,
-        Unit.Count,
-        StorageResolution.Standard
-      )
-    })
-
-    test('Should send metric', async () => {
-      await metricsCounter(mockMetricsName, mockValue)
-
-      expect(mockPutMetric).toHaveBeenCalledWith(
-        mockMetricsName,
-        mockValue,
-        Unit.Count,
-        StorageResolution.Standard
-      )
-    })
-
-    test('Should call flush', async () => {
-      await metricsCounter(mockMetricsName, mockValue)
-
-      expect(mockFlush).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('When metrics throws', () => {
-    const mockError = new Error('mock-metrics-put-error')
-
-    beforeEach(async () => {
-      config.set('server.isMetricsEnabled', true)
-
-      mockFlush.mockRejectedValue(mockError)
-
-      await metricsCounter(mockMetricsName, mockValue)
-    })
-
-    test('Should log expected error', () => {
-      expect(mockLoggerError).toHaveBeenCalledWith(
-        expect.any(Error),
-        mockError.message
-      )
-    })
+    expect(typeof metrics.counter).toBe('function')
+    expect(typeof metrics.millis).toBe('function')
   })
 })

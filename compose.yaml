@@ -13,6 +13,7 @@ services:
     environment:
       PORT: 3000
       NODE_ENV: development
+      AWS_EMF_ENVIRONMENT: ${AWS_EMF_ENVIRONMENT:-Local}
       ALLOW_ERROR_VIEWS: ${ALLOW_ERROR_VIEWS:-false}
       DAL_ENDPOINT: ${DAL_ENDPOINT:-http://fcp-dal-api:3005/graphql}
       DAL_TOKEN_ENDPOINT: https://login.microsoftonline.com/${DAL_TENANT_ID}/oauth2/v2.0/token

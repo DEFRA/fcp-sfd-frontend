@@ -98,5 +98,13 @@ describe('personalDobCheckPresenter', () => {
 
       expect(result.dateOfBirth).toBeNull()
     })
+
+    test('it returns null if date of birth on record is missing', () => {
+      delete data.info.dateOfBirth
+
+      const result = personalDobCheckPresenter(data)
+
+      expect(result.dateOfBirth).toBeNull()
+    })
   })
 })

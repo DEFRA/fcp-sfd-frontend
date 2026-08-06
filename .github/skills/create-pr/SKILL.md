@@ -149,7 +149,7 @@ Before touching origin or opening a PR, **stop and show the user** the generated
 1. Create and switch to the generated branch name
 2. Stage and commit changes with message: `<Description>` (title-cased, no ticket prefix — ever)
 3. Push branch to origin with `-u`
-4. Run `gh pr create --draft` with the generated title and description body
+4. Run `gh pr create --draft --assignee @me` with the generated title and description body. `@me` assigns the PR to whoever runs the skill.
 
 ## Rules
 

@@ -19,9 +19,22 @@ import { DAL_TOKEN, TOKEN_EXPIRY_BUFFER_MS } from '../../../constants/cache-keys
 import { retry } from './retry-service.js'
 import { config } from '../../../config/index.js'
 import { get, set } from '../../../utils/caching/index.js'
+import { createLogger } from '../../../utils/logger.js'
+import { metrics } from '../../../utils/metrics.js'
+
+const logger = createLogger()
 
 const getTokenService = async (cache) => {
-  return retry(() => getToken(cache))
+  // Timed around the whole retry loop so the backoff waits between attempts are
+  // included. This is the latency the caller actually experiences, and the figure
+  // needed to confirm whether retries are responsible for slow page loads
+  const startedAt = Date.now()
+
+  try {
+    return await retry(() => getToken(cache), cache)
+  } finally {
+    metrics.millis('dalTokenTotalTime', Date.now() - startedAt)
+  }
 }
 
 /**
@@ -32,14 +45,32 @@ const getToken = async (cache) => {
   const cachedToken = await get(DAL_TOKEN, cache)
 
   if (cachedToken) {
+    logger.info('#dal-token - cache hit')
+    metrics.counter('dalTokenCacheHit', 1)
     return cachedToken
   }
 
-  // No cached token, fetch a new one
-  const token = await getNewToken()
+  logger.info('#dal-token - cache miss, fetching new token from Azure AD')
+  metrics.counter('dalTokenCacheMiss', 1)
+
+  // Timed explicitly rather than with metrics.timer(), because that helper swallows
+  // errors thrown by the wrapped function and resolves to undefined, which would
+  // mask genuine token fetch failures from the retry logic
+  const startedAt = Date.now()
+  let token
+  let outcome = 'success'
+
+  try {
+    token = await getNewToken()
+  } catch (err) {
+    outcome = 'error'
+    throw err
+  } finally {
+    // Split by outcome so a fast failure does not skew the timings for genuine fetches
+    metrics.millis('dalTokenFetchTime', Date.now() - startedAt, { outcome })
+  }
 
   // Cache the token slightly less than the actual expiry to avoid using an expired token
-  // Here, 60 seconds is subtracted—adjust if your expires_in is in seconds
   await set(DAL_TOKEN, token.token, (token.expiresAt * 1000) - TOKEN_EXPIRY_BUFFER_MS, cache)
 
   return token.token

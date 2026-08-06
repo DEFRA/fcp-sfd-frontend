@@ -1,29 +1,12 @@
-import {
-  createMetricsLogger,
-  Unit,
-  StorageResolution
-} from 'aws-embedded-metrics'
+import { Metrics } from '@defra/cdp-metrics'
 
-import { config } from '../config/index.js'
 import { createLogger } from './logger.js'
 
-export const metricsCounter = async (metricName, value = 1) => {
-  const isMetricsEnabled = config.get('server.isMetricsEnabled')
-
-  if (!isMetricsEnabled) {
-    return
-  }
-
-  try {
-    const metricsLogger = createMetricsLogger()
-    metricsLogger.putMetric(
-      metricName,
-      value,
-      Unit.Count,
-      StorageResolution.Standard
-    )
-    await metricsLogger.flush()
-  } catch (error) {
-    createLogger().error(error, error.message)
-  }
-}
+/**
+ * Shared metrics instance for code that runs outside a Hapi request context,
+ * such as the DAL token service.
+ *
+ * Request-scoped code should prefer `request.metrics` or `server.metrics`,
+ * which the cdp-metrics plugin decorates onto the server.
+ */
+export const metrics = new Metrics(createLogger())

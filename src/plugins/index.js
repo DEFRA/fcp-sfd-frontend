@@ -2,6 +2,7 @@ import Crumb from '@hapi/crumb'
 import Bell from '@hapi/bell'
 import Cookie from '@hapi/cookie'
 import Scooter from '@hapi/scooter'
+import { metrics } from '@defra/cdp-metrics'
 import { csp } from './content-security-policy.js'
 import { errors } from './errors.js'
 import { headersPlugin } from './headers.js'
@@ -29,6 +30,7 @@ export const plugins = [
   requestLogger,
   requestTracing,
   secureContext,
+  metrics,
   pulse,
   vision,
   router,

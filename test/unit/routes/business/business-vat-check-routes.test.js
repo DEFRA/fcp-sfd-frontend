@@ -107,7 +107,8 @@ const getMockData = () => {
     },
     customer: {
       userName: 'Alfred Waldron'
-    }
+    },
+    changeBusinessVat: 'GB123456789'
   }
 }
 

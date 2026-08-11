@@ -3,20 +3,18 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessAddressSelectPresenter } from '../../presenters/business/business-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessAddressSelect = {
   method: 'GET',
   path: '/business-address-select',
   options: {
-    auth: { scope: AMEND_PERMISSIONS }
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkSessionDataGuard(['changeBusinessPostcode', 'changeBusinessAddresses'], '/business-details', 'businessDetailsUpdate')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, ['changeBusinessPostcode', 'changeBusinessAddresses', 'changeBusinessAddress'])
-
-    if (!businessDetails.changeBusinessPostcode || !businessDetails.changeBusinessAddresses) {
-      return h.redirect('/business-details')
-    }
 
     const pageData = businessAddressSelectPresenter(businessDetails)
 

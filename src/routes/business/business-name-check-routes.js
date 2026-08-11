@@ -2,16 +2,19 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { updateBusinessNameChangeService } from '../../services/business/update-business-name-change-service.js'
 import { businessNameCheckPresenter } from '../../presenters/business/business-name-check-presenter.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessNameCheck = {
   method: 'GET',
   path: '/business-name-check',
   options: {
-    auth: { scope: FULL_PERMISSIONS }
+    auth: { scope: FULL_PERMISSIONS },
+    pre: [checkSessionDataGuard('changeBusinessName', '/business-details', 'businessDetailsUpdate')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
+
     const pageData = businessNameCheckPresenter(businessDetails)
 
     return h.view('business/business-name-check', pageData)

@@ -129,6 +129,12 @@ const getMockData = () => {
     },
     customer: {
       userName: 'Alfred Waldron'
+    },
+    changeBusinessAddress: {
+      address1: '10 Skirbeck Way',
+      city: 'Maidstone',
+      postcode: 'SK22 1DL',
+      country: 'United Kingdom'
     }
   }
 }

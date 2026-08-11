@@ -1,13 +1,18 @@
 import { personalDobCheckPresenter } from '../../presenters/personal/personal-dob-check-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalDobChangeService } from '../../services/personal/update-personal-dob-change-service.js'
+import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalDobCheck = {
   method: 'GET',
   path: '/account-date-of-birth-check',
+  options: {
+    pre: [checkSessionDataGuard('changePersonalDob', '/personal-details', 'personalDetailsUpdate')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
+
     const pageData = personalDobCheckPresenter(personalDetails)
 
     return h.view('personal/personal-dob-check', pageData)

@@ -3,13 +3,14 @@ import { utils, constants, schemas } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { personalAddressSelectPresenter } from '../../presenters/personal/personal-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
 import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalAddressSelect = {
   method: 'GET',
   path: '/account-address-select',
   options: {
-    pre: [checkSessionDataGuard(['changePersonalPostcode', 'changePersonalAddresses'], '/personal-details', 'personalDetailsUpdate')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, ['changePersonalPostcode', 'changePersonalAddresses'])]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

@@ -3,6 +3,7 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessAddressSelectPresenter } from '../../presenters/business/business-address-select-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
 import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessAddressSelect = {
@@ -10,7 +11,7 @@ const getBusinessAddressSelect = {
   path: '/business-address-select',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard(['changeBusinessPostcode', 'changeBusinessAddresses'], '/business-details', 'businessDetailsUpdate')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

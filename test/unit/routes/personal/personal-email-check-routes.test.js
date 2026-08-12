@@ -153,8 +153,7 @@ const getMockData = () => {
     },
     contact: {
       email: 'test@example.com'
-    },
-    changePersonalEmail: 'test@example.com'
+    }
   }
 }
 

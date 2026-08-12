@@ -152,7 +152,6 @@ const getMockData = () => {
         last: 'Doe'
       }
     },
-
     changePersonalDob: {
       day: '7',
       month: '11',

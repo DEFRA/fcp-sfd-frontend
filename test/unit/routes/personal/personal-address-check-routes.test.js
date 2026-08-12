@@ -173,12 +173,6 @@ const getMockData = () => {
       city: 'Maidstone',
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
-    },
-    changePersonalAddress: {
-      address1: '10 Skirbeck Way',
-      city: 'Maidstone',
-      postcode: 'SK22 1DL',
-      country: 'United Kingdom'
     }
   }
 }

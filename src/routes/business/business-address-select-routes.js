@@ -28,6 +28,7 @@ const postBusinessAddressSelect = {
   path: '/business-address-select',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])],
     validate: {
       payload: schemas.osPlaces.addresses,
       options: { abortEarly: false },

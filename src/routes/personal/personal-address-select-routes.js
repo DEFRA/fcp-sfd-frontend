@@ -26,6 +26,7 @@ const postPersonalAddressSelect = {
   method: 'POST',
   path: '/account-address-select',
   options: {
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, ['changePersonalPostcode', 'changePersonalAddresses'])],
     validate: {
       payload: schemas.osPlaces.addresses,
       options: { abortEarly: false },

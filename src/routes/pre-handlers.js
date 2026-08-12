@@ -37,8 +37,9 @@ export const checkSessionDataGuard = (fieldName, redirectPath, sessionKey) => {
       // Get the session data
       const sessionData = yar.get(sessionKey) || {}
 
-      // Check if all required fields exist
-      const allFieldsPresent = fieldNames.every(field => sessionData[field])
+      // Check if all required fields exist (not undefined/null)
+      // Allows falsy values like false, 0, '' which are valid session data
+      const allFieldsPresent = fieldNames.every(field => sessionData[field] != null)
 
       if (!allFieldsPresent) {
         // Return redirect directly - bypasses the route handler

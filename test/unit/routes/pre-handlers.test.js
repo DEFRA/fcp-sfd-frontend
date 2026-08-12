@@ -73,6 +73,41 @@ describe('pre-handlers', () => {
           expect(takeoverMock).toHaveBeenCalled()
         })
       })
+
+      describe('and the field has a falsy value (but is present)', () => {
+        test('it should allow the request to continue when value is false', async () => {
+          request.yar.get.mockReturnValue({
+            changePersonalChoice: false
+          })
+          const guard = checkSessionDataGuard('changePersonalChoice', '/personal-details', 'personalDetailsUpdate')
+          const result = await guard.method(request, h)
+
+          expect(result).toBe(h.continue)
+          expect(h.redirect).not.toHaveBeenCalled()
+        })
+
+        test('it should allow the request to continue when value is 0', async () => {
+          request.yar.get.mockReturnValue({
+            changePersonalNumber: 0
+          })
+          const guard = checkSessionDataGuard('changePersonalNumber', '/personal-details', 'personalDetailsUpdate')
+          const result = await guard.method(request, h)
+
+          expect(result).toBe(h.continue)
+          expect(h.redirect).not.toHaveBeenCalled()
+        })
+
+        test('it should allow the request to continue when value is empty string', async () => {
+          request.yar.get.mockReturnValue({
+            changePersonalText: ''
+          })
+          const guard = checkSessionDataGuard('changePersonalText', '/personal-details', 'personalDetailsUpdate')
+          const result = await guard.method(request, h)
+
+          expect(result).toBe(h.continue)
+          expect(h.redirect).not.toHaveBeenCalled()
+        })
+      })
     })
 
     describe('when checking multiple fields', () => {

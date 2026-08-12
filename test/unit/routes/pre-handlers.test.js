@@ -139,9 +139,9 @@ describe('pre-handlers', () => {
 
       describe('and some fields are missing from session', () => {
         beforeEach(() => {
+          // changeBusinessAddresses is missing
           request.yar.get.mockReturnValue({
             changeBusinessPostcode: { postcode: 'SW1A 1AA' }
-            // changeBusinessAddresses is missing
           })
         })
 

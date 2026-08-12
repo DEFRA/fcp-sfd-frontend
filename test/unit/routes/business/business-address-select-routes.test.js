@@ -62,6 +62,107 @@ describe('business address select change', () => {
         expect(getBusinessAddressSelect.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getBusinessAddressSelect.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should have the pre-handler defined', () => {
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          expect(preHandler).toBeDefined()
+          expect(preHandler.method).toBeDefined()
+        })
+
+        test('should redirect to /business-details when session data is missing', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+          expect(takeoverFn).toHaveBeenCalled()
+        })
+
+        test('should redirect when only first required field is missing', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessAddresses: [] }) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+        })
+
+        test('should redirect when only second required field is missing', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessPostcode: 'SW1A 1AA' }) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+        })
+
+        test('should check the correct session key (businessDetailsUpdate)', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const h = { redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }) }
+
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(sessionRequest.yar.get).toHaveBeenCalledWith('businessDetailsUpdate')
+        })
+
+        test('should allow access when all required fields exist', async () => {
+          const sessionRequest = {
+            yar: {
+              get: vi.fn().mockReturnValue({
+                changeBusinessPostcode: 'SW1A 1AA',
+                changeBusinessAddresses: [{ uprn: '1001', displayAddress: '10 Downing Street' }]
+              })
+            }
+          }
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {})
+
+          expect(preResponse).toBe(true)
+        })
+
+        test('should allow access even when fields are empty arrays/objects', async () => {
+          const sessionRequest = {
+            yar: {
+              get: vi.fn().mockReturnValue({
+                changeBusinessPostcode: '',
+                changeBusinessAddresses: []
+              })
+            }
+          }
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {})
+
+          expect(preResponse).toBe(true)
+        })
+
+        test('should redirect when session data is null', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = getBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+        })
+      })
+
       test('it calls fetchBusinessChangeService', async () => {
         await getBusinessAddressSelect.handler(request, h)
 
@@ -76,32 +177,6 @@ describe('business address select change', () => {
         await getBusinessAddressSelect.handler(request, h)
 
         expect(h.view).toHaveBeenCalledWith('business/business-address-select', getPageData())
-      })
-    })
-
-    describe('when the postcode has not been set in session', () => {
-      beforeEach(() => {
-        fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessPostcode: undefined })
-      })
-
-      test('it redirects to /business-details', async () => {
-        await getBusinessAddressSelect.handler(request, h)
-
-        expect(h.redirect).toHaveBeenCalledWith('/business-details')
-        expect(h.view).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('when the addresses have not been set in session', () => {
-      beforeEach(() => {
-        fetchBusinessChangeService.mockResolvedValue({ ...getMockData(), changeBusinessAddresses: undefined })
-      })
-
-      test('it redirects to /business-details', async () => {
-        await getBusinessAddressSelect.handler(request, h)
-
-        expect(h.redirect).toHaveBeenCalledWith('/business-details')
-        expect(h.view).not.toHaveBeenCalled()
       })
     })
   })
@@ -120,6 +195,68 @@ describe('business address select change', () => {
         expect(postBusinessAddressSelect.method).toBe('POST')
         expect(postBusinessAddressSelect.path).toBe('/business-address-select')
         expect(postBusinessAddressSelect.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postBusinessAddressSelect.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should have the pre-handler defined', () => {
+          const preHandler = postBusinessAddressSelect.options.pre[0]
+          expect(preHandler).toBeDefined()
+          expect(preHandler.method).toBeDefined()
+        })
+
+        test('should redirect to /business-details when session data is missing', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = postBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+          expect(takeoverFn).toHaveBeenCalled()
+        })
+
+        test('should check the correct session key (businessDetailsUpdate)', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const h = { redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }) }
+
+          const preHandler = postBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(sessionRequest.yar.get).toHaveBeenCalledWith('businessDetailsUpdate')
+        })
+
+        test('should allow access when all required fields exist', async () => {
+          const sessionRequest = {
+            yar: {
+              get: vi.fn().mockReturnValue({
+                changeBusinessPostcode: 'SW1A 1AA',
+                changeBusinessAddresses: [{ uprn: '1001', displayAddress: '10 Downing Street' }]
+              })
+            }
+          }
+          const preHandler = postBusinessAddressSelect.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {})
+
+          expect(preResponse).toBe(true)
+        })
+
+        test('should redirect when session data is null', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = postBusinessAddressSelect.options.pre[0]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+        })
       })
 
       describe('and the validation passes', () => {

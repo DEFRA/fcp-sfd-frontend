@@ -50,6 +50,31 @@ describe('personal dob check', () => {
         expect(getPersonalDobCheck.path).toBe('/account-date-of-birth-check')
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getPersonalDobCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = getPersonalDobCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalDob: { day: '15', month: '06', year: '1990' } }) } }
+          const preHandler = getPersonalDobCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches the data from the session', async () => {
         await getPersonalDobCheck.handler(request, h)
 
@@ -77,6 +102,31 @@ describe('personal dob check', () => {
         expect(postPersonalDobCheck.path).toBe('/account-date-of-birth-check')
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postPersonalDobCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = postPersonalDobCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalDob: { day: '15', month: '06', year: '1990' } }) } }
+          const preHandler = postPersonalDobCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it redirects to the /personal-details page', async () => {
         await postPersonalDobCheck.handler(request, h)
 
@@ -102,7 +152,6 @@ const getMockData = () => {
         last: 'Doe'
       }
     },
-
     changePersonalDob: {
       day: '7',
       month: '11',

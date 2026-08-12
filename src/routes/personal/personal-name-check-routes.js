@@ -1,13 +1,19 @@
 import { personalNameCheckPresenter } from '../../presenters/personal/personal-name-check-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalNameChangeService } from '../../services/personal/update-personal-name-change-service.js'
+import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
+import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalNameCheck = {
   method: 'GET',
   path: '/account-name-check',
+  options: {
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalName')
+
     const pageData = personalNameCheckPresenter(personalDetails)
 
     return h.view('personal/personal-name-check', pageData)
@@ -17,6 +23,9 @@ const getPersonalNameCheck = {
 const postPersonalNameCheck = {
   method: 'POST',
   path: '/account-name-check',
+  options: {
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     await updatePersonalNameChangeService(yar, auth.credentials)

@@ -50,6 +50,31 @@ describe('personal name check', () => {
         expect(getPersonalNameCheck.path).toBe('/account-name-check')
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getPersonalNameCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = getPersonalNameCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalName: { firstName: 'John', surname: 'Doe' } }) } }
+          const preHandler = getPersonalNameCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches the data from the session', async () => {
         await getPersonalNameCheck.handler(request, h)
 
@@ -74,6 +99,31 @@ describe('personal name check', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalNameCheck.method).toBe('POST')
         expect(postPersonalNameCheck.path).toBe('/account-name-check')
+      })
+
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postPersonalNameCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = postPersonalNameCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalName: { firstName: 'John', surname: 'Doe' } }) } }
+          const preHandler = postPersonalNameCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /personal-details page', async () => {

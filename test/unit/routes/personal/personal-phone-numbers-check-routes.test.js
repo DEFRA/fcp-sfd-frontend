@@ -50,6 +50,31 @@ describe('personal phone numbers check', () => {
         expect(getPersonalPhoneNumbersCheck.path).toBe('/account-phone-numbers-check')
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getPersonalPhoneNumbersCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = getPersonalPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalPhoneNumbers: { landline: '01234567890' } }) } }
+          const preHandler = getPersonalPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches the data from the session', async () => {
         await getPersonalPhoneNumbersCheck.handler(request, h)
 
@@ -75,6 +100,31 @@ describe('personal phone numbers check', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalPhoneNumbersCheck.method).toBe('POST')
         expect(postPersonalPhoneNumbersCheck.path).toBe('/account-phone-numbers-check')
+      })
+
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postPersonalPhoneNumbersCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = postPersonalPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalPhoneNumbers: { landline: '01234567890' } }) } }
+          const preHandler = postPersonalPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /personal-details page', async () => {

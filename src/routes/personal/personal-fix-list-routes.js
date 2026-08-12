@@ -4,13 +4,14 @@ import { setPersonalFixSessionDataService } from '../../services/personal/set-pe
 import { personalFixListPresenter } from '../../presenters/personal/personal-fix-list-presenter.js'
 import { validateFixDetailsService } from '../../services/validate-fix-details-service.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
-import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
+import { PERSONAL_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
+import { checkInterruptedJourneyPreHandler } from '../pre-handlers.js'
 
 const getPersonalFixList = {
   method: 'GET',
   path: '/personal-fix-list',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+    pre: [checkInterruptedJourneyPreHandler(PERSONAL_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +28,7 @@ const postPersonalFixList = {
   method: 'POST',
   path: '/personal-fix-list',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+    pre: [checkInterruptedJourneyPreHandler(PERSONAL_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth, payload } = request

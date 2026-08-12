@@ -3,6 +3,10 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things under test
 import { checkSessionDataGuard } from '../../../src/routes/pre-handlers.js'
+import {
+  PERSONAL_JOURNEY,
+  BUSINESS_JOURNEY
+} from '../../../src/constants/journeys.js'
 
 describe('pre-handlers', () => {
   let h
@@ -13,8 +17,7 @@ describe('pre-handlers', () => {
 
     takeoverMock = vi.fn().mockReturnValue({})
     h = {
-      redirect: vi.fn().mockReturnValue({ takeover: takeoverMock }),
-      continue: {}
+      redirect: vi.fn().mockReturnValue({ takeover: takeoverMock })
     }
   })
 
@@ -38,10 +41,10 @@ describe('pre-handlers', () => {
         })
 
         test('it should allow the request to continue', async () => {
-          const guard = checkSessionDataGuard('changePersonalDob', '/personal-details', 'personalDetailsUpdate')
+          const guard = checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')
           const result = await guard.method(request, h)
 
-          expect(result).toBe(h.continue)
+          expect(result).toBe(true)
           expect(h.redirect).not.toHaveBeenCalled()
         })
       })
@@ -52,10 +55,10 @@ describe('pre-handlers', () => {
         })
 
         test('it should redirect to the specified path', async () => {
-          const guard = checkSessionDataGuard('changePersonalDob', '/personal-details', 'personalDetailsUpdate')
+          const guard = checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')
           await guard.method(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+          expect(h.redirect).toHaveBeenCalledWith(PERSONAL_JOURNEY.redirectPath)
           expect(takeoverMock).toHaveBeenCalled()
         })
       })
@@ -66,10 +69,10 @@ describe('pre-handlers', () => {
         })
 
         test('it should redirect to the specified path', async () => {
-          const guard = checkSessionDataGuard('changePersonalDob', '/personal-details', 'personalDetailsUpdate')
+          const guard = checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')
           await guard.method(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+          expect(h.redirect).toHaveBeenCalledWith(PERSONAL_JOURNEY.redirectPath)
           expect(takeoverMock).toHaveBeenCalled()
         })
       })
@@ -79,10 +82,11 @@ describe('pre-handlers', () => {
           request.yar.get.mockReturnValue({
             changePersonalChoice: false
           })
-          const guard = checkSessionDataGuard('changePersonalChoice', '/personal-details', 'personalDetailsUpdate')
+          const journey = { sessionKey: 'personalDetailsUpdate', redirectPath: '/personal-details' }
+          const guard = checkSessionDataGuard(journey, 'changePersonalChoice')
           const result = await guard.method(request, h)
 
-          expect(result).toBe(h.continue)
+          expect(result).toBe(true)
           expect(h.redirect).not.toHaveBeenCalled()
         })
 
@@ -90,10 +94,11 @@ describe('pre-handlers', () => {
           request.yar.get.mockReturnValue({
             changePersonalNumber: 0
           })
-          const guard = checkSessionDataGuard('changePersonalNumber', '/personal-details', 'personalDetailsUpdate')
+          const journey = { sessionKey: 'personalDetailsUpdate', redirectPath: '/personal-details' }
+          const guard = checkSessionDataGuard(journey, 'changePersonalNumber')
           const result = await guard.method(request, h)
 
-          expect(result).toBe(h.continue)
+          expect(result).toBe(true)
           expect(h.redirect).not.toHaveBeenCalled()
         })
 
@@ -101,10 +106,11 @@ describe('pre-handlers', () => {
           request.yar.get.mockReturnValue({
             changePersonalText: ''
           })
-          const guard = checkSessionDataGuard('changePersonalText', '/personal-details', 'personalDetailsUpdate')
+          const journey = { sessionKey: 'personalDetailsUpdate', redirectPath: '/personal-details' }
+          const guard = checkSessionDataGuard(journey, 'changePersonalText')
           const result = await guard.method(request, h)
 
-          expect(result).toBe(h.continue)
+          expect(result).toBe(true)
           expect(h.redirect).not.toHaveBeenCalled()
         })
       })
@@ -121,13 +127,12 @@ describe('pre-handlers', () => {
 
         test('it should allow the request to continue', async () => {
           const guard = checkSessionDataGuard(
-            ['changeBusinessPostcode', 'changeBusinessAddresses'],
-            '/business-details',
-            'businessDetailsUpdate'
+            BUSINESS_JOURNEY,
+            ['changeBusinessPostcode', 'changeBusinessAddresses']
           )
           const result = await guard.method(request, h)
 
-          expect(result).toBe(h.continue)
+          expect(result).toBe(true)
           expect(h.redirect).not.toHaveBeenCalled()
         })
       })
@@ -142,13 +147,12 @@ describe('pre-handlers', () => {
 
         test('it should redirect to the specified path', async () => {
           const guard = checkSessionDataGuard(
-            ['changeBusinessPostcode', 'changeBusinessAddresses'],
-            '/business-details',
-            'businessDetailsUpdate'
+            BUSINESS_JOURNEY,
+            ['changeBusinessPostcode', 'changeBusinessAddresses']
           )
           await guard.method(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(h.redirect).toHaveBeenCalledWith(BUSINESS_JOURNEY.redirectPath)
           expect(takeoverMock).toHaveBeenCalled()
         })
       })
@@ -160,13 +164,12 @@ describe('pre-handlers', () => {
 
         test('it should redirect to the specified path', async () => {
           const guard = checkSessionDataGuard(
-            ['changeBusinessPostcode', 'changeBusinessAddresses'],
-            '/business-details',
-            'businessDetailsUpdate'
+            BUSINESS_JOURNEY,
+            ['changeBusinessPostcode', 'changeBusinessAddresses']
           )
           await guard.method(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(h.redirect).toHaveBeenCalledWith(BUSINESS_JOURNEY.redirectPath)
           expect(takeoverMock).toHaveBeenCalled()
         })
       })
@@ -178,17 +181,17 @@ describe('pre-handlers', () => {
       })
 
       test('it should look up the correct session key', async () => {
-        const guard = checkSessionDataGuard('changePersonalEmail', '/personal-details', 'personalDetailsUpdate')
+        const guard = checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')
         await guard.method(request, h)
 
-        expect(request.yar.get).toHaveBeenCalledWith('personalDetailsUpdate')
+        expect(request.yar.get).toHaveBeenCalledWith(PERSONAL_JOURNEY.sessionKey)
       })
 
       test('it should redirect if the correct session key has no data', async () => {
-        const guard = checkSessionDataGuard('changeBusinessName', '/business-details', 'businessDetailsUpdate')
+        const guard = checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')
         await guard.method(request, h)
 
-        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(h.redirect).toHaveBeenCalledWith(BUSINESS_JOURNEY.redirectPath)
       })
     })
 
@@ -198,15 +201,15 @@ describe('pre-handlers', () => {
       })
 
       test('it should call redirect with the correct path', async () => {
-        const redirectPath = '/account-details'
-        const guard = checkSessionDataGuard('changePersonalPhone', redirectPath, 'personalDetailsUpdate')
+        const customJourney = { sessionKey: 'personalDetailsUpdate', redirectPath: '/account-details' }
+        const guard = checkSessionDataGuard(customJourney, 'changePersonalPhone')
         await guard.method(request, h)
 
-        expect(h.redirect).toHaveBeenCalledWith(redirectPath)
+        expect(h.redirect).toHaveBeenCalledWith(customJourney.redirectPath)
       })
 
       test('it should call takeover on the redirect response', async () => {
-        const guard = checkSessionDataGuard('changeBusinessVat', '/business-details', 'businessDetailsUpdate')
+        const guard = checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')
         await guard.method(request, h)
 
         expect(takeoverMock).toHaveBeenCalled()

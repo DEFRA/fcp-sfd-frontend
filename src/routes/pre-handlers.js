@@ -1,41 +1,39 @@
 /**
+ * Hapi pre-handlers for session data and journey validation guards.
+ * Redirects to the specified path if required session data is missing or invalid.
+ */
+
+import { checkInterruptedJourneySessionService } from '../services/check-interrupter-journey-session-service.js'
+
+/**
  * Creates a pre-handler that validates required session data exists before allowing access to a route.
- * If the required field is missing from session, redirects to the appropriate details page.
+ * Used to guard change/check journeys where the user must have completed a prior step.
  *
+ * @param {Object} journey - Journey configuration object with sessionKey and redirectPath properties
  * @param {string|string[]} fieldName - The session field name(s) to check (e.g., 'changePersonalDob' or ['changeBusinessPostcode', 'changeBusinessAddresses'])
- * @param {string} redirectPath - The path to redirect to if data is missing (e.g., '/personal-details')
- * @param {string} sessionKey - The session object key to check (e.g., 'businessDetailsUpdate' or 'personalDetailsUpdate')
  * @returns {Object} Hapi pre-handler object
  *
  * @example
- * // Single field check
- * const checkDob = checkSessionDataGuard(
- *   'changePersonalDob',
- *   '/personal-details',
- *   'personalDetailsUpdate'
- * )
+ * import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
+ * import { checkSessionDataGuard } from '../pre-handlers.js'
  *
- * // Multiple field check
- * const checkAddress = checkSessionDataGuard(
- *   ['changeBusinessPostcode', 'changeBusinessAddresses'],
- *   '/business-details',
- *   'businessDetailsUpdate'
- * )
- *
- * // Usage in route options:
- * options: {
- *   pre: [checkAddress],
+ * const getDobCheck = {
+ *   method: 'GET',
+ *   path: '/account-date-of-birth-check',
+ *   options: {
+ *     pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')]
+ *   },
  *   handler: async (request, h) => { ... }
  * }
  */
-export const checkSessionDataGuard = (fieldName, redirectPath, sessionKey) => {
+export const checkSessionDataGuard = (journey, fieldName) => {
   return {
     method: async (request, h) => {
       const { yar } = request
       const fieldNames = Array.isArray(fieldName) ? fieldName : [fieldName]
 
       // Get the session data
-      const sessionData = yar.get(sessionKey) || {}
+      const sessionData = yar.get(journey.sessionKey) || {}
 
       // Check if all required fields exist (not undefined/null)
       // Allows falsy values like false, 0, '' which are valid session data
@@ -43,11 +41,48 @@ export const checkSessionDataGuard = (fieldName, redirectPath, sessionKey) => {
 
       if (!allFieldsPresent) {
         // Return redirect directly - bypasses the route handler
-        return h.redirect(redirectPath).takeover()
+        return h.redirect(journey.redirectPath).takeover()
       }
 
       // Continue to the route handler
-      return h.continue
+      return true
+    }
+  }
+}
+
+/**
+ * Creates a Hapi pre-handler that checks the interrupted journey session.
+ * Redirects to the given path if the session is invalid.
+ * Used to guard fix/interrupter journey routes.
+ *
+ * @param {Object} journey - Journey configuration object with journeyKey and redirectPath properties
+ * @returns {Object} Hapi pre-handler object
+ *
+ * @example
+ * import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
+ * import { checkInterruptedJourneyPreHandler } from '../pre-handlers.js'
+ *
+ * const getFixCheck = {
+ *   method: 'GET',
+ *   path: '/business-fix-check',
+ *   options: {
+ *     pre: [checkInterruptedJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+ *   },
+ *   handler: async (request, h) => { ... }
+ * }
+ */
+export const checkInterruptedJourneyPreHandler = (journey) => {
+  return {
+    method: (request, h) => {
+      const { yar } = request
+
+      const isValid = checkInterruptedJourneySessionService(yar, journey.journeyKey)
+
+      if (!isValid) {
+        return h.redirect(journey.redirectPath).takeover()
+      }
+
+      return true
     }
   }
 }

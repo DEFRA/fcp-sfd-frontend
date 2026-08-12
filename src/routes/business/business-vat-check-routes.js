@@ -2,6 +2,7 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { updateBusinessVatChangeService } from '../../services/business/update-business-vat-change-service.js'
 import { businessVatCheckPresenter } from '../../presenters/business/business-vat-check-presenter.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
 import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessVatCheck = {
@@ -9,7 +10,7 @@ const getBusinessVatCheck = {
   path: '/business-vat-registration-number-check',
   options: {
     auth: { scope: FULL_PERMISSIONS },
-    pre: [checkSessionDataGuard('changeBusinessVat', '/business-details', 'businessDetailsUpdate')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessVat')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -25,7 +26,8 @@ const postBusinessVatCheck = {
   method: 'POST',
   path: '/business-vat-registration-number-check',
   options: {
-    auth: { scope: FULL_PERMISSIONS }
+    auth: { scope: FULL_PERMISSIONS },
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessVat')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

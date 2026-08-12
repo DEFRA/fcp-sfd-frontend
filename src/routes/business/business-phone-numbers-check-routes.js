@@ -2,6 +2,7 @@ import { businessPhoneNumbersCheckPresenter } from '../../presenters/business/bu
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { updateBusinessPhoneNumbersChangeService } from '../../services/business/update-business-phone-numbers-change-service.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
 import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessPhoneNumbersCheck = {
@@ -9,7 +10,7 @@ const getBusinessPhoneNumbersCheck = {
   path: '/business-phone-numbers-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard('changeBusinessPhoneNumbers', '/business-details', 'businessDetailsUpdate')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessPhoneNumbers')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -25,7 +26,8 @@ const postBusinessPhoneNumbersCheck = {
   method: 'POST',
   path: '/business-phone-numbers-check',
   options: {
-    auth: { scope: AMEND_PERMISSIONS }
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessPhoneNumbers')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

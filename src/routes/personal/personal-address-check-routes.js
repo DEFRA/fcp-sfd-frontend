@@ -1,13 +1,14 @@
 import { personalAddressCheckPresenter } from '../../presenters/personal/personal-address-check-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalAddressChangeService } from '../../services/personal/update-personal-address-change-service.js'
+import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
 import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalAddressCheck = {
   method: 'GET',
   path: '/account-address-check',
   options: {
-    pre: [checkSessionDataGuard('changePersonalAddress', '/personal-details', 'personalDetailsUpdate')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalAddress')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -22,6 +23,9 @@ const getPersonalAddressCheck = {
 const postPersonalAddressCheck = {
   method: 'POST',
   path: '/account-address-check',
+  options: {
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalAddress')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     await updatePersonalAddressChangeService(yar, auth.credentials)

@@ -55,6 +55,31 @@ describe('business phone numbers check', () => {
         expect(getBusinessPhoneNumbersCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getBusinessPhoneNumbersCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = getBusinessPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessPhoneNumbers: { landline: '01234567890' } }) } }
+          const preHandler = getBusinessPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches the data from the session', async () => {
         await getBusinessPhoneNumbersCheck.handler(request, h)
 
@@ -81,6 +106,31 @@ describe('business phone numbers check', () => {
         expect(postBusinessPhoneNumbersCheck.method).toBe('POST')
         expect(postBusinessPhoneNumbersCheck.path).toBe('/business-phone-numbers-check')
         expect(postBusinessPhoneNumbersCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postBusinessPhoneNumbersCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = postBusinessPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessPhoneNumbers: { landline: '01234567890' } }) } }
+          const preHandler = postBusinessPhoneNumbersCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /business-details page', async () => {

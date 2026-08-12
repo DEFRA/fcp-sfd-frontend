@@ -50,6 +50,31 @@ describe('personal address check', () => {
         expect(getPersonalAddressCheck.path).toBe('/account-address-check')
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getPersonalAddressCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = getPersonalAddressCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalAddress: { postcode: 'SW1A 1AA' } }) } }
+          const preHandler = getPersonalAddressCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches the data from the session', async () => {
         await getPersonalAddressCheck.handler(request, h)
 
@@ -75,6 +100,31 @@ describe('personal address check', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalAddressCheck.method).toBe('POST')
         expect(postPersonalAddressCheck.path).toBe('/account-address-check')
+      })
+
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postPersonalAddressCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = postPersonalAddressCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalAddress: { postcode: 'SW1A 1AA' } }) } }
+          const preHandler = postPersonalAddressCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /personal-details page', async () => {

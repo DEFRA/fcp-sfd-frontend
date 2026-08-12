@@ -55,6 +55,31 @@ describe('business email check', () => {
         expect(getBusinessEmailCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getBusinessEmailCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = getBusinessEmailCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessEmail: 'test@example.com' }) } }
+          const preHandler = getBusinessEmailCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches the data from the session', async () => {
         await getBusinessEmailCheck.handler(request, h)
 
@@ -81,6 +106,31 @@ describe('business email check', () => {
         expect(postBusinessEmailCheck.method).toBe('POST')
         expect(postBusinessEmailCheck.path).toBe('/business-email-check')
         expect(postBusinessEmailCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postBusinessEmailCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = postBusinessEmailCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessEmail: 'test@example.com' }) } }
+          const preHandler = postBusinessEmailCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /business-details page', async () => {

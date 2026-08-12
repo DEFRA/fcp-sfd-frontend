@@ -55,6 +55,31 @@ describe('business VAT check', () => {
         expect(getBusinessVatCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getBusinessVatCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = getBusinessVatCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessVat: '123456789' }) } }
+          const preHandler = getBusinessVatCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches the data from the session', async () => {
         await getBusinessVatCheck.handler(request, h)
 
@@ -81,6 +106,31 @@ describe('business VAT check', () => {
         expect(postBusinessVatCheck.method).toBe('POST')
         expect(postBusinessVatCheck.path).toBe('/business-vat-registration-number-check')
         expect(postBusinessVatCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+      })
+
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postBusinessVatCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const redirectStub = {}
+          const preHandler = postBusinessVatCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when required session field exists', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessVat: '123456789' }) } }
+          const preHandler = postBusinessVatCheck.options.pre[0]
+          const preResponse = await preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /business-details page', async () => {

@@ -1,15 +1,14 @@
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { businessFixCheckPresenter } from '../../presenters/business/business-fix-check-presenter.js'
 import { updateBusinessFixService } from '../../services/business/update-business-fix-service.js'
-import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
-
-const BUSINESS_DETAILS_ROUTE = '/business-details'
+import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
+import { checkInterruptedJourneyPreHandler } from '../pre-handlers.js'
 
 const getBusinessFixCheck = {
   method: 'GET',
   path: '/business-fix-check',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('businessDetailsValidation', BUSINESS_DETAILS_ROUTE)]
+    pre: [checkInterruptedJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -26,7 +25,7 @@ const postBusinessFixCheck = {
   method: 'POST',
   path: '/business-fix-check',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('businessDetailsValidation', BUSINESS_DETAILS_ROUTE)]
+    pre: [checkInterruptedJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -34,7 +33,7 @@ const postBusinessFixCheck = {
     const sessionData = yar.get('businessDetailsValidation')
     await updateBusinessFixService(sessionData, yar, auth.credentials)
 
-    return h.redirect(BUSINESS_DETAILS_ROUTE)
+    return h.redirect(BUSINESS_DETAILS_VALIDATION_JOURNEY.redirectPath)
   }
 }
 

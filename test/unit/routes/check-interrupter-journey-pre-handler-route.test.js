@@ -2,15 +2,17 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Thing under test
-import { checkInterruptedJourneyPreHandler } from '../../../src/routes/check-interrupter-journey-pre-handler-route.js'
+import { checkInterruptedJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
 
 describe('checkInterruptedJourneyPreHandler', () => {
   let request
   let h
   let redirectStub
 
-  const journeyKey = 'fixJourney'
-  const redirectPath = '/start-page'
+  const journey = {
+    journeyKey: 'fixJourney',
+    redirectPath: '/start-page'
+  }
 
   beforeEach(() => {
     redirectStub = {
@@ -34,10 +36,10 @@ describe('checkInterruptedJourneyPreHandler', () => {
     })
 
     test('redirects and takes over', () => {
-      const preHandler = checkInterruptedJourneyPreHandler(journeyKey, redirectPath)
+      const preHandler = checkInterruptedJourneyPreHandler(journey)
       const result = preHandler.method(request, h)
 
-      expect(h.redirect).toHaveBeenCalledWith(redirectPath)
+      expect(h.redirect).toHaveBeenCalledWith(journey.redirectPath)
       expect(redirectStub.takeover).toHaveBeenCalled()
       expect(result).toBe(redirectStub)
     })
@@ -51,7 +53,7 @@ describe('checkInterruptedJourneyPreHandler', () => {
     })
 
     test('returns true', () => {
-      const preHandler = checkInterruptedJourneyPreHandler(journeyKey, redirectPath)
+      const preHandler = checkInterruptedJourneyPreHandler(journey)
       const result = preHandler.method(request, h)
 
       expect(result).toBe(true)

@@ -64,6 +64,31 @@ describe('business fix check routes', () => {
         expect(getBusinessFixCheck.path).toBe('/business-fix-check')
       })
 
+      test('should have a pre-handler to guard the interrupted journey session', () => {
+        expect(getBusinessFixCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when interrupted journey session is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
+          const redirectStub = {}
+          const preHandler = getBusinessFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when interrupted journey session is valid', () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ orderedSectionsToFix: ['name'] }) } }
+          const preHandler = getBusinessFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches business fix data using credentials and session data', async () => {
         await getBusinessFixCheck.handler(request, h)
 
@@ -89,6 +114,31 @@ describe('business fix check routes', () => {
       test('should have the correct method and path configured', () => {
         expect(postBusinessFixCheck.method).toBe('POST')
         expect(postBusinessFixCheck.path).toBe('/business-fix-check')
+      })
+
+      test('should have a pre-handler to guard the interrupted journey session', () => {
+        expect(postBusinessFixCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /business-details when interrupted journey session is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
+          const redirectStub = {}
+          const preHandler = postBusinessFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when interrupted journey session is valid', () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ orderedSectionsToFix: ['name'] }) } }
+          const preHandler = postBusinessFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /business-details page', async () => {

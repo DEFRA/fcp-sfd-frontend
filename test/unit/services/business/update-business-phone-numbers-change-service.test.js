@@ -49,7 +49,6 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   }
 }))
 
-
 describe('updateBusinessPhoneNumbersChangeService', () => {
   let yar
   let credentials

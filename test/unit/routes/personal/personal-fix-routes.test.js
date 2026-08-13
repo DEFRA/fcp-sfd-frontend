@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { personalFixPresenter } from '../../../../src/presenters/personal/personal-fix-presenter.js'
-import { initialiseFixJourneyService } from '../../../../src/services/initialise-fix-journey-service.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 
 // Thing under test
@@ -15,9 +15,11 @@ vi.mock('../../../../src/presenters/personal/personal-fix-presenter.js', () => (
   personalFixPresenter: vi.fn()
 }))
 
-vi.mock('../../../../src/services/initialise-fix-journey-service.js', () => ({
-  initialiseFixJourneyService: vi.fn()
-}))
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  services: {
+    initialiseFixJourney: vi.fn()
+  }
+}), { partial: true })
 
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
   fetchPersonalFixService: vi.fn()
@@ -52,7 +54,7 @@ describe('personal fix routes', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        initialiseFixJourneyService.mockReturnValue(getMockSessionData())
+        services.initialiseFixJourney.mockReturnValue(getMockSessionData())
         fetchPersonalFixService.mockReturnValue('personal details')
         personalFixPresenter.mockReturnValue(getPageData())
       })
@@ -71,7 +73,7 @@ describe('personal fix routes', () => {
       test('it initialises the personal fix journey using the session and source', async () => {
         await getPersonalFix.handler(request, h)
 
-        expect(initialiseFixJourneyService).toHaveBeenCalledWith(request.yar, request.query.source, 'personal')
+        expect(services.initialiseFixJourney).toHaveBeenCalledWith(request.yar, request.query.source, 'personal')
       })
 
       test('it presents the session data using the personalFixPresenter', async () => {

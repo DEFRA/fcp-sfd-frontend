@@ -1,6 +1,7 @@
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { businessFixPresenter } from '../../presenters/business/business-fix-presenter.js'
-import { initialiseFixJourneyService } from '../../services/initialise-fix-journey-service.js'
+
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const getBusinessFix = {
   method: 'GET',
@@ -9,7 +10,7 @@ const getBusinessFix = {
     const { yar, query, auth } = request
 
     const businessDetails = await fetchBusinessDetailsService(auth.credentials)
-    const sessionData = initialiseFixJourneyService(yar, query.source, 'business')
+    const sessionData = services.initialiseFixJourney(yar, query.source, 'business')
     const pageData = businessFixPresenter(sessionData, businessDetails)
 
     return h.view('business/business-fix.njk', pageData)

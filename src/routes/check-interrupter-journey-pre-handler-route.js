@@ -8,13 +8,13 @@
  * @module checkInterruptedJourneyPreHandler
  */
 
-import { checkInterruptedJourneySessionService } from '../services/check-interrupter-journey-session-service.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const checkInterruptedJourneyPreHandler = (journeyKey, redirectPath) => ({
   method: (request, h) => {
     const { yar } = request
 
-    const isValid = checkInterruptedJourneySessionService(yar, journeyKey)
+    const isValid = services.checkInterruptedJourneySession(yar, journeyKey)
 
     if (!isValid) {
       return h.redirect(redirectPath).takeover()

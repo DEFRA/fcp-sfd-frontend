@@ -3,7 +3,7 @@
  * Redirects to the specified path if required session data is missing or invalid.
  */
 
-import { checkInterruptedJourneySessionService } from '../services/check-interrupter-journey-session-service.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 /**
  * Creates a pre-handler that validates required session data exists before allowing access to a route.
@@ -76,7 +76,7 @@ export const checkInterruptedJourneyPreHandler = (journey) => {
     method: (request, h) => {
       const { yar } = request
 
-      const isValid = checkInterruptedJourneySessionService(yar, journey.journeyKey)
+      const isValid = services.checkInterruptedJourneySession(yar, journey.journeyKey)
 
       if (!isValid) {
         return h.redirect(journey.redirectPath).takeover()

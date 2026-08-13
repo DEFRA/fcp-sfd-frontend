@@ -3,8 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setPersonalFixSessionDataService } from '../../../../src/services/personal/set-personal-fix-session-data-service.js'
-import { validateFixDetailsService } from '../../../../src/services/validate-fix-details-service.js'
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 import { personalFixListPresenter } from '../../../../src/presenters/personal/personal-fix-list-presenter.js'
 
@@ -17,14 +16,11 @@ vi.mock('../../../../src/services/personal/set-personal-fix-session-data-service
   setPersonalFixSessionDataService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/validate-fix-details-service.js', () => ({
-  validateFixDetailsService: vi.fn()
-}))
-
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   utils: { formatValidationErrors: vi.fn() },
   schemas: { personal: {} },
-  constants: { statusCodes: { BAD_REQUEST: 400 } }
+  constants: { statusCodes: { BAD_REQUEST: 400 } },
+  services: { validateFixDetails: vi.fn() }
 }))
 
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
@@ -105,7 +101,7 @@ describe('personal fix list routes', () => {
           personalEmail: 'john@example.com'
         }
 
-        validateFixDetailsService.mockReturnValue({})
+        services.validateFixDetails.mockReturnValue({})
       })
 
       test('should have the correct method and path configured', () => {
@@ -140,7 +136,7 @@ describe('personal fix list routes', () => {
             { field: 'first', message: 'Enter your first name' }
           ]
 
-          validateFixDetailsService.mockReturnValue({ error: validationError })
+          services.validateFixDetails.mockReturnValue({ error: validationError })
           utils.formatValidationErrors.mockReturnValue(errors)
           fetchPersonalFixService.mockResolvedValue({ some: 'data' })
           personalFixListPresenter.mockReturnValue({ page: 'data', errors })

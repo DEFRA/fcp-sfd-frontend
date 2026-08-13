@@ -3,8 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { setBusinessFixSessionDataService } from '../../../../src/services/business/set-business-fix-session-data-service.js'
-import { validateFixDetailsService } from '../../../../src/services/validate-fix-details-service.js'
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { utils, services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
 import { businessFixListPresenter } from '../../../../src/presenters/business/business-fix-list-presenter.js'
 
@@ -17,12 +16,9 @@ vi.mock('../../../../src/services/business/set-business-fix-session-data-service
   setBusinessFixSessionDataService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/validate-fix-details-service.js', () => ({
-  validateFixDetailsService: vi.fn()
-}))
-
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   utils: { formatValidationErrors: vi.fn() },
+  services: { validateFixDetails: vi.fn() },
   schemas: {
     business: {
       details: {
@@ -115,7 +111,7 @@ describe('business fix list routes', () => {
           businessEmail: 'john@example.com'
         }
 
-        validateFixDetailsService.mockReturnValue({})
+        services.validateFixDetails.mockReturnValue({})
       })
 
       test('should have the correct method and path configured', () => {
@@ -150,7 +146,7 @@ describe('business fix list routes', () => {
             { field: 'businessName', message: 'Enter your business name' }
           ]
 
-          validateFixDetailsService.mockReturnValue({ error: validationError })
+          services.validateFixDetails.mockReturnValue({ error: validationError })
           utils.formatValidationErrors.mockReturnValue(errors)
           fetchBusinessFixService.mockResolvedValue({ some: 'data' })
           businessFixListPresenter.mockReturnValue({ page: 'data', errors })

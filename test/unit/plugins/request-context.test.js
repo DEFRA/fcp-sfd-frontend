@@ -71,6 +71,17 @@ describe('request-context', () => {
     })
   })
 
+  test('continues without creating a child logger when logging is ignored', () => {
+    const noOpLogger = { info: vi.fn(), error: vi.fn() }
+    const mockRequest = { auth: {}, logger: noOpLogger }
+    const mockH = { continue: Symbol('continue') }
+
+    const result = capturedHandler(mockRequest, mockH)
+
+    expect(result).toBe(mockH.continue)
+    expect(mockRequest.logger).toBe(noOpLogger)
+  })
+
   test('returns h.continue', () => {
     const mockRequest = { auth: {}, logger: mockLogger }
     const mockH = { continue: Symbol('continue') }

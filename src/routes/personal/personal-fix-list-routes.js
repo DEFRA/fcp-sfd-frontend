@@ -1,6 +1,5 @@
 import { utils, schemas, constants, services } from '@defra/fcp-sfd-frontend-engine'
 
-import { setPersonalFixSessionDataService } from '../../services/personal/set-personal-fix-session-data-service.js'
 import { personalFixListPresenter } from '../../presenters/personal/personal-fix-list-presenter.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
 import { PERSONAL_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
@@ -43,7 +42,7 @@ const postPersonalFixList = {
       return h.view('personal/personal-fix-list.njk', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
     }
 
-    setPersonalFixSessionDataService(yar, sessionData, payload)
+    services.setFixSessionData(yar, sessionData, payload, 'personalDetailsValidation', 'personalFixUpdates')
 
     return h.redirect('/personal-fix-check')
   }

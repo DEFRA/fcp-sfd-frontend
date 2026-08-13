@@ -2,7 +2,6 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { setPersonalFixSessionDataService } from '../../../../src/services/personal/set-personal-fix-session-data-service.js'
 import { utils, services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
 import { personalFixListPresenter } from '../../../../src/presenters/personal/personal-fix-list-presenter.js'
@@ -20,7 +19,10 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   utils: { formatValidationErrors: vi.fn() },
   schemas: { personal: {} },
   constants: { statusCodes: { BAD_REQUEST: 400 } },
-  services: { validateFixDetails: vi.fn() }
+  services: {
+    validateFixDetails: vi.fn(),
+    setFixSessionData: vi.fn()
+  }
 }))
 
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
@@ -113,7 +115,7 @@ describe('personal fix list routes', () => {
         test('it stores the session data and redirects', async () => {
           await postPersonalFixList.handler(request, h)
 
-          expect(setPersonalFixSessionDataService).toHaveBeenCalledWith(request.yar, sessionData, request.payload)
+          expect(services.setFixSessionData).toHaveBeenCalledWith(request.yar, sessionData, request.payload, 'personalDetailsValidation', 'personalFixUpdates')
           expect(h.redirect).toHaveBeenCalledWith('/personal-fix-check')
         })
       })

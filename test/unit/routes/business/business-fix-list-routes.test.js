@@ -2,7 +2,6 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
-import { setBusinessFixSessionDataService } from '../../../../src/services/business/set-business-fix-session-data-service.js'
 import { utils, services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
 import { businessFixListPresenter } from '../../../../src/presenters/business/business-fix-list-presenter.js'
@@ -12,13 +11,12 @@ import { businessFixListRoutes } from '../../../../src/routes/business/business-
 const [getBusinessFixList, postBusinessFixList] = businessFixListRoutes
 
 // Mocks
-vi.mock('../../../../src/services/business/set-business-fix-session-data-service.js', () => ({
-  setBusinessFixSessionDataService: vi.fn()
-}))
-
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   utils: { formatValidationErrors: vi.fn() },
-  services: { validateFixDetails: vi.fn() },
+  services: {
+    validateFixDetails: vi.fn(),
+    setFixSessionData: vi.fn()
+  },
   schemas: {
     business: {
       details: {
@@ -123,7 +121,7 @@ describe('business fix list routes', () => {
         test('it stores the session data and redirects', async () => {
           await postBusinessFixList.handler(request, h)
 
-          expect(setBusinessFixSessionDataService).toHaveBeenCalledWith(request.yar, sessionData, request.payload)
+          expect(services.setFixSessionData).toHaveBeenCalledWith(request.yar, sessionData, request.payload, 'businessDetailsValidation', 'businessFixUpdates')
           expect(h.redirect).toHaveBeenCalledWith('/business-fix-check')
         })
       })

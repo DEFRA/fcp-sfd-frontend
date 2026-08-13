@@ -1,6 +1,5 @@
 import { utils, schemas, constants, services } from '@defra/fcp-sfd-frontend-engine'
 
-import { setBusinessFixSessionDataService } from '../../services/business/set-business-fix-session-data-service.js'
 import { businessFixListPresenter } from '../../presenters/business/business-fix-list-presenter.js'
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
@@ -43,7 +42,7 @@ const postBusinessFixList = {
       return h.view('business/business-fix-list.njk', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
     }
 
-    setBusinessFixSessionDataService(yar, sessionData, payload)
+    services.setFixSessionData(yar, sessionData, payload, 'businessDetailsValidation', 'businessFixUpdates')
 
     return h.redirect('/business-fix-check')
   }

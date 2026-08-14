@@ -5,6 +5,10 @@ export const requestContext = {
     name: 'request-context',
     register: (server) => {
       server.ext('onPreResponse', (request, h) => {
+        if (typeof request.logger?.child !== 'function') {
+          return h.continue
+        }
+
         const credentials = request.auth?.credentials
         request.logger = request.logger.child({
           event: {

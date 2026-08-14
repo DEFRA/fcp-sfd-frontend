@@ -3,13 +3,13 @@ import { utils, schemas, constants, services } from '@defra/fcp-sfd-frontend-eng
 import { businessFixListPresenter } from '../../presenters/business/business-fix-list-presenter.js'
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
-import { checkInterruptedJourneyPreHandler } from '../pre-handlers.js'
+import { checkInterrupterJourneyPreHandler } from '../pre-handlers.js'
 
 const getBusinessFixList = {
   method: 'GET',
   path: '/business-fix-list',
   options: {
-    pre: [checkInterruptedJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+    pre: [checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -26,7 +26,7 @@ const postBusinessFixList = {
   method: 'POST',
   path: '/business-fix-list',
   options: {
-    pre: [checkInterruptedJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+    pre: [checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth, payload } = request

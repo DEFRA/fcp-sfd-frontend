@@ -1,8 +1,15 @@
 // Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  services: {
+    checkInterrupterJourneySession: vi.fn()
+  }
+}))
+
 // Things under test
-import { checkSessionDataGuard } from '../../../src/routes/pre-handlers.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
+import { checkSessionDataGuard, checkInterrupterJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
 import {
   PERSONAL_JOURNEY,
   BUSINESS_JOURNEY
@@ -213,6 +220,64 @@ describe('pre-handlers', () => {
         await guard.method(request, h)
 
         expect(takeoverMock).toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('checkInterrupterJourneyPreHandler', () => {
+    let request
+    let h
+    let redirectStub
+
+    const journey = {
+      journeyKey: 'fixJourney',
+      redirectPath: '/start-page'
+    }
+
+    beforeEach(() => {
+      redirectStub = {
+        takeover: vi.fn().mockReturnThis()
+      }
+
+      h = {
+        redirect: vi.fn(() => redirectStub)
+      }
+
+      request = {
+        yar: {
+          get: vi.fn()
+        }
+      }
+    })
+
+    describe('when the session is invalid', () => {
+      beforeEach(() => {
+        services.checkInterrupterJourneySession.mockReturnValue(false)
+      })
+
+      test('redirects and takes over', () => {
+        const preHandler = checkInterrupterJourneyPreHandler(journey)
+        const result = preHandler.method(request, h)
+
+        expect(services.checkInterrupterJourneySession).toHaveBeenCalledWith(request.yar, journey.journeyKey)
+        expect(h.redirect).toHaveBeenCalledWith(journey.redirectPath)
+        expect(redirectStub.takeover).toHaveBeenCalled()
+        expect(result).toBe(redirectStub)
+      })
+    })
+
+    describe('when the session is valid', () => {
+      beforeEach(() => {
+        services.checkInterrupterJourneySession.mockReturnValue(true)
+      })
+
+      test('returns true', () => {
+        const preHandler = checkInterrupterJourneyPreHandler(journey)
+        const result = preHandler.method(request, h)
+
+        expect(services.checkInterrupterJourneySession).toHaveBeenCalledWith(request.yar, journey.journeyKey)
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
       })
     })
   })

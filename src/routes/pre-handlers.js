@@ -3,7 +3,7 @@
  * Redirects to the specified path if required session data is missing or invalid.
  */
 
-import { checkInterruptedJourneySessionService } from '../services/check-interrupter-journey-session-service.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 /**
  * Creates a pre-handler that validates required session data exists before allowing access to a route.
@@ -60,23 +60,23 @@ export const checkSessionDataGuard = (journey, fieldName) => {
  *
  * @example
  * import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
- * import { checkInterruptedJourneyPreHandler } from '../pre-handlers.js'
+ * import { checkInterrupterJourneyPreHandler } from '../pre-handlers.js'
  *
  * const getFixCheck = {
  *   method: 'GET',
  *   path: '/business-fix-check',
  *   options: {
- *     pre: [checkInterruptedJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+ *     pre: [checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
  *   },
  *   handler: async (request, h) => { ... }
  * }
  */
-export const checkInterruptedJourneyPreHandler = (journey) => {
+export const checkInterrupterJourneyPreHandler = (journey) => {
   return {
     method: (request, h) => {
       const { yar } = request
 
-      const isValid = checkInterruptedJourneySessionService(yar, journey.journeyKey)
+      const isValid = services.checkInterrupterJourneySession(yar, journey.journeyKey)
 
       if (!isValid) {
         return h.redirect(journey.redirectPath).takeover()

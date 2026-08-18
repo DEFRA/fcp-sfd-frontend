@@ -3,13 +3,15 @@
  * @module personalFixListPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
-
-import { PERSONAL_SECTION_FIELD_ORDER } from '../../constants/interrupter-journey.js'
+import { presenters, constants } from '@defra/fcp-sfd-frontend-engine'
 
 const personalFixListPresenter = (personalDetails, payload, errors = null) => {
   const { day, month, year } = formatDateOfBirth(personalDetails, payload)
-  const sortedErrors = errors ? presenters.sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER) : null
+  const { PERSONAL_SECTION_FIELD_ORDER } = constants.interrupterJourney
+
+  const sortedErrors = errors
+    ? presenters.sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER)
+    : null
 
   return {
     userName: personalDetails.info?.userName ?? null,

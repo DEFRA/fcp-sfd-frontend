@@ -3,7 +3,9 @@
  * @module personalFixPresenter
  */
 
-import { PERSONAL_SECTION_ORDER, PERSONAL_UPDATE_TEXT_LABELS, PERSONAL_SECTION_LABELS } from '../../constants/interrupter-journey.js'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+
+const { PERSONAL_SECTION_ORDER, PERSONAL_UPDATE_TEXT_LABELS, PERSONAL_SECTION_LABELS } = constants.interrupterJourney
 
 const personalFixPresenter = (personalDetails) => {
   const { source, orderedSectionsToFix } = personalDetails

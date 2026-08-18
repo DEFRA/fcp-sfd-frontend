@@ -11,10 +11,6 @@ import { personalFixListRoutes } from '../../../../src/routes/personal/personal-
 const [getPersonalFixList, postPersonalFixList] = personalFixListRoutes
 
 // Mocks
-vi.mock('../../../../src/services/personal/set-personal-fix-session-data-service.js', () => ({
-  setPersonalFixSessionDataService: vi.fn()
-}))
-
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   utils: { formatValidationErrors: vi.fn() },
   schemas: { personal: {} },

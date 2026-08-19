@@ -4,21 +4,19 @@
  */
 
 import { fetchPersonalFixService } from './fetch-personal-fix-service.js'
-import { buildPersonalSuccessMessage } from './build-personal-success-message-service.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
-import { buildPersonalUpdateVariablesService } from './build-personal-update-variables-service.js'
-import { updatePersonalDetailsMutation } from '../../dal/mutations/personal/update-personal-details.js'
+import { mutations, services } from '@defra/fcp-sfd-frontend-engine'
 
 const updatePersonalFixService = async (sessionData, yar, credentials) => {
   const personalDetails = await fetchPersonalFixService(credentials, sessionData)
-  const variables = buildPersonalUpdateVariablesService(personalDetails)
+  const variables = services.buildCustomerFixUpdateVariables(personalDetails)
 
-  await updateDalService(updatePersonalDetailsMutation, variables, credentials.sessionId)
+  await updateDalService(mutations.updateCustomerDetails, variables, credentials.sessionId)
 
   yar.clear('personalDetails')
 
-  const message = buildPersonalSuccessMessage(personalDetails)
+  const message = services.buildPersonalSuccessMessage(personalDetails)
 
   if (message.type === 'html') {
     flashNotification(yar, 'Success', null, message.value)

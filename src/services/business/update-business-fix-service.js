@@ -19,7 +19,7 @@ const updateBusinessFixService = async (sessionData, yar, credentials) => {
 
   yar.clear('businessDetails')
 
-  const message = services.buildBusinessSuccessMessage(businessDetails)
+  const message = services.buildFixSuccessMessage('business', businessDetails)
 
   if (message.type === 'html') {
     flashNotification(yar, 'Success', null, message.value)

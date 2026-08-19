@@ -23,7 +23,7 @@ vi.mock('../../../../src/services/business/build-business-update-variables-servi
 
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   services: {
-    buildBusinessSuccessMessage: vi.fn()
+    buildFixSuccessMessage: vi.fn()
   }
 }))
 
@@ -77,7 +77,7 @@ describe('updateBusinessFixService', () => {
     fetchBusinessFixService.mockResolvedValue(businessDetails)
     buildBusinessUpdateVariablesService.mockReturnValue(updateVariables)
     buildBusinessDetailsMutationService.mockReturnValue(updateBusinessDetailsMutation)
-    services.buildBusinessSuccessMessage.mockReturnValue({
+    services.buildFixSuccessMessage.mockReturnValue({
       type: 'text',
       value: 'You have updated your business email address'
     })
@@ -126,7 +126,7 @@ describe('updateBusinessFixService', () => {
 
     describe('when the success message is html', () => {
       beforeEach(() => {
-        services.buildBusinessSuccessMessage.mockReturnValue({
+        services.buildFixSuccessMessage.mockReturnValue({
           type: 'html',
           value: '<p>You have updated your business email address</p>'
         })

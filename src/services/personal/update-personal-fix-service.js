@@ -16,7 +16,7 @@ const updatePersonalFixService = async (sessionData, yar, credentials) => {
 
   yar.clear('personalDetails')
 
-  const message = services.buildPersonalSuccessMessage(personalDetails)
+  const message = services.buildFixSuccessMessage('personal', personalDetails)
 
   if (message.type === 'html') {
     flashNotification(yar, 'Success', null, message.value)

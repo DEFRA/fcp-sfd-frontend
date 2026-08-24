@@ -9,8 +9,8 @@
  * @module updateBusinessVatChangeService
  */
 
+import { mutations, utils, constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from './fetch-business-change-service.js'
-import { updateBusinessVATMutation } from '../../dal/mutations/business/update-business-vat.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 
@@ -21,13 +21,13 @@ const updateBusinessVatChangeService = async (yar, credentials) => {
     return
   }
 
-  const variables = { input: { vat: businessDetails.changeBusinessVat, sbi: businessDetails.info.sbi } }
+  const variables = utils.buildUpdateBusinessVatVariables(businessDetails.changeBusinessVat, businessDetails.info.sbi)
 
-  await updateDalService(updateBusinessVATMutation, variables, credentials.sessionId)
+  await updateDalService(mutations.updateBusinessVat, variables, credentials.sessionId)
 
   yar.clear('businessDetailsUpdate')
 
-  flashNotification(yar, 'Success', 'You have updated your VAT registration number')
+  flashNotification(yar, 'Success', constants.successMessages.BUSINESS_VAT)
 }
 
 export {

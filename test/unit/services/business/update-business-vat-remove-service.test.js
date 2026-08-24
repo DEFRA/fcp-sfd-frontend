@@ -5,7 +5,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
-import { updateBusinessVATMutation } from '../../../../src/dal/mutations/business/update-business-vat.js'
+import { mutations } from '@defra/fcp-sfd-frontend-engine'
 
 // Test helpers
 import { getMappedData } from '../../../mocks/mock-business-details.js'
@@ -48,7 +48,7 @@ describe('updateBusinessVatRemoveService', () => {
     test('it calls dalConnector with correct mutation and variable', async () => {
       await updateBusinessVatRemoveService(yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updateBusinessVATMutation, {
+      expect(updateDalService).toHaveBeenCalledWith(mutations.updateBusinessVat, {
         input: {
           vat: '',
           sbi: '107183280'

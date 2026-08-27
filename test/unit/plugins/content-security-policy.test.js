@@ -15,16 +15,24 @@ describe('contentSecurityPolicy', () => {
     expect(csp.options.fontSrc).toEqual(['self', 'data:'])
   })
 
-  test('should restrict the img src to self', () => {
-    expect(csp.options.imgSrc).toEqual(['self'])
+  test('should restrict the img src to self and Google Analytics', () => {
+    expect(csp.options.imgSrc).toEqual(['self', 'https://www.googletagmanager.com'])
   })
 
-  test('should restrict the script src to self and GDS frontend hash', () => {
-    expect(csp.options.scriptSrc).toEqual(['self', "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='"])
+  test('should restrict the script src to self, GDS frontend hash, and Google Analytics', () => {
+    expect(csp.options.scriptSrc).toEqual(['self', 'strict-dynamic', "'sha256-GUQ5ad8JK5KmEWmROf3LZd9ge94daqNvd8xy9YS1iDw='", 'https://www.googletagmanager.com'])
   })
 
   test('should restrict the style src to self', () => {
     expect(csp.options.styleSrc).toEqual(['self'])
+  })
+
+  test('should restrict the connect src to self and Google Analytics', () => {
+    expect(csp.options.connectSrc).toEqual(['self', 'https://www.googletagmanager.com', 'https://www.google.com'])
+  })
+
+  test('should restrict the frame src to Google Analytics', () => {
+    expect(csp.options.frameSrc).toEqual(['https://www.googletagmanager.com'])
   })
 
   test('should restrict the frame ancestors to self', () => {
@@ -35,11 +43,11 @@ describe('contentSecurityPolicy', () => {
     expect(csp.options.formAction).toEqual(['self'])
   })
 
-  test('should restrict the manifest to self', () => {
+  test('should restrict the manifest src to self', () => {
     expect(csp.options.manifestSrc).toEqual(['self'])
   })
 
-  test('should not generate nonces', () => {
+  test('should generate nonces', () => {
     expect(csp.options.generateNonces).toBe(true)
   })
 })

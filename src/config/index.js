@@ -8,6 +8,7 @@ import { featureToggleConfig } from './feature-toggle.js'
 import { osPlacesConfig } from './os-places.js'
 import { allowListsConfig } from './allow-lists.js'
 import { servicesConfig } from './services.js'
+import { googleAnalyticsConfig } from './google-analytics.js'
 
 const config = convict({
   ...serverConfig,
@@ -18,7 +19,8 @@ const config = convict({
   ...osPlacesConfig,
   ...featureToggleConfig,
   ...allowListsConfig,
-  ...servicesConfig
+  ...servicesConfig,
+  ...googleAnalyticsConfig
 })
 
 config.validate({ allowed: 'strict' })

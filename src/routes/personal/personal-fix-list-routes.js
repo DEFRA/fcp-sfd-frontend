@@ -1,16 +1,15 @@
-import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
+import { utils, schemas, constants, services } from '@defra/fcp-sfd-frontend-engine'
 
-import { setPersonalFixSessionDataService } from '../../services/personal/set-personal-fix-session-data-service.js'
 import { personalFixListPresenter } from '../../presenters/personal/personal-fix-list-presenter.js'
-import { validateFixDetailsService } from '../../services/validate-fix-details-service.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
-import { checkInterruptedJourneyPreHandler } from '../check-interrupter-journey-pre-handler-route.js'
+import { PERSONAL_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
+import { checkInterrupterJourneyPreHandler } from '../pre-handlers.js'
 
 const getPersonalFixList = {
   method: 'GET',
   path: '/personal-fix-list',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+    pre: [checkInterrupterJourneyPreHandler(PERSONAL_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,13 +26,13 @@ const postPersonalFixList = {
   method: 'POST',
   path: '/personal-fix-list',
   options: {
-    pre: [checkInterruptedJourneyPreHandler('personalDetailsValidation', '/personal-details')]
+    pre: [checkInterrupterJourneyPreHandler(PERSONAL_DETAILS_VALIDATION_JOURNEY)]
   },
   handler: async (request, h) => {
     const { yar, auth, payload } = request
 
     const sessionData = yar.get('personalDetailsValidation')
-    const validation = validateFixDetailsService(payload, sessionData.orderedSectionsToFix, schemas.personal)
+    const validation = services.validateFixDetails(payload, sessionData.orderedSectionsToFix, schemas.personal)
 
     if (validation.error) {
       const errors = utils.formatValidationErrors(validation.error.details || [])
@@ -43,7 +42,7 @@ const postPersonalFixList = {
       return h.view('personal/personal-fix-list.njk', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
     }
 
-    setPersonalFixSessionDataService(yar, sessionData, payload)
+    services.setFixSessionData(yar, sessionData, payload, 'personalDetailsValidation', 'personalFixUpdates')
 
     return h.redirect('/personal-fix-check')
   }

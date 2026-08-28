@@ -3,12 +3,14 @@
  * @module businessFixListPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
-
-import { BUSINESS_SECTION_FIELD_ORDER } from '../../constants/interrupter-journey.js'
+import { presenters, constants } from '@defra/fcp-sfd-frontend-engine'
 
 const businessFixListPresenter = (businessDetails, payload, errors = null) => {
-  const sortedErrors = errors ? presenters.sortErrorsBySectionOrder(errors, businessDetails.orderedSectionsToFix, BUSINESS_SECTION_FIELD_ORDER) : null
+  const { BUSINESS_SECTION_FIELD_ORDER } = constants.interrupterJourney
+
+  const sortedErrors = errors
+    ? presenters.sortErrorsBySectionOrder(errors, businessDetails.orderedSectionsToFix, BUSINESS_SECTION_FIELD_ORDER)
+    : null
 
   return {
     backLink: { href: `/business-fix?source=${businessDetails.source}` },

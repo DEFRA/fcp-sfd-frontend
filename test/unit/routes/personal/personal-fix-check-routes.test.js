@@ -62,6 +62,31 @@ describe('personal fix check routes', () => {
         expect(getPersonalFixCheck.path).toBe('/personal-fix-check')
       })
 
+      test('should have a pre-handler to guard the interrupted journey session', () => {
+        expect(getPersonalFixCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when interrupted journey session is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
+          const redirectStub = {}
+          const preHandler = getPersonalFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when interrupted journey session is valid', () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ orderedSectionsToFix: ['name'] }) } }
+          const preHandler = getPersonalFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
+      })
+
       test('it fetches personal fix data using credentials and session data', async () => {
         await getPersonalFixCheck.handler(request, h)
 
@@ -87,6 +112,31 @@ describe('personal fix check routes', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalFixCheck.method).toBe('POST')
         expect(postPersonalFixCheck.path).toBe('/personal-fix-check')
+      })
+
+      test('should have a pre-handler to guard the interrupted journey session', () => {
+        expect(postPersonalFixCheck.options.pre).toHaveLength(1)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should redirect to /personal-details when interrupted journey session is missing', async () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
+          const redirectStub = {}
+          const preHandler = postPersonalFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, {
+            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+          })
+
+          expect(preResponse).toBe(redirectStub)
+        })
+
+        test('should allow access when interrupted journey session is valid', () => {
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ orderedSectionsToFix: ['name'] }) } }
+          const preHandler = postPersonalFixCheck.options.pre[0]
+          const preResponse = preHandler.method(sessionRequest, { continue: {} })
+
+          expect(preResponse).toBe(true)
+        })
       })
 
       test('it redirects to the /personal-details page', async () => {

@@ -1,6 +1,7 @@
 import { personalFixPresenter } from '../../presenters/personal/personal-fix-presenter.js'
-import { initialiseFixJourneyService } from '../../services/initialise-fix-journey-service.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
+
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const getPersonalFix = {
   method: 'GET',
@@ -8,7 +9,7 @@ const getPersonalFix = {
   handler: async (request, h) => {
     const { yar, query, auth } = request
 
-    const sessionData = initialiseFixJourneyService(yar, query.source, 'personal')
+    const sessionData = services.initialiseFixJourney(yar, query.source, 'personal')
     const personalDetails = await fetchPersonalFixService(auth.credentials, sessionData)
     const pageData = personalFixPresenter(personalDetails)
 

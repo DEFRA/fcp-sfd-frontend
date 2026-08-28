@@ -4,10 +4,10 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Things we need to mock
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
 import { buildBusinessDetailsMutationService } from '../../../../src/services/business/build-business-details-mutation-service.js'
-import { buildBusinessSuccessMessage } from '../../../../src/services/business/build-business-success-message-service.js'
 import { buildBusinessUpdateVariablesService } from '../../../../src/services/business/build-business-update-variables-service.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 // Thing under test
 import { updateBusinessFixService } from '../../../../src/services/business/update-business-fix-service.js'
@@ -21,8 +21,10 @@ vi.mock('../../../../src/services/business/build-business-update-variables-servi
   buildBusinessUpdateVariablesService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/build-business-success-message-service.js', () => ({
-  buildBusinessSuccessMessage: vi.fn()
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  services: {
+    buildFixSuccessMessage: vi.fn()
+  }
 }))
 
 vi.mock('../../../../src/services/business/build-business-details-mutation-service.js', () => ({
@@ -75,7 +77,7 @@ describe('updateBusinessFixService', () => {
     fetchBusinessFixService.mockResolvedValue(businessDetails)
     buildBusinessUpdateVariablesService.mockReturnValue(updateVariables)
     buildBusinessDetailsMutationService.mockReturnValue(updateBusinessDetailsMutation)
-    buildBusinessSuccessMessage.mockReturnValue({
+    services.buildFixSuccessMessage.mockReturnValue({
       type: 'text',
       value: 'You have updated your business email address'
     })
@@ -124,7 +126,7 @@ describe('updateBusinessFixService', () => {
 
     describe('when the success message is html', () => {
       beforeEach(() => {
-        buildBusinessSuccessMessage.mockReturnValue({
+        services.buildFixSuccessMessage.mockReturnValue({
           type: 'html',
           value: '<p>You have updated your business email address</p>'
         })

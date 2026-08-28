@@ -3,7 +3,9 @@
  * @module businessFixPresenter
  */
 
-import { BUSINESS_SECTION_ORDER, BUSINESS_UPDATE_TEXT_LABELS, BUSINESS_SECTION_LABELS } from '../../constants/interrupter-journey.js'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+
+const { BUSINESS_SECTION_ORDER, BUSINESS_UPDATE_TEXT_LABELS, BUSINESS_SECTION_LABELS } = constants.interrupterJourney
 
 const businessFixPresenter = (sessionData, businessDetails) => {
   const { source, orderedSectionsToFix } = sessionData

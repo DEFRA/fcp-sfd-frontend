@@ -3,8 +3,6 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
-import { buildPersonalSuccessMessage } from '../../../../src/services/personal/build-personal-success-message-service.js'
-import { buildPersonalUpdateVariablesService } from '../../../../src/services/personal/build-personal-update-variables-service.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
 
@@ -12,15 +10,21 @@ import { flashNotification } from '../../../../src/utils/notifications/flash-not
 import { updatePersonalFixService } from '../../../../src/services/personal/update-personal-fix-service.js'
 
 // Test helpers
-import { updatePersonalDetailsMutation } from '../../../../src/dal/mutations/personal/update-personal-details.js'
+import { mutations, services } from '@defra/fcp-sfd-frontend-engine'
 
 // Mocks
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
   fetchPersonalFixService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/personal/build-personal-success-message-service.js', () => ({
-  buildPersonalSuccessMessage: vi.fn()
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  services: {
+    buildFixSuccessMessage: vi.fn(),
+    buildCustomerFixUpdateVariables: vi.fn()
+  },
+  mutations: {
+    updateCustomerDetails: 'updateCustomerDetails'
+  }
 }))
 
 vi.mock('../../../../src/services/personal/build-personal-update-variables-service.js', () => ({
@@ -68,8 +72,8 @@ describe('updatePersonalFixService', () => {
     }
 
     fetchPersonalFixService.mockResolvedValue(personalDetails)
-    buildPersonalUpdateVariablesService.mockReturnValue(updateVariables)
-    buildPersonalSuccessMessage.mockReturnValue({
+    services.buildCustomerFixUpdateVariables.mockReturnValue(updateVariables)
+    services.buildFixSuccessMessage.mockReturnValue({
       type: 'text',
       value: 'You have updated your personal email address'
     })
@@ -85,13 +89,13 @@ describe('updatePersonalFixService', () => {
     test('it builds mutation variables from personal details', async () => {
       await updatePersonalFixService(sessionData, yar, credentials)
 
-      expect(buildPersonalUpdateVariablesService).toHaveBeenCalledWith(personalDetails)
+      expect(services.buildCustomerFixUpdateVariables).toHaveBeenCalledWith(personalDetails)
     })
 
     test('it calls the DAL update service with the correct mutation and variables', async () => {
       await updatePersonalFixService(sessionData, yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updatePersonalDetailsMutation, updateVariables, credentials.sessionId)
+      expect(updateDalService).toHaveBeenCalledWith(mutations.updateCustomerDetails, updateVariables, credentials.sessionId)
     })
 
     test('it clears personalDetails from the session', async () => {
@@ -112,7 +116,7 @@ describe('updatePersonalFixService', () => {
 
     describe('when the success message is html', () => {
       beforeEach(() => {
-        buildPersonalSuccessMessage.mockReturnValue({
+        services.buildFixSuccessMessage.mockReturnValue({
           type: 'html',
           value: '<p>You have updated your personal email address</p>'
         })

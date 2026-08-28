@@ -4,11 +4,11 @@
  */
 
 import { fetchBusinessFixService } from './fetch-business-fix-service.js'
-import { buildBusinessSuccessMessage } from './build-business-success-message-service.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { buildBusinessUpdateVariablesService } from './build-business-update-variables-service.js'
 import { buildBusinessDetailsMutationService } from './build-business-details-mutation-service.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const updateBusinessFixService = async (sessionData, yar, credentials) => {
   const businessDetails = await fetchBusinessFixService(credentials, sessionData)
@@ -19,7 +19,7 @@ const updateBusinessFixService = async (sessionData, yar, credentials) => {
 
   yar.clear('businessDetails')
 
-  const message = buildBusinessSuccessMessage(businessDetails)
+  const message = services.buildFixSuccessMessage('business', businessDetails)
 
   if (message.type === 'html') {
     flashNotification(yar, 'Success', null, message.value)

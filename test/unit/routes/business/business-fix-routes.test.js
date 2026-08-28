@@ -3,7 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { businessFixPresenter } from '../../../../src/presenters/business/business-fix-presenter.js'
-import { initialiseFixJourneyService } from '../../../../src/services/initialise-fix-journey-service.js'
+import { services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Thing under test
@@ -15,9 +15,11 @@ vi.mock('../../../../src/presenters/business/business-fix-presenter.js', () => (
   businessFixPresenter: vi.fn()
 }))
 
-vi.mock('../../../../src/services/initialise-fix-journey-service.js', () => ({
-  initialiseFixJourneyService: vi.fn()
-}))
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  services: {
+    initialiseFixJourney: vi.fn()
+  }
+}), { partial: true })
 
 vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
   fetchBusinessDetailsService: vi.fn()
@@ -52,7 +54,7 @@ describe('business fix routes', () => {
           view: vi.fn().mockReturnValue({})
         }
 
-        initialiseFixJourneyService.mockReturnValue(getMockSessionData())
+        services.initialiseFixJourney.mockReturnValue(getMockSessionData())
         fetchBusinessDetailsService.mockReturnValue('business details')
         businessFixPresenter.mockReturnValue(getPageData())
       })
@@ -71,7 +73,7 @@ describe('business fix routes', () => {
       test('it initialises the business fix journey using the session and source', async () => {
         await getBusinessFix.handler(request, h)
 
-        expect(initialiseFixJourneyService).toHaveBeenCalledWith(request.yar, request.query.source, 'business')
+        expect(services.initialiseFixJourney).toHaveBeenCalledWith(request.yar, request.query.source, 'business')
       })
 
       test('it presents the session data using the businessFixPresenter', async () => {

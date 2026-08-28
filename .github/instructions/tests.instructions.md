@@ -1,11 +1,12 @@
 ---
 description: Conventions for Vitest unit tests.
-applyTo: 'test/**/*.test.js'
+applyTo: 'test/unit/**/*.test.js'
 ---
 
 # Test conventions
 
 - Tests run in Docker (`npm run docker:test`) — see `.github/copilot-instructions.md`.
+- **Unit tests are the default.** New coverage belongs under `test/unit/`; `test/integration/narrow/` is deliberately small, so reach for it only when a behaviour can't be proven without a real Hapi server.
 - Vitest only. Use `test(...)`, never `it(...)`; import from `vitest`.
 - Mirror the `src/` structure — a test lives at the matching relative path under `test/unit/`.
 - Use section comment banners in this order: `// Test framework dependencies`, `// Things we need to mock`, `// Test helpers`, `// Thing under test`, `// Mocks`.

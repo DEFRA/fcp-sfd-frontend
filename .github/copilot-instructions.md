@@ -34,9 +34,9 @@ Frontend service for the Single Front Door (SFD) on Defra's Future Farming and C
 - **Routes** (`src/routes/`): Hapi route definitions with GET/POST handlers, organised by domain (`personal/`, `business/`, `footer/`, `errors/`). Keep handlers thin — delegate to services.
 - **Services** (`src/services/`): Business logic. Fetch data, orchestrate mutations, manage session state. Grouped by domain + shared services.
 - **DAL** (`src/dal/`): GraphQL connector singleton initialised at server startup. Queries and mutations live in `queries/` and `mutations/`.
-- **Presenters** (`src/presenters/`): Transform data for view rendering, organised by domain. Shared formatting (addresses, phone numbers, back links) comes from the engine's `base-presenter.js` (`@defra/fcp-sfd-frontend-engine`), not a local file.
+- **Presenters** (`src/presenters/`): Transform data for view rendering, organised by domain. Shared formatting (addresses, phone numbers, back links) comes from the engine's `presenters` namespace export (`@defra/fcp-sfd-frontend-engine`) — e.g. `presenters.formatBackLink()`, `presenters.formatDisplayAddress()` — not a local base presenter.
 - **Mappers** (`src/mappers/`): Transform DAL responses into domain objects used by services/presenters.
-- **Schemas** (`src/schemas/`): Joi validation for form payloads and DAL response shapes.
+- **Schemas** (`src/schemas/`): Joi validation for DAL response shapes. Form payload schemas are shared, so they live in the engine and are used as `schemas.<domain>.<field>`.
 - **Views** (`src/views/`): Nunjucks templates. `common/` has shared layout partials, `components/` reusable macros.
 - **Plugins** (`src/plugins/`): Hapi server assembly, registered from `src/plugins/index.js` — routing (`router.js`), auth strategies (`auth.js`, `sso.js`), security (`content-security-policy.js`, `headers.js`, `secure-context/`), session, request logging/tracing, error handling, and template rendering.
 - **Auth helpers** (`src/auth/`): Defra ID / OIDC support — token verification and refresh, permissions, SBI resolution, sign-out and business-reselection URLs.
@@ -44,7 +44,7 @@ Frontend service for the Single Front Door (SFD) on Defra's Future Farming and C
 ### Key patterns
 
 - **DAL connector**: singleton initialised in `src/server.js` via `initDalConnector()`; services access it via `getDalConnector()`. Handles auth tokens (M2M + forwarded user token) automatically.
-- **Credentials**: `{ sbi, crn, sessionId }` (sometimes `email`, `token`, `enrolmentCount`) passed through the stack route → service. Extract in services; always pass `{ sessionId }` to `dalConnector.query()` for authenticated calls. During OIDC sign-in (before the session cache is populated) pass `{ forwardedUserToken }` instead.
+- **Credentials**: `{ sbi, crn, sessionId }` (sometimes `email`, `token`, `enrolmentCount`) live on `auth.credentials`. Destructure in the route and pass a service only the values it uses; always pass `{ sessionId }` to `dalConnector.query()` for authenticated calls. During OIDC sign-in (before the session cache is populated) pass `{ forwardedUserToken }` instead.
 - **Cache**: session cache via `request.server.app.cache` — `.get(sessionId)` / `.set(sessionId, data, ttl)`. Re-fetch from DAL on cache miss.
 - **Change/Fix journeys**: two-phase pattern — "change" routes let users edit one field; "fix" routes (interrupters) force users to correct invalid data before proceeding.
 - **Address lookup**: postcode/address search via OS Places (`src/services/os-places/address-lookup-service.js`); a stub is used when `OS_PLACES_STUB=true`.
@@ -75,8 +75,10 @@ Webpack bundles `src/client/` → `.public/`. Entry points: `src/client/javascri
 
 ## Common tasks
 
-- **New service**: `src/services/{domain}/my-service.js` → accept `credentials`, extract `sessionId`, call `getDalConnector().query(...)`, map the response, export the function.
-- **New route**: `src/routes/{domain}/routes.js` → thin handler delegating to a service, add a Joi schema in `src/schemas/`, register in `src/routes/routes.js`.
+Layer conventions live in `.github/instructions/` — routes, services, presenters, mappers, schemas, views and tests each have their own file. Read the relevant one before adding to that layer rather than inferring from nearby code.
+
+- **New service**: `src/services/{domain}/<verb>-<domain>-<field>-service.js` — see `services.instructions.md`.
+- **New route**: `src/routes/{domain}/{domain}-{field}-{change|check}-routes.js`, registered in `src/routes/routes.js` — see `routes.instructions.md`.
 - **New DAL query**: `src/dal/queries/my-query.js` exporting the GraphQL string → import in the service → `dalConnector.query(myQuery, variables, { sessionId })`.
 - **Business selection/switching** (multiple enrolments): presenter adds link only when `enrolmentCount > 1`; route passes `auth.credentials.enrolmentCount`; template guards navigation with `{% if backLink %}`; auth plugin sets `forceReselection` for the route path to trigger Defra ID reselection.
 

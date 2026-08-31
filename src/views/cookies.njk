@@ -10,6 +10,21 @@
 {% endblock %}
 
 {% block content %}
+  {% if updated %}
+    <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header">
+        <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+          Success
+        </h2>
+      </div>
+      <div class="govuk-notification-banner__content">
+        <h3 class="govuk-notification-banner__heading">
+          You’ve set your cookie preferences.
+        </h3>
+      </div>
+    </div>
+  {% endif %}
+
   {{ appHeading({
     text: "Cookies"
   }) }}
@@ -77,7 +92,7 @@
         rows: [
           [
             {
-              text: "accept_analytics_cookies"
+              text: "fcp_sfd_cookie_policy"
             },
             {
               text: "Lets us know you've already seen our cookie message"
@@ -154,6 +169,19 @@
           ]
         ]
       }) }}
+
+      <h2 class="govuk-heading-m">Change your cookie settings</h2>
+      <form action="/cookies" method="post" novalidate>
+        <input type="hidden" name="crumb" value="{{ crumb }}">
+        <input type="hidden" name="async" value="false">
+        <input type="hidden" name="referer" value="{{ referer }}">
+
+        {{ govukRadios(analytics) }}
+
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Save cookie settings
+        </button>
+      </form>
     </div>
   </div>
 {% endblock %}

@@ -8,6 +8,7 @@ import { featureToggleConfig } from './feature-toggle.js'
 import { osPlacesConfig } from './os-places.js'
 import { allowListsConfig } from './allow-lists.js'
 import { servicesConfig } from './services.js'
+import { cookieConfig } from './cookie.js'
 
 const config = convict({
   ...serverConfig,
@@ -18,7 +19,8 @@ const config = convict({
   ...osPlacesConfig,
   ...featureToggleConfig,
   ...allowListsConfig,
-  ...servicesConfig
+  ...servicesConfig,
+  ...cookieConfig
 })
 
 config.validate({ allowed: 'strict' })

@@ -9,7 +9,7 @@
  * @module updatePersonalDobChangeService
  */
 
-import { mutations } from '@defra/fcp-sfd-frontend-engine'
+import { constants, mutations } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
 import { updateDalService } from '../DAL/update-dal-service.js'
@@ -35,7 +35,7 @@ const updatePersonalDobChangeService = async (yar, credentials) => {
 
   yar.clear('personalDetailsUpdate')
 
-  flashNotification(yar, 'Success', 'You have updated your date of birth')
+  flashNotification(yar, 'Success', constants.successMessages.PERSONAL_DOB)
 }
 
 export {

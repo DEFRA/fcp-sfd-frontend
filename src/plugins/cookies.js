@@ -1,6 +1,6 @@
 import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../config/index.js'
-import { getCurrentPolicy, removeAnalytics } from '../cookies.js'
+import { getCurrentPolicy, removeAnalytics } from '../utils/cookies.js'
 
 const cookieNamePolicy = config.get('cookie.name')
 const cookiePolicy = config.get('cookie.policy')

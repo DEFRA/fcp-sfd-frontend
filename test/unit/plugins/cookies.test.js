@@ -1,6 +1,6 @@
 import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { getCurrentPolicy, removeAnalytics } from '../../../src/cookies.js'
+import { getCurrentPolicy, removeAnalytics } from '../../../src/utils/cookies.js'
 
 const mockConfigGet = vi.fn()
 vi.mock('../../../src/config/index.js', () => ({
@@ -9,7 +9,7 @@ vi.mock('../../../src/config/index.js', () => ({
   }
 }))
 
-vi.mock('../../../src/cookies.js', () => ({
+vi.mock('../../../src/utils/cookies.js', () => ({
   getCurrentPolicy: vi.fn(),
   removeAnalytics: vi.fn()
 }))

@@ -41,4 +41,16 @@ describe('cookiesPresenter', () => {
 
     expect(result.referer).toBe('')
   })
+
+  test('should not set an errorMessage when there are no errors', () => {
+    const result = cookiesPresenter(false, '/some-path', { analytics: true })
+
+    expect(result.analytics.errorMessage).toBeFalsy()
+  })
+
+  test('should set the analytics errorMessage when an analytics error is provided', () => {
+    const result = cookiesPresenter(false, '/some-path', { analytics: true }, { analytics: { text: 'Select yes if you want to accept analytics cookies' } })
+
+    expect(result.analytics.errorMessage).toEqual({ text: 'Select yes if you want to accept analytics cookies' })
+  })
 })

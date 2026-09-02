@@ -1,4 +1,4 @@
-import { config } from './config/index.js'
+import { config } from '../config/index.js'
 
 const cookieNamePolicy = config.get('cookie.name')
 const cookiePolicy = config.get('cookie.policy')

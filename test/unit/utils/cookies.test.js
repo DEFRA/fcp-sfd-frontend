@@ -1,7 +1,7 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
 const mockConfigGet = vi.fn()
-vi.mock('../../src/config/index.js', () => ({
+vi.mock('../../../src/config/index.js', () => ({
   config: {
     get: mockConfigGet
   }
@@ -38,7 +38,7 @@ describe('cookies', () => {
       }
     })
 
-    cookiesModule = await import('../../src/cookies.js')
+    cookiesModule = await import('../../../src/utils/cookies.js')
 
     request = {
       state: {

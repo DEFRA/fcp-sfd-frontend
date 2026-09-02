@@ -2,7 +2,7 @@
  * Formats data ready for presenting in the `/cookies` page
  * @module cookiesPresenter
  */
-const cookiesPresenter = (updated, referer = '', cookiesPolicy = {}) => {
+const cookiesPresenter = (updated, referer = '', cookiesPolicy = {}, errors = {}) => {
   return {
     analytics: {
       idPrefix: 'analytics',
@@ -13,6 +13,7 @@ const cookiesPresenter = (updated, referer = '', cookiesPolicy = {}) => {
           classes: 'govuk-fieldset__legend--s'
         }
       },
+      errorMessage: errors.analytics && { text: errors.analytics.text },
       items: [
         { value: true, text: 'Yes', checked: !!cookiesPolicy.analytics },
         { value: false, text: 'No', checked: !cookiesPolicy.analytics }

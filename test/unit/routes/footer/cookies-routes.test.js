@@ -1,11 +1,12 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import { getCurrentPolicy, updatePolicy } from '../../../../src/cookies.js'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+import { getCurrentPolicy, updatePolicy } from '../../../../src/utils/cookies.js'
 import { cookiesPresenter } from '../../../../src/presenters/footer/cookies-presenter.js'
 import { cookies } from '../../../../src/routes/footer/cookies-routes.js'
 
 const [getCookies, postCookies] = cookies
 
-vi.mock('../../../../src/cookies.js', () => ({
+vi.mock('../../../../src/utils/cookies.js', () => ({
   getCurrentPolicy: vi.fn(),
   updatePolicy: vi.fn()
 }))
@@ -104,6 +105,75 @@ describe('Cookies endpoints', () => {
       })
       expect(responseMock).not.toHaveBeenCalled()
       expect(result).toBe('mock view return')
+    })
+
+    describe('validate.failAction', () => {
+      let err
+      let responseStub
+
+      beforeEach(() => {
+        err = {
+          details: [
+            {
+              message: 'Select yes if you want to accept analytics cookies',
+              path: ['analytics'],
+              type: 'any.required'
+            }
+          ]
+        }
+
+        responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        viewMock.mockReturnValue(responseStub)
+      })
+
+      test('should fetch the current cookie policy using the raw referer', () => {
+        const mockRequest = { payload: { referer: '/some-page' } }
+        const h = { view: viewMock }
+
+        postCookies.options.validate.failAction(mockRequest, h, err)
+
+        expect(getCurrentPolicy).toHaveBeenCalledWith(mockRequest, h)
+      })
+
+      test('should re-render the cookies view with formatted errors and a 400 status', () => {
+        const mockRequest = { payload: { referer: '/some-page' } }
+        const h = { view: viewMock }
+        const cookiesPolicy = { confirmed: false, analytics: false }
+        const presenterResult = { analytics: {}, updated: false, referer: '/some-page' }
+        const formattedErrors = { analytics: { text: 'Select yes if you want to accept analytics cookies' } }
+
+        getCurrentPolicy.mockReturnValue(cookiesPolicy)
+        cookiesPresenter.mockReturnValue(presenterResult)
+
+        const result = postCookies.options.validate.failAction(mockRequest, h, err)
+
+        expect(cookiesPresenter).toHaveBeenCalledWith(false, '/some-page', cookiesPolicy, formattedErrors)
+        expect(viewMock).toHaveBeenCalledWith('cookies', {
+          pageTitle: 'Cookies',
+          heading: 'How we use cookies to store information about how you use this service.',
+          backLink: '/some-page',
+          ...presenterResult
+        })
+        expect(responseStub.code).toHaveBeenCalledWith(constants.statusCodes.BAD_REQUEST)
+        expect(responseStub.takeover).toHaveBeenCalled()
+        expect(result).toBe(responseStub)
+      })
+
+      test('should handle undefined error details', () => {
+        const mockRequest = { payload: { referer: '/some-page' } }
+        const h = { view: viewMock }
+        const cookiesPolicy = { confirmed: false, analytics: false }
+
+        getCurrentPolicy.mockReturnValue(cookiesPolicy)
+
+        postCookies.options.validate.failAction(mockRequest, h, {})
+
+        expect(cookiesPresenter).toHaveBeenCalledWith(false, '/some-page', cookiesPolicy, {})
+      })
     })
   })
 })

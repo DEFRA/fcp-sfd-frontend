@@ -1,6 +1,7 @@
-import Joi from 'joi'
-import { getCurrentPolicy, updatePolicy } from '../../cookies.js'
+import { utils, constants } from '@defra/fcp-sfd-frontend-engine'
+import { getCurrentPolicy, updatePolicy } from '../../utils/cookies.js'
 import { cookiesPresenter } from '../../presenters/footer/cookies-presenter.js'
+import { cookiesSchema } from '../../schemas/footer/cookies-schema.js'
 
 const getCookies = {
   method: 'GET',
@@ -27,11 +28,20 @@ const postCookies = {
   options: {
     auth: false,
     validate: {
-      payload: Joi.object({
-        analytics: Joi.boolean().required(),
-        async: Joi.boolean().default(false),
-        referer: Joi.string().allow('').default('')
-      })
+      payload: cookiesSchema,
+      options: { abortEarly: false },
+      failAction: (request, h, err) => {
+        const errors = utils.formatValidationErrors(err.details || [])
+        const { payload } = request
+        const cookiesPolicy = getCurrentPolicy(request, h)
+
+        return h.view('cookies', {
+          pageTitle: 'Cookies',
+          heading: 'How we use cookies to store information about how you use this service.',
+          backLink: payload.referer,
+          ...cookiesPresenter(false, payload.referer, cookiesPolicy, errors)
+        }).code(constants.statusCodes.BAD_REQUEST).takeover()
+      }
     }
   },
   handler: (request, h) => {

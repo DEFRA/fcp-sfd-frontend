@@ -17,14 +17,18 @@ export const getCurrentPolicy = (request, h) => {
 }
 
 export const updatePolicy = (request, h, analytics) => {
-  const cookiesPolicy = getCurrentPolicy(request, h)
+  const currentPolicy = getCurrentPolicy(request, h)
 
-  cookiesPolicy.analytics = analytics
-  cookiesPolicy.confirmed = true
+  const cookiesPolicy = {
+    ...currentPolicy,
+    confirmed: true,
+    essential: true,
+    analytics: Boolean(analytics)
+  }
 
   h.state(cookieNamePolicy, cookiesPolicy, { ...cookiePolicy, ...cookieConfig })
 
-  if (!analytics) {
+  if (!cookiesPolicy.analytics) {
     removeAnalytics(request, h)
   }
 }

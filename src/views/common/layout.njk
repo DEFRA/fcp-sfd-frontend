@@ -21,6 +21,12 @@
   {% endif %}
 {% endblock %}
 
+{% block bodyStart %}
+  {% if cookiesPolicy and not cookiesPolicy.confirmed %}
+    {% include "common/cookie-banner/cookie-banner.njk" %}
+  {% endif %}
+{% endblock %}
+
 {% block header %}
   <div class="govuk-header">
     <div class="govuk-header__container govuk-width-container">

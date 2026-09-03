@@ -16,6 +16,7 @@ import { pulse } from './pulse.js'
 import { session } from './session.js'
 import { sso } from './sso.js'
 import { requestContext } from './request-context.js'
+import { cookies } from './cookies.js'
 
 export const plugins = [
   Crumb,
@@ -25,6 +26,7 @@ export const plugins = [
   csp,
   auth,
   session,
+  cookies,
   headersPlugin,
   errors,
   requestLogger,

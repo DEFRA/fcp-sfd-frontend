@@ -5,6 +5,7 @@ import { sso } from '../../../src/plugins/sso.js'
 import { session } from '../../../src/plugins/session.js'
 import { csp } from '../../../src/plugins/content-security-policy.js'
 import { auth } from '../../../src/plugins/auth.js'
+import { cookies } from '../../../src/plugins/cookies.js'
 import { plugins } from '../../../src/plugins/index.js'
 import { router } from '../../../src/plugins/router.js'
 
@@ -27,6 +28,11 @@ describe('registerPlugins', () => {
   test('should contain sso plugin', async () => {
     const ssoIndex = plugins.findIndex(plugin => plugin.plugin.name === 'sso')
     expect(sso).toEqual(plugins[ssoIndex])
+  })
+
+  test('should contain cookies plugin', async () => {
+    const cookiesIndex = plugins.findIndex(plugin => plugin.plugin.name === 'cookies')
+    expect(cookies).toEqual(plugins[cookiesIndex])
   })
 
   test('should contain router plugin', async () => {

@@ -5,5 +5,5 @@ import { cookies } from './cookies-routes.js'
 export const footerRoutes = [
   accessibilityStatement,
   contactUs,
-  cookies
+  ...cookies
 ]

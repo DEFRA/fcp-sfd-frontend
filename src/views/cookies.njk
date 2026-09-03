@@ -11,12 +11,12 @@
 {% endblock %}
 
 {% block content %}
-  {% if errors %}
+  {% if analytics and analytics.errorMessage %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: [
         {
-          text: errors.analytics.text,
+          text: analytics.errorMessage.text,
           href: "#analytics"
         }
       ]

@@ -79,10 +79,10 @@ describe('cookies', () => {
     expect(h.state).not.toHaveBeenCalled()
   })
 
-  test('updatePolicy sets cookie to accepted', () => {
+  test('updatePolicy sets cookie to accepted and returns the updated policy', () => {
     request.state[cookieNamePolicy] = defaultCookie
 
-    cookiesModule.updatePolicy(request, h, true)
+    const result = cookiesModule.updatePolicy(request, h, true)
 
     expect(h.state).toHaveBeenCalledWith(
       cookieNamePolicy,
@@ -90,12 +90,13 @@ describe('cookies', () => {
       { ...cookiePolicy, ...cookieConfig }
     )
     expect(h.unstate).not.toHaveBeenCalled()
+    expect(result).toStrictEqual({ confirmed: true, essential: true, analytics: true })
   })
 
-  test('updatePolicy sets cookie to rejected and removes analytics cookies', () => {
+  test('updatePolicy sets cookie to rejected, removes analytics cookies and returns the updated policy', () => {
     request.state[cookieNamePolicy] = defaultCookie
 
-    cookiesModule.updatePolicy(request, h, false)
+    const result = cookiesModule.updatePolicy(request, h, false)
 
     expect(h.state).toHaveBeenCalledWith(
       cookieNamePolicy,
@@ -104,6 +105,7 @@ describe('cookies', () => {
     )
     expect(h.unstate).toHaveBeenCalledWith('_ga')
     expect(h.unstate).toHaveBeenCalledWith('_gid')
+    expect(result).toStrictEqual({ confirmed: true, essential: true, analytics: false })
   })
 
   test('removeAnalytics removes cookies matching the Google Analytics naming pattern', () => {

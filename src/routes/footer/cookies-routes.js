@@ -47,13 +47,11 @@ const postCookies = {
   handler: (request, h) => {
     const { payload } = request
 
-    updatePolicy(request, h, payload.analytics)
+    const cookiesPolicy = updatePolicy(request, h, payload.analytics)
 
     if (payload.async) {
       return h.response({ message: 'success' })
     }
-
-    const cookiesPolicy = getCurrentPolicy(request, h)
 
     return h.view('cookies', {
       pageTitle: 'Cookies',

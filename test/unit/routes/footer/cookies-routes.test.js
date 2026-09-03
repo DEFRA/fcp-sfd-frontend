@@ -89,13 +89,13 @@ describe('Cookies endpoints', () => {
       const cookiesPolicy = { confirmed: true, analytics: false }
       const presenterResult = { analytics: {}, updated: true, referer: '/some-page' }
 
-      getCurrentPolicy.mockReturnValue(cookiesPolicy)
+      updatePolicy.mockReturnValue(cookiesPolicy)
       cookiesPresenter.mockReturnValue(presenterResult)
 
       const result = postCookies.handler(mockRequest, h)
 
       expect(updatePolicy).toHaveBeenCalledWith(mockRequest, h, false)
-      expect(getCurrentPolicy).toHaveBeenCalledWith(mockRequest, h)
+      expect(getCurrentPolicy).not.toHaveBeenCalled()
       expect(cookiesPresenter).toHaveBeenCalledWith(true, '/some-page', cookiesPolicy)
       expect(viewMock).toHaveBeenCalledWith('cookies', {
         pageTitle: 'Cookies',

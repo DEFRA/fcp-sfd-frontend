@@ -31,6 +31,8 @@ export const updatePolicy = (request, h, analytics) => {
   if (!cookiesPolicy.analytics) {
     removeAnalytics(request, h)
   }
+
+  return cookiesPolicy
 }
 
 export const removeAnalytics = (request, h) => {

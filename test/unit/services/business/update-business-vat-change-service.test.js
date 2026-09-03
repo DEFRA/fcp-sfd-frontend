@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Engine dependencies
-import { constants, mutations } from '@defra/fcp-sfd-frontend-engine'
+import { mutations } from '@defra/fcp-sfd-frontend-engine'
 
 // Mocks
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
@@ -74,7 +74,7 @@ describe('updateBusinessVatChangeService', () => {
     test('adds a flash notification confirming the change in data', async () => {
       await updateBusinessVatChangeService(yar, credentials)
 
-      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', constants.successMessages.BUSINESS_VAT)
+      expect(flashNotification).toHaveBeenCalledWith(yar, 'Success', 'You have updated your VAT registration number')
     })
   })
 

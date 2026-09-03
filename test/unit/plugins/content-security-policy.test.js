@@ -38,7 +38,6 @@ describe('contentSecurityPolicy', () => {
   test('should restrict the connect src to self and Google Analytics', () => {
     expect(csp.options.connectSrc).toEqual([
       'self',
-      'https://www.google.com',
       'https://*.google-analytics.com',
       'https://*.analytics.google.com',
       'https://*.googletagmanager.com'

@@ -36,6 +36,7 @@ services:
       WOODLAND_MANAGEMENT_ALLOWED_SBIS: ${WOODLAND_MANAGEMENT_ALLOWED_SBIS}
       WMP_ENDPOINT: ${WMP_ENDPOINT:-https://grants-ui.test.cdp-int.defra.cloud/woodland}
       GOOGLE_TAG_MANAGER_KEY: ${GOOGLE_TAG_MANAGER_KEY}
+
   upstream-mock:
     image: defradigital/fcp-dal-upstream-mock:0.99.0
     environment:

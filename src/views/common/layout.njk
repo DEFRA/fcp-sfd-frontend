@@ -16,7 +16,7 @@
 {% block head %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
 
-  {% if cookiesPolicy and cookiesPolicy.analytics %}
+  {% if analyticsEnabled %}
     {% include "google-tag-manager/head-content.njk" %}
   {% endif %}
 
@@ -30,7 +30,7 @@
     {% include "common/cookie-banner/cookie-banner.njk" %}
   {% endif %}
 
-  {% if cookiesPolicy and cookiesPolicy.analytics %}
+  {% if analyticsEnabled %}
     {% include "google-tag-manager/body-content.njk" %}
   {% endif %}
 {% endblock %}

@@ -12,8 +12,9 @@ const createDefaultPolicy = (h) => {
   return cookiesPolicy
 }
 
+// request.app takes precedence so the policy just written by POST /cookies is used for the rest of that response
 export const getCurrentPolicy = (request, h) => {
-  return request.state[cookieNamePolicy] ?? createDefaultPolicy(h)
+  return request.app?.cookiesPolicy ?? request.state[cookieNamePolicy] ?? createDefaultPolicy(h)
 }
 
 export const updatePolicy = (request, h, analytics) => {
@@ -27,6 +28,10 @@ export const updatePolicy = (request, h, analytics) => {
   }
 
   h.state(cookieNamePolicy, cookiesPolicy, { ...cookiePolicy, ...cookieConfig })
+
+  if (request.app) {
+    request.app.cookiesPolicy = cookiesPolicy
+  }
 
   if (!cookiesPolicy.analytics) {
     removeAnalytics(request, h)

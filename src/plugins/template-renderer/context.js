@@ -36,6 +36,8 @@ export const context = async (request) => {
       const webpackAssetPath = webpackManifest?.[asset]
       const result = `${assetPath}/${webpackAssetPath ?? asset}`
       return result
-    }
+    },
+    googleTagManagerKey: config.get('googleAnalytics.googleTagManagerKey'),
+    analyticsEnabled: Boolean(config.get('googleAnalytics.googleTagManagerKey') && ctx.cookiesPolicy?.analytics)
   }
 }

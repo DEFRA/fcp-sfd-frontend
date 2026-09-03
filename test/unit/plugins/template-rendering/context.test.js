@@ -131,7 +131,9 @@ describe('#context', () => {
           }
         ],
         serviceName: 'Farm and Land Service',
-        serviceUrl: '/'
+        serviceUrl: '/',
+        googleTagManagerKey: '',
+        analyticsEnabled: false
       })
     })
 
@@ -204,7 +206,9 @@ describe('#context cache', () => {
           }
         ],
         serviceName: 'Farm and Land Service',
-        serviceUrl: '/'
+        serviceUrl: '/',
+        googleTagManagerKey: '',
+        analyticsEnabled: false
       })
     })
   })
@@ -264,7 +268,9 @@ describe('#context cache', () => {
           }
         ],
         serviceName: 'Farm and Land Service',
-        serviceUrl: '/'
+        serviceUrl: '/',
+        googleTagManagerKey: '',
+        analyticsEnabled: false
       })
     })
 
@@ -288,7 +294,9 @@ describe('#context cache', () => {
           }
         ],
         serviceName: 'Farm and Land Service',
-        serviceUrl: '/'
+        serviceUrl: '/',
+        googleTagManagerKey: '',
+        analyticsEnabled: false
       })
     })
 
@@ -308,7 +316,9 @@ describe('#context cache', () => {
           }
         ],
         serviceName: 'Farm and Land Service',
-        serviceUrl: '/'
+        serviceUrl: '/',
+        googleTagManagerKey: '',
+        analyticsEnabled: false
       })
     })
 
@@ -331,7 +341,9 @@ describe('#context cache', () => {
           }
         ],
         serviceName: 'Farm and Land Service',
-        serviceUrl: '/'
+        serviceUrl: '/',
+        googleTagManagerKey: '',
+        analyticsEnabled: false
       })
     })
   })

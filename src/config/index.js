@@ -9,6 +9,7 @@ import { osPlacesConfig } from './os-places.js'
 import { allowListsConfig } from './allow-lists.js'
 import { servicesConfig } from './services.js'
 import { cookieConfig } from './cookie.js'
+import { googleAnalyticsConfig } from './google-analytics.js'
 
 const config = convict({
   ...serverConfig,
@@ -20,7 +21,8 @@ const config = convict({
   ...featureToggleConfig,
   ...allowListsConfig,
   ...servicesConfig,
-  ...cookieConfig
+  ...cookieConfig,
+  ...googleAnalyticsConfig
 })
 
 config.validate({ allowed: 'strict' })

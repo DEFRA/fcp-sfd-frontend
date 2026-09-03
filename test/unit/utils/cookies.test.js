@@ -41,6 +41,7 @@ describe('cookies', () => {
     cookiesModule = await import('../../../src/utils/cookies.js')
 
     request = {
+      app: {},
       state: {
         [cookieNamePolicy]: undefined,
         _ga: '123',
@@ -117,5 +118,27 @@ describe('cookies', () => {
     expect(h.unstate).toHaveBeenCalledWith('_gid')
     expect(h.unstate).toHaveBeenCalledWith('_gat_foo')
     expect(h.unstate).not.toHaveBeenCalledWith('session')
+  })
+
+  test('updatePolicy makes the new policy authoritative for the rest of the response', () => {
+    request.state[cookieNamePolicy] = { confirmed: true, essential: true, analytics: true }
+
+    cookiesModule.updatePolicy(request, h, false)
+
+    expect(cookiesModule.getCurrentPolicy(request, h)).toStrictEqual({
+      confirmed: true,
+      essential: true,
+      analytics: false
+    })
+  })
+
+  test('getCurrentPolicy falls back to the request cookie when no policy has been written', () => {
+    request.state[cookieNamePolicy] = { confirmed: true, essential: true, analytics: true }
+
+    expect(cookiesModule.getCurrentPolicy(request, h)).toStrictEqual({
+      confirmed: true,
+      essential: true,
+      analytics: true
+    })
   })
 })

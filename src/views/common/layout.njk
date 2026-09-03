@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block bodyStart %}
-  {% if not cookiesPolicy.confirmed %}
+  {% if cookiesPolicy and not cookiesPolicy.confirmed %}
     {% include "common/cookie-banner/cookie-banner.njk" %}
   {% endif %}
 {% endblock %}

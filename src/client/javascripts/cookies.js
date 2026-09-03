@@ -21,9 +21,22 @@ export default {
     const submitPreference = (accepted) => {
       const xhr = new XMLHttpRequest() // eslint-disable-line no-undef
 
-      xhr.open('POST', '/cookies', true)
+      const revertUiOnFailure = () => {
+        const questionBanner = document.querySelector('.js-question-banner')
+        questionBanner?.removeAttribute('hidden')
+        acceptedBanner?.setAttribute('hidden', 'hidden')
+        rejectedBanner?.setAttribute('hidden', 'hidden')
+      }
 
+      xhr.open('POST', '/cookies', true)
       xhr.setRequestHeader('Content-Type', 'application/json')
+
+      xhr.onload = () => {
+        if (xhr.status < 200 || xhr.status >= 300) {
+          revertUiOnFailure()
+        }
+      }
+      xhr.onerror = revertUiOnFailure
 
       xhr.send(JSON.stringify({
         analytics: accepted,

@@ -8,6 +8,7 @@ import { featureToggleConfig } from './feature-toggle.js'
 import { osPlacesConfig } from './os-places.js'
 import { allowListsConfig } from './allow-lists.js'
 import { servicesConfig } from './services.js'
+import { cookieConfig } from './cookie.js'
 import { googleAnalyticsConfig } from './google-analytics.js'
 
 const config = convict({
@@ -20,6 +21,7 @@ const config = convict({
   ...featureToggleConfig,
   ...allowListsConfig,
   ...servicesConfig,
+  ...cookieConfig,
   ...googleAnalyticsConfig
 })
 

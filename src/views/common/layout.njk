@@ -16,6 +16,10 @@
 {% block head %}
   <link href="{{ getAssetPath('stylesheets/application.scss') }}" rel="stylesheet">
 
+  {% if cookiesPolicy.analytics %}
+    {% include "google-tag-manager/head-content.njk" %}
+  {% endif %}
+
   {% if metaDescription %}
     <meta name="description" content="{{ metaDescription }}">
   {% endif %}
@@ -24,6 +28,10 @@
 {% block bodyStart %}
   {% if cookiesPolicy and not cookiesPolicy.confirmed %}
     {% include "common/cookie-banner/cookie-banner.njk" %}
+  {% endif %}
+
+  {% if cookiesPolicy.analytics %}
+    {% include "google-tag-manager/body-content.njk" %}
   {% endif %}
 {% endblock %}
 

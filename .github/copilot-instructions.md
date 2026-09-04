@@ -79,7 +79,7 @@ Layer conventions live in `.github/instructions/` — routes, services, presente
 
 - **New service**: `src/services/{domain}/<verb>-<domain>-<field>-service.js` — see `services.instructions.md`.
 - **New route**: `src/routes/{domain}/{domain}-{field}-{change|check}-routes.js`, registered in `src/routes/routes.js` — see `routes.instructions.md`.
-- **New DAL query**: `src/dal/queries/my-query.js` exporting the GraphQL string → import in the service → `dalConnector.query(myQuery, variables, { sessionId })`.
+- **New DAL query**: add generic GraphQL queries to `@defra/fcp-sfd-frontend-engine`, then import the engine export in the service and call `dalConnector.query(query, variables, { sessionId })`.
 - **Business selection/switching** (multiple enrolments): presenter adds link only when `enrolmentCount > 1`; route passes `auth.credentials.enrolmentCount`; template guards navigation with `{% if backLink %}`; auth plugin sets `forceReselection` for the route path to trigger Defra ID reselection.
 
 ## References

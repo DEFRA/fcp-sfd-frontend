@@ -105,7 +105,7 @@ PAYLOAD=$(jq -n \
   --arg text "$DESCRIPTION" \
   --arg issuetype "$ISSUE_TYPE" \
   --arg epic "$EPIC_KEY" \
-  --args -- "${BULLETS[@]}" \
+  --args \
   '{
     fields: (
       {
@@ -127,7 +127,7 @@ PAYLOAD=$(jq -n \
       }
       + (if $epic == "" then {} else { parent: { key: $epic } } end)
     )
-  }')
+  }' -- "${BULLETS[@]}")
 
 curl -s -X POST "$JIRA_BASE_URL/rest/api/3/issue" \
   -H "Authorization: Basic $(printf '%s' "$JIRA_EMAIL:$JIRA_TOKEN" | base64 | tr -d '\n')" \

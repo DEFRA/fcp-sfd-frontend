@@ -10,22 +10,24 @@ Analyse the current git branch, commits, and diff to produce a branch name, PR t
 
 ## Prerequisites (first-time setup)
 
-The optional Jira ticket feature needs three values. The API token is a secret and lives in the macOS Keychain; the other two are not secret.
+The optional Jira ticket feature needs three values. The API token is a secret and should never be stored in the repo.
 
-- **`JIRA_TOKEN`** — read from Keychain at runtime, never stored in the repo:
-  ```bash
-  JIRA_TOKEN=$(security find-generic-password -a "$USER" -s jira-api-token -w)
-  ```
-  One-time add (generate a token at https://id.atlassian.com/manage-profile/security/api-tokens):
-  ```bash
-  security add-generic-password -a "$USER" -s jira-api-token -w '<your-token>' -U
-  ```
+- **`JIRA_TOKEN`** — provide via secure storage or environment variable. Generate a token at https://id.atlassian.com/manage-profile/security/api-tokens, then:
+  - **macOS (recommended):** Store in Keychain and export at runtime
+    ```bash
+    security add-generic-password -a "$USER" -s jira-api-token -w '<your-token>' -U
+    export JIRA_TOKEN=$(security find-generic-password -a "$USER" -s jira-api-token -w)
+    ```
+  - **Cross-platform fallback:** Set as an environment variable
+    ```bash
+    export JIRA_TOKEN='<your-token>'
+    ```
 - **`JIRA_BASE_URL`** — defaults to `https://eaflood.atlassian.net`.
 - **`JIRA_EMAIL`** — your Defra email. Set it in your personal user instructions rather than here, since this skill is shared.
 
 Before any Jira call, fail loudly if the token is missing:
 ```bash
-: "${JIRA_TOKEN:?JIRA_TOKEN not set — run: security add-generic-password -a \$USER -s jira-api-token -w '<token>' -U}"
+: "${JIRA_TOKEN:?JIRA_TOKEN not set — set via Keychain (macOS: security add-generic-password -a \$USER -s jira-api-token -w '<token>' -U) or export JIRA_TOKEN='<token>'}"
 ```
 Never commit credentials to the repo.
 
@@ -57,7 +59,7 @@ Look for ticket patterns in branch name, commits, or $ARGUMENTS:
 
 If the user says they don't have a ticket but would like one created, create it via the Jira REST API:
 
-- Uses: `$JIRA_EMAIL`, `$JIRA_TOKEN` (from Keychain), `$JIRA_BASE_URL`
+- Uses: `$JIRA_EMAIL`, `$JIRA_TOKEN` (from environment), `$JIRA_BASE_URL`
 - Project key: FLS2
 - Issue type: inferred from change classification (Task for refactors/chores, Story for features, Bug for fixes)
 - Summary: derived from the PR title

@@ -25,8 +25,10 @@ The optional Jira ticket feature needs three values. The API token is a secret a
 - **`JIRA_BASE_URL`** — defaults to `https://eaflood.atlassian.net`.
 - **`JIRA_EMAIL`** — your Defra email. Set it in your personal user instructions rather than here, since this skill is shared.
 
-Before any Jira call, fail loudly if the token is missing:
+Before any Jira call, apply the default and fail loudly if anything required is still missing:
 ```bash
+: "${JIRA_BASE_URL:=https://eaflood.atlassian.net}"
+: "${JIRA_EMAIL:?JIRA_EMAIL not set — see your personal user instructions}"
 : "${JIRA_TOKEN:?JIRA_TOKEN not set — set via Keychain (macOS: security add-generic-password -a \$USER -s jira-api-token -w '<token>' -U) or export JIRA_TOKEN='<token>'}"
 ```
 Never commit credentials to the repo.
@@ -66,11 +68,16 @@ If the user says they don't have a ticket but would like one created, create it 
 - Description: ADF-formatted summary of changes
 - Epic link (optional): if the user mentions an epic (e.g. "tech debt epic") or one is obvious from context, find its key and set it as the `parent` field so the ticket links correctly
 
-**Finding an epic key:** search by keyword rather than guessing — the epic key changes over time and old `/rest/api/3/search` is deprecated in favour of `/rest/api/3/search/jql`:
+**Finding an epic key:** search by keyword rather than guessing — the epic key changes over time and old `/rest/api/3/search` is deprecated in favour of `/rest/api/3/search/jql`. Capture the keyword via a quoted heredoc (not inline in the command) so any quotes or special characters in it can't break the shell command:
 ```bash
+KEYWORD=$(cat <<'EOF'
+<keyword>
+EOF
+)
+JQL="project = FLS2 AND issuetype = Epic AND summary ~ \"$KEYWORD\""
 curl -s -G "$JIRA_BASE_URL/rest/api/3/search/jql" \
   -H "Authorization: Basic $(printf '%s' "$JIRA_EMAIL:$JIRA_TOKEN" | base64 | tr -d '\n')" \
-  --data-urlencode 'jql=project = FLS2 AND issuetype = Epic AND summary ~ "<keyword>"' \
+  --data-urlencode "jql=$JQL" \
   --data-urlencode 'fields=summary'
 ```
 If multiple epics match, show the user the candidates and ask which one. If none match, proceed without a parent link and tell the user so.
@@ -78,47 +85,57 @@ If multiple epics match, show the user the candidates and ask which one. If none
 **Auth:** Basic auth with base64-encoded `"$JIRA_EMAIL:$JIRA_TOKEN"`
 **Endpoint:** `POST $JIRA_BASE_URL/rest/api/3/issue`
 
+Never splice generated titles/descriptions directly into a quoted JSON literal — a stray quote or apostrophe in that text breaks the command and can turn the rest of the payload into shell syntax. Instead, capture each value via a quoted heredoc, then build the JSON with `jq --arg` so it's always safely escaped:
 ```bash
+SUMMARY=$(cat <<'EOF'
+<ticket title>
+EOF
+)
+DESCRIPTION=$(cat <<'EOF'
+<one-paragraph summary of what this change does and why>
+EOF
+)
+ISSUE_TYPE='<Task|Story|Bug>'
+EPIC_KEY='<epic key, leave empty if none>'
+# one BULLETS entry per change bullet used in the PR description
+BULLETS=('<change bullet>')
+
+PAYLOAD=$(jq -n \
+  --arg summary "$SUMMARY" \
+  --arg text "$DESCRIPTION" \
+  --arg issuetype "$ISSUE_TYPE" \
+  --arg epic "$EPIC_KEY" \
+  --args -- "${BULLETS[@]}" \
+  '{
+    fields: (
+      {
+        project: { key: "FLS2" },
+        summary: $summary,
+        description: {
+          type: "doc",
+          version: 1,
+          content: [
+            { type: "paragraph", content: [{ type: "text", text: $text }] },
+            { type: "bulletList", content: [
+              $ARGS.positional[] | { type: "listItem", content: [
+                { type: "paragraph", content: [{ type: "text", text: . }] }
+              ] }
+            ] }
+          ]
+        },
+        issuetype: { name: $issuetype }
+      }
+      + (if $epic == "" then {} else { parent: { key: $epic } } end)
+    )
+  }')
+
 curl -s -X POST "$JIRA_BASE_URL/rest/api/3/issue" \
   -H "Authorization: Basic $(printf '%s' "$JIRA_EMAIL:$JIRA_TOKEN" | base64 | tr -d '\n')" \
   -H "Content-Type: application/json" \
-  -d '{
-    "fields": {
-      "project": { "key": "FLS2" },
-      "summary": "<ticket title>",
-      "description": {
-        "type": "doc",
-        "version": 1,
-        "content": [
-          {
-            "type": "paragraph",
-            "content": [
-              { "type": "text", "text": "<one-paragraph summary of what this change does and why>" }
-            ]
-          },
-          {
-            "type": "bulletList",
-            "content": [
-              {
-                "type": "listItem",
-                "content": [
-                  {
-                    "type": "paragraph",
-                    "content": [{ "type": "text", "text": "<change bullet>" }]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      "issuetype": { "name": "<Task|Story|Bug>" },
-      "parent": { "key": "<epic-key, omit this field entirely if no epic>" }
-    }
-  }'
+  -d "$PAYLOAD"
 ```
 
-Build the `content` array from the same summary and change bullets used for the PR description — never send an empty `content: []`. Omit the `parent` field entirely (not just leave it blank) when there's no epic to link.
+Build `BULLETS` from the same change bullets used for the PR description — never send an empty content array. Leave `EPIC_KEY` empty (not omitted) when there's no epic to link; the `jq` expression drops the `parent` field automatically in that case.
 
 After creation, use the returned ticket key (e.g. FLS2-42) to prefix the branch name and PR title as normal. The Jira/GitHub integration links the PR to the ticket off that prefix, so no separate linking step is needed.
 

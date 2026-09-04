@@ -99,13 +99,14 @@ ISSUE_TYPE='<Task|Story|Bug>'
 EPIC_KEY='<epic key, leave empty if none>'
 # one BULLETS entry per change bullet used in the PR description
 BULLETS=('<change bullet>')
+BULLETS_JSON=$(printf '%s\n' "${BULLETS[@]}" | jq -R . | jq -s .)
 
 PAYLOAD=$(jq -n \
   --arg summary "$SUMMARY" \
   --arg text "$DESCRIPTION" \
   --arg issuetype "$ISSUE_TYPE" \
   --arg epic "$EPIC_KEY" \
-  --args \
+  --argjson bullets "$BULLETS_JSON" \
   '{
     fields: (
       {
@@ -117,7 +118,7 @@ PAYLOAD=$(jq -n \
           content: [
             { type: "paragraph", content: [{ type: "text", text: $text }] },
             { type: "bulletList", content: [
-              $ARGS.positional[] | { type: "listItem", content: [
+              $bullets[] | { type: "listItem", content: [
                 { type: "paragraph", content: [{ type: "text", text: . }] }
               ] }
             ] }
@@ -127,7 +128,7 @@ PAYLOAD=$(jq -n \
       }
       + (if $epic == "" then {} else { parent: { key: $epic } } end)
     )
-  }' -- "${BULLETS[@]}")
+  }')
 
 curl -s -X POST "$JIRA_BASE_URL/rest/api/3/issue" \
   -H "Authorization: Basic $(printf '%s' "$JIRA_EMAIL:$JIRA_TOKEN" | base64 | tr -d '\n')" \

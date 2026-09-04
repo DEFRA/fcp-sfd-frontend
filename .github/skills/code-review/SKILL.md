@@ -1,7 +1,6 @@
 ---
 name: code-review
 description: Review changed code against Defra software development standards and common quality criteria. Use when asked to review code, review a PR, do a code review, or check a change against Defra standards.
-context: fork
 ---
 
 # Defra standards code reviewer

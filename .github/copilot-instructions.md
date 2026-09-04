@@ -75,10 +75,8 @@ Webpack bundles `src/client/` → `.public/`. Entry points: `src/client/javascri
 
 ## Common tasks
 
-Layer conventions live in `.github/instructions/` — routes, services, presenters, mappers, schemas, views and tests each have their own file. Read the relevant one before adding to that layer rather than inferring from nearby code.
-
-- **New service**: `src/services/{domain}/<verb>-<domain>-<field>-service.js` — see `services.instructions.md`.
-- **New route**: `src/routes/{domain}/{domain}-{field}-{change|check}-routes.js`, registered in `src/routes/routes.js` — see `routes.instructions.md`.
+- **New service**: `src/services/{domain}/<verb>-<domain>-<field>-service.js`.
+- **New route**: `src/routes/{domain}/{domain}-{field}-{change|check}-routes.js`, registered in `src/routes/routes.js`.
 - **New DAL query**: add generic GraphQL queries to `@defra/fcp-sfd-frontend-engine`, then import the engine export in the service and call `dalConnector.query(query, variables, { sessionId })`.
 - **Business selection/switching** (multiple enrolments): presenter adds link only when `enrolmentCount > 1`; route passes `auth.credentials.enrolmentCount`; template guards navigation with `{% if backLink %}`; auth plugin sets `forceReselection` for the route path to trigger Defra ID reselection.
 

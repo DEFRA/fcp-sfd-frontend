@@ -61,7 +61,7 @@ If the user says they don't have a ticket but would like one created, create it 
 - Project key: FLS2
 - Issue type: inferred from change classification (Task for refactors/chores, Story for features, Bug for fixes)
 - Summary: derived from the PR title
-- Description: ADF-formatted summary of changes + link to PR once created
+- Description: ADF-formatted summary of changes
 
 **Auth:** Basic auth with base64-encoded `"$JIRA_EMAIL:$JIRA_TOKEN"`
 **Endpoint:** `POST $JIRA_BASE_URL/rest/api/3/issue`
@@ -74,13 +74,40 @@ curl -s -X POST "$JIRA_BASE_URL/rest/api/3/issue" \
     "fields": {
       "project": { "key": "FLS2" },
       "summary": "<ticket title>",
-      "description": { "type": "doc", "version": 1, "content": [] },
+      "description": {
+        "type": "doc",
+        "version": 1,
+        "content": [
+          {
+            "type": "paragraph",
+            "content": [
+              { "type": "text", "text": "<one-paragraph summary of what this change does and why>" }
+            ]
+          },
+          {
+            "type": "bulletList",
+            "content": [
+              {
+                "type": "listItem",
+                "content": [
+                  {
+                    "type": "paragraph",
+                    "content": [{ "type": "text", "text": "<change bullet>" }]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
       "issuetype": { "name": "<Task|Story|Bug>" }
     }
   }'
 ```
 
-After creation, use the returned ticket key (e.g. FLS2-42) to prefix the branch name and PR title as normal.
+Build the `content` array from the same summary and change bullets used for the PR description — never send an empty `content: []`.
+
+After creation, use the returned ticket key (e.g. FLS2-42) to prefix the branch name and PR title as normal. The Jira/GitHub integration links the PR to the ticket off that prefix, so no separate linking step is needed.
 
 ## Step 3: Classify the change
 

@@ -91,17 +91,15 @@ Use these labels for findings:
 
 ## Output format
 
-Structure findings by file. For each file with issues, provide:
+Where the surface supports per-line comments (a pull request review), raise each finding as a comment on the relevant line, prefixed with its category and severity, e.g. `Tests and coverage [Blocking]`.
+
+Otherwise, structure findings by file. For each file with issues, provide:
 - **File:** `path/to/file.js` (line numbers)
 - **Category & Severity:** Category name + [Blocking|Recommended|Nit]
 - **Issue:** Clear description
 - **Fix:** Suggested code snippet where helpful
 
-Summarise at the end: total findings by severity, and whether the PR is ready to merge. Close with this exact attribution line:
-
-```
-_Reviewed by GitHub Copilot using the Defra `code-review` skill._
-```
+Either way, summarise at the end: total findings by severity, and whether the PR is ready to merge.
 
 **Do not post comments about:**
 - PR description or title

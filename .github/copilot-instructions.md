@@ -51,7 +51,7 @@ Frontend service for the Single Front Door (SFD) on Defra's Future Farming and C
 - **Flash notifications**: one-shot confirmation banners shown after a successful change via `src/utils/notifications/flash-notification.js` (session-backed, cleared on read).
 - **Feature toggles**: boolean env vars via `src/config/feature-toggle.js` (convict).
 - **Config**: convict with strict validation, split across `src/config/` by concern. Read with `config.get('path.to.value')`. See `.env.example`.
-- **Errors**: throw Boom errors in routes (`Boom.badRequest()`, `Boom.notFound()`). The global `onPreResponse` handler is registered in `src/plugins/errors.js`; the catch-all rendering logic lives in `src/utils/errors.js`.
+- **Errors**: throw Boom errors in routes (`Boom.badRequest()`, `Boom.notFound()`). Two separate `onPreResponse` extensions handle them: one registered in `src/plugins/errors.js`, and another (`catchAll`) registered directly in `src/server.js` from `src/utils/errors.js`.
 
 ### Client-side assets
 

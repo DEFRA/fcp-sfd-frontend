@@ -13,7 +13,7 @@ Frontend service for the Single Front Door (SFD) on Defra's Future Farming and C
 - Session: `@hapi/yar` over Catbox (Redis in prod, memory locally).
 - Auth: **Defra ID** via OpenID Connect (`@hapi/bell`).
 - Tests: Vitest. Lint: **neostandard** (via eslint) + stylelint. No semicolons, 2-space indent.
-- Platform: deployed on Defra CDP. Outbound HTTP goes through a proxy (`global-agent` / `https-proxy-agent`, set up in `src/utils/proxy.js`) and CDP secure context (`src/plugins/secure-context/`); metrics via `@defra/cdp-metrics`, tracing via `@defra/hapi-tracing`.
+- Platform: deployed on Defra CDP. Outbound HTTP goes through a proxy — `global-agent` bootstrapped in `src/server/common/helpers/proxy/setup-proxy.js`, `https-proxy-agent` configured in `src/utils/proxy.js` — and CDP secure context (`src/plugins/secure-context/`); metrics via `@defra/cdp-metrics`, tracing via `@defra/hapi-tracing`.
 
 ## Commands
 
@@ -33,13 +33,13 @@ Frontend service for the Single Front Door (SFD) on Defra's Future Farming and C
 
 - **Routes** (`src/routes/`): Hapi route definitions with GET/POST handlers, organised by domain (`personal/`, `business/`, `footer/`, `errors/`). Keep handlers thin — delegate to services.
 - **Services** (`src/services/`): Business logic. Fetch data, orchestrate mutations, manage session state. Grouped by domain + shared services.
-- **DAL** (`src/dal/`): GraphQL connector singleton initialised at server startup. Queries and mutations live in `queries/` and `mutations/`.
+- **DAL** (`src/dal/`): GraphQL connector singleton initialised at server startup. Existing queries live locally in `queries/`; mutation definitions are imported from `@defra/fcp-sfd-frontend-engine` (`mutations/` only holds local section-map helpers for building dynamic update payloads) — see [New DAL query](#common-tasks) for where new ones should go.
 - **Presenters** (`src/presenters/`): Transform data for view rendering, organised by domain. Shared formatting (addresses, phone numbers, back links) comes from the engine's `presenters` namespace export (`@defra/fcp-sfd-frontend-engine`) — e.g. `presenters.formatBackLink()`, `presenters.formatDisplayAddress()` — not a local base presenter.
 - **Mappers** (`src/mappers/`): Transform DAL responses into domain objects used by services/presenters.
 - **Schemas** (`src/schemas/`): Joi validation for DAL response shapes. Form payload schemas are shared, so they live in the engine and are used as `schemas.<domain>.<field>`.
 - **Views** (`src/views/`): Nunjucks templates. `common/` has shared layout partials, `components/` reusable macros.
 - **Plugins** (`src/plugins/`): Hapi server assembly, registered from `src/plugins/index.js` — routing (`router.js`), auth strategies (`auth.js`, `sso.js`), security (`content-security-policy.js`, `headers.js`, `secure-context/`), session, request logging/tracing, error handling, and template rendering.
-- **Auth helpers** (`src/auth/`): Defra ID / OIDC support — token verification and refresh, permissions, SBI resolution, sign-out and business-reselection URLs.
+- **Auth helpers** (`src/auth/`): Defra ID / OIDC support — token verification and refresh, permissions, SBI resolution, sign-out URL.
 
 ### Key patterns
 
@@ -59,7 +59,7 @@ Webpack bundles `src/client/` → `.public/`. Entry points: `src/client/javascri
 
 ## Testing
 
-**Always run tests in Docker: `npm run docker:test`.** Host `vitest` / `npm test` runs fail — convict's strict config validation throws on missing env vars (`DAL_ENDPOINT`, Defra ID client config, etc.), and integration tests need dependent services (DAL API, upstream-mock) that only `compose.test.yaml` provides. Watch mode: `npm run docker:test:watch`.
+**Always run tests in Docker: `npm run docker:test`.** Host `vitest` / `npm test` runs fail — integration tests need dependent services (DAL API, upstream-mock, Redis) that only `compose.test.yaml` provides. Watch mode: `npm run docker:test:watch`.
 
 - **Unit tests** (`test/unit/`): mirror `src/` structure. Pure logic with `vi.mock`.
 - **Integration tests** (`test/integration/narrow/`): spin up a real Hapi server (Redis mocked to CatboxMemory). Use `server.inject()` to test routes end-to-end. Import `test/mocks/setup-server-mocks.js` for OIDC/Redis stubbing.

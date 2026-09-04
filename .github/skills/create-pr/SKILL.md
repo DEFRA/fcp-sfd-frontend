@@ -64,6 +64,16 @@ If the user says they don't have a ticket but would like one created, create it 
 - Issue type: inferred from change classification (Task for refactors/chores, Story for features, Bug for fixes)
 - Summary: derived from the PR title
 - Description: ADF-formatted summary of changes
+- Epic link (optional): if the user mentions an epic (e.g. "tech debt epic") or one is obvious from context, find its key and set it as the `parent` field so the ticket links correctly
+
+**Finding an epic key:** search by keyword rather than guessing — the epic key changes over time and old `/rest/api/3/search` is deprecated in favour of `/rest/api/3/search/jql`:
+```bash
+curl -s -G "$JIRA_BASE_URL/rest/api/3/search/jql" \
+  -H "Authorization: Basic $(printf '%s' "$JIRA_EMAIL:$JIRA_TOKEN" | base64 | tr -d '\n')" \
+  --data-urlencode 'jql=project = FLS2 AND issuetype = Epic AND summary ~ "<keyword>"' \
+  --data-urlencode 'fields=summary'
+```
+If multiple epics match, show the user the candidates and ask which one. If none match, proceed without a parent link and tell the user so.
 
 **Auth:** Basic auth with base64-encoded `"$JIRA_EMAIL:$JIRA_TOKEN"`
 **Endpoint:** `POST $JIRA_BASE_URL/rest/api/3/issue`
@@ -102,12 +112,13 @@ curl -s -X POST "$JIRA_BASE_URL/rest/api/3/issue" \
           }
         ]
       },
-      "issuetype": { "name": "<Task|Story|Bug>" }
+      "issuetype": { "name": "<Task|Story|Bug>" },
+      "parent": { "key": "<epic-key, omit this field entirely if no epic>" }
     }
   }'
 ```
 
-Build the `content` array from the same summary and change bullets used for the PR description — never send an empty `content: []`.
+Build the `content` array from the same summary and change bullets used for the PR description — never send an empty `content: []`. Omit the `parent` field entirely (not just leave it blank) when there's no epic to link.
 
 After creation, use the returned ticket key (e.g. FLS2-42) to prefix the branch name and PR title as normal. The Jira/GitHub integration links the PR to the ticket off that prefix, so no separate linking step is needed.
 

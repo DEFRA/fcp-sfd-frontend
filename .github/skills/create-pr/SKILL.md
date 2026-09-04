@@ -1,8 +1,7 @@
 ---
 name: create-pr
 description: Analyse the current git branch, commits, and diff to generate a branch name, PR title, and PR description, then create the branch, commit, and open a draft PR. Use when asked to create a PR, open a pull request, or prepare a branch for review.
-argument-hint: [FLS2-ticket] [jira-url]
-context: fork
+argument-hint: "[FLS2-ticket] [jira-url]"
 ---
 
 # Generate GitHub PR metadata and create PR

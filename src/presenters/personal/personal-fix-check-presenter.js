@@ -5,7 +5,7 @@
 
 import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
-const personalFixCheckPresenter = (personalDetails) => {
+const personalFixCheckPresenter = (data) => {
   const {
     orderedSectionsToFix,
     changePersonalName,
@@ -13,10 +13,10 @@ const personalFixCheckPresenter = (personalDetails) => {
     changePersonalEmail,
     changePersonalAddress,
     changePersonalPhoneNumbers
-  } = personalDetails
+  } = data
 
   return {
-    userName: personalDetails.info?.userName ?? null,
+    userName: data.info?.userName ?? null,
     backLink: { href: '/personal-fix-list' },
     pageTitle: 'Check your details are correct before submitting',
     metaDescription: 'Check your details are correct before submitting',

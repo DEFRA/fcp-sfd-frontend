@@ -3,17 +3,17 @@
  * @module businessPhoneNumbersCheckPresenter
  */
 
-const businessPhoneNumbersCheckPresenter = (businessDetails) => {
+const businessPhoneNumbersCheckPresenter = (data) => {
   return {
     backLink: { href: '/business-phone-numbers-change' },
     changeLink: '/business-phone-numbers-change',
     pageTitle: 'Check your business phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your business are correct.',
-    userName: businessDetails.customer.userName ?? null,
-    businessName: businessDetails.info.businessName ?? null,
-    sbi: businessDetails.info.sbi ?? null,
-    businessMobile: businessDetails.changeBusinessPhoneNumbers.businessMobile ?? null,
-    businessTelephone: businessDetails.changeBusinessPhoneNumbers.businessTelephone ?? null
+    userName: data.customer.userName ?? null,
+    businessName: data.info.businessName ?? null,
+    sbi: data.info.sbi ?? null,
+    businessMobile: data.changeBusinessPhoneNumbers.businessMobile ?? null,
+    businessTelephone: data.changeBusinessPhoneNumbers.businessTelephone ?? null
   }
 }
 

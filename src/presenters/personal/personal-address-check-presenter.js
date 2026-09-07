@@ -5,8 +5,8 @@
 
 import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
-const personalAddressCheckPresenter = (personalDetails) => {
-  const { changePersonalAddress, address, info } = personalDetails
+const personalAddressCheckPresenter = (data) => {
+  const { changePersonalAddress, address, info } = data
 
   return {
     backLink: presenters.addressBackLink(changePersonalAddress?.postcodeLookup, 'personal'),

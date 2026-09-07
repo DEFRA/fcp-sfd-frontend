@@ -5,10 +5,10 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { businessFixCheckPresenter } from '../../../../src/presenters/business/business-fix-check-presenter.js'
 
 describe('businessFixCheckPresenter', () => {
-  let businessDetails
+  let data
 
   beforeEach(() => {
-    businessDetails = {
+    data = {
       orderedSectionsToFix: [
         'name',
         'email',
@@ -49,7 +49,7 @@ describe('businessFixCheckPresenter', () => {
 
   describe('when provided with business fix data', () => {
     test('it correctly presents the data', () => {
-      const result = businessFixCheckPresenter(businessDetails)
+      const result = businessFixCheckPresenter(data)
 
       expect(result).toEqual({
         backLink: { href: '/business-fix-list' },
@@ -87,11 +87,11 @@ describe('businessFixCheckPresenter', () => {
   describe('the "businessName" property', () => {
     describe('when changeBusinessName is missing', () => {
       beforeEach(() => {
-        delete businessDetails.changeBusinessName
+        delete data.changeBusinessName
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.businessName).toBeNull()
       })
@@ -101,11 +101,11 @@ describe('businessFixCheckPresenter', () => {
   describe('the "businessEmail" property', () => {
     describe('when changeBusinessEmail is missing', () => {
       beforeEach(() => {
-        delete businessDetails.changeBusinessEmail
+        delete data.changeBusinessEmail
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.businessEmail).toBeNull()
       })
@@ -115,18 +115,18 @@ describe('businessFixCheckPresenter', () => {
   describe('the "address" property', () => {
     describe('when changeBusinessAddress is missing', () => {
       beforeEach(() => {
-        delete businessDetails.changeBusinessAddress
+        delete data.changeBusinessAddress
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.address).toBeNull()
       })
     })
 
     test('it filters out empty address values', () => {
-      const result = businessFixCheckPresenter(businessDetails)
+      const result = businessFixCheckPresenter(data)
 
       expect(result.address).not.toContain('')
     })
@@ -135,11 +135,11 @@ describe('businessFixCheckPresenter', () => {
   describe('the "vatNumber" property', () => {
     describe('when changeBusinessVat is missing', () => {
       beforeEach(() => {
-        delete businessDetails.changeBusinessVat
+        delete data.changeBusinessVat
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.vatNumber).toBeNull()
       })
@@ -149,11 +149,11 @@ describe('businessFixCheckPresenter', () => {
   describe('the "businessTelephone" property', () => {
     describe('when changeBusinessPhoneNumbers is missing', () => {
       beforeEach(() => {
-        delete businessDetails.changeBusinessPhoneNumbers
+        delete data.changeBusinessPhoneNumbers
       })
 
       test('it should return null values for both numbers', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.businessTelephone).toEqual({
           telephone: null,
@@ -166,11 +166,11 @@ describe('businessFixCheckPresenter', () => {
   describe('the "sbi" property', () => {
     describe('when info is missing', () => {
       beforeEach(() => {
-        delete businessDetails.info
+        delete data.info
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.sbi).toBeNull()
       })
@@ -178,11 +178,11 @@ describe('businessFixCheckPresenter', () => {
 
     describe('when sbi is missing from info', () => {
       beforeEach(() => {
-        delete businessDetails.info.sbi
+        delete data.info.sbi
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.sbi).toBeNull()
       })
@@ -192,11 +192,11 @@ describe('businessFixCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when customer is missing', () => {
       beforeEach(() => {
-        delete businessDetails.customer
+        delete data.customer
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.userName).toBeNull()
       })
@@ -204,11 +204,11 @@ describe('businessFixCheckPresenter', () => {
 
     describe('when userName is missing from customer', () => {
       beforeEach(() => {
-        businessDetails.customer = {}
+        data.customer = {}
       })
 
       test('it should return null', () => {
-        const result = businessFixCheckPresenter(businessDetails)
+        const result = businessFixCheckPresenter(data)
 
         expect(result.userName).toBeNull()
       })

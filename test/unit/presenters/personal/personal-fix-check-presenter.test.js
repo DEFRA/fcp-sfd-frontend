@@ -5,10 +5,10 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { personalFixCheckPresenter } from '../../../../src/presenters/personal/personal-fix-check-presenter.js'
 
 describe('personalFixCheckPresenter', () => {
-  let personalDetails
+  let data
 
   beforeEach(() => {
-    personalDetails = {
+    data = {
       orderedSectionsToFix: ['name', 'dob', 'address', 'phone', 'email'],
       changePersonalName: {
         first: 'Alfred',
@@ -44,7 +44,7 @@ describe('personalFixCheckPresenter', () => {
 
   describe('when provided with personal fix data', () => {
     test('it correctly presents the data', () => {
-      const result = personalFixCheckPresenter(personalDetails)
+      const result = personalFixCheckPresenter(data)
 
       expect(result).toEqual({
         userName: 'Jane Doe',
@@ -74,11 +74,11 @@ describe('personalFixCheckPresenter', () => {
   describe('the "fullName" property', () => {
     describe('when changePersonalName is missing', () => {
       beforeEach(() => {
-        delete personalDetails.changePersonalName
+        delete data.changePersonalName
       })
 
       test('it should return null', () => {
-        const result = personalFixCheckPresenter(personalDetails)
+        const result = personalFixCheckPresenter(data)
 
         expect(result.fullName).toBeNull()
       })
@@ -88,11 +88,11 @@ describe('personalFixCheckPresenter', () => {
   describe('the "dateOfBirth" property', () => {
     describe('when the year is not 4 digits', () => {
       beforeEach(() => {
-        personalDetails.changePersonalDob = { day: '5', month: '7', year: '33' }
+        data.changePersonalDob = { day: '5', month: '7', year: '33' }
       })
 
       test('it does not interpret the year as 2033', () => {
-        const result = personalFixCheckPresenter(personalDetails)
+        const result = personalFixCheckPresenter(data)
 
         expect(result.dateOfBirth).toEqual('5 July 33')
       })
@@ -100,11 +100,11 @@ describe('personalFixCheckPresenter', () => {
 
     describe('when changePersonalDob is missing', () => {
       beforeEach(() => {
-        delete personalDetails.changePersonalDob
+        delete data.changePersonalDob
       })
 
       test('it should return null', () => {
-        const result = personalFixCheckPresenter(personalDetails)
+        const result = personalFixCheckPresenter(data)
 
         expect(result.dateOfBirth).toBeNull()
       })
@@ -114,11 +114,11 @@ describe('personalFixCheckPresenter', () => {
   describe('the "personalEmail" property', () => {
     describe('when changePersonalEmail is missing', () => {
       beforeEach(() => {
-        delete personalDetails.changePersonalEmail
+        delete data.changePersonalEmail
       })
 
       test('it should return null', () => {
-        const result = personalFixCheckPresenter(personalDetails)
+        const result = personalFixCheckPresenter(data)
 
         expect(result.personalEmail).toBeNull()
       })
@@ -128,18 +128,18 @@ describe('personalFixCheckPresenter', () => {
   describe('the "address" property', () => {
     describe('when changePersonalAddress is missing', () => {
       beforeEach(() => {
-        delete personalDetails.changePersonalAddress
+        delete data.changePersonalAddress
       })
 
       test('it should return null', () => {
-        const result = personalFixCheckPresenter(personalDetails)
+        const result = personalFixCheckPresenter(data)
 
         expect(result.address).toBeNull()
       })
     })
 
     test('it filters out empty address values', () => {
-      const result = personalFixCheckPresenter(personalDetails)
+      const result = personalFixCheckPresenter(data)
 
       expect(result.address).not.toContain('')
     })
@@ -148,11 +148,11 @@ describe('personalFixCheckPresenter', () => {
   describe('the "personalTelephone" property', () => {
     describe('when changePersonalPhoneNumbers is missing', () => {
       beforeEach(() => {
-        delete personalDetails.changePersonalPhoneNumbers
+        delete data.changePersonalPhoneNumbers
       })
 
       test('it should return null values for both numbers', () => {
-        const result = personalFixCheckPresenter(personalDetails)
+        const result = personalFixCheckPresenter(data)
 
         expect(result.personalTelephone).toEqual({
           telephone: null,

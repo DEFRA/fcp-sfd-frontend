@@ -3,7 +3,7 @@
  * @module businessFixCheckPresenter
  */
 
-const businessFixCheckPresenter = (businessDetails) => {
+const businessFixCheckPresenter = (data) => {
   const {
     orderedSectionsToFix,
     changeBusinessName,
@@ -11,7 +11,7 @@ const businessFixCheckPresenter = (businessDetails) => {
     changeBusinessAddress,
     changeBusinessPhoneNumbers,
     changeBusinessVat
-  } = businessDetails
+  } = data
 
   return {
     backLink: { href: '/business-fix-list' },
@@ -19,10 +19,10 @@ const businessFixCheckPresenter = (businessDetails) => {
     metaDescription: 'Check your details are correct before submitting',
     changeLink: '/business-fix-list',
     sections: orderedSectionsToFix,
-    businessName: businessDetails.info?.businessName ?? null,
+    businessName: data.info?.businessName ?? null,
     changeBusinessName: changeBusinessName?.businessName ?? null,
-    sbi: businessDetails.info?.sbi ?? null,
-    userName: businessDetails.customer?.userName ?? null,
+    sbi: data.info?.sbi ?? null,
+    userName: data.customer?.userName ?? null,
     businessEmail: changeBusinessEmail?.businessEmail ?? null,
     address: formatAddress(changeBusinessAddress),
     vatNumber: changeBusinessVat?.vatNumber ?? null,

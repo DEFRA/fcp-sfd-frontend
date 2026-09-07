@@ -5,11 +5,11 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { businessFixListPresenter } from '../../../../src/presenters/business/business-fix-list-presenter.js'
 
 describe('businessFixListPresenter', () => {
-  let businessDetails
+  let data
   let payload
 
   beforeEach(() => {
-    businessDetails = {
+    data = {
       source: 'name',
       orderedSectionsToFix: ['name', 'vat', 'address', 'phone', 'email'],
       info: {
@@ -32,7 +32,7 @@ describe('businessFixListPresenter', () => {
 
   describe('when provided with business fix list data', () => {
     test('it correctly presents the data', () => {
-      const result = businessFixListPresenter(businessDetails, payload)
+      const result = businessFixListPresenter(data, payload)
 
       expect(result).toEqual({
         backLink: { href: '/business-fix?source=name' },
@@ -62,7 +62,7 @@ describe('businessFixListPresenter', () => {
       })
 
       test('it should return the stored or original business name as the "businessName" property', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.businessName).toEqual('Test Business')
         expect(result.changeBusinessName).toEqual('New Business Name')
@@ -71,13 +71,13 @@ describe('businessFixListPresenter', () => {
 
     describe('when provided with changed business name data', () => {
       beforeEach(() => {
-        businessDetails.changeBusinessName = {
+        data.changeBusinessName = {
           businessName: 'Changed Business Name'
         }
       })
 
       test('it should retain the stored business name as "businessName" and use the changed value as "changeBusinessName"', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.businessName).toEqual('Test Business')
         expect(result.changeBusinessName).toEqual('Changed Business Name')
@@ -94,7 +94,7 @@ describe('businessFixListPresenter', () => {
       })
 
       test('it should return the payload as the "vatNumber" property', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.vatNumber).toEqual('987654321')
       })
@@ -102,13 +102,13 @@ describe('businessFixListPresenter', () => {
 
     describe('when provided with changed VAT number data', () => {
       beforeEach(() => {
-        businessDetails.changeBusinessVat = {
+        data.changeBusinessVat = {
           vatNumber: '987654321'
         }
       })
 
       test('it should return the changed VAT number as the "vatNumber" property', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.vatNumber).toEqual('987654321')
       })
@@ -130,7 +130,7 @@ describe('businessFixListPresenter', () => {
       })
 
       test('it should return the payload as the "address" property', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.address).toEqual({
           address1: '1 Test Street',
@@ -146,7 +146,7 @@ describe('businessFixListPresenter', () => {
 
     describe('when provided with changed business address data', () => {
       beforeEach(() => {
-        businessDetails.changeBusinessAddress = {
+        data.changeBusinessAddress = {
           address1: '2 Changed Road',
           address2: 'Changed Area',
           address3: '',
@@ -158,7 +158,7 @@ describe('businessFixListPresenter', () => {
       })
 
       test('it should return the changed business address as the "address" property', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.address).toEqual({
           address1: '2 Changed Road',
@@ -174,12 +174,12 @@ describe('businessFixListPresenter', () => {
 
     describe('when no payload and no changed address is provided', () => {
       beforeEach(() => {
-        delete businessDetails.changeBusinessAddress
+        delete data.changeBusinessAddress
         payload = null
       })
 
       test('it should return null as the "address" property', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.address).toBeNull()
       })
@@ -198,7 +198,7 @@ describe('businessFixListPresenter', () => {
     })
 
     test('it sorts errors by section and field order', () => {
-      const result = businessFixListPresenter(businessDetails, payload, errors)
+      const result = businessFixListPresenter(data, payload, errors)
 
       expect(result.errors).toEqual([
         { field: 'businessName', message: 'Enter your business name' },
@@ -211,7 +211,7 @@ describe('businessFixListPresenter', () => {
   describe('the "userName" property', () => {
     describe('when customer exists with a userName', () => {
       test('it should return the customer userName', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.userName).toEqual('Jane Doe')
       })
@@ -219,11 +219,11 @@ describe('businessFixListPresenter', () => {
 
     describe('when customer is undefined', () => {
       beforeEach(() => {
-        delete businessDetails.customer
+        delete data.customer
       })
 
       test('it should return null', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.userName).toBeNull()
       })
@@ -231,11 +231,11 @@ describe('businessFixListPresenter', () => {
 
     describe('when customer exists but userName is undefined', () => {
       beforeEach(() => {
-        businessDetails.customer = {}
+        data.customer = {}
       })
 
       test('it should return null', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.userName).toBeNull()
       })
@@ -243,9 +243,9 @@ describe('businessFixListPresenter', () => {
   })
 
   describe('the "sbi" property', () => {
-    describe('when sbi exists on businessDetails.info', () => {
+    describe('when sbi exists on data.info', () => {
       test('it should return the sbi value', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.sbi).toEqual('123456789')
       })
@@ -253,11 +253,11 @@ describe('businessFixListPresenter', () => {
 
     describe('when info exists but sbi is undefined', () => {
       beforeEach(() => {
-        delete businessDetails.info.sbi
+        delete data.info.sbi
       })
 
       test('it should return null', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.sbi).toBeNull()
       })
@@ -265,11 +265,11 @@ describe('businessFixListPresenter', () => {
 
     describe('when info is undefined', () => {
       beforeEach(() => {
-        delete businessDetails.info.sbi
+        delete data.info.sbi
       })
 
       test('it should return null', () => {
-        const result = businessFixListPresenter(businessDetails, payload)
+        const result = businessFixListPresenter(data, payload)
 
         expect(result.sbi).toBeNull()
       })

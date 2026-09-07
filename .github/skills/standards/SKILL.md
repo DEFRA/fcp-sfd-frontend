@@ -34,10 +34,18 @@ This document defines the standards an agent must apply when reviewing or writin
 - No abstractions for a single use case
 - Private functions must be ordered alphabetically by name
 
+## Testing
+
+For now, testing review checks live in section 2 of [Standards review checklist](./review-checklist.md). Add a dedicated testing skill later if deeper test conventions need to be shared across skills.
+
 ## Refactoring
 
 - Refactor in a separate commit from behaviour changes
 - Do not rename or restructure things incidentally while fixing bugs
+
+## Reviewing code
+
+See [Standards review checklist](./review-checklist.md) for review-specific checks and expectations.
 
 ## Quality gates
 
@@ -48,3 +56,7 @@ Before completing any task:
 3. No `console.log`, `console.dir`, or `describe.only` present
 4. No commented out code
 5. No unintended files changed
+
+## References
+
+See [External standards references](./external-references.md).

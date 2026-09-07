@@ -27,60 +27,22 @@ Read surrounding code for context, but do not raise findings against unchanged l
 ## Standards
 
 - Load `.github/skills/standards/SKILL.md` before reviewing
-- If changed files include `*.test.js`, apply the testing checks in category 2 in full
+- Load `.github/skills/standards/review-checklist.md` before reviewing
+- If changed files include `*.test.js`, apply section 2 (Tests and coverage) in `.github/skills/standards/review-checklist.md` in full
 - The code meets our standards
 
 ## Review categories
 
-Work through each category in order. Skip categories that do not apply to the change.
+Work through each category in order using [Standards review checklist](../standards/review-checklist.md). Skip categories that do not apply to the change.
 
 ### 1. Correctness and behaviour
-- The code does what the PR description says it does
-- Edge cases are handled (null, empty, boundary values)
-- Error paths return useful messages without leaking internals
-
 ### 2. Tests and coverage
-- New code has unit tests covering the happy path and key error paths
-- Test names describe the behaviour being verified
-- Coverage does not decrease — target is 90% minimum (check SonarCloud quality gate)
-- Route handlers include tests for validation failure, CSRF, and auth where applicable
-- Vitest for unit/integration tests, `server.inject()` for route testing (Hapi)
-- Do not run the test suite as part of a review — inspect the test files instead. If the change needs a verification run, say so in the findings and let the author run `npm run docker:test`. Never suggest host `vitest`/`npm test`: config validation needs env vars and integration tests need dependent services (DAL API, upstream-mock) that only `compose.test.yaml` provides.
-
 ### 3. Security
-- No secrets, API keys, or tokens in code (use environment variables)
-- User input is validated and sanitised
-- Dependencies are from trusted sources with no known vulnerabilities
-- Logging does not contain PII (names, addresses, emails, NI numbers, bank details)
-- SonarCloud security hotspots are reviewed and resolved
-- No new vulnerabilities or code smells introduced (SonarWay profile)
-
 ### 4. Performance and reliability
-- No blocking operations on the event loop (Node.js)
-- Database queries are indexed and bounded
-- External calls have timeouts and retry logic
-
 ### 5. Maintainability and readability
-- No commented-out code
-- Functions and variables have descriptive names
-- Complex logic has explanatory comments or is split into named functions ("separate in order to name")
-- No magic numbers or strings — use named constants
-
 ### 6. Architecture and boundaries
-- Code follows the existing project structure
-- Dependencies flow inward (routes → services → DAL)
-- No circular dependencies between modules
-
 ### 7. Documentation
-- Public functions have JSDoc comments
-- README is updated if setup steps or prerequisites change
-- Breaking changes are clearly documented
-
 ### 8. Accessibility (frontend changes only)
-- HTML meets WCAG 2.2 Level AA
-- Interactive elements are keyboard accessible
-- Images have alt text, form fields have labels
-- Error summaries link to the corresponding form field
 
 ### 9. AI customization files
 
@@ -113,4 +75,4 @@ Either way, summarise at the end: total findings by severity, and whether the PR
 
 ## References
 
-See [External references](./external-references.md).
+See [External standards references](../standards/external-references.md).

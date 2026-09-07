@@ -36,7 +36,8 @@ This document defines the standards an agent must apply when reviewing or writin
 
 ## Testing
 
-For now, testing review checks live in section 2 of [Standards review checklist](./review-checklist.md). Add a dedicated testing skill later if deeper test conventions need to be shared across skills.
+- Load `../testing/SKILL.md` when work or review includes tests.
+- Use section 2 in [Standards review checklist](./review-checklist.md) for testing review criteria.
 
 ## Refactoring
 

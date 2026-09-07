@@ -10,11 +10,12 @@ Use this checklist when reviewing changed code. Apply findings only to changed f
 
 ## 2. Tests and coverage
 
+See `../testing/SKILL.md` for testing patterns and conventions.
+
 - New code has unit tests covering the happy path and key error paths.
 - Test names describe the behaviour being verified.
 - Coverage does not decrease; target is 90% minimum (SonarCloud quality gate).
 - Route handlers include tests for validation failure, CSRF, and auth where applicable.
-- Use Vitest for tests and `server.inject()` for Hapi route testing.
 - Do not run the test suite as part of a review. Inspect test files and, if runtime verification is needed, ask the author to run `npm run docker:test`. Never suggest host `vitest` or `npm test`.
 
 ## 3. Security

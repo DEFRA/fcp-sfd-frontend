@@ -28,7 +28,7 @@ Read surrounding code for context, but do not raise findings against unchanged l
 
 - Load `.github/skills/standards/SKILL.md` before reviewing
 - Load `.github/skills/standards/review-checklist.md` before reviewing
-- If changed files include `*.test.js`, apply section 2 (Tests and coverage) in `.github/skills/standards/review-checklist.md` in full
+- If changed files include `*.test.js`, load `.github/skills/testing/SKILL.md` and apply section 2 (Tests and coverage) in `.github/skills/standards/review-checklist.md` in full
 - The code meets our standards
 
 ## Review categories

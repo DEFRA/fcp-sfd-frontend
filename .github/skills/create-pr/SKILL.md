@@ -8,31 +8,6 @@ argument-hint: "[FLS2-ticket] [jira-url]"
 
 Analyse the current git branch, commits, and diff to produce a branch name, PR title, and PR description — then create the branch, commit, and open the PR.
 
-## Prerequisites (first-time setup)
-
-The optional Jira ticket feature needs three values. The API token is a secret and should never be stored in the repo.
-
-- **`JIRA_TOKEN`** — provide via secure storage or environment variable. Generate a token at https://id.atlassian.com/manage-profile/security/api-tokens, then:
-  - **macOS (recommended):** Store in Keychain and export at runtime
-    ```bash
-    security add-generic-password -a "$USER" -s jira-api-token -w '<your-token>' -U
-    export JIRA_TOKEN=$(security find-generic-password -a "$USER" -s jira-api-token -w)
-    ```
-  - **Cross-platform fallback:** Set as an environment variable
-    ```bash
-    export JIRA_TOKEN='<your-token>'
-    ```
-- **`JIRA_BASE_URL`** — defaults to `https://eaflood.atlassian.net`.
-- **`JIRA_EMAIL`** — your Defra email. Set it in your personal user instructions rather than here, since this skill is shared.
-
-Before any Jira call, apply the default and fail loudly if anything required is still missing:
-```bash
-: "${JIRA_BASE_URL:=https://eaflood.atlassian.net}"
-: "${JIRA_EMAIL:?JIRA_EMAIL not set — see your personal user instructions}"
-: "${JIRA_TOKEN:?JIRA_TOKEN not set — set via Keychain (macOS: security add-generic-password -a \$USER -s jira-api-token -w '<token>' -U) or export JIRA_TOKEN='<token>'}"
-```
-Never commit credentials to the repo.
-
 ## Step 1: Gather git context
 
 Run these before generating anything:
@@ -59,86 +34,17 @@ Look for ticket patterns in branch name, commits, or $ARGUMENTS:
 
 ## Step 2b: Create Jira ticket (if none detected and user wants one)
 
-If the user says they don't have a ticket but would like one created, create it via the Jira REST API:
+If the user says they don't have a ticket but wants one created, load `.github/skills/create-jira-ticket/SKILL.md` and follow that workflow.
 
-- Uses: `$JIRA_EMAIL`, `$JIRA_TOKEN` (from environment), `$JIRA_BASE_URL`
-- Project key: FLS2
-- Issue type: inferred from change classification (Task for refactors/chores, Story for features, Bug for fixes)
-- Summary: derived from the PR title
-- Description: ADF-formatted summary of changes
-- Epic link (optional): if the user mentions an epic (e.g. "tech debt epic") or one is obvious from context, find its key and set it as the `parent` field so the ticket links correctly
+Inputs to pass into the Jira workflow:
 
-**Finding an epic key:** search by keyword rather than guessing — the epic key changes over time and old `/rest/api/3/search` is deprecated in favour of `/rest/api/3/search/jql`. Capture the keyword via a quoted heredoc (not inline in the command) so any quotes or special characters in it can't break the shell command:
-```bash
-KEYWORD=$(cat <<'EOF'
-<keyword>
-EOF
-)
-JQL="project = FLS2 AND issuetype = Epic AND summary ~ \"$KEYWORD\""
-curl -s -G "$JIRA_BASE_URL/rest/api/3/search/jql" \
-  -H "Authorization: Basic $(printf '%s' "$JIRA_EMAIL:$JIRA_TOKEN" | base64 | tr -d '\n')" \
-  --data-urlencode "jql=$JQL" \
-  --data-urlencode 'fields=summary'
-```
-If multiple epics match, show the user the candidates and ask which one. If none match, proceed without a parent link and tell the user so.
+- Issue type inferred from this skill's change classification rules (Task for refactors/chores, Story for features, Bug for fixes)
+- Ticket summary derived from the candidate PR title
+- One-paragraph description of the change and why
+- Change bullets that will also be used in the PR description
+- Optional epic keyword from the user
 
-**Auth:** Basic auth with base64-encoded `"$JIRA_EMAIL:$JIRA_TOKEN"`
-**Endpoint:** `POST $JIRA_BASE_URL/rest/api/3/issue`
-
-Never splice generated titles/descriptions directly into a quoted JSON literal — a stray quote or apostrophe in that text breaks the command and can turn the rest of the payload into shell syntax. Instead, capture each value via a quoted heredoc, then build the JSON with `jq --arg` so it's always safely escaped:
-```bash
-SUMMARY=$(cat <<'EOF'
-<ticket title>
-EOF
-)
-DESCRIPTION=$(cat <<'EOF'
-<one-paragraph summary of what this change does and why>
-EOF
-)
-ISSUE_TYPE='<Task|Story|Bug>'
-EPIC_KEY='<epic key, leave empty if none>'
-# one BULLETS entry per change bullet used in the PR description
-BULLETS=('<change bullet>')
-BULLETS_JSON=$(printf '%s\n' "${BULLETS[@]}" | jq -R . | jq -s .)
-
-PAYLOAD=$(jq -n \
-  --arg summary "$SUMMARY" \
-  --arg text "$DESCRIPTION" \
-  --arg issuetype "$ISSUE_TYPE" \
-  --arg epic "$EPIC_KEY" \
-  --argjson bullets "$BULLETS_JSON" \
-  '{
-    fields: (
-      {
-        project: { key: "FLS2" },
-        summary: $summary,
-        description: {
-          type: "doc",
-          version: 1,
-          content: [
-            { type: "paragraph", content: [{ type: "text", text: $text }] },
-            { type: "bulletList", content: [
-              $bullets[] | { type: "listItem", content: [
-                { type: "paragraph", content: [{ type: "text", text: . }] }
-              ] }
-            ] }
-          ]
-        },
-        issuetype: { name: $issuetype }
-      }
-      + (if $epic == "" then {} else { parent: { key: $epic } } end)
-    )
-  }')
-
-curl -s -X POST "$JIRA_BASE_URL/rest/api/3/issue" \
-  -H "Authorization: Basic $(printf '%s' "$JIRA_EMAIL:$JIRA_TOKEN" | base64 | tr -d '\n')" \
-  -H "Content-Type: application/json" \
-  -d "$PAYLOAD"
-```
-
-Build `BULLETS` from the same change bullets used for the PR description — never send an empty content array. Leave `EPIC_KEY` empty (not omitted) when there's no epic to link; the `jq` expression drops the `parent` field automatically in that case.
-
-After creation, use the returned ticket key (e.g. FLS2-42) to prefix the branch name and PR title as normal. The Jira/GitHub integration links the PR to the ticket off that prefix, so no separate linking step is needed.
+If the Jira workflow returns a ticket key (e.g. `FLS2-42`), use it to prefix branch name and PR title as normal. Include the Jira URL at the top of the PR description.
 
 ## Step 3: Classify the change
 

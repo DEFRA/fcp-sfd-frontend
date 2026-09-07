@@ -19,6 +19,8 @@ Frontend service for the Single Front Door (SFD) on Defra's Future Farming and C
 
 **Everything runs in Docker.** The service can't run standalone — it depends on other services (DAL, upstream-mock, Redis, Mongo, Defra ID stub) that come up together via `docker compose`. Do not suggest host `npm run dev` / `npm start` / `npm run build`; they won't produce a working app on their own.
 
+Prefer running common workflows via VS Code tasks where available (for example Up Frontend, Test Frontend, Watch Test Frontend, Lint Frontend). If no task fits, use the explicit commands below.
+
 - `docker compose up` — run the full stack (frontend + all dependencies)
 - `npm run docker:debug` — full stack with the Node debugger attached
 - `npm run docker:test` — **run the full test suite (see Testing)**

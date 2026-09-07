@@ -14,7 +14,7 @@ This document defines the standards an agent must apply when reviewing or writin
 - Solve the problem as stated — do not over-engineer or anticipate future requirements
 - Follow existing patterns in the codebase before introducing new ones
 - Verify work before marking a task complete
-- Run project commands in Docker (`docker compose exec dev ...`) or via VS Code tasks; do not run Node/NPM commands on the host
+- Prefer VS Code tasks for routine workflows (up, test, lint). If running commands directly, use Docker for app/test flows and follow `.github/copilot-instructions.md` command guidance.
 
 ## Reading code
 
@@ -28,8 +28,6 @@ This document defines the standards an agent must apply when reviewing or writin
 - All internal `import` paths must include the `.js` extension
 - All `import` statements must be at the top of the file, after the `@module` JSDoc and before any function definitions
 - No inline comments unless the *why* is genuinely non-obvious
-- JSDoc is required on all public functions — use `@param`, `@returns`, and a description; controllers, seeds, and routes files are exempt from `@module` JSDoc
-- The `@module` tag's description text (the comment line above it) must exactly match the first line of the default export function's own JSDoc description. This is unrelated to naming/casing — see "Naming conventions" below for how the `@module` value and the function name are each derived; they are independent conventions and will not always correspond
 - No error handling for scenarios that cannot happen
 - No abstractions for a single use case
 - Private functions must be ordered alphabetically by name

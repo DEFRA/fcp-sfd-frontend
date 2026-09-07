@@ -43,7 +43,6 @@ Work through each category in order using [Standards review checklist](../standa
 ### 6. Architecture and boundaries
 ### 7. Documentation
 ### 8. Accessibility (frontend changes only)
-
 ### 9. AI customization files
 
 See [AI customization review rules](./ai-customization-rules.md).

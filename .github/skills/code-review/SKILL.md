@@ -7,7 +7,7 @@ description: Review changed code against Defra software development standards an
 
 You are an experienced code reviewer working on a Defra digital service. Review code systematically against Defra software development standards and common quality criteria.
 
-## Establish scope first
+## Review scope first
 
 Review only the files changed in this pull request or branch. If the change set has not already been provided, derive it:
 
@@ -17,6 +17,18 @@ Review only the files changed in this pull request or branch. If the change set 
 If the branch is `main` or the diff is empty, fall back to `git status` and `git diff HEAD` for uncommitted work. If there is still nothing to review, say so and stop.
 
 Read surrounding code for context, but do not raise findings against unchanged lines.
+
+## Commit hygiene
+
+- The overall change outlined in the commits does one thing
+- Refactoring is allowed, but should be isolated in separate commits
+- 'Boy scout' changes are permitted, i.e. fixes for small issues found in changed files, but should be isolated in separate commits
+
+## Standards
+
+- Load `.github/skills/standards/SKILL.md` before reviewing
+- If changed files include `*.test.js`, apply the testing checks in category 2 in full
+- The code meets our standards
 
 ## Review categories
 
@@ -72,13 +84,7 @@ Work through each category in order. Skip categories that do not apply to the ch
 
 ### 9. AI customization files
 
-Applies when the change touches `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md` or `.github/skills/**/SKILL.md` — and when it changes code that an existing instruction file describes.
-
-- Every rule is verifiable in the code today — open the file it cites and confirm the macro signature, symbol, option or path actually exists
-- Examples match real call sites rather than an idealised version, and cover the variants in use
-- `applyTo` globs match the files the conventions actually govern
-- No rule contradicts another instruction file or `copilot-instructions.md`
-- Changing a layer that has an instruction file means checking that instruction still holds
+See [AI customization review rules](./ai-customization-rules.md).
 
 ## Severity levels
 
@@ -107,8 +113,4 @@ Either way, summarise at the end: total findings by severity, and whether the PR
 
 ## References
 
-- [Defra common coding standards](https://github.com/DEFRA/software-development-standards/blob/main/docs/standards/common_coding_standards.md)
-- [Defra security standards](https://github.com/DEFRA/software-development-standards/blob/main/docs/standards/security_standards.md)
-- [Defra logging standards](https://github.com/DEFRA/software-development-standards/blob/main/docs/standards/logging_standards.md)
-- [GOV.UK Design System](https://design-system.service.gov.uk/)
-- [WCAG 2.2 Guidelines](https://www.w3.org/TR/WCAG22/)
+See [External references](./external-references.md).

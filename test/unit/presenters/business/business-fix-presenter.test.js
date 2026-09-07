@@ -6,7 +6,7 @@ import { businessFixPresenter } from '../../../../src/presenters/business/busine
 
 describe('businessFixPresenter', () => {
   let sessionData
-  let businessDetails
+  let data
 
   describe('when provided with business fix data', () => {
     beforeEach(() => {
@@ -15,7 +15,7 @@ describe('businessFixPresenter', () => {
         orderedSectionsToFix: ['name']
       }
 
-      businessDetails = {
+      data = {
         info: {
           sbi: '123456789',
           businessName: 'Test Business'
@@ -27,7 +27,7 @@ describe('businessFixPresenter', () => {
     })
 
     test('it correctly presents the data', () => {
-      const result = businessFixPresenter(sessionData, businessDetails)
+      const result = businessFixPresenter(sessionData, data)
 
       expect(result).toEqual({
         businessName: 'Test Business',
@@ -52,7 +52,7 @@ describe('businessFixPresenter', () => {
       })
 
       test('it returns a combined update message', () => {
-        const result = businessFixPresenter(sessionData, businessDetails)
+        const result = businessFixPresenter(sessionData, data)
 
         expect(result.updateText).toEqual('We will ask you to update your business email address as well as your business name.')
       })
@@ -67,7 +67,7 @@ describe('businessFixPresenter', () => {
       })
 
       test('it references the source section in the update text', () => {
-        const result = businessFixPresenter(sessionData, businessDetails)
+        const result = businessFixPresenter(sessionData, data)
 
         expect(result.updateText).toEqual('We will ask you to update these details as well as your business address:')
       })
@@ -81,7 +81,7 @@ describe('businessFixPresenter', () => {
       })
 
       test('it returns a generic update message', () => {
-        const result = businessFixPresenter(sessionData, businessDetails)
+        const result = businessFixPresenter(sessionData, data)
 
         expect(result.updateText).toEqual('We will ask you to update these details.')
       })
@@ -98,7 +98,7 @@ describe('businessFixPresenter', () => {
       })
 
       test('it returns an empty list', () => {
-        const result = businessFixPresenter(sessionData, businessDetails)
+        const result = businessFixPresenter(sessionData, data)
 
         expect(result.listOfErrors).toEqual([])
       })
@@ -113,7 +113,7 @@ describe('businessFixPresenter', () => {
       })
 
       test('it returns an ordered list excluding the source', () => {
-        const result = businessFixPresenter(sessionData, businessDetails)
+        const result = businessFixPresenter(sessionData, data)
 
         expect(result.listOfErrors).toEqual([
           'business name',
@@ -127,7 +127,7 @@ describe('businessFixPresenter', () => {
   describe('the "businessName", "sbi" and "userName" properties', () => {
     describe('when business details are provided', () => {
       beforeEach(() => {
-        businessDetails = {
+        data = {
           info: {
             sbi: '123456789',
             businessName: 'Test Business'
@@ -139,7 +139,7 @@ describe('businessFixPresenter', () => {
       })
 
       test('it returns the corresponding values', () => {
-        const result = businessFixPresenter(sessionData, businessDetails)
+        const result = businessFixPresenter(sessionData, data)
 
         expect(result.businessName).toEqual('Test Business')
         expect(result.sbi).toEqual('123456789')
@@ -149,11 +149,11 @@ describe('businessFixPresenter', () => {
 
     describe('when business details are missing', () => {
       beforeEach(() => {
-        businessDetails = {}
+        data = {}
       })
 
       test('it returns null values', () => {
-        const result = businessFixPresenter(sessionData, businessDetails)
+        const result = businessFixPresenter(sessionData, data)
 
         expect(result.businessName).toBeNull()
         expect(result.sbi).toBeNull()

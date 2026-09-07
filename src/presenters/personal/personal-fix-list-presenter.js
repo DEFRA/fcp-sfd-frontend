@@ -5,48 +5,48 @@
 
 import { presenters, constants } from '@defra/fcp-sfd-frontend-engine'
 
-const personalFixListPresenter = (personalDetails, payload, errors = null) => {
-  const { day, month, year } = formatDateOfBirth(personalDetails, payload)
+const personalFixListPresenter = (data, payload, errors = null) => {
+  const { day, month, year } = formatDateOfBirth(data, payload)
   const { PERSONAL_SECTION_FIELD_ORDER } = constants.interrupterJourney
 
   const sortedErrors = errors
-    ? presenters.sortErrorsBySectionOrder(errors, personalDetails.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER)
+    ? presenters.sortErrorsBySectionOrder(errors, data.orderedSectionsToFix, PERSONAL_SECTION_FIELD_ORDER)
     : null
 
   return {
-    userName: personalDetails.info?.userName ?? null,
-    backLink: { href: `/personal-fix?source=${personalDetails.source}` },
+    userName: data.info?.userName ?? null,
+    backLink: { href: `/personal-fix?source=${data.source}` },
     pageTitle: 'Your personal details to update',
     metaDescription: 'Your personal details to update.',
-    sections: personalDetails.orderedSectionsToFix,
-    name: formatName(payload, personalDetails),
+    sections: data.orderedSectionsToFix,
+    name: formatName(payload, data),
     dateOfBirth: {
       day,
       month,
       year
     },
-    personalTelephone: presenters.formatNumber(payload?.personalTelephone, personalDetails.changePersonalPhoneNumbers?.personalTelephone, personalDetails.contact.telephone),
-    personalMobile: presenters.formatNumber(payload?.personalMobile, personalDetails.changePersonalPhoneNumbers?.personalMobile, personalDetails.contact.mobile),
-    personalEmail: payload?.personalEmail ?? personalDetails.changePersonalEmail?.personalEmail ?? personalDetails.contact.email,
-    address: formatAddress(payload, personalDetails.changePersonalAddress),
+    personalTelephone: presenters.formatNumber(payload?.personalTelephone, data.changePersonalPhoneNumbers?.personalTelephone, data.contact.telephone),
+    personalMobile: presenters.formatNumber(payload?.personalMobile, data.changePersonalPhoneNumbers?.personalMobile, data.contact.mobile),
+    personalEmail: payload?.personalEmail ?? data.changePersonalEmail?.personalEmail ?? data.contact.email,
+    address: formatAddress(payload, data.changePersonalAddress),
     errors: sortedErrors
   }
 }
 
-const formatName = (payload, personalDetails) => {
+const formatName = (payload, data) => {
   return {
     first:
       payload?.first ??
-      personalDetails.changePersonalName?.first ??
-      personalDetails.info.fullName.first,
+      data.changePersonalName?.first ??
+      data.info.fullName.first,
     middle:
       payload?.middle ??
-      personalDetails.changePersonalName?.middle ??
-      personalDetails.info.fullName.middle,
+      data.changePersonalName?.middle ??
+      data.info.fullName.middle,
     last:
       payload?.last ??
-      personalDetails.changePersonalName?.last ??
-      personalDetails.info.fullName.last
+      data.changePersonalName?.last ??
+      data.info.fullName.last
   }
 }
 

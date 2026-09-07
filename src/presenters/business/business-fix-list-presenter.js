@@ -5,27 +5,27 @@
 
 import { presenters, constants } from '@defra/fcp-sfd-frontend-engine'
 
-const businessFixListPresenter = (businessDetails, payload, errors = null) => {
+const businessFixListPresenter = (data, payload, errors = null) => {
   const { BUSINESS_SECTION_FIELD_ORDER } = constants.interrupterJourney
 
   const sortedErrors = errors
-    ? presenters.sortErrorsBySectionOrder(errors, businessDetails.orderedSectionsToFix, BUSINESS_SECTION_FIELD_ORDER)
+    ? presenters.sortErrorsBySectionOrder(errors, data.orderedSectionsToFix, BUSINESS_SECTION_FIELD_ORDER)
     : null
 
   return {
-    backLink: { href: `/business-fix?source=${businessDetails.source}` },
+    backLink: { href: `/business-fix?source=${data.source}` },
     pageTitle: 'Your business details to update',
     metaDescription: 'Your business details to update.',
-    sections: businessDetails.orderedSectionsToFix,
-    userName: businessDetails.customer?.userName ?? null,
-    businessName: businessDetails.info.businessName ?? null,
-    changeBusinessName: payload?.businessName ?? businessDetails.changeBusinessName?.businessName ?? businessDetails.info?.businessName ?? null,
-    sbi: businessDetails.info?.sbi ?? null,
-    businessTelephone: presenters.formatNumber(payload?.businessTelephone, businessDetails.changeBusinessPhoneNumbers?.businessTelephone, businessDetails.contact.landline),
-    businessMobile: presenters.formatNumber(payload?.businessMobile, businessDetails.changeBusinessPhoneNumbers?.businessMobile, businessDetails.contact.mobile),
-    businessEmail: payload?.businessEmail ?? businessDetails.changeBusinessEmail?.businessEmail ?? businessDetails.contact.email,
-    address: formatAddress(payload, businessDetails.changeBusinessAddress),
-    vatNumber: payload?.vatNumber ?? businessDetails.changeBusinessVat?.vatNumber ?? businessDetails.info?.vat,
+    sections: data.orderedSectionsToFix,
+    userName: data.customer?.userName ?? null,
+    businessName: data.info.businessName ?? null,
+    changeBusinessName: payload?.businessName ?? data.changeBusinessName?.businessName ?? data.info?.businessName ?? null,
+    sbi: data.info?.sbi ?? null,
+    businessTelephone: presenters.formatNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.contact.landline),
+    businessMobile: presenters.formatNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.contact.mobile),
+    businessEmail: payload?.businessEmail ?? data.changeBusinessEmail?.businessEmail ?? data.contact.email,
+    address: formatAddress(payload, data.changeBusinessAddress),
+    vatNumber: payload?.vatNumber ?? data.changeBusinessVat?.vatNumber ?? data.info?.vat,
     errors: sortedErrors
   }
 }

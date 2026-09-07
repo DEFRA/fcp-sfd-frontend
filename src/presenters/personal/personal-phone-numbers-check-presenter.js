@@ -3,10 +3,10 @@
  * @module personalPhoneNumbersCheckPresenter
  */
 
-const personalPhoneNumbersCheckPresenter = (personalDetails) => {
-  const phoneNumbers = personalDetails.changePersonalPhoneNumbers ?? {
-    personalTelephone: personalDetails.contact.telephone,
-    personalMobile: personalDetails.contact.mobile
+const personalPhoneNumbersCheckPresenter = (data) => {
+  const phoneNumbers = data.changePersonalPhoneNumbers ?? {
+    personalTelephone: data.contact.telephone,
+    personalMobile: data.contact.mobile
   }
 
   return {
@@ -14,7 +14,7 @@ const personalPhoneNumbersCheckPresenter = (personalDetails) => {
     changeLink: '/account-phone-numbers-change',
     pageTitle: 'Check your personal phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your personal account are correct.',
-    userName: personalDetails.info.userName ?? null,
+    userName: data.info.userName ?? null,
     personalTelephone: {
       telephone: phoneNumbers.personalTelephone ?? null,
       mobile: phoneNumbers.personalMobile ?? null

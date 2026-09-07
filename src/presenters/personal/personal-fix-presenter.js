@@ -7,12 +7,12 @@ import { constants } from '@defra/fcp-sfd-frontend-engine'
 
 const { PERSONAL_SECTION_ORDER, PERSONAL_UPDATE_TEXT_LABELS, PERSONAL_SECTION_LABELS } = constants.interrupterJourney
 
-const personalFixPresenter = (personalDetails) => {
-  const { source, orderedSectionsToFix } = personalDetails
+const personalFixPresenter = (data) => {
+  const { source, orderedSectionsToFix } = data
   const hasMultipleErrors = orderedSectionsToFix.length > 2
 
   return {
-    userName: personalDetails.info?.userName ?? null,
+    userName: data.info?.userName ?? null,
     backLink: { href: '/personal-details' },
     pageTitle: 'Update your personal details',
     metaDescription: 'Update your personal details.',

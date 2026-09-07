@@ -7,14 +7,14 @@ import { constants } from '@defra/fcp-sfd-frontend-engine'
 
 const { BUSINESS_SECTION_ORDER, BUSINESS_UPDATE_TEXT_LABELS, BUSINESS_SECTION_LABELS } = constants.interrupterJourney
 
-const businessFixPresenter = (sessionData, businessDetails) => {
+const businessFixPresenter = (sessionData, data) => {
   const { source, orderedSectionsToFix } = sessionData
   const hasMultipleErrors = orderedSectionsToFix.length > 2
 
   return {
-    businessName: businessDetails.info?.businessName ?? null,
-    sbi: businessDetails.info?.sbi ?? null,
-    userName: businessDetails.customer?.userName ?? null,
+    businessName: data.info?.businessName ?? null,
+    sbi: data.info?.sbi ?? null,
+    userName: data.customer?.userName ?? null,
     backLink: { href: '/business-details' },
     pageTitle: 'Update your business details',
     metaDescription: 'Update your business details.',

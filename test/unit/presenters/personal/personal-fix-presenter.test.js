@@ -5,11 +5,11 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { personalFixPresenter } from '../../../../src/presenters/personal/personal-fix-presenter.js'
 
 describe('personalFixPresenter', () => {
-  let personalDetails
+  let data
 
   describe('when provided with personal fix data', () => {
     beforeEach(() => {
-      personalDetails = {
+      data = {
         source: 'name',
         orderedSectionsToFix: ['name'],
         info: {
@@ -19,7 +19,7 @@ describe('personalFixPresenter', () => {
     })
 
     test('it correctly presents the data', () => {
-      const result = personalFixPresenter(personalDetails)
+      const result = personalFixPresenter(data)
 
       expect(result).toEqual({
         userName: 'Jane Doe',
@@ -35,7 +35,7 @@ describe('personalFixPresenter', () => {
   describe('the "updateText" property', () => {
     describe('when two sections need fixing', () => {
       beforeEach(() => {
-        personalDetails = {
+        data = {
           source: 'name',
           orderedSectionsToFix: ['name', 'email'],
           info: {
@@ -45,7 +45,7 @@ describe('personalFixPresenter', () => {
       })
 
       test('it returns a combined update message', () => {
-        const result = personalFixPresenter(personalDetails)
+        const result = personalFixPresenter(data)
 
         expect(result.updateText)
           .toEqual('We will ask you to update your personal email address as well as your full name.')
@@ -54,7 +54,7 @@ describe('personalFixPresenter', () => {
 
     describe('when more than two sections need fixing and a source is provided', () => {
       beforeEach(() => {
-        personalDetails = {
+        data = {
           source: 'address',
           orderedSectionsToFix: ['address', 'dob', 'email'],
           info: {
@@ -64,7 +64,7 @@ describe('personalFixPresenter', () => {
       })
 
       test('it references the source section in the update text', () => {
-        const result = personalFixPresenter(personalDetails)
+        const result = personalFixPresenter(data)
 
         expect(result.updateText)
           .toEqual('We will ask you to update these details as well as your personal address:')
@@ -73,7 +73,7 @@ describe('personalFixPresenter', () => {
 
     describe('when no source is provided', () => {
       beforeEach(() => {
-        personalDetails = {
+        data = {
           orderedSectionsToFix: ['name', 'dob', 'email'],
           info: {
             userName: 'Jane Doe'
@@ -82,7 +82,7 @@ describe('personalFixPresenter', () => {
       })
 
       test('it returns a generic update message', () => {
-        const result = personalFixPresenter(personalDetails)
+        const result = personalFixPresenter(data)
 
         expect(result.updateText)
           .toEqual('We will ask you to update these details.')
@@ -93,7 +93,7 @@ describe('personalFixPresenter', () => {
   describe('the "listOfErrors" property', () => {
     describe('when two sections need fixing', () => {
       beforeEach(() => {
-        personalDetails = {
+        data = {
           source: 'name',
           orderedSectionsToFix: ['name', 'email'],
           info: {
@@ -103,7 +103,7 @@ describe('personalFixPresenter', () => {
       })
 
       test('it returns an empty list', () => {
-        const result = personalFixPresenter(personalDetails)
+        const result = personalFixPresenter(data)
 
         expect(result.listOfErrors).toEqual([])
       })
@@ -111,7 +111,7 @@ describe('personalFixPresenter', () => {
 
     describe('when more than two sections need fixing', () => {
       beforeEach(() => {
-        personalDetails = {
+        data = {
           source: 'phone',
           orderedSectionsToFix: ['email', 'phone', 'name', 'dob'],
           info: {
@@ -121,7 +121,7 @@ describe('personalFixPresenter', () => {
       })
 
       test('it returns an ordered list excluding the source', () => {
-        const result = personalFixPresenter(personalDetails)
+        const result = personalFixPresenter(data)
 
         expect(result.listOfErrors).toEqual([
           'full name',

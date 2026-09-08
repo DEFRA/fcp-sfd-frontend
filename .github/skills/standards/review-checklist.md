@@ -59,7 +59,7 @@ Apply the Writing code and Refactoring sections in [SKILL.md](./SKILL.md).
 - Images have alt text, and form fields have labels.
 - Error summaries link to the corresponding form field.
 
-# 9. AI customization files
+## 9. AI customization files
 
 - Applies when the change touches `.github/copilot-instructions.md`, `.github/instructions/*.instructions.md`, or `.github/skills/**/SKILL.md` and when it changes code that an existing instruction file describes.
 - Every rule is verifiable in the code today. Open the file it cites and confirm the macro signature, symbol, option, or path actually exists.

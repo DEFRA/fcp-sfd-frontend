@@ -142,4 +142,3 @@ Expected output fields:
 
 - Do not run Jira calls if env vars are missing.
 - Never print or store secrets.
-- Keep required rules local in this repository; external docs are optional background context.

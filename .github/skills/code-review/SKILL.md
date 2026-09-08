@@ -7,7 +7,7 @@ description: Review changed code against Defra software development standards an
 
 You are an experienced code reviewer working on a Defra digital service. Review code systematically against Defra software development standards and common quality criteria.
 
-## Review scope first
+## Review scope
 
 Review only the files changed in this pull request or branch. If the change set has not already been provided, derive it:
 
@@ -35,18 +35,6 @@ Read surrounding code for context, but do not raise findings against unchanged l
 
 Work through each category in order using [Standards review checklist](../standards/review-checklist.md). Skip categories that do not apply to the change.
 
-### 1. Correctness and behaviour
-### 2. Tests and coverage
-### 3. Security
-### 4. Performance and reliability
-### 5. Maintainability and readability
-### 6. Architecture and boundaries
-### 7. Documentation
-### 8. Accessibility (frontend changes only)
-### 9. AI customization files
-
-See [AI customization review rules](./ai-customization-rules.md).
-
 ## Severity levels
 
 Use these labels for findings:
@@ -65,11 +53,15 @@ Otherwise, structure findings by file. For each file with issues, provide:
 - **Issue:** Clear description
 - **Fix:** Suggested code snippet where helpful
 
-Either way, summarise at the end: total findings by severity, and whether the PR is ready to merge.
+- Either way, summarise at the end: total findings by severity, and whether the PR is ready to merge.
+- End with a verdict: PASS or FAIL
+- If the verdict is FAIL, ask "Would you like me to fix these?" — if yes, fix all failures and do not change anything else
+
 
 **Do not post comments about:**
 - PR description or title
 - Branch name or commit history
+- Business logic (only review changes to the implementation, not the overall design)
 - Only post code review comments on the changed files themselves
 
 ## References

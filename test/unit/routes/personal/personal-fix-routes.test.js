@@ -88,6 +88,23 @@ describe('personal fix routes', () => {
         expect(h.view).toHaveBeenCalledWith('personal/personal-fix.njk', getPageData())
       })
     })
+
+    describe('when there is no valid session data to fix', () => {
+      beforeEach(() => {
+        h = {
+          redirect: vi.fn()
+        }
+
+        services.initialiseFixJourney.mockReturnValue(null)
+      })
+
+      test('it redirects to the personal details page without fetching personal data', async () => {
+        await getPersonalFix.handler(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(fetchPersonalFixService).not.toHaveBeenCalled()
+      })
+    })
   })
 
   describe('POST /personal-fix', () => {

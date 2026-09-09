@@ -33,7 +33,8 @@ export const cookieConfig = {
       ttl: {
         doc: 'Time to live for cookie policy (ms)',
         format: 'nat',
-        default: 1000 * 60 * 60 * 24 * 365
+        default: 1000 * 60 * 60 * 24 * 365,
+        env: 'COOKIE_POLICY_TTL'
       }
     }
   }

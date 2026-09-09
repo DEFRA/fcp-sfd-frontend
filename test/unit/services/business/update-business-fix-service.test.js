@@ -3,32 +3,28 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
-import { buildBusinessDetailsMutationService } from '../../../../src/services/business/build-business-details-mutation-service.js'
-import { buildBusinessUpdateVariablesService } from '../../../../src/services/business/build-business-update-variables-service.js'
 import { updateDalService } from '../../../../src/services/DAL/update-dal-service.js'
 import { flashNotification } from '../../../../src/utils/notifications/flash-notification.js'
-import { services } from '@defra/fcp-sfd-frontend-engine'
 
 // Thing under test
 import { updateBusinessFixService } from '../../../../src/services/business/update-business-fix-service.js'
+
+// Test helpers
+import { mutations, services } from '@defra/fcp-sfd-frontend-engine'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-fix-service.js', () => ({
   fetchBusinessFixService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/build-business-update-variables-service.js', () => ({
-  buildBusinessUpdateVariablesService: vi.fn()
-}))
-
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   services: {
-    buildFixSuccessMessage: vi.fn()
+    buildFixSuccessMessage: vi.fn(),
+    buildBusinessFixUpdateVariables: vi.fn()
+  },
+  mutations: {
+    updateBusinessDetails: 'updateBusinessDetails'
   }
-}))
-
-vi.mock('../../../../src/services/business/build-business-details-mutation-service.js', () => ({
-  buildBusinessDetailsMutationService: vi.fn()
 }))
 
 vi.mock('../../../../src/services/DAL/update-dal-service.js', () => ({
@@ -45,7 +41,6 @@ describe('updateBusinessFixService', () => {
   let credentials
   let businessDetails
   let updateVariables
-  let updateBusinessDetailsMutation
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -69,14 +64,11 @@ describe('updateBusinessFixService', () => {
     }
 
     updateVariables = {
-      updateBusinessEmailInput: {}
+      input: { email: { address: 'test@example.com' } }
     }
 
-    updateBusinessDetailsMutation = 'mutation Mutation ($updateBusinessEmailInput: UpdateBusinessEmailInput!)'
-
     fetchBusinessFixService.mockResolvedValue(businessDetails)
-    buildBusinessUpdateVariablesService.mockReturnValue(updateVariables)
-    buildBusinessDetailsMutationService.mockReturnValue(updateBusinessDetailsMutation)
+    services.buildBusinessFixUpdateVariables.mockReturnValue(updateVariables)
     services.buildFixSuccessMessage.mockReturnValue({
       type: 'text',
       value: 'You have updated your business email address'
@@ -93,19 +85,13 @@ describe('updateBusinessFixService', () => {
     test('it builds mutation variables from business details', async () => {
       await updateBusinessFixService(sessionData, yar, credentials)
 
-      expect(buildBusinessUpdateVariablesService).toHaveBeenCalledWith(businessDetails)
-    })
-
-    test('it builds the business details mutation', async () => {
-      await updateBusinessFixService(sessionData, yar, credentials)
-
-      expect(buildBusinessDetailsMutationService).toHaveBeenCalledWith(businessDetails.orderedSectionsToFix)
+      expect(services.buildBusinessFixUpdateVariables).toHaveBeenCalledWith(businessDetails)
     })
 
     test('it calls the DAL update service with the correct mutation and variables', async () => {
       await updateBusinessFixService(sessionData, yar, credentials)
 
-      expect(updateDalService).toHaveBeenCalledWith(updateBusinessDetailsMutation, updateVariables, credentials.sessionId)
+      expect(updateDalService).toHaveBeenCalledWith(mutations.updateBusinessDetails, updateVariables, credentials.sessionId)
     })
 
     test('it clears businessDetails from the session', async () => {

@@ -10,7 +10,7 @@ vi.mock('../../../src/config/index.js', () => ({
 let cookiesModule
 
 describe('cookies', () => {
-  const cookieNamePolicy = 'fcp_sfd_cookie_policy'
+  const cookieNamePolicy = 'cookie_policy'
   const cookiePolicy = { isSecure: true, isSameSite: 'Lax' }
   const cookieConfig = { ttl: 31536000000 }
 
@@ -56,38 +56,42 @@ describe('cookies', () => {
   })
 
   test('getCurrentPolicy returns default cookie if policy does not exist', () => {
-    const result = cookiesModule.getCurrentPolicy(request, h)
+    const result = cookiesModule.getCurrentPolicy(request)
 
     expect(result).toStrictEqual(defaultCookie)
   })
 
-  test('getCurrentPolicy sets default cookie if policy does not exist', () => {
-    cookiesModule.getCurrentPolicy(request, h)
+  test('getCurrentPolicy does not write a cookie when no choice has been made', () => {
+    cookiesModule.getCurrentPolicy(request)
 
-    expect(h.state).toHaveBeenCalledWith(
-      cookieNamePolicy,
-      defaultCookie,
-      { ...cookiePolicy, ...cookieConfig }
-    )
+    expect(h.state).not.toHaveBeenCalled()
   })
 
   test('getCurrentPolicy returns cookie if policy exists', () => {
-    request.state[cookieNamePolicy] = { confirmed: true, essential: false, analytics: true }
+    request.state[cookieNamePolicy] = JSON.stringify({ confirmed: true, essential: false, analytics: true })
 
-    const result = cookiesModule.getCurrentPolicy(request, h)
+    const result = cookiesModule.getCurrentPolicy(request)
 
     expect(result).toStrictEqual({ confirmed: true, essential: false, analytics: true })
     expect(h.state).not.toHaveBeenCalled()
   })
 
+  test('getCurrentPolicy returns the default cookie if the policy cannot be parsed', () => {
+    request.state[cookieNamePolicy] = 'not-json'
+
+    const result = cookiesModule.getCurrentPolicy(request)
+
+    expect(result).toStrictEqual(defaultCookie)
+  })
+
   test('updatePolicy sets cookie to accepted and returns the updated policy', () => {
-    request.state[cookieNamePolicy] = defaultCookie
+    request.state[cookieNamePolicy] = JSON.stringify(defaultCookie)
 
     const result = cookiesModule.updatePolicy(request, h, true)
 
     expect(h.state).toHaveBeenCalledWith(
       cookieNamePolicy,
-      { confirmed: true, essential: true, analytics: true },
+      JSON.stringify({ confirmed: true, essential: true, analytics: true }),
       { ...cookiePolicy, ...cookieConfig }
     )
     expect(h.unstate).not.toHaveBeenCalled()
@@ -95,13 +99,13 @@ describe('cookies', () => {
   })
 
   test('updatePolicy sets cookie to rejected, removes analytics cookies and returns the updated policy', () => {
-    request.state[cookieNamePolicy] = defaultCookie
+    request.state[cookieNamePolicy] = JSON.stringify(defaultCookie)
 
     const result = cookiesModule.updatePolicy(request, h, false)
 
     expect(h.state).toHaveBeenCalledWith(
       cookieNamePolicy,
-      { confirmed: true, essential: true, analytics: false },
+      JSON.stringify({ confirmed: true, essential: true, analytics: false }),
       { ...cookiePolicy, ...cookieConfig }
     )
     expect(h.unstate).toHaveBeenCalledWith('_ga')
@@ -121,11 +125,11 @@ describe('cookies', () => {
   })
 
   test('updatePolicy makes the new policy authoritative for the rest of the response', () => {
-    request.state[cookieNamePolicy] = { confirmed: true, essential: true, analytics: true }
+    request.state[cookieNamePolicy] = JSON.stringify({ confirmed: true, essential: true, analytics: true })
 
     cookiesModule.updatePolicy(request, h, false)
 
-    expect(cookiesModule.getCurrentPolicy(request, h)).toStrictEqual({
+    expect(cookiesModule.getCurrentPolicy(request)).toStrictEqual({
       confirmed: true,
       essential: true,
       analytics: false
@@ -133,9 +137,9 @@ describe('cookies', () => {
   })
 
   test('getCurrentPolicy falls back to the request cookie when no policy has been written', () => {
-    request.state[cookieNamePolicy] = { confirmed: true, essential: true, analytics: true }
+    request.state[cookieNamePolicy] = JSON.stringify({ confirmed: true, essential: true, analytics: true })
 
-    expect(cookiesModule.getCurrentPolicy(request, h)).toStrictEqual({
+    expect(cookiesModule.getCurrentPolicy(request)).toStrictEqual({
       confirmed: true,
       essential: true,
       analytics: true

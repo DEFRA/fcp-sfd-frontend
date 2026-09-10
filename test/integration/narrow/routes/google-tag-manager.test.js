@@ -6,8 +6,8 @@ process.env.GOOGLE_TAG_MANAGER_KEY = 'GTM-TEST123'
 
 const { createServer } = await import('../../../../src/server.js')
 
-const cookieName = 'fcp_sfd_cookie_policy'
-const policyCookie = (analytics) => `${cookieName}=${Buffer.from(JSON.stringify({ confirmed: true, essential: true, analytics })).toString('base64')}`
+const cookieName = 'cookie_policy'
+const policyCookie = (analytics) => `${cookieName}=${JSON.stringify({ confirmed: true, essential: true, analytics })}`
 const gtmSnippet = 'googletagmanager.com/gtm.js'
 
 let server
@@ -45,6 +45,28 @@ describe('google tag manager', () => {
 
     expect(response.statusCode).toBe(constants.statusCodes.OK)
     expect(response.result).not.toContain(gtmSnippet)
+  })
+
+  test('does not render the GTM snippet before a choice has been made', async () => {
+    const response = await server.inject({ url: '/cookies' })
+
+    expect(response.statusCode).toBe(constants.statusCodes.OK)
+    expect(response.result).not.toContain('googletagmanager')
+  })
+
+  test('denies every consent signal before granting analytics storage and starting the container', async () => {
+    const response = await server.inject({
+      url: '/cookies',
+      headers: { cookie: policyCookie(true) }
+    })
+
+    const consentDefault = response.result.indexOf("gtag('consent','default'")
+    const consentUpdate = response.result.indexOf("gtag('consent','update',{'analytics_storage':'granted'})")
+
+    expect(response.result).toContain("'ad_storage':'denied'")
+    expect(consentDefault).toBeGreaterThan(-1)
+    expect(consentUpdate).toBeGreaterThan(consentDefault)
+    expect(response.result.indexOf(gtmSnippet)).toBeGreaterThan(consentUpdate)
   })
 
   test('allows googletagmanager.com in the script-src content security policy directive', async () => {
@@ -104,6 +126,36 @@ describe('google tag manager', () => {
       const noOption = response.result.match(/<input[^>]*id="analytics-2"[^>]*>/)[0]
 
       expect(noOption).toContain('checked')
+    })
+  })
+
+  describe('the consent cookie', () => {
+    const policyHeader = (setCookie) => setCookie.find((header) => header.startsWith(`${cookieName}=`))
+
+    test('is not written before a choice has been made', async () => {
+      const response = await server.inject({ url: '/cookies' })
+
+      expect(policyHeader(response.headers['set-cookie'] ?? [])).toBeUndefined()
+    })
+
+    test('is written as readable JSON that client side scripts can access', async () => {
+      const seed = await server.inject({ url: '/cookies' })
+      const crumb = seed.headers['set-cookie'].join(';').match(/crumb=([^;]+)/)[1]
+
+      const response = await server.inject({
+        method: 'POST',
+        url: '/cookies',
+        headers: {
+          cookie: `crumb=${crumb}`,
+          'content-type': 'application/x-www-form-urlencoded'
+        },
+        payload: `analytics=true&referer=/&crumb=${crumb}`
+      })
+
+      const header = policyHeader(response.headers['set-cookie'])
+
+      expect(header).toContain(`${cookieName}={"confirmed":true,"essential":true,"analytics":true}`)
+      expect(header).not.toContain('HttpOnly')
     })
   })
 })

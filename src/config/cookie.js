@@ -5,18 +5,18 @@ export const cookieConfig = {
     name: {
       doc: 'Name of cookies set as part of the cookie policy',
       format: String,
-      default: 'fcp_sfd_cookie_policy'
+      default: 'cookie_policy'
     },
     policy: {
-      clearInvalid: {
-        doc: 'Clear invalid cookie policy',
-        format: Boolean,
-        default: true
-      },
       encoding: {
-        doc: 'Encoding protocol for cookie policy',
+        doc: 'Encoding protocol for cookie policy, kept unencoded so the value is readable JSON',
         format: String,
-        default: 'base64json'
+        default: 'none'
+      },
+      isHttpOnly: {
+        doc: 'Hide the cookie policy from client-side scripts, which must stay false so Google Tag Manager can read consent',
+        format: Boolean,
+        default: false
       },
       isSameSite: {
         doc: 'Check if site is the same',
@@ -27,14 +27,18 @@ export const cookieConfig = {
         doc: 'Check if secure',
         format: Boolean,
         default: isProduction
+      },
+      strictHeader: {
+        doc: 'Require an RFC 6265 compliant header, which plain JSON is not',
+        format: Boolean,
+        default: false
       }
     },
     config: {
       ttl: {
         doc: 'Time to live for cookie policy (ms)',
         format: 'nat',
-        default: 1000 * 60 * 60 * 24 * 365,
-        env: 'COOKIE_POLICY_TTL'
+        default: 1000 * 60 * 60 * 24 * 365
       }
     }
   }

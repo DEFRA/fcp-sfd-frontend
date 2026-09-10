@@ -45,7 +45,7 @@ describe('Cookies endpoints', () => {
 
       const result = getCookies.handler(mockRequest, h)
 
-      expect(getCurrentPolicy).toHaveBeenCalledWith(mockRequest, h)
+      expect(getCurrentPolicy).toHaveBeenCalledWith(mockRequest)
       expect(cookiesPresenter).toHaveBeenCalledWith(false, '/some-previous-page', cookiesPolicy)
       expect(viewMock).toHaveBeenCalledWith('cookies', {
         pageTitle: 'Cookies',
@@ -136,7 +136,7 @@ describe('Cookies endpoints', () => {
 
         postCookies.options.validate.failAction(mockRequest, h, err)
 
-        expect(getCurrentPolicy).toHaveBeenCalledWith(mockRequest, h)
+        expect(getCurrentPolicy).toHaveBeenCalledWith(mockRequest)
       })
 
       test('should re-render the cookies view with formatted errors and a 400 status', () => {

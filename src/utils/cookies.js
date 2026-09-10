@@ -10,6 +10,10 @@ const createDefaultPolicy = () => {
 
 // The policy is stored as plain JSON so Google Tag Manager can read it, so it arrives here as an unparsed string
 const parsePolicy = (value) => {
+  if (!value) {
+    return null
+  }
+
   try {
     return JSON.parse(value)
   } catch {

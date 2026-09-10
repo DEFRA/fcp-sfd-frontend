@@ -14,7 +14,7 @@ export const cookieConfig = {
         default: 'none'
       },
       isHttpOnly: {
-        doc: 'Hide the cookie policy from client side scripts, which must stay false so Google Tag Manager can read consent',
+        doc: 'Hide the cookie policy from client-side scripts, which must stay false so Google Tag Manager can read consent',
         format: Boolean,
         default: false
       },

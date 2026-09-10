@@ -8,8 +8,7 @@
 import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const buildBusinessUpdateVariablesService = (businessDetails) => {
-  const { orderedSectionsToFix, info } = businessDetails
-  const { sbi } = info
+  const { orderedSectionsToFix, sbi } = businessDetails
 
   const variables = {}
 

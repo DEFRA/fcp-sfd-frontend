@@ -18,7 +18,7 @@ import { updateDalService } from '../DAL/update-dal-service.js'
 
 const updateBusinessVatRemoveService = async (yar, credentials) => {
   const businessDetails = await fetchBusinessDetailsService(credentials)
-  const variables = utils.buildUpdateBusinessVatVariables('', businessDetails.info.sbi)
+  const variables = utils.buildUpdateBusinessVatVariables('', businessDetails.sbi)
 
   await updateDalService(mutations.updateBusinessVat, variables, credentials.sessionId)
 

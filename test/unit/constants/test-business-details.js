@@ -1,14 +1,12 @@
 const businessDetailsMapped = () => ({
-  info: {
-    sbi: '107705779',
-    businessName: 'MR TEST PELLING',
-    vat: '123456789',
-    traderNumber: null,
-    vendorNumber: '111111',
-    legalStatus: null,
-    type: 'Farmer',
-    countyParishHoldingNumbers: undefined
-  },
+  sbi: '107705779',
+  businessName: 'MR TEST PELLING',
+  vat: '123456789',
+  traderNumber: null,
+  vendorNumber: '111111',
+  legalStatus: null,
+  type: 'Farmer',
+  countyParishHoldingNumbers: undefined,
   address: {
     lookup: {
       buildingNumberRange: '1',
@@ -29,11 +27,9 @@ const businessDetailsMapped = () => ({
     postcode: 'DL12 0AH',
     country: 'ENGLAND'
   },
-  contact: {
-    email: 'test@example.com',
-    landline: '01234611835',
-    mobile: '07123456789'
-  },
+  email: 'test@example.com',
+  landline: '01234611835',
+  mobile: '07123456789',
   customer: { userName: 'Stephen Hyde' }
 })
 

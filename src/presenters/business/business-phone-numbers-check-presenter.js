@@ -10,8 +10,8 @@ const businessPhoneNumbersCheckPresenter = (data) => {
     pageTitle: 'Check your business phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your business are correct.',
     userName: data.customer.userName ?? null,
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null,
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null,
     businessMobile: data.changeBusinessPhoneNumbers.businessMobile ?? null,
     businessTelephone: data.changeBusinessPhoneNumbers.businessTelephone ?? null
   }

@@ -30,7 +30,7 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when business details are invalid', () => {
     beforeEach(() => {
-      businessDetails.info.businessName = ''
+      businessDetails.businessName = ''
     })
 
     test('returns hasValidBusinessDetails as false', () => {
@@ -62,8 +62,8 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when multiple sections are invalid', () => {
     beforeEach(() => {
-      businessDetails.info.businessName = ''
-      businessDetails.contact.email = 'not-an-email'
+      businessDetails.businessName = ''
+      businessDetails.email = 'not-an-email'
     })
 
     test('returns all affected sections', () => {
@@ -75,8 +75,8 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when both landline and mobile are missing', () => {
     beforeEach(() => {
-      businessDetails.contact.landline = null
-      businessDetails.contact.mobile = null
+      businessDetails.landline = null
+      businessDetails.mobile = null
     })
 
     test('maps the error to the phone section', () => {
@@ -88,7 +88,7 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when only a landline number is provided', () => {
     beforeEach(() => {
-      businessDetails.contact.mobile = null
+      businessDetails.mobile = null
     })
 
     test('does not flag the phone section', () => {
@@ -100,7 +100,7 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when only a mobile number is provided', () => {
     beforeEach(() => {
-      businessDetails.contact.landline = null
+      businessDetails.landline = null
     })
 
     test('does not flag the phone section', () => {
@@ -139,7 +139,7 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when a VAT number is provided', () => {
     beforeEach(() => {
-      businessDetails.info.vat = '123456789'
+      businessDetails.vat = '123456789'
     })
 
     test('validates the VAT number', () => {
@@ -152,7 +152,7 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when an invalid VAT number is provided', () => {
     beforeEach(() => {
-      businessDetails.info.vat = 'INVALIDVAT'
+      businessDetails.vat = 'INVALIDVAT'
     })
 
     test('returns the VAT section as needing update', () => {
@@ -165,7 +165,7 @@ describe('validateBusinessDetailsService', () => {
 
   describe('when no VAT number is provided', () => {
     beforeEach(() => {
-      businessDetails.info.vat = null
+      businessDetails.vat = null
     })
 
     test('does not validate the VAT number', () => {

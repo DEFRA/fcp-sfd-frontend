@@ -336,10 +336,8 @@ describe('business address select change', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
+    sbi: '123456789',
+    businessName: 'Agile Farm Ltd',
     customer: {
       userName: 'Alfred Waldron'
     },

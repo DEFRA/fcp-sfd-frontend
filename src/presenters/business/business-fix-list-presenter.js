@@ -18,14 +18,14 @@ const businessFixListPresenter = (data, payload, errors = null) => {
     metaDescription: 'Your business details to update.',
     sections: data.orderedSectionsToFix,
     userName: data.customer?.userName ?? null,
-    businessName: data.info.businessName ?? null,
-    changeBusinessName: payload?.businessName ?? data.changeBusinessName?.businessName ?? data.info?.businessName ?? null,
-    sbi: data.info?.sbi ?? null,
-    businessTelephone: presenters.formatNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.contact.landline),
-    businessMobile: presenters.formatNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.contact.mobile),
-    businessEmail: payload?.businessEmail ?? data.changeBusinessEmail?.businessEmail ?? data.contact.email,
+    businessName: data.businessName ?? null,
+    changeBusinessName: payload?.businessName ?? data.changeBusinessName?.businessName ?? data.businessName ?? null,
+    sbi: data.sbi ?? null,
+    businessTelephone: presenters.formatNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.landline),
+    businessMobile: presenters.formatNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.mobile),
+    businessEmail: payload?.businessEmail ?? data.changeBusinessEmail?.businessEmail ?? data.email,
     address: formatAddress(payload, data.changeBusinessAddress),
-    vatNumber: payload?.vatNumber ?? data.changeBusinessVat?.vatNumber ?? data.info?.vat,
+    vatNumber: payload?.vatNumber ?? data.changeBusinessVat?.vatNumber ?? data.vat,
     errors: sortedErrors
   }
 }

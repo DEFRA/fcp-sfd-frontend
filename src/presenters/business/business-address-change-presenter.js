@@ -11,8 +11,8 @@ const businessAddressChangePresenter = (data, payload) => {
     metaDescription: 'Update the address for your business.',
     userName: data.customer.userName ?? null,
     postcode: payload ?? data.changeBusinessPostcode?.postcode ?? data.address.postcode,
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

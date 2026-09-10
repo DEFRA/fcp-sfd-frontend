@@ -12,8 +12,8 @@ const businessAddressEnterPresenter = (data, payload) => {
     metaDescription: 'Enter the address for your business.',
     userName: data.customer.userName ?? null,
     address: formatAddress(payload, data.changeBusinessAddress, data.address),
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

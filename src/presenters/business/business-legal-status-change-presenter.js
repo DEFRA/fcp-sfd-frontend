@@ -10,9 +10,9 @@ const businessLegalStatusChangePresenter = (data) => {
     pageTitle: 'Change your legal status',
     metaDescription: 'Update the legal status of your business.',
     userName: data.customer.userName ?? null,
-    businessName: data.info.businessName ?? null,
-    businessLegalStatus: data.info.legalStatus ?? null,
-    sbi: data.info.sbi ?? null
+    businessName: data.businessName ?? null,
+    businessLegalStatus: data.legalStatus ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

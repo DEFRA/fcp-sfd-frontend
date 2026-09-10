@@ -11,10 +11,8 @@ describe('businessNameCheckPresenter', () => {
     vi.clearAllMocks()
 
     data = {
-      info: {
-        businessName: 'Agile Farm Ltd',
-        sbi: '123456789'
-      },
+      businessName: 'Agile Farm Ltd',
+      sbi: '123456789',
       customer: {
         userName: 'Alfred Waldron'
       }
@@ -41,7 +39,7 @@ describe('businessNameCheckPresenter', () => {
   describe('the "businessName" property', () => {
     describe('when the businessName property is missing', () => {
       beforeEach(() => {
-        delete data.info.businessName
+        delete data.businessName
       })
 
       test('it should return businessName as null', () => {
@@ -55,7 +53,7 @@ describe('businessNameCheckPresenter', () => {
   describe('the "sbi" property', () => {
     describe('when the sbi property is missing', () => {
       beforeEach(() => {
-        delete data.info.sbi
+        delete data.sbi
       })
 
       test('it should return sbi as null', () => {

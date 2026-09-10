@@ -15,15 +15,11 @@ describe('homePresenter', () => {
 
   beforeEach(() => {
     data = {
-      info: {
-        userName: 'Alfred Waldron'
-      },
+      userName: 'Alfred Waldron',
       business: {
-        info: {
-          sbi: '123456789',
-          name: 'Test Farm Ltd',
-          organisationId: '5565448'
-        }
+        sbi: '123456789',
+        name: 'Test Farm Ltd',
+        organisationId: '5565448'
       }
     }
     permissionGroups = ['BUSINESS_DETAILS:VIEW']

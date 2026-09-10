@@ -10,9 +10,9 @@ const businessEmailCheckPresenter = (data) => {
     pageTitle: 'Check your business email address is correct before submitting',
     metaDescription: 'Check the email address for your business is correct.',
     userName: data.customer.userName ?? null,
-    businessEmail: data.changeBusinessEmail ?? data.contact.email,
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null
+    businessEmail: data.changeBusinessEmail ?? data.email,
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

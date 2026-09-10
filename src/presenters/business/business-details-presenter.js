@@ -9,14 +9,14 @@ import { businessDetailsChangeLinksPresenter } from './business-details-change-l
 
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
-  const countyParishHoldingNumbers = presenters.formatCph(data.info.countyParishHoldingNumbers)
+  const countyParishHoldingNumbers = presenters.formatCph(data.countyParishHoldingNumbers)
 
   return {
     backLink: {
-      text: data.info.businessName ? presenters.formatBackLink(data.info.businessName) : 'Back',
+      text: data.businessName ? presenters.formatBackLink(data.businessName) : 'Back',
       href: '/home'
     },
-    businessNameHeader: data.info.businessName ?? null,
+    businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: permissionLevel === 'view' ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',
@@ -28,35 +28,35 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
     },
     businessName: {
-      value: data.info.businessName || 'Not added',
+      value: data.businessName || 'Not added',
       changeLink: changeLinks.businessName,
-      action: presenters.getActionText(data.info.businessName)
+      action: presenters.getActionText(data.businessName)
     },
     businessTelephone: {
-      telephone: data.contact.landline || 'Not added',
-      mobile: data.contact.mobile || 'Not added',
-      action: presenters.getActionText(data.contact.landline || data.contact.mobile),
+      telephone: data.landline || 'Not added',
+      mobile: data.mobile || 'Not added',
+      action: presenters.getActionText(data.landline || data.mobile),
       changeLink: changeLinks.businessTelephone
     },
     businessEmail: {
-      value: data.contact.email || 'Not added',
-      action: presenters.getActionText(data.contact.email),
+      value: data.email || 'Not added',
+      action: presenters.getActionText(data.email),
       changeLink: changeLinks.businessEmail
     },
-    sbi: data.info.sbi,
-    vatNumber: buildVatDisplay(data.info.vat, changeLinks.vat),
-    tradeNumber: data.info.traderNumber ?? null,
-    vendorRegistrationNumber: data.info.vendorNumber ?? null,
+    sbi: data.sbi,
+    vatNumber: buildVatDisplay(data.vat, changeLinks.vat),
+    tradeNumber: data.traderNumber ?? null,
+    vendorRegistrationNumber: data.vendorNumber ?? null,
     countyParishHoldingNumbers,
     countyParishHoldingNumbersText: presenters.formatCphText(countyParishHoldingNumbers.length),
     businessLegalStatus: {
-      value: data.info.legalStatus ?? 'Not added',
-      action: presenters.getActionText(data.info.legalStatus),
+      value: data.legalStatus ?? 'Not added',
+      action: presenters.getActionText(data.legalStatus),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegal : null
     },
     businessType: {
-      value: data.info.type ?? 'Not added',
-      action: presenters.getActionText(data.info.type),
+      value: data.type ?? 'Not added',
+      action: presenters.getActionText(data.type),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessType : null
     }
   }

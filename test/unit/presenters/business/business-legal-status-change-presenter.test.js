@@ -11,11 +11,9 @@ describe('businessLegalStatusChangePresenter', () => {
     vi.clearAllMocks()
 
     data = {
-      info: {
-        businessName: 'HENLEY, RE',
-        legalStatus: 'Sole Proprietorship',
-        sbi: '123456789'
-      },
+      businessName: 'HENLEY, RE',
+      legalStatus: 'Sole Proprietorship',
+      sbi: '123456789',
       customer: {
         userName: 'Alfred Waldron'
       }
@@ -42,7 +40,7 @@ describe('businessLegalStatusChangePresenter', () => {
   describe('the "businessName" property', () => {
     describe('when the businessName property is missing', () => {
       beforeEach(() => {
-        delete data.info.businessName
+        delete data.businessName
       })
 
       test('it should return businessName as null', () => {
@@ -55,7 +53,7 @@ describe('businessLegalStatusChangePresenter', () => {
   describe('the "sbi" property', () => {
     describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
       beforeEach(() => {
-        delete data.info.sbi
+        delete data.sbi
       })
 
       test('it should return sbi as null', () => {
@@ -81,7 +79,7 @@ describe('businessLegalStatusChangePresenter', () => {
   describe('the "businessLegalStatus" property', () => {
     describe('when the businessLegalStatus property is missing', () => {
       beforeEach(() => {
-        delete data.info.legalStatus
+        delete data.legalStatus
       })
 
       test('it should return businessLegalStatus as null', () => {

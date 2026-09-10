@@ -22,7 +22,7 @@ describe('cookies plugin', () => {
     mockConfigGet.mockImplementation((key) => {
       switch (key) {
         case 'cookie.name':
-          return 'fcp_sfd_cookie_policy'
+          return 'cookie_policy'
         case 'cookie.policy':
           return { isSecure: true }
         default:
@@ -59,7 +59,7 @@ describe('cookies plugin', () => {
     })
 
     test('should register the cookie policy state', () => {
-      expect(mockServer.state).toHaveBeenCalledWith('fcp_sfd_cookie_policy', { isSecure: true })
+      expect(mockServer.state).toHaveBeenCalledWith('cookie_policy', { isSecure: true })
     })
 
     test('should register an onPreResponse handler', () => {

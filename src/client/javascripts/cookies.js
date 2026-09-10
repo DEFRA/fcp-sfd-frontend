@@ -1,3 +1,5 @@
+import { loadGoogleTagManager } from './google-tag-manager.js'
+
 export default {
   init () {
     this.setupCookieComponentListeners()
@@ -34,6 +36,11 @@ export default {
       xhr.onload = () => {
         if (xhr.status < 200 || xhr.status >= 300) {
           revertUiOnFailure()
+          return
+        }
+
+        if (accepted) {
+          loadGoogleTagManager(cookieContainer.dataset.gtmKey)
         }
       }
       xhr.onerror = revertUiOnFailure

@@ -19,7 +19,7 @@ export const cookies = {
           statusCode < constants.statusCodes.BAD_REQUEST &&
           request.response.source?.context
         ) {
-          const cookiesPolicy = getCurrentPolicy(request, h)
+          const cookiesPolicy = getCurrentPolicy(request)
 
           request.response.source.context.cookiesPolicy = cookiesPolicy
 

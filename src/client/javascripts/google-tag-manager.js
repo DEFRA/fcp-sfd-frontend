@@ -24,7 +24,7 @@ export const loadGoogleTagManager = (containerId) => {
   gtag('consent', 'default', consentDefaults)
   gtag('consent', 'update', { analytics_storage: 'granted' })
 
-  window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' })
+  window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' })
 
   const script = document.createElement('script')
 

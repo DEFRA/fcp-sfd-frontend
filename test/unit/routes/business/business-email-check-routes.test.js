@@ -150,16 +150,12 @@ describe('business email check', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
+    sbi: '123456789',
+    businessName: 'Agile Farm Ltd',
     customer: {
       userName: 'Alfred Waldron'
     },
-    contact: {
-      email: 'test@test.com'
-    }
+    email: 'test@test.com'
   }
 }
 

@@ -123,16 +123,12 @@ describe('buildBusinessUpdateVariablesService', () => {
 })
 
 const baseBusinessDetails = () => ({
-  info: {
-    sbi: '106705779',
-    businessName: 'Test Business Ltd',
-    vat: '123456789'
-  },
-  contact: {
-    email: 'test@business.com',
-    landline: '0123456789',
-    mobile: null
-  },
+  sbi: '106705779',
+  businessName: 'Test Business Ltd',
+  vat: '123456789',
+  email: 'test@business.com',
+  landline: '0123456789',
+  mobile: null,
   address: {
     lookup: {
       buildingNumberRange: '10',

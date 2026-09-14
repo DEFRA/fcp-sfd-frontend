@@ -16,10 +16,8 @@ describe('businessFixPresenter', () => {
       }
 
       data = {
-        info: {
-          sbi: '123456789',
-          businessName: 'Test Business'
-        },
+        sbi: '123456789',
+        businessName: 'Test Business',
         customer: {
           userName: 'testuser'
         }
@@ -128,10 +126,8 @@ describe('businessFixPresenter', () => {
     describe('when business details are provided', () => {
       beforeEach(() => {
         data = {
-          info: {
-            sbi: '123456789',
-            businessName: 'Test Business'
-          },
+          sbi: '123456789',
+          businessName: 'Test Business',
           customer: {
             userName: 'testuser'
           }

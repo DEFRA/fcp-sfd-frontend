@@ -21,7 +21,7 @@ const updateBusinessVatChangeService = async (yar, credentials) => {
     return
   }
 
-  const variables = utils.buildUpdateBusinessVatVariables(businessDetails.changeBusinessVat, businessDetails.info.sbi)
+  const variables = utils.buildUpdateBusinessVatVariables(businessDetails.changeBusinessVat, businessDetails.sbi)
 
   await updateDalService(mutations.updateBusinessVat, variables, credentials.sessionId)
 

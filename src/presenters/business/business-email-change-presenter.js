@@ -9,9 +9,9 @@ const businessEmailChangePresenter = (data, payload) => {
     pageTitle: 'What is your business email address?',
     metaDescription: 'Update the email address for your business.',
     userName: data.customer.userName ?? null,
-    businessEmail: payload ?? data.changeBusinessEmail ?? data.contact.email,
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null
+    businessEmail: payload ?? data.changeBusinessEmail ?? data.email,
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

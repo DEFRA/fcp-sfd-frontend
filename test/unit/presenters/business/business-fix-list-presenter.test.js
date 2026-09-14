@@ -12,16 +12,12 @@ describe('businessFixListPresenter', () => {
     data = {
       source: 'name',
       orderedSectionsToFix: ['name', 'vat', 'address', 'phone', 'email'],
-      info: {
-        vat: '123456789',
-        businessName: 'Test Business',
-        sbi: '123456789'
-      },
-      contact: {
-        landline: '0123456789',
-        mobile: '07123456789',
-        email: 'test@test.com'
-      },
+      vat: '123456789',
+      businessName: 'Test Business',
+      sbi: '123456789',
+      landline: '0123456789',
+      mobile: '07123456789',
+      email: 'test@test.com',
       customer: {
         userName: 'Jane Doe'
       }
@@ -243,7 +239,7 @@ describe('businessFixListPresenter', () => {
   })
 
   describe('the "sbi" property', () => {
-    describe('when sbi exists on data.info', () => {
+    describe('when sbi exists on data', () => {
       test('it should return the sbi value', () => {
         const result = businessFixListPresenter(data, payload)
 
@@ -251,21 +247,9 @@ describe('businessFixListPresenter', () => {
       })
     })
 
-    describe('when info exists but sbi is undefined', () => {
+    describe('when sbi is undefined', () => {
       beforeEach(() => {
-        delete data.info.sbi
-      })
-
-      test('it should return null', () => {
-        const result = businessFixListPresenter(data, payload)
-
-        expect(result.sbi).toBeNull()
-      })
-    })
-
-    describe('when info is undefined', () => {
-      beforeEach(() => {
-        delete data.info.sbi
+        delete data.sbi
       })
 
       test('it should return null', () => {

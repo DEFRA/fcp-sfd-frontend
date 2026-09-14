@@ -41,9 +41,7 @@ describe('businessFixCheckPresenter', () => {
       customer: {
         userName: 'Jane Doe'
       },
-      info: {
-        sbi: '123456789'
-      }
+      sbi: '123456789'
     }
   })
 
@@ -164,21 +162,9 @@ describe('businessFixCheckPresenter', () => {
   })
 
   describe('the "sbi" property', () => {
-    describe('when info is missing', () => {
+    describe('when sbi is missing', () => {
       beforeEach(() => {
-        delete data.info
-      })
-
-      test('it should return null', () => {
-        const result = businessFixCheckPresenter(data)
-
-        expect(result.sbi).toBeNull()
-      })
-    })
-
-    describe('when sbi is missing from info', () => {
-      beforeEach(() => {
-        delete data.info.sbi
+        delete data.sbi
       })
 
       test('it should return null', () => {

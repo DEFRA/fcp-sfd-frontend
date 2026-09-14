@@ -44,10 +44,10 @@ describe('businessDetailsPresenter', () => {
 
       expect(result).toEqual({
         backLink: {
-          text: `Back to ${data.info.businessName}`,
+          text: `Back to ${data.businessName}`,
           href: '/home'
         },
-        businessNameHeader: data.info.businessName,
+        businessNameHeader: data.businessName,
         notification: { title: 'Update', text: 'Business details updated successfully' },
         pageTitle: 'View business details',
         metaDescription: 'View and update your business details.',
@@ -69,38 +69,38 @@ describe('businessDetailsPresenter', () => {
           action: 'Change'
         },
         businessName: {
-          value: data.info.businessName,
+          value: data.businessName,
           changeLink: undefined,
           action: 'Change'
         },
         businessTelephone: {
           changeLink: undefined,
           action: 'Change',
-          telephone: data.contact.landline,
+          telephone: data.landline,
           mobile: 'Not added'
         },
         businessEmail: {
-          value: data.contact.email,
+          value: data.email,
           changeLink: undefined,
           action: 'Change'
         },
-        sbi: data.info.sbi,
+        sbi: data.sbi,
         vatNumber: {
           action: null,
           changeLink: null,
           value: 'GB123456789'
         },
-        tradeNumber: data.info.traderNumber,
-        vendorRegistrationNumber: data.info.vendorNumber,
+        tradeNumber: data.traderNumber,
+        vendorRegistrationNumber: data.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
         countyParishHoldingNumbersText: 'County Parish Holding (CPH) number',
         businessLegalStatus: {
-          value: data.info.legalStatus,
+          value: data.legalStatus,
           action: 'Change',
           changeLink: null
         },
         businessType: {
-          value: data.info.type,
+          value: data.type,
           action: 'Change',
           changeLink: null
         },
@@ -188,7 +188,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "backLink" property', () => {
     describe('when the businessName property is missing', () => {
       test('it should return the text "Back"', () => {
-        data.info.businessName = null
+        data.businessName = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.backLink.text).toEqual('Back')
@@ -199,8 +199,8 @@ describe('businessDetailsPresenter', () => {
   describe('the "businessTelephone" property', () => {
     describe('when both business telephone and mobile properties have values', () => {
       beforeEach(() => {
-        data.contact.landline = '01234567890'
-        data.contact.mobile = '07123456789'
+        data.landline = '01234567890'
+        data.mobile = '07123456789'
       })
 
       test('it should return the actual values', () => {
@@ -219,7 +219,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the telephone property is missing', () => {
       test('it should return the text "Not added"', () => {
-        data.contact.landline = null
+        data.landline = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessTelephone.telephone).toEqual('Not added')
@@ -236,8 +236,8 @@ describe('businessDetailsPresenter', () => {
 
     describe('when both telephone and mobile properties are missing', () => {
       test('the action text should be "Add"', () => {
-        data.contact.landline = null
-        data.contact.mobile = null
+        data.landline = null
+        data.mobile = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.businessTelephone.action).toEqual('Add')
@@ -261,14 +261,14 @@ describe('businessDetailsPresenter', () => {
   describe('the "vatNumber" property', () => {
     describe('when the property is null for view only permission', () => {
       test('it should return "No number added" for value', () => {
-        data.info.vat = null
+        data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('No number added')
       })
 
       test('it should return null for action and change link', () => {
-        data.info.vat = null
+        data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual(null)
@@ -282,14 +282,14 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return "No number added" for value', () => {
-        data.info.vat = null
+        data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('No number added')
       })
 
       test('it should return "Add" for action and the change link', () => {
-        data.info.vat = null
+        data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual('Add')
@@ -299,7 +299,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the property has a value for view permissions', () => {
       test('it should return the vat number', () => {
-        data.info.vat = 'GB987654321'
+        data.vat = 'GB987654321'
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('GB987654321')
@@ -312,14 +312,14 @@ describe('businessDetailsPresenter', () => {
       })
 
       test('it should return the vat number', () => {
-        data.info.vat = 'GB987654321'
+        data.vat = 'GB987654321'
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.value).toEqual('GB987654321')
       })
 
       test('it should return the "Change and Remove links"', () => {
-        data.info.vat = 'GB987654321'
+        data.vat = 'GB987654321'
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vatNumber.action).toEqual('Change')
@@ -344,7 +344,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the property has a value for full permissions with interrupter', () => {
       beforeEach(() => {
-        data.info.vat = 'GB987654321'
+        data.vat = 'GB987654321'
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
       })
 
@@ -379,7 +379,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the property is null for full permissions with interrupter', () => {
       beforeEach(() => {
-        data.info.vat = null
+        data.vat = null
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
       })
 
@@ -401,7 +401,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "cph" property', () => {
     describe('when there are multiple CPH numbers', () => {
       beforeEach(() => {
-        data.info.countyParishHoldingNumbers = [
+        data.countyParishHoldingNumbers = [
           { cphNumber: '12/123/1234' },
           { cphNumber: '45/678/9012' }
         ]
@@ -416,7 +416,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the cph array is empty', () => {
       beforeEach(() => {
-        data.info.countyParishHoldingNumbers = []
+        data.countyParishHoldingNumbers = []
       })
 
       test('it should return an array of CPH numbers', () => {
@@ -428,7 +428,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the cph array has incorrect values', () => {
       beforeEach(() => {
-        data.info.countyParishHoldingNumbers = [
+        data.countyParishHoldingNumbers = [
           { cphNumber: '123/456/7890' },
           { cphNumber: null },
           { cphNumber: undefined }
@@ -446,7 +446,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "countyParishHoldingNumbersText" property', () => {
     describe('when there are no CPH numbers', () => {
       beforeEach(() => {
-        data.info.countyParishHoldingNumbers = []
+        data.countyParishHoldingNumbers = []
       })
 
       test('it should return "County Parish Holding (CPH) numbers"', () => {
@@ -458,7 +458,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when there is 1 CPH number', () => {
       beforeEach(() => {
-        data.info.countyParishHoldingNumbers = [{ cphNumber: '12/123/1234' }]
+        data.countyParishHoldingNumbers = [{ cphNumber: '12/123/1234' }]
       })
 
       test('it should return "County Parish Holding (CPH) number"', () => {
@@ -470,7 +470,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when there are multiple CPH numbers', () => {
       beforeEach(() => {
-        data.info.countyParishHoldingNumbers = [
+        data.countyParishHoldingNumbers = [
           { cphNumber: '12/123/1234' },
           { cphNumber: '45/678/9012' }
         ]
@@ -487,7 +487,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "tradeNumber" property', () => {
     describe('when the property is null', () => {
       test('it should return "null"', () => {
-        data.info.traderNumber = null
+        data.traderNumber = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.tradeNumber).toEqual(null)
@@ -498,7 +498,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "vendorRegistrationNumber" property', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
-        data.info.vendorNumber = null
+        data.vendorNumber = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.vendorRegistrationNumber).toEqual(null)
@@ -534,7 +534,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "businessNameHeader" property', () => {
     describe('when the business name property is missing', () => {
       beforeEach(() => {
-        delete data.info.businessName
+        delete data.businessName
       })
 
       test('it should return businessNameHeader as null', () => {

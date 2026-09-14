@@ -11,6 +11,8 @@ import { mappers } from '@defra/fcp-sfd-frontend-engine'
 export const mapBusinessDetails = (value) => {
   return {
     ...mappers.businessDetails(value),
-    customer: mappers.customerName(value.customer.info.name)
+    customer: {
+      userName: mappers.customerName(value.customer.info.name)
+    }
   }
 }

@@ -67,11 +67,9 @@ describe('business type change', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd',
-      type: 'Farmer'
-    },
+    sbi: '123456789',
+    businessName: 'Agile Farm Ltd',
+    type: 'Farmer',
     customer: {
       userName: 'Alfred Waldron'
     }

@@ -11,8 +11,8 @@ const personalNameCheckPresenter = (data) => {
     changeLink: '/account-name-change',
     pageTitle: 'Check your name is correct before submitting',
     metaDescription: 'Check the full name for your personal account is correct.',
-    userName: data.info.userName ?? null,
-    fullName: utils.formatFullName(data.changePersonalName ?? data.info.fullName)
+    userName: data.userName ?? null,
+    fullName: utils.formatFullName(data.changePersonalName ?? data.fullName)
   }
 }
 

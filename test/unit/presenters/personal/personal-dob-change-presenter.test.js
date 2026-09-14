@@ -10,18 +10,16 @@ describe('personalDobChangePresenter', () => {
 
   beforeEach(() => {
     data = {
-      info: {
-        dateOfBirth: {
-          full: '1990-05-01',
-          day: '1',
-          month: '5',
-          year: '1990'
-        },
-        userName: 'Alfred Waldron',
-        fullName: {
-          first: 'Alfred',
-          last: 'Waldron'
-        }
+      dateOfBirth: {
+        full: '1990-05-01',
+        day: '1',
+        month: '5',
+        year: '1990'
+      },
+      userName: 'Alfred Waldron',
+      fullName: {
+        first: 'Alfred',
+        last: 'Waldron'
       }
     }
   })
@@ -46,7 +44,7 @@ describe('personalDobChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.userName
+        delete data.userName
       })
 
       test('it should return userName as null', () => {

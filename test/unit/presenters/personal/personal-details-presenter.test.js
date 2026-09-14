@@ -78,13 +78,13 @@ describe('personalDetailsPresenter', () => {
           changeLink: '/account-date-of-birth-change'
         },
         personalTelephone: {
-          telephone: data.contact.telephone,
+          telephone: data.telephone,
           mobile: 'Not added',
           action: 'Change',
           changeLink: '/account-phone-numbers-change'
         },
         personalEmail: {
-          email: data.contact.email,
+          email: data.email,
           action: 'Change',
           changeLink: '/account-email-change'
         }
@@ -95,7 +95,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       test('it should return null', () => {
-        data.info.userName = null
+        data.userName = null
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.userName).toBeNull()
@@ -117,8 +117,8 @@ describe('personalDetailsPresenter', () => {
   describe('the "personalTelephone" property', () => {
     describe('when both telephone and mobile properties have values', () => {
       test('it should return the actual values', () => {
-        data.contact.telephone = '01234567890'
-        data.contact.mobile = '07123456789'
+        data.telephone = '01234567890'
+        data.mobile = '07123456789'
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalTelephone.telephone).toEqual('01234567890')
@@ -128,7 +128,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when the telephone property is missing', () => {
       test('returns "Not added" if telephone is missing', () => {
-        data.contact.telephone = null
+        data.telephone = null
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalTelephone.telephone).toBe('Not added')
@@ -139,7 +139,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "personalMobile" property', () => {
     describe('when the mobile property is missing', () => {
       test('returns "Not added" if mobile is missing', () => {
-        data.contact.mobile = null
+        data.mobile = null
 
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
@@ -151,8 +151,8 @@ describe('personalDetailsPresenter', () => {
   describe('the "personalPhoneAction" property', () => {
     describe('when both telephone and mobile properties have values', () => {
       test('it should return the text "Change"', () => {
-        data.contact.telephone = '01234567890'
-        data.contact.mobile = '07123456789'
+        data.telephone = '01234567890'
+        data.mobile = '07123456789'
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalTelephone.action).toEqual('Change')
@@ -161,8 +161,8 @@ describe('personalDetailsPresenter', () => {
 
     describe('when only one of the properties has a value', () => {
       test('it should return the text "Change"', () => {
-        data.contact.telephone = '01234567890'
-        data.contact.mobile = null
+        data.telephone = '01234567890'
+        data.mobile = null
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalTelephone.action).toEqual('Change')
@@ -171,8 +171,8 @@ describe('personalDetailsPresenter', () => {
 
     describe('when both properties are null', () => {
       test('it should return the text "Add"', () => {
-        data.contact.telephone = null
-        data.contact.mobile = null
+        data.telephone = null
+        data.mobile = null
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalTelephone.action).toEqual('Add')
@@ -212,7 +212,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "personalEmail.email" property', () => {
     describe('when the email property is missing', () => {
       test('it should return the text "Not added"', () => {
-        data.contact.email = null
+        data.email = null
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalEmail.email).toEqual('Not added')
@@ -221,7 +221,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when the email property has a value', () => {
       test('it should return the email address', () => {
-        data.contact.email = 'test@test.com'
+        data.email = 'test@test.com'
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalEmail.email).toEqual('test@test.com')
@@ -232,7 +232,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "personalEmail.action" property', () => {
     describe('when the personalEmail property is missing', () => {
       test('it should return the text "Add"', () => {
-        data.contact.email = null
+        data.email = null
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalEmail.action).toEqual('Add')
@@ -241,7 +241,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when the personalEmail property has a value', () => {
       test('it should return the text "Change"', () => {
-        data.contact.email = 'test@test.com'
+        data.email = 'test@test.com'
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.personalEmail.action).toEqual('Change')
@@ -252,7 +252,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "dob.fullDateOfBirth" property', () => {
     describe('when dateOfBirth is missing', () => {
       test('it should return the text "Not added"', () => {
-        delete data.info.dateOfBirth.full
+        delete data.dateOfBirth.full
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('Not added')
@@ -261,7 +261,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth is an invalid date', () => {
       test('it should return the text "Not added"', () => {
-        data.info.dateOfBirth.full = '4000-14-01'
+        data.dateOfBirth.full = '4000-14-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('Not added')
@@ -270,7 +270,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth has a value', () => {
       test('it should return the formatted date', () => {
-        data.info.dateOfBirth.full = '2000-01-01'
+        data.dateOfBirth.full = '2000-01-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('1 January 2000')
@@ -284,7 +284,7 @@ describe('personalDetailsPresenter', () => {
         const yyyy = futureDate.getFullYear()
         const mm = String(futureDate.getMonth() + 1).padStart(2, '0')
         const dd = String(futureDate.getDate()).padStart(2, '0')
-        data.info.dateOfBirth.full = `${yyyy}-${mm}-${dd}`
+        data.dateOfBirth.full = `${yyyy}-${mm}-${dd}`
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.fullDateOfBirth).toEqual('Not added')
@@ -295,7 +295,7 @@ describe('personalDetailsPresenter', () => {
   describe('the "dob.action" property', () => {
     describe('when dateOfBirth is missing', () => {
       test('it should return the text "Add"', () => {
-        delete data.info.dateOfBirth.full
+        delete data.dateOfBirth.full
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.action).toEqual('Add')
@@ -304,7 +304,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth is an invalid date', () => {
       test('it should return the text "Add"', () => {
-        data.info.dateOfBirth.full = '4000-14-01'
+        data.dateOfBirth.full = '4000-14-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.action).toEqual('Add')
@@ -313,7 +313,7 @@ describe('personalDetailsPresenter', () => {
 
     describe('when dateOfBirth has a value', () => {
       test('it should return the text "Change"', () => {
-        data.info.dateOfBirth.full = '2000-01-01'
+        data.dateOfBirth.full = '2000-01-01'
         const result = personalDetailsPresenter(data, yar)
 
         expect(result.dob.action).toEqual('Change')
@@ -328,7 +328,7 @@ describe('personalDetailsPresenter', () => {
         const yyyy = futureDate.getFullYear()
         const mm = String(futureDate.getMonth() + 1).padStart(2, '0')
         const dd = String(futureDate.getDate()).padStart(2, '0')
-        data.info.dateOfBirth.full = `${yyyy}-${mm}-${dd}`
+        data.dateOfBirth.full = `${yyyy}-${mm}-${dd}`
         const result = personalDetailsPresenter(data, yar)
         expect(result.dob.action).toEqual('Add')
       })

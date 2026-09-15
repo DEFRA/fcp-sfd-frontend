@@ -9,8 +9,10 @@ vi.mock('../../../../src/dal/connector.js', () => ({
   getDalConnector: vi.fn(() => mockDalConnector)
 }))
 
-vi.mock('../../../../src/mappers/personal-details-mapper.js', () => ({
-  mapPersonalDetails: mockMappedValue
+vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
+  mappers: {
+    personalDetails: mockMappedValue
+  }
 }))
 
 // Test helpers
@@ -42,7 +44,19 @@ describe('fetchPersonalDetailsService', () => {
   describe('when fetching from the DAL', () => {
     beforeEach(() => {
       mockDalConnector.query.mockResolvedValue(data)
-      mockMappedValue.mockReturnValue(mappedDalData)
+      // The engine mapper doesn't know about `business`, the service attaches it separately
+      const mappedWithoutBusiness = {
+        crn: mappedDalData.crn,
+        userName: mappedDalData.userName,
+        fullName: mappedDalData.fullName,
+        fullNameJoined: mappedDalData.fullNameJoined,
+        dateOfBirth: mappedDalData.dateOfBirth,
+        address: mappedDalData.address,
+        email: mappedDalData.email,
+        telephone: mappedDalData.telephone,
+        mobile: mappedDalData.mobile
+      }
+      mockMappedValue.mockReturnValue(mappedWithoutBusiness)
     })
 
     test('calls DAL connector with credentials values', async () => {

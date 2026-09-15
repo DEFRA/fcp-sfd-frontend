@@ -149,16 +149,12 @@ describe('personal email change', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      userName: 'Alfred Waldron',
-      fullName: {
-        first: 'Alfred',
-        last: 'Waldron'
-      }
+    userName: 'Alfred Waldron',
+    fullName: {
+      first: 'Alfred',
+      last: 'Waldron'
     },
-    contact: {
-      email: 'new-email@test.com'
-    }
+    email: 'new-email@test.com'
   }
 }
 

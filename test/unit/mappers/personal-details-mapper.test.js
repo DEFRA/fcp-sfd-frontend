@@ -23,7 +23,7 @@ describe('personalDetailsMapper', () => {
       })
     })
 
-    describe('info.userName', () => {
+    describe('userName', () => {
       beforeEach(() => {
         dalData.customer.info.name = {
           first: 'Software',
@@ -35,11 +35,11 @@ describe('personalDetailsMapper', () => {
       test('it should build the userName correctly', () => {
         const result = mapPersonalDetails(dalData)
 
-        expect(result.info.userName).toEqual('Software Developer')
+        expect(result.userName).toEqual('Software Developer')
       })
     })
 
-    describe('info.fullName', () => {
+    describe('fullName', () => {
       beforeEach(() => {
         dalData.customer.info.name = {
           first: 'Software',
@@ -51,7 +51,7 @@ describe('personalDetailsMapper', () => {
       test('it should build the fullName object correctly', () => {
         const result = mapPersonalDetails(dalData)
 
-        expect(result.info.fullName).toEqual({
+        expect(result.fullName).toEqual({
           first: 'Software',
           last: 'Developer',
           middle: 'Engineer'
@@ -59,7 +59,7 @@ describe('personalDetailsMapper', () => {
       })
     })
 
-    describe('info.fullNameJoined', () => {
+    describe('fullNameJoined', () => {
       beforeEach(() => {
         dalData.customer.info.name = {
           first: 'Software',
@@ -71,11 +71,11 @@ describe('personalDetailsMapper', () => {
       test('it should build the fullNameJoined string correctly', () => {
         const result = mapPersonalDetails(dalData)
 
-        expect(result.info.fullNameJoined).toEqual('Software Engineer Developer')
+        expect(result.fullNameJoined).toEqual('Software Engineer Developer')
       })
     })
 
-    describe('info.dateOfBirth', () => {
+    describe('dateOfBirth', () => {
       describe('when date of birth exists', () => {
         beforeEach(() => {
           dalData.customer.info.dateOfBirth = '1990-01-01'
@@ -84,7 +84,7 @@ describe('personalDetailsMapper', () => {
         test('it should build the date of birth correctly when it exists', () => {
           const result = mapPersonalDetails(dalData)
 
-          expect(result.info.dateOfBirth).toEqual({
+          expect(result.dateOfBirth).toEqual({
             full: '1990-01-01',
             day: '01',
             month: '01',
@@ -101,7 +101,7 @@ describe('personalDetailsMapper', () => {
         test('it should build the date of birth correctly when it does not exist', () => {
           const result = mapPersonalDetails(dalData)
 
-          expect(result.info.dateOfBirth).toEqual({
+          expect(result.dateOfBirth).toEqual({
             full: null,
             day: null,
             month: null,

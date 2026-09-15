@@ -9,8 +9,8 @@ const personalEmailCheckPresenter = (data) => {
     changeLink: '/account-email-change',
     pageTitle: 'Check your personal email address is correct before submitting',
     metaDescription: 'Check the email address for your personal account is correct.',
-    userName: data.info.userName ?? null,
-    personalEmail: data.changePersonalEmail ?? data.contact.email
+    userName: data.userName ?? null,
+    personalEmail: data.changePersonalEmail ?? data.email
   }
 }
 

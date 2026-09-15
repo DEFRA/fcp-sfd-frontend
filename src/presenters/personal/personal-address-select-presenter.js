@@ -12,7 +12,7 @@ const personalAddressSelectPresenter = (data) => {
     manualAddressLink: '/account-address-enter',
     pageTitle: 'Choose your personal address',
     metaDescription: 'Choose the address for your personal account.',
-    userName: data.info.userName ?? null,
+    userName: data.userName ?? null,
     postcode: data.changePersonalPostcode?.postcode ?? null,
     displayAddresses: presenters.formatDisplayAddresses(data.changePersonalAddresses ?? [], data.changePersonalAddress)
   }

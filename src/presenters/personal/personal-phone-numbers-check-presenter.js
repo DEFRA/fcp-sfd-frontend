@@ -5,8 +5,8 @@
 
 const personalPhoneNumbersCheckPresenter = (data) => {
   const phoneNumbers = data.changePersonalPhoneNumbers ?? {
-    personalTelephone: data.contact.telephone,
-    personalMobile: data.contact.mobile
+    personalTelephone: data.telephone,
+    personalMobile: data.mobile
   }
 
   return {
@@ -14,7 +14,7 @@ const personalPhoneNumbersCheckPresenter = (data) => {
     changeLink: '/account-phone-numbers-change',
     pageTitle: 'Check your personal phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your personal account are correct.',
-    userName: data.info.userName ?? null,
+    userName: data.userName ?? null,
     personalTelephone: {
       telephone: phoneNumbers.personalTelephone ?? null,
       mobile: phoneNumbers.personalMobile ?? null

@@ -165,12 +165,10 @@ const getMockData = () => {
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    info: {
-      userName: 'Alfred Waldron',
-      fullName: {
-        first: 'Alfred',
-        last: 'Waldron'
-      }
+    userName: 'Alfred Waldron',
+    fullName: {
+      first: 'Alfred',
+      last: 'Waldron'
     }
   }
 }

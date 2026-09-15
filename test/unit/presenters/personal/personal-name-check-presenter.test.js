@@ -9,13 +9,11 @@ describe('personalNameCheckPresenter', () => {
 
   beforeEach(() => {
     data = {
-      info: {
-        userName: 'Alfred Waldron',
-        fullName: {
-          first: 'Alfred',
-          middle: 'M',
-          last: 'Waldron'
-        }
+      userName: 'Alfred Waldron',
+      fullName: {
+        first: 'Alfred',
+        middle: 'M',
+        last: 'Waldron'
       }
     }
   })
@@ -38,7 +36,7 @@ describe('personalNameCheckPresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.userName
+        delete data.userName
       })
 
       test('it should return userName as null', () => {

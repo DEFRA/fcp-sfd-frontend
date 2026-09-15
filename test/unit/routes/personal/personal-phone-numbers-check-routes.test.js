@@ -145,17 +145,13 @@ describe('personal phone numbers check', () => {
 const getMockData = () => {
   return {
     crn: '987654321',
-    info: {
-      userName: 'John Doe',
-      fullName: {
-        first: 'John',
-        last: 'Doe'
-      }
+    userName: 'John Doe',
+    fullName: {
+      first: 'John',
+      last: 'Doe'
     },
-    contact: {
-      telephone: '01234567890',
-      mobile: null
-    },
+    telephone: '01234567890',
+    mobile: null,
     changePersonalPhoneNumbers: {
       personalTelephone: '01234567890',
       personalMobile: null

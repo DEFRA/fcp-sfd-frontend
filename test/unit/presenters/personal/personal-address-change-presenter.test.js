@@ -10,12 +10,10 @@ describe('personalAddressChangePresenter', () => {
 
   beforeEach(() => {
     data = {
-      info: {
-        userName: 'Test Name',
-        fullName: {
-          first: 'Test',
-          last: 'Name'
-        }
+      userName: 'Test Name',
+      fullName: {
+        first: 'Test',
+        last: 'Name'
       },
       address: { postcode: 'SK22 1DL' },
       changePersonalPostcode: {}
@@ -40,7 +38,7 @@ describe('personalAddressChangePresenter', () => {
   describe('the "userName" property', () => {
     describe('when the userName property is missing', () => {
       beforeEach(() => {
-        delete data.info.userName
+        delete data.userName
       })
 
       test('it should return userName as null', () => {

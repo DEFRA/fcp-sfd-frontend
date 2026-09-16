@@ -21,7 +21,9 @@ const fetchPersonalDetailsService = async (credentials) => {
   )
 
   if (dalResponse.data) {
-    return mapPersonalDetails(dalResponse.data)
+    const mappedResponse = mapPersonalDetails(dalResponse.data)
+
+    return mappedResponse
   }
 
   throw new Error('Failed to retrieve personal details')

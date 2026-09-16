@@ -3,9 +3,10 @@
  * @module businessDetailsPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
-import { BUSINESS_CHANGE_LINKS } from '../../constants/change-links.js'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
+
+const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
@@ -52,7 +53,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     businessLegalStatus: {
       value: data.legalStatus ?? 'Not added',
       action: presenters.getActionText(data.legalStatus),
-      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegal : null
+      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
     businessType: {
       value: data.type ?? 'Not added',
@@ -144,7 +145,7 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
     return {
       value,
       action: 'Add',
-      changeLink: BUSINESS_CHANGE_LINKS.vatNumberAdd
+      changeLink: BUSINESS_CHANGE_LINKS.businessVat
     }
   }
 
@@ -154,13 +155,13 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
     changeLink: {
       items: [
         {
-          href: BUSINESS_CHANGE_LINKS.vatNumberChange,
+          href: BUSINESS_CHANGE_LINKS.businessVat,
           text: 'Change',
           visuallyHiddenText: 'VAT registration number',
           classes: linkStyling
         },
         {
-          href: BUSINESS_CHANGE_LINKS.vatNumberRemove,
+          href: BUSINESS_CHANGE_LINKS.businessVatRemove,
           text: 'Remove',
           visuallyHiddenText: 'VAT registration number',
           classes: linkStyling

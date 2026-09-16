@@ -3,11 +3,13 @@
  * @module personalAddressEnterPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
+
+const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 
 const personalAddressEnterPresenter = (data, payload) => {
   return {
-    backLink: { href: '/account-address-change' },
+    backLink: { href: PERSONAL_CHANGE_LINKS.personalAddress },
     pageTitle: 'Enter your personal address',
     metaDescription: 'Enter the address for your personal account.',
     userName: data.userName ?? null,

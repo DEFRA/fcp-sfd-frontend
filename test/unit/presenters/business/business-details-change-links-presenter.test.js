@@ -4,11 +4,13 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 // Thing under test
 import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/business/business-details-change-links-presenter.js'
 
-// Mock constants
-import { BUSINESS_CHANGE_LINKS } from '../../../../src/constants/change-links.js'
+// Test helpers
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 
 // Mock dependencies
 import { config } from '../../../../src/config/index.js'
+
+const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
 // Mock imports
 vi.mock('../../../../src/config/index.js', () => ({
@@ -58,7 +60,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
         expect(result).toEqual({
           businessAddress: BUSINESS_CHANGE_LINKS.businessAddress,
-          businessTelephone: BUSINESS_CHANGE_LINKS.businessTelephone,
+          businessTelephone: BUSINESS_CHANGE_LINKS.businessPhone,
           businessEmail: BUSINESS_CHANGE_LINKS.businessEmail,
           vat: null
         })
@@ -117,7 +119,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
         expect(result).toEqual({
           businessAddress: BUSINESS_CHANGE_LINKS.businessAddress,
-          businessTelephone: BUSINESS_CHANGE_LINKS.businessTelephone,
+          businessTelephone: BUSINESS_CHANGE_LINKS.businessPhone,
           businessEmail: BUSINESS_CHANGE_LINKS.businessEmail,
           businessName: BUSINESS_CHANGE_LINKS.businessName,
           vat: 'normal'
@@ -153,7 +155,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
           test('the single invalid section link points to the normal change page', () => {
             const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-            expect(result.businessTelephone).toEqual(BUSINESS_CHANGE_LINKS.businessTelephone)
+            expect(result.businessTelephone).toEqual(BUSINESS_CHANGE_LINKS.businessPhone)
           })
 
           test('all other sections point to the business-fix page', () => {
@@ -215,7 +217,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
           )
 
           expect(result.businessAddress).toBe(BUSINESS_CHANGE_LINKS.businessAddress)
-          expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)
+          expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessPhone)
           expect(result.businessEmail).toBe(BUSINESS_CHANGE_LINKS.businessEmail)
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
           expect(result.vat).toBe('normal')
@@ -239,7 +241,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
           const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
           expect(result.businessAddress).toBe(BUSINESS_CHANGE_LINKS.businessAddress)
-          expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)
+          expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessPhone)
           expect(result.businessEmail).toBe(BUSINESS_CHANGE_LINKS.businessEmail)
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
           expect(result.vat).toBe('normal')
@@ -256,7 +258,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
           const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
           expect(result.businessAddress).toBe(BUSINESS_CHANGE_LINKS.businessAddress)
-          expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessTelephone)
+          expect(result.businessTelephone).toBe(BUSINESS_CHANGE_LINKS.businessPhone)
           expect(result.businessEmail).toBe(BUSINESS_CHANGE_LINKS.businessEmail)
           expect(result.businessName).toBe(BUSINESS_CHANGE_LINKS.businessName)
           expect(result.vat).toBe('normal')

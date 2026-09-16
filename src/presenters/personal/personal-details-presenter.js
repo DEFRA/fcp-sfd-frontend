@@ -3,8 +3,10 @@
  * @module personalDetailsPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
+
+const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
@@ -76,11 +78,11 @@ const getActionText = (value) => {
  */
 const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) => {
   const CHANGE_LINKS = {
-    name: '/account-name-change',
-    address: '/account-address-change',
-    phone: '/account-phone-numbers-change',
-    email: '/account-email-change',
-    dob: '/account-date-of-birth-change'
+    name: PERSONAL_CHANGE_LINKS.personalName,
+    address: PERSONAL_CHANGE_LINKS.personalAddress,
+    phone: PERSONAL_CHANGE_LINKS.personalPhone,
+    email: PERSONAL_CHANGE_LINKS.personalEmail,
+    dob: PERSONAL_CHANGE_LINKS.personalDateOfBirth
   }
 
   const personalDetailsInterrupterEnabled = config.get('featureToggle.personalDetailsInterrupterEnabled')

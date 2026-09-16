@@ -3,10 +3,14 @@
  * @module businessPhoneNumbersCheckPresenter
  */
 
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+
+const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
+
 const businessPhoneNumbersCheckPresenter = (data) => {
   return {
-    backLink: { href: '/business-phone-numbers-change' },
-    changeLink: '/business-phone-numbers-change',
+    backLink: { href: BUSINESS_CHANGE_LINKS.businessPhone },
+    changeLink: BUSINESS_CHANGE_LINKS.businessPhone,
     pageTitle: 'Check your business phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your business are correct.',
     userName: data.customer.userName ?? null,

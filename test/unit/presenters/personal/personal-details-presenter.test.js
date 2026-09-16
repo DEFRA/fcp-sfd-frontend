@@ -43,7 +43,7 @@ describe('personalDetailsPresenter', () => {
 
       expect(result).toEqual({
         backLink: {
-          text: `Back to ${data.business.info.name}`,
+          text: `Back to ${data.business.name}`,
           href: '/home'
         },
         notification: { title: 'Update', text: 'Personal details updated successfully' },
@@ -106,7 +106,7 @@ describe('personalDetailsPresenter', () => {
   describe('the backLink property', () => {
     describe('when the businessName property is missing', () => {
       test('it should return the text "Back"', () => {
-        data.business.info.name = null
+        data.business.name = null
         const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
 
         expect(result.backLink.text).toEqual('Back')

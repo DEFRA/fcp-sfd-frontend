@@ -92,9 +92,7 @@ const getMappedData = () => ({
   telephone: '01234567890',
   mobile: null,
   business: {
-    info: {
-      name: 'Acme Farms Ltd'
-    }
+    name: 'Acme Farms Ltd'
   }
 })
 

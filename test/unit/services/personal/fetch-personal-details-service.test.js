@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Things we need to mock
-const mockMappedValue = vi.fn()
+const mockMapPersonalDetails = vi.fn()
 const mockDalConnector = { query: vi.fn() }
 
 vi.mock('../../../../src/dal/connector.js', () => ({
@@ -10,7 +10,7 @@ vi.mock('../../../../src/dal/connector.js', () => ({
 }))
 
 vi.mock('../../../../src/mappers/personal-details-mapper.js', () => ({
-  mapPersonalDetails: mockMappedValue
+  mapPersonalDetails: mockMapPersonalDetails
 }))
 
 // Test helpers
@@ -42,7 +42,7 @@ describe('fetchPersonalDetailsService', () => {
   describe('when fetching from the DAL', () => {
     beforeEach(() => {
       mockDalConnector.query.mockResolvedValue(data)
-      mockMappedValue.mockReturnValue(mappedDalData)
+      mockMapPersonalDetails.mockReturnValue(mappedDalData)
     })
 
     test('calls DAL connector with credentials values', async () => {
@@ -58,7 +58,8 @@ describe('fetchPersonalDetailsService', () => {
     test('returns mapped data when DAL response includes data', async () => {
       const result = await fetchPersonalDetailsService(credentials)
 
-      expect(result).toMatchObject(mappedDalData)
+      expect(mockMapPersonalDetails).toHaveBeenCalledWith(getDalData())
+      expect(result).toEqual(mappedDalData)
     })
 
     test('throws when DAL response contains errors', async () => {
@@ -71,7 +72,7 @@ describe('fetchPersonalDetailsService', () => {
       await expect(fetchPersonalDetailsService(credentials))
         .rejects.toThrowError('Failed to retrieve personal details')
 
-      expect(mockMappedValue).not.toHaveBeenCalled()
+      expect(mockMapPersonalDetails).not.toHaveBeenCalled()
     })
   })
 })

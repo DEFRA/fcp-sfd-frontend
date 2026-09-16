@@ -12,7 +12,7 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
 
   return {
     backLink: {
-      text: data.business.info.name ? presenters.formatBackLink(data.business.info.name) : 'Back',
+      text: data.business.name ? presenters.formatBackLink(data.business.name) : 'Back',
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,

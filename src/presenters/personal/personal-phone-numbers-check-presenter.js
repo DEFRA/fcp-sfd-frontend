@@ -3,6 +3,10 @@
  * @module personalPhoneNumbersCheckPresenter
  */
 
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+
+const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
+
 const personalPhoneNumbersCheckPresenter = (data) => {
   const phoneNumbers = data.changePersonalPhoneNumbers ?? {
     personalTelephone: data.telephone,
@@ -10,8 +14,8 @@ const personalPhoneNumbersCheckPresenter = (data) => {
   }
 
   return {
-    backLink: { href: '/account-phone-numbers-change' },
-    changeLink: '/account-phone-numbers-change',
+    backLink: { href: PERSONAL_CHANGE_LINKS.personalPhone },
+    changeLink: PERSONAL_CHANGE_LINKS.personalPhone,
     pageTitle: 'Check your personal phone numbers are correct before submitting',
     metaDescription: 'Check the phone numbers for your personal account are correct.',
     userName: data.userName ?? null,

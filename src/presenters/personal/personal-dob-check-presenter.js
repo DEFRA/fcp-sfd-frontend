@@ -3,7 +3,9 @@
  * @module personalDobCheckPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
+
+const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 
 const personalDobCheckPresenter = (data) => {
   const { day, month, year } = data.changePersonalDob ?? data.dateOfBirth
@@ -13,11 +15,11 @@ const personalDobCheckPresenter = (data) => {
   )
 
   return {
-    backLink: { href: '/account-date-of-birth-change' },
+    backLink: { href: PERSONAL_CHANGE_LINKS.personalDateOfBirth },
     pageTitle: 'Check your date of birth is correct before submitting',
     metaDescription: 'Check the date of birth for your personal account is correct.',
     userName: data.userName ?? null,
-    changeLink: '/account-date-of-birth-change',
+    changeLink: PERSONAL_CHANGE_LINKS.personalDateOfBirth,
     dateOfBirth: presenters.formatLongDate(personalDob)
   }
 }

@@ -3,12 +3,14 @@
  * @module personalNameCheckPresenter
  */
 
-import { utils } from '@defra/fcp-sfd-frontend-engine'
+import { constants, utils } from '@defra/fcp-sfd-frontend-engine'
+
+const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 
 const personalNameCheckPresenter = (data) => {
   return {
-    backLink: { href: '/account-name-change' },
-    changeLink: '/account-name-change',
+    backLink: { href: PERSONAL_CHANGE_LINKS.personalName },
+    changeLink: PERSONAL_CHANGE_LINKS.personalName,
     pageTitle: 'Check your name is correct before submitting',
     metaDescription: 'Check the full name for your personal account is correct.',
     userName: data.userName ?? null,

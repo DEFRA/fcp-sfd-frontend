@@ -3,12 +3,14 @@
  * @module personalAddressSelectPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
+
+const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 
 const personalAddressSelectPresenter = (data) => {
   return {
-    backLink: { href: '/account-address-change' },
-    postcodeChangeLink: '/account-address-change',
+    backLink: { href: PERSONAL_CHANGE_LINKS.personalAddress },
+    postcodeChangeLink: PERSONAL_CHANGE_LINKS.personalAddress,
     manualAddressLink: '/account-address-enter',
     pageTitle: 'Choose your personal address',
     metaDescription: 'Choose the address for your personal account.',

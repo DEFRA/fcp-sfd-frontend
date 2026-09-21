@@ -54,7 +54,7 @@ services:
       retries: 5
 
   fcp-dal-api:
-    image: defradigital/fcp-dal-api:2.2.1
+    image: defradigital/fcp-dal-api:2.22.0
     depends_on:
       upstream-mock:
         condition: service_healthy
@@ -80,6 +80,7 @@ services:
       HITACHI_TIMEOUT_MS: 3000
       MONGO_URI: mongodb://mongo:27017
       DAL_REQUEST_TIMEOUT_MS: 3000
+      KITS_DAL_SERVICE_ACCOUNT_EMAIL: dal-service-account@defra.gov.uk
 
   redis:
     image: redis:7.2.3-alpine3.18

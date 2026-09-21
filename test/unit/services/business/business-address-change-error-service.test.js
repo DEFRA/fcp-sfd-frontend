@@ -87,10 +87,8 @@ const mockBusinessDetails = () => {
     address: {
       postcode: 'AB12 3CD'
     },
-    info: {
-      businessName: 'Test Business',
-      sbi: '123456789'
-    },
+    businessName: 'Test Business',
+    sbi: '123456789',
     customer: {
       userName: 'Alfred Waldron'
     },

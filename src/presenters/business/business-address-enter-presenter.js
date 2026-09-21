@@ -3,17 +3,19 @@
  * @module businessAddressEnterPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
+
+const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
 const businessAddressEnterPresenter = (data, payload) => {
   return {
-    backLink: { href: '/business-address-change' },
+    backLink: { href: BUSINESS_CHANGE_LINKS.businessAddress },
     pageTitle: 'Enter your business address',
     metaDescription: 'Enter the address for your business.',
     userName: data.customer.userName ?? null,
     address: formatAddress(payload, data.changeBusinessAddress, data.address),
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

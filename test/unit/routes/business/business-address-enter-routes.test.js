@@ -171,10 +171,8 @@ const getMockData = () => {
       postcode: 'SK22 1DL',
       country: 'United Kingdom'
     },
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
+    sbi: '123456789',
+    businessName: 'Agile Farm Ltd',
     customer: {
       userName: 'Alfred Waldron'
     }

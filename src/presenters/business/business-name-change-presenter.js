@@ -9,9 +9,9 @@ const businessNameChangePresenter = (data, payload) => {
     pageTitle: 'What is your business name?',
     metaDescription: 'Update the name for your business.',
     userName: data.customer.userName ?? null,
-    businessName: data.info.businessName ?? null,
-    changeBusinessName: payload ?? data.changeBusinessName ?? data.info.businessName,
-    sbi: data.info.sbi ?? null
+    businessName: data.businessName ?? null,
+    changeBusinessName: payload ?? data.changeBusinessName ?? data.businessName,
+    sbi: data.sbi ?? null
   }
 }
 

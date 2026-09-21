@@ -11,7 +11,7 @@ const getCookies = {
   },
   handler: (request, h) => {
     const backLink = request.headers.referer
-    const cookiesPolicy = getCurrentPolicy(request, h)
+    const cookiesPolicy = getCurrentPolicy(request)
 
     return h.view('cookies', {
       pageTitle: 'Cookies',
@@ -33,7 +33,7 @@ const postCookies = {
       failAction: (request, h, err) => {
         const errors = utils.formatValidationErrors(err.details || [])
         const { payload } = request
-        const cookiesPolicy = getCurrentPolicy(request, h)
+        const cookiesPolicy = getCurrentPolicy(request)
 
         return h.view('cookies', {
           pageTitle: 'Cookies',

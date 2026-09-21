@@ -151,17 +151,13 @@ describe('business phone numbers change', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
+    sbi: '123456789',
+    businessName: 'Agile Farm Ltd',
     customer: {
       userName: 'Alfred Waldron'
     },
-    contact: {
-      mobile: '01234 567891',
-      landline: '01111 111111'
-    }
+    mobile: '01234 567891',
+    landline: '01111 111111'
   }
 }
 

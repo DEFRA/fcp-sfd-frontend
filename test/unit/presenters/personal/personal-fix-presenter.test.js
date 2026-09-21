@@ -12,9 +12,7 @@ describe('personalFixPresenter', () => {
       data = {
         source: 'name',
         orderedSectionsToFix: ['name'],
-        info: {
-          userName: 'Jane Doe'
-        }
+        userName: 'Jane Doe'
       }
     })
 
@@ -38,9 +36,7 @@ describe('personalFixPresenter', () => {
         data = {
           source: 'name',
           orderedSectionsToFix: ['name', 'email'],
-          info: {
-            userName: 'Jane Doe'
-          }
+          userName: 'Jane Doe'
         }
       })
 
@@ -57,9 +53,7 @@ describe('personalFixPresenter', () => {
         data = {
           source: 'address',
           orderedSectionsToFix: ['address', 'dob', 'email'],
-          info: {
-            userName: 'Jane Doe'
-          }
+          userName: 'Jane Doe'
         }
       })
 
@@ -75,9 +69,7 @@ describe('personalFixPresenter', () => {
       beforeEach(() => {
         data = {
           orderedSectionsToFix: ['name', 'dob', 'email'],
-          info: {
-            userName: 'Jane Doe'
-          }
+          userName: 'Jane Doe'
         }
       })
 
@@ -96,9 +88,7 @@ describe('personalFixPresenter', () => {
         data = {
           source: 'name',
           orderedSectionsToFix: ['name', 'email'],
-          info: {
-            userName: 'Jane Doe'
-          }
+          userName: 'Jane Doe'
         }
       })
 
@@ -114,9 +104,7 @@ describe('personalFixPresenter', () => {
         data = {
           source: 'phone',
           orderedSectionsToFix: ['email', 'phone', 'name', 'dob'],
-          info: {
-            userName: 'Jane Doe'
-          }
+          userName: 'Jane Doe'
         }
       })
 

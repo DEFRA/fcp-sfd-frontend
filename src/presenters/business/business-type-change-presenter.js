@@ -10,9 +10,9 @@ const businessTypeChangePresenter = (data) => {
     pageTitle: 'Change your business type',
     metaDescription: 'Update the type of your business.',
     userName: data.customer.userName ?? null,
-    businessName: data.info.businessName ?? null,
-    businessType: data.info.type ?? null,
-    sbi: data.info.sbi ?? null
+    businessName: data.businessName ?? null,
+    businessType: data.type ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

@@ -11,11 +11,9 @@ describe('businessTypeChangePresenter', () => {
     vi.clearAllMocks()
 
     data = {
-      info: {
-        businessName: 'Agile Farm Ltd',
-        type: 'Farmer',
-        sbi: '123456789'
-      },
+      businessName: 'Agile Farm Ltd',
+      type: 'Farmer',
+      sbi: '123456789',
       customer: {
         userName: 'Alfred Waldron'
       }
@@ -42,7 +40,7 @@ describe('businessTypeChangePresenter', () => {
   describe('the "businessName" property', () => {
     describe('when the businessName property is missing', () => {
       beforeEach(() => {
-        delete data.info.businessName
+        delete data.businessName
       })
 
       test('it should return businessName as null', () => {
@@ -56,7 +54,7 @@ describe('businessTypeChangePresenter', () => {
   describe('the "sbi" property', () => {
     describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
       beforeEach(() => {
-        delete data.info.sbi
+        delete data.sbi
       })
 
       test('it should return sbi as null', () => {
@@ -84,7 +82,7 @@ describe('businessTypeChangePresenter', () => {
   describe('the "businessType" property', () => {
     describe('when the type property is missing', () => {
       beforeEach(() => {
-        delete data.info.type
+        delete data.type
       })
 
       test('it should return businessType as null', () => {

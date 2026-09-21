@@ -9,17 +9,13 @@ describe('businessPhoneNumbersChangePresenter', () => {
 
   beforeEach(() => {
     data = {
-      info: {
-        businessName: 'Agile Farm Ltd',
-        sbi: '123456789'
-      },
+      businessName: 'Agile Farm Ltd',
+      sbi: '123456789',
       customer: {
         userName: 'Alfred Waldron'
       },
-      contact: {
-        landline: '01234 567891',
-        mobile: null
-      },
+      landline: '01234 567891',
+      mobile: null,
       changeBusinessPhoneNumbers: {}
     }
   })
@@ -44,7 +40,7 @@ describe('businessPhoneNumbersChangePresenter', () => {
   describe('the "businessName" property', () => {
     describe('when the businessName property is missing', () => {
       beforeEach(() => {
-        delete data.info.businessName
+        delete data.businessName
       })
 
       test('it should return businessName as null', () => {
@@ -58,7 +54,7 @@ describe('businessPhoneNumbersChangePresenter', () => {
   describe('the "sbi" property', () => {
     describe('when the sbi (singleBusinessIdentifier) property is missing', () => {
       beforeEach(() => {
-        delete data.info.sbi
+        delete data.sbi
       })
 
       test('it should return sbi as null', () => {

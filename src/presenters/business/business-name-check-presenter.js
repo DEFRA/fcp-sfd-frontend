@@ -3,16 +3,20 @@
  * @module businessNameCheckPresenter
  */
 
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+
+const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
+
 const businessNameCheckPresenter = (data) => {
   return {
-    backLink: { href: '/business-name-change' },
-    changeLink: '/business-name-change',
+    backLink: { href: BUSINESS_CHANGE_LINKS.businessName },
+    changeLink: BUSINESS_CHANGE_LINKS.businessName,
     pageTitle: 'Check your business name is correct before submitting',
     metaDescription: 'Check the name for your business is correct.',
     userName: data.customer.userName ?? null,
-    businessName: data.info.businessName ?? null,
-    changeBusinessName: data.changeBusinessName ?? data.info.businessName,
-    sbi: data.info.sbi ?? null
+    businessName: data.businessName ?? null,
+    changeBusinessName: data.changeBusinessName ?? data.businessName,
+    sbi: data.sbi ?? null
   }
 }
 

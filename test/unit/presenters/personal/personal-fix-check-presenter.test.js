@@ -36,9 +36,7 @@ describe('personalFixCheckPresenter', () => {
         personalTelephone: '0123456789',
         personalMobile: '07123456789'
       },
-      info: {
-        userName: 'Jane Doe'
-      }
+      userName: 'Jane Doe'
     }
   })
 

@@ -3,26 +3,28 @@
  * @module personalDetailsPresenter
  */
 
-import { presenters } from '@defra/fcp-sfd-frontend-engine'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
+
+const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
-  const { action: dobAction, formattedDob } = formatDob(data.info.dateOfBirth.full)
+  const { action: dobAction, formattedDob } = formatDob(data.dateOfBirth.full)
 
   return {
     backLink: {
-      text: data.business.info.name ? presenters.formatBackLink(data.business.info.name) : 'Back',
+      text: data.business.name ? presenters.formatBackLink(data.business.name) : 'Back',
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',
-    userName: data.info.userName ?? null,
+    userName: data.userName ?? null,
     crn: data.crn,
     personalName: {
-      fullName: data.info.fullNameJoined,
-      action: getActionText(data.info.fullNameJoined),
+      fullName: data.fullNameJoined,
+      action: getActionText(data.fullNameJoined),
       changeLink: changeLinks.name
     },
     dob: {
@@ -36,14 +38,14 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
       changeLink: changeLinks.address
     },
     personalTelephone: {
-      telephone: data.contact.telephone || 'Not added',
-      mobile: data.contact.mobile || 'Not added',
-      action: getActionText(data.contact.telephone || data.contact.mobile),
+      telephone: data.telephone || 'Not added',
+      mobile: data.mobile || 'Not added',
+      action: getActionText(data.telephone || data.mobile),
       changeLink: changeLinks.phone
     },
     personalEmail: {
-      email: data.contact.email || 'Not added',
-      action: getActionText(data.contact.email),
+      email: data.email || 'Not added',
+      action: getActionText(data.email),
       changeLink: changeLinks.email
     }
   }
@@ -76,11 +78,11 @@ const getActionText = (value) => {
  */
 const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) => {
   const CHANGE_LINKS = {
-    name: '/account-name-change',
-    address: '/account-address-change',
-    phone: '/account-phone-numbers-change',
-    email: '/account-email-change',
-    dob: '/account-date-of-birth-change'
+    name: PERSONAL_CHANGE_LINKS.personalName,
+    address: PERSONAL_CHANGE_LINKS.personalAddress,
+    phone: PERSONAL_CHANGE_LINKS.personalPhone,
+    email: PERSONAL_CHANGE_LINKS.personalEmail,
+    dob: PERSONAL_CHANGE_LINKS.personalDateOfBirth
   }
 
   const personalDetailsInterrupterEnabled = config.get('featureToggle.personalDetailsInterrupterEnabled')

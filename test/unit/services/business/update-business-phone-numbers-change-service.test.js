@@ -90,7 +90,7 @@ describe('updateBusinessPhoneNumbersChangeService', () => {
               landline: null,
               mobile: null
             },
-            sbi: data.info.sbi
+            sbi: data.sbi
           }
         }, credentials.sessionId)
     })

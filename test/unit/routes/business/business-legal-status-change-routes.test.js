@@ -67,11 +67,9 @@ describe('business legal status change', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      sbi: '123456789',
-      businessName: 'HENLEY, RE',
-      legalStatus: 'Sole Proprietorship'
-    },
+    sbi: '123456789',
+    businessName: 'HENLEY, RE',
+    legalStatus: 'Sole Proprietorship',
     customer: {
       userName: 'Alfred Waldron'
     }

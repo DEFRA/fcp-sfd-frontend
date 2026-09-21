@@ -54,7 +54,8 @@ describe('business name change', () => {
     describe('when a request is valid', () => {
       beforeEach(() => {
         fetchBusinessChangeService.mockResolvedValue({
-          info: { businessName: 'Agile Farm Ltd', sbi: '123456789' },
+          businessName: 'Agile Farm Ltd',
+          sbi: '123456789',
           customer: { userName: 'Alfred Waldron' }
         })
       })
@@ -85,7 +86,8 @@ describe('business name change', () => {
         request.payload = { businessName: 'New business Name ltd' }
 
         fetchBusinessChangeService.mockResolvedValue({
-          info: { businessName: 'Agile Farm Ltd', sbi: '123456789' },
+          businessName: 'Agile Farm Ltd',
+          sbi: '123456789',
           customer: { userName: 'Alfred Waldron' },
           changeBusinessName: request.payload.businessName
         })

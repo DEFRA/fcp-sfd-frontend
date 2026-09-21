@@ -25,15 +25,11 @@ const getDalData = () => ({
 })
 
 const getMappedData = () => ({
-  info: {
-    userName: 'John Doe'
-  },
+  userName: 'John Doe',
   business: {
-    info: {
-      name: 'Acme Farms Ltd',
-      organisationId: '5565448',
-      sbi: '123456789'
-    }
+    name: 'Acme Farms Ltd',
+    organisationId: '5565448',
+    sbi: '123456789'
   }
 })
 

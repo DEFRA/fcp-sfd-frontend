@@ -1,6 +1,11 @@
 // @vitest-environment jsdom
 import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest'
+import { loadGoogleTagManager } from '../../../../src/client/javascripts/google-tag-manager.js'
 import cookies from '../../../../src/client/javascripts/cookies.js'
+
+vi.mock('../../../../src/client/javascripts/google-tag-manager.js', () => ({
+  loadGoogleTagManager: vi.fn()
+}))
 
 let xhrInstances
 
@@ -14,7 +19,7 @@ class MockXHR {
 }
 
 const cookieBannerFixture = `
-  <div class="js-cookies-container js-cookies-banner" data-crumb="mock-crumb">
+  <div class="js-cookies-container js-cookies-banner" data-crumb="mock-crumb" data-gtm-key="GTM-TEST123">
     <div class="js-question-banner">
       <button class="js-cookies-button-accept">Accept analytics cookies</button>
       <button class="js-cookies-button-reject">Reject analytics cookies</button>
@@ -30,6 +35,7 @@ const cookieBannerFixture = `
 
 describe('cookies client script', () => {
   beforeEach(() => {
+    vi.clearAllMocks()
     xhrInstances = []
     vi.stubGlobal('XMLHttpRequest', MockXHR)
     document.body.innerHTML = cookieBannerFixture
@@ -130,6 +136,37 @@ describe('cookies client script', () => {
         acceptedBanner.dispatchEvent(new window.FocusEvent('blur'))
 
         expect(acceptedBanner.hasAttribute('tabindex')).toBe(false)
+      })
+    })
+
+    describe('when the preference has been recorded', () => {
+      const submitAndRespond = (button, status) => {
+        cookies.init()
+
+        document.querySelector(button).click()
+
+        xhrInstances[0].status = status
+        xhrInstances[0].onload()
+      }
+
+      test('it loads Google Tag Manager after an acceptance', () => {
+        submitAndRespond('.js-cookies-button-accept', 200)
+
+        expect(loadGoogleTagManager).toHaveBeenCalledWith('GTM-TEST123')
+      })
+
+      test('it does not load Google Tag Manager after a rejection', () => {
+        submitAndRespond('.js-cookies-button-reject', 200)
+
+        expect(loadGoogleTagManager).not.toHaveBeenCalled()
+      })
+
+      test('it restores the question banner and does not load Google Tag Manager when the request fails', () => {
+        submitAndRespond('.js-cookies-button-accept', 500)
+
+        expect(document.querySelector('.js-question-banner').hasAttribute('hidden')).toBe(false)
+        expect(document.querySelector('.js-cookies-accepted').hasAttribute('hidden')).toBe(true)
+        expect(loadGoogleTagManager).not.toHaveBeenCalled()
       })
     })
 

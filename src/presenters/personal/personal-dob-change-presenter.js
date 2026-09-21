@@ -6,13 +6,13 @@
 import { presenters } from '@defra/fcp-sfd-frontend-engine'
 
 const personalDobChangePresenter = (data, payload) => {
-  const { day, month, year } = presenters.formatDateInputValues(payload, data.changePersonalDob, data.info.dateOfBirth)
+  const { day, month, year } = presenters.formatDateInputValues(payload, data.changePersonalDob, data.dateOfBirth)
 
   return {
     backLink: { href: '/personal-details' },
     pageTitle: 'What is your date of birth?',
     metaDescription: 'Update the date of birth for your personal account.',
-    userName: data.info.userName ?? null,
+    userName: data.userName ?? null,
     hint: 'For example, 31 3 1980',
     day,
     month,

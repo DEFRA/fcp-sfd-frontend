@@ -25,8 +25,10 @@
  * @module businessDetailsChangeLinksPresenter
  */
 
-import { BUSINESS_CHANGE_LINKS } from '../../constants/change-links.js'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
+
+const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
 const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const interrupter = getInterrupterState(hasValidBusinessDetails, sectionsNeedingUpdate)
@@ -48,7 +50,7 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
 
   const links = {
     businessAddress: resolveChangeLink(interrupter, 'address', BUSINESS_CHANGE_LINKS.businessAddress),
-    businessTelephone: resolveChangeLink(interrupter, 'phone', BUSINESS_CHANGE_LINKS.businessTelephone),
+    businessTelephone: resolveChangeLink(interrupter, 'phone', BUSINESS_CHANGE_LINKS.businessPhone),
     businessEmail: resolveChangeLink(interrupter, 'email', BUSINESS_CHANGE_LINKS.businessEmail),
     vat: resolveVatLink(permissionLevel, interrupter)
   }

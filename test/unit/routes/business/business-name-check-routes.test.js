@@ -150,10 +150,8 @@ describe('business name check', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
+    sbi: '123456789',
+    businessName: 'Agile Farm Ltd',
     customer: {
       userName: 'Alfred Waldron'
     },

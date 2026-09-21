@@ -4,21 +4,30 @@ const cookieNamePolicy = config.get('cookie.name')
 const cookiePolicy = config.get('cookie.policy')
 const cookieConfig = config.get('cookie.config')
 
-const createDefaultPolicy = (h) => {
-  const cookiesPolicy = { confirmed: false, essential: true, analytics: false }
+const createDefaultPolicy = () => {
+  return { confirmed: false, essential: true, analytics: false }
+}
 
-  h.state(cookieNamePolicy, cookiesPolicy, { ...cookiePolicy, ...cookieConfig })
+// The policy is stored as plain JSON so Google Tag Manager can read it, so it arrives here as an unparsed string
+const parsePolicy = (value) => {
+  if (!value) {
+    return null
+  }
 
-  return cookiesPolicy
+  try {
+    return JSON.parse(value)
+  } catch {
+    return null
+  }
 }
 
 // request.app takes precedence so the policy just written by POST /cookies is used for the rest of that response
-export const getCurrentPolicy = (request, h) => {
-  return request.app?.cookiesPolicy ?? request.state[cookieNamePolicy] ?? createDefaultPolicy(h)
+export const getCurrentPolicy = (request) => {
+  return request.app?.cookiesPolicy ?? parsePolicy(request.state[cookieNamePolicy]) ?? createDefaultPolicy()
 }
 
 export const updatePolicy = (request, h, analytics) => {
-  const currentPolicy = getCurrentPolicy(request, h)
+  const currentPolicy = getCurrentPolicy(request)
 
   const cookiesPolicy = {
     ...currentPolicy,
@@ -27,7 +36,7 @@ export const updatePolicy = (request, h, analytics) => {
     analytics: Boolean(analytics)
   }
 
-  h.state(cookieNamePolicy, cookiesPolicy, { ...cookiePolicy, ...cookieConfig })
+  h.state(cookieNamePolicy, JSON.stringify(cookiesPolicy), { ...cookiePolicy, ...cookieConfig })
 
   if (request.app) {
     request.app.cookiesPolicy = cookiesPolicy

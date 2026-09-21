@@ -65,7 +65,7 @@ const updateBusinessAddressChangeService = async (yar, credentials) => {
  * @private
  */
 const businessAddressVariables = (businessDetails) => {
-  const { sbi } = businessDetails.info
+  const { sbi } = businessDetails
   const change = businessDetails.changeBusinessAddress
 
   // Base structure for the GraphQL mutation: includes the SBI (required for the mutation)

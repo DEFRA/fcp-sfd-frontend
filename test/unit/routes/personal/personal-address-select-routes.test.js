@@ -330,12 +330,10 @@ describe('personal address select routes', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      userName: 'Alfred Waldron',
-      fullName: {
-        first: 'Alfred',
-        last: 'Waldron'
-      }
+    userName: 'Alfred Waldron',
+    fullName: {
+      first: 'Alfred',
+      last: 'Waldron'
     },
     changePersonalPostcode: {
       postcode: 'SK22 1DL'

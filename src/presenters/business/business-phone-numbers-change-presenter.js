@@ -11,10 +11,10 @@ const businessPhoneNumbersChangePresenter = (data, payload) => {
     pageTitle: 'What are your business phone numbers?',
     metaDescription: 'Update the phone numbers for your business.',
     userName: data.customer.userName ?? null,
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null,
-    businessTelephone: presenters.formatNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.contact.landline),
-    businessMobile: presenters.formatNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.contact.mobile)
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null,
+    businessTelephone: presenters.formatNumber(payload?.businessTelephone, data.changeBusinessPhoneNumbers?.businessTelephone, data.landline),
+    businessMobile: presenters.formatNumber(payload?.businessMobile, data.changeBusinessPhoneNumbers?.businessMobile, data.mobile)
   }
 }
 

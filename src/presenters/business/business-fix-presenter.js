@@ -12,8 +12,8 @@ const businessFixPresenter = (sessionData, data) => {
   const hasMultipleErrors = orderedSectionsToFix.length > 2
 
   return {
-    businessName: data.info?.businessName ?? null,
-    sbi: data.info?.sbi ?? null,
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null,
     userName: data.customer?.userName ?? null,
     backLink: { href: '/business-details' },
     pageTitle: 'Update your business details',

@@ -9,9 +9,9 @@ const businessVatRemovePresenter = (data) => {
     pageTitle: 'Are you sure you want to remove your VAT registration number?',
     metaDescription: 'Are you sure you want to remove your VAT registration number?',
     userName: data.customer.userName ?? null,
-    vatNumber: data.info.vat ?? null,
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null
+    vatNumber: data.vat ?? null,
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

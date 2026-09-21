@@ -9,9 +9,9 @@ const businessVatChangePresenter = (data, payload) => {
     pageTitle: 'What is your VAT registration number?',
     metaDescription: 'Update the VAT registration number for your business.',
     userName: data.customer.userName ?? null,
-    vatNumber: payload ?? data.changeBusinessVat ?? data.info.vat,
-    businessName: data.info.businessName ?? null,
-    sbi: data.info.sbi ?? null
+    vatNumber: payload ?? data.changeBusinessVat ?? data.vat,
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
   }
 }
 

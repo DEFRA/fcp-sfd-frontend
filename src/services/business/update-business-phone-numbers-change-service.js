@@ -24,7 +24,7 @@ const updateBusinessPhoneNumbersChangeService = async (yar, credentials) => {
   const variables = utils.buildUpdateBusinessPhoneNumbersVariables(
     businessDetails.changeBusinessPhoneNumbers.businessTelephone,
     businessDetails.changeBusinessPhoneNumbers.businessMobile,
-    businessDetails.info.sbi
+    businessDetails.sbi
   )
 
   await updateDalService(mutations.updateBusinessPhoneNumbers, variables, credentials.sessionId)

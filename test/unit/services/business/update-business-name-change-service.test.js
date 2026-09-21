@@ -66,7 +66,7 @@ describe('updateBusinessNameChangeService', () => {
 
       expect(updateDalService).toHaveBeenCalledWith(
         'update-business-name-mutation',
-        { input: { name: 'New business ltd', sbi: data.info.sbi } },
+        { input: { name: 'New business ltd', sbi: data.sbi } },
         credentials.sessionId
       )
     })

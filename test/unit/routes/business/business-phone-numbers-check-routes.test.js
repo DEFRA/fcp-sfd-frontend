@@ -150,17 +150,13 @@ describe('business phone numbers check', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      sbi: '123456789',
-      businessName: 'Agile Farm Ltd'
-    },
+    sbi: '123456789',
+    businessName: 'Agile Farm Ltd',
     customer: {
       userName: 'Alfred Waldron'
     },
-    contact: {
-      landline: '02222 222222',
-      mobile: '01111 111111'
-    },
+    landline: '02222 222222',
+    mobile: '01111 111111',
     changeBusinessPhoneNumbers: {
       businessTelephone: '01111 111111',
       businessMobile: null

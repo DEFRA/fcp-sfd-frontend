@@ -55,7 +55,7 @@ describe('business fix check routes', () => {
           changeBusinessEmail: { businessEmail: 'newemail@new.com' },
           orderedSectionsToFix: ['name', 'email'],
           customer: { userName: 'Jane Doe' },
-          info: { sbi: '123456789' }
+          sbi: '123456789'
         })
       })
 

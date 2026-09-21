@@ -63,22 +63,21 @@ const getSchemasToValidate = (hasUprn) => {
 }
 
 /**
- * Maps nested personal details into a flat structure for validation.
+ * Maps personal details onto the field names used by the validation schemas.
  *
- * The flat shape mirrors the validation schema and avoids duplicating
- * nested schemas. Address fields are only included when no UPRN is present.
+ * Address fields are only included when no UPRN is present.
  */
 const mapPersonalDetails = (personalDetails, hasUprn) => {
   const flatPersonalDetails = {
-    first: personalDetails.info?.fullName?.first ?? '',
-    last: personalDetails.info?.fullName?.last ?? '',
-    middle: personalDetails.info?.fullName?.middle ?? '',
-    day: personalDetails.info?.dateOfBirth?.day ?? '',
-    month: personalDetails.info?.dateOfBirth?.month ?? '',
-    year: personalDetails.info?.dateOfBirth?.year ?? '',
-    personalEmail: personalDetails.contact?.email ?? '',
-    personalTelephone: personalDetails.contact?.telephone ?? '',
-    personalMobile: personalDetails.contact?.mobile ?? ''
+    first: personalDetails.fullName?.first ?? '',
+    last: personalDetails.fullName?.last ?? '',
+    middle: personalDetails.fullName?.middle ?? '',
+    day: personalDetails.dateOfBirth?.day ?? '',
+    month: personalDetails.dateOfBirth?.month ?? '',
+    year: personalDetails.dateOfBirth?.year ?? '',
+    personalEmail: personalDetails.email ?? '',
+    personalTelephone: personalDetails.telephone ?? '',
+    personalMobile: personalDetails.mobile ?? ''
   }
 
   if (!hasUprn) {

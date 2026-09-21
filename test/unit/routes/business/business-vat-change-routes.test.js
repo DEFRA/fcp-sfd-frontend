@@ -155,11 +155,9 @@ describe('business VAT change', () => {
 
 const getMockData = () => {
   return {
-    info: {
-      businessName: 'Agile Farm Ltd',
-      sbi: '123456789',
-      vat: 'GB123456789'
-    },
+    businessName: 'Agile Farm Ltd',
+    sbi: '123456789',
+    vat: 'GB123456789',
     customer: {
       userName: 'Alfred Waldron'
     }

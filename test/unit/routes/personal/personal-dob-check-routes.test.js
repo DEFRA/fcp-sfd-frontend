@@ -145,12 +145,10 @@ describe('personal dob check', () => {
 const getMockData = () => {
   return {
     crn: '987654321',
-    info: {
-      userName: 'John Doe',
-      fullName: {
-        first: 'John',
-        last: 'Doe'
-      }
+    userName: 'John Doe',
+    fullName: {
+      first: 'John',
+      last: 'Doe'
     },
     changePersonalDob: {
       day: '7',

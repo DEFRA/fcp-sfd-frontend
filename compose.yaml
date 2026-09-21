@@ -80,7 +80,7 @@ services:
       HITACHI_TIMEOUT_MS: 3000
       MONGO_URI: mongodb://mongo:27017
       DAL_REQUEST_TIMEOUT_MS: 3000
-      KITS_DAL_SERVICE_ACCOUNT_EMAIL: dal-service-account@defra.gov.uk
+      KITS_DAL_SERVICE_ACCOUNT_EMAIL: ${KITS_DAL_SERVICE_ACCOUNT_EMAIL:-dal@defra.gov.uk}
 
   redis:
     image: redis:7.2.3-alpine3.18

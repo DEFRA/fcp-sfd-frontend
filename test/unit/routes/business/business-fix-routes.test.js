@@ -88,6 +88,23 @@ describe('business fix routes', () => {
         expect(h.view).toHaveBeenCalledWith('business/business-fix.njk', getPageData())
       })
     })
+
+    describe('when there is no valid session data to fix', () => {
+      beforeEach(() => {
+        h = {
+          redirect: vi.fn()
+        }
+
+        services.initialiseFixJourney.mockReturnValue(null)
+      })
+
+      test('it redirects to the business details page without fetching business data', async () => {
+        await getBusinessFix.handler(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(fetchBusinessDetailsService).not.toHaveBeenCalled()
+      })
+    })
   })
 
   describe('POST /business-fix', () => {

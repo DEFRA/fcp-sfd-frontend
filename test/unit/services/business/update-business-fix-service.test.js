@@ -129,5 +129,17 @@ describe('updateBusinessFixService', () => {
         )
       })
     })
+
+    describe('when the success message is null', () => {
+      beforeEach(() => {
+        services.buildFixSuccessMessage.mockReturnValue(null)
+      })
+
+      test('it does not flash a notification', async () => {
+        await updateBusinessFixService(sessionData, yar, credentials)
+
+        expect(flashNotification).not.toHaveBeenCalled()
+      })
+    })
   })
 })

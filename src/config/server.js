@@ -59,6 +59,21 @@ export const serverConfig = {
       default: '/public',
       env: 'ASSET_PATH'
     },
+    cdpEnvironment: {
+      doc: 'The CDP environment the app is running in (distinct from NODE_ENV, which CDP always sets to "production" once deployed). "local" is added for local development.',
+      format: [
+        'local',
+        'infra-dev',
+        'management',
+        'dev',
+        'test',
+        'perf-test',
+        'ext-test',
+        'prod'
+      ],
+      default: 'local',
+      env: 'ENVIRONMENT'
+    },
     isProduction: {
       doc: 'If this application running in the production environment',
       format: Boolean,

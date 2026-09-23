@@ -1,15 +1,37 @@
-import { checkBankDetailsServiceHealth } from '../services/bank-details/bank-details-client.js'
+import {
+  checkBankDetailsServiceHealth,
+  getBankDetails
+} from '../services/bank-details/bank-details-client.js'
 
-// Diagnostic route to prove connectivity to fcp-sfd-bank-details; not for use in production.
-export const bankDetailsCheck = {
-  method: 'GET',
-  path: '/bank-details-check',
-  options: {
-    auth: false
+// Diagnostic routes to prove connectivity to fcp-sfd-bank-details; not for use in production.
+export const bankDetailsRoutes = [
+  {
+    method: 'GET',
+    path: '/bank-details-check',
+    options: {
+      auth: false
+    },
+    handler: async (_request, h) => {
+      const isHealthy = await checkBankDetailsServiceHealth()
+
+      return h.response({ message: isHealthy ? 'success' : 'failure' })
+    }
   },
-  handler: async (_request, h) => {
-    const isHealthy = await checkBankDetailsServiceHealth()
+  {
+    method: 'GET',
+    path: '/bank-details-check/{sbi}',
+    options: {
+      auth: false
+    },
+    handler: async (request, h) => {
+      const { sbi } = request.params
+      const bankDetails = await getBankDetails(sbi)
 
-    return h.response({ message: isHealthy ? 'success' : 'failure' })
+      if (!bankDetails) {
+        return h.response({ message: 'failure' }).code(502)
+      }
+
+      return h.response(bankDetails)
+    }
   }
-}
+]

@@ -8,12 +8,12 @@ import { footerRoutes } from './footer/footer-routes.js'
 import { businessRoutes } from './business/business-routes.js'
 import { personalRoutes } from './personal/personal-routes.js'
 import { catchAllNotFound } from './catch-all-routes.js'
-import { bankDetailsCheck } from './bank-details-routes.js'
+import { bankDetailsRoutes } from './bank-details-routes.js'
 import { config } from '../config/index.js'
 
 const nonProductionRoutes = config.get('server.isProduction')
   ? []
-  : [bankDetailsCheck]
+  : bankDetailsRoutes
 
 export const routes = [
   health,

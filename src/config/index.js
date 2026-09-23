@@ -10,6 +10,7 @@ import { allowListsConfig } from './allow-lists.js'
 import { servicesConfig } from './services.js'
 import { cookieConfig } from './cookie.js'
 import { googleAnalyticsConfig } from './google-analytics.js'
+import { bankDetailsConfig } from './bank-details.js'
 
 const config = convict({
   ...serverConfig,
@@ -22,7 +23,8 @@ const config = convict({
   ...allowListsConfig,
   ...servicesConfig,
   ...cookieConfig,
-  ...googleAnalyticsConfig
+  ...googleAnalyticsConfig,
+  ...bankDetailsConfig
 })
 
 config.validate({ allowed: 'strict' })

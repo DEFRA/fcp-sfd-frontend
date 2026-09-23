@@ -8,6 +8,12 @@ import { footerRoutes } from './footer/footer-routes.js'
 import { businessRoutes } from './business/business-routes.js'
 import { personalRoutes } from './personal/personal-routes.js'
 import { catchAllNotFound } from './catch-all-routes.js'
+import { bankDetailsCheck } from './bank-details-routes.js'
+import { config } from '../config/index.js'
+
+const nonProductionRoutes = config.get('server.isProduction')
+  ? []
+  : [bankDetailsCheck]
 
 export const routes = [
   health,
@@ -19,5 +25,6 @@ export const routes = [
   ...footerRoutes,
   ...businessRoutes,
   ...personalRoutes,
+  ...nonProductionRoutes,
   catchAllNotFound // This should always be the last route to ensure it only catches unmatched routes
 ]

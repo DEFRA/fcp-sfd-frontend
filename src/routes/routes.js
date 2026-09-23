@@ -11,9 +11,8 @@ import { catchAllNotFound } from './catch-all-routes.js'
 import { bankDetailsRoutes } from './bank-details-routes.js'
 import { config } from '../config/index.js'
 
-const nonProductionRoutes = config.get('server.isProduction')
-  ? []
-  : bankDetailsRoutes
+const nonProductionRoutes =
+  config.get('server.cdpEnvironment') === 'prod' ? [] : bankDetailsRoutes
 
 export const routes = [
   health,

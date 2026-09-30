@@ -51,7 +51,7 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@defra/cdp-metrics": "0.6.0",
-    "@defra/fcp-sfd-frontend-engine": "0.37.0",
+    "@defra/fcp-sfd-frontend-engine": "0.37.1",
     "@defra/hapi-tracing": "1.30.0",
     "@elastic/ecs-pino-format": "1.5.0",
     "@hapi/bell": "13.1.0",
@@ -79,7 +79,7 @@
     "hapi-pulse": "4.0.0",
     "https-proxy-agent": "9.1.0",
     "ioredis": "5.11.1",
-    "joi": "18.2.3",
+    "joi": "18.2.9",
     "nunjucks": "3.2.4",
     "osdatahub": "0.2.2",
     "pino": "10.3.1",
@@ -115,11 +115,6 @@
     "webpack-cli": "7.2.1"
   },
   "overrides": {
-    "@hapi/bell": {
-      "joi": "18.2.3"
-    },
-    "@hapi/catbox-redis": {
-      "joi": "18.2.3"
-    }
+    "joi": "$joi"
   }
 }

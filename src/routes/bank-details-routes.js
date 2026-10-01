@@ -25,7 +25,7 @@ export const bankDetailsRoutes = [
     },
     handler: async (request, h) => {
       const { sbi } = request.params
-      const bankDetails = await getBankDetails(sbi)
+      const bankDetails = await getBankDetails(request.server.sts, sbi)
 
       if (!bankDetails) {
         return h.response({ message: 'failure' }).code(502)

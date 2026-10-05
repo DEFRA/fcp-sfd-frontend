@@ -8,6 +8,7 @@ import { getSignOutUrl } from '../../../src/auth/get-sign-out-url.js'
 import { validateState } from '../../../src/auth/state.js'
 import { verifyToken } from '../../../src/auth/verify-token.js'
 import { allowListService } from '../../../src/services/allow-list-service.js'
+import { config } from '../../../src/config/index.js'
 
 // Thing under test
 import { auth } from '../../../src/routes/auth-routes.js'
@@ -33,6 +34,12 @@ vi.mock('../../../src/services/allow-list-service.js', () => ({
   allowListService: vi.fn()
 }))
 
+vi.mock('../../../src/config/index.js', () => ({
+  config: {
+    get: vi.fn()
+  }
+}))
+
 let route
 
 describe('auth', () => {
@@ -42,6 +49,8 @@ describe('auth', () => {
 
     verifyToken.mockResolvedValue()
     getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
+    // Default: allow list restriction feature toggle OFF
+    config.get.mockReturnValue(false)
   })
 
   test('should return an array of routes', () => {
@@ -124,6 +133,42 @@ describe('auth', () => {
       await route.handler(mockRequest, mockH)
 
       expect(mockYarSet).toHaveBeenCalledWith('isOnWoodlandManagementAllowList', true)
+    })
+
+    test('handler should return unauthorised view when restriction toggle is on and user is not on the allow list', async () => {
+      const mockH = { view: vi.fn(), redirect: vi.fn() }
+      const mockRequest = createMockRequest()
+      config.get.mockReturnValue(true)
+      allowListService.mockReturnValue(false)
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockH.view).toHaveBeenCalledWith('unauthorised')
+      expect(mockH.redirect).not.toHaveBeenCalled()
+    })
+
+    test('handler should sign the user in when restriction toggle is on and user is on the allow list', async () => {
+      const mockH = { view: vi.fn(), redirect: vi.fn() }
+      const mockRequest = createMockRequest()
+      config.get.mockReturnValue(true)
+      allowListService.mockReturnValue(true)
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockH.view).not.toHaveBeenCalled()
+      expect(mockH.redirect).toHaveBeenCalledWith('/home')
+    })
+
+    test('handler should sign the user in when restriction toggle is off, regardless of allow list status', async () => {
+      const mockH = { view: vi.fn(), redirect: vi.fn() }
+      const mockRequest = createMockRequest()
+      config.get.mockReturnValue(false)
+      allowListService.mockReturnValue(false)
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockH.view).not.toHaveBeenCalled()
+      expect(mockH.redirect).toHaveBeenCalledWith('/home')
     })
 
     test('handler should set session cache with correct data', async () => {

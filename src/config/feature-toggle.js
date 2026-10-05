@@ -17,6 +17,12 @@ export const featureToggleConfig = {
       format: Boolean,
       default: false,
       env: 'CPH_ENABLED'
+    },
+    restrictAccessToWoodlandManagementAllowList: {
+      doc: 'Restricts sign-in to users on the woodland management allow list',
+      format: Boolean,
+      default: false,
+      env: 'RESTRICT_ACCESS_TO_WOODLAND_MANAGEMENT_ALLOW_LIST'
     }
   }
 }

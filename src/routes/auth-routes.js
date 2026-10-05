@@ -83,14 +83,19 @@ const signOut = {
   },
   handler: async function (request, h) {
     await request.yar.reset()
+
+    // If not authenticated redirect to home page
     if (!request.auth.isAuthenticated) {
       return h.redirect('/')
     }
 
-    // Clear the session cache and cookie here so the local session is invalidated even if the Defra ID round trip never completes
+    // Clear the session cache before redirecting to Defra ID to clear SSO session
+    // This ensures that the user is signed out of this service even if there is a failure with ending the SSO session
     if (request.auth.credentials?.sessionId) {
       await request.server.app.cache.drop(request.auth.credentials.sessionId)
     }
+
+    // Clear local session cookie
     request.cookieAuth.clear()
 
     const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
@@ -106,13 +111,19 @@ const signOutOidc = {
   },
   handler: async function (request, h) {
     if (request.auth.isAuthenticated) {
+      // Verify state parameter to prevent CSRF attacks
       validateState(request, request.query.state)
+
+      // Clear session as a fail safe as should already be cleared in /auth/sign-out
       if (request.auth.credentials?.sessionId) {
         // Clear the session cache
         await request.server.app.cache.drop(request.auth.credentials.sessionId)
       }
+
+      // Clear local session cookie as fail safe as should already be cleared in /auth/sign-out
       request.cookieAuth.clear()
     }
+
     return h.redirect('/signed-out')
   }
 }

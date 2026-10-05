@@ -4,6 +4,7 @@ import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
 import { allowListService } from '../services/allow-list-service.js'
+import { metrics } from '../utils/metrics.js'
 
 const AUTH_SIGN_IN_PATH = '/auth/sign-in'
 
@@ -25,10 +26,11 @@ const signInOidc = {
     auth: { strategy: 'defra-id', mode: 'try' }
   },
   handler: async function (request, h) {
-    // If the user is not authenticated, redirect to the home page
+    // If the user is not authenticated, redirect to the unauthorised page
     // This should only occur if the user tries to access the sign-in page directly and not part of the sign-in flow
     // eg if the user has bookmarked the Defra Identity sign-in page or they have signed out and tried to go back in the browser
     if (!request.auth.isAuthenticated) {
+      request.logger.error(request.auth.error, 'Defra Identity authentication failed')
       return h.view('unauthorised')
     }
     const { profile, token, refreshToken } = request.auth.credentials
@@ -64,6 +66,9 @@ const signInOidc = {
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
     request.cookieAuth.set({ sessionId })
+
+    request.logger.info('Defra Identity sign in successful')
+    metrics.counter('authSignInSuccess', 1)
 
     // Redirect to the home route
     return h.redirect('/home')

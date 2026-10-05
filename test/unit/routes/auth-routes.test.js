@@ -8,6 +8,7 @@ import { getSignOutUrl } from '../../../src/auth/get-sign-out-url.js'
 import { validateState } from '../../../src/auth/state.js'
 import { verifyToken } from '../../../src/auth/verify-token.js'
 import { allowListService } from '../../../src/services/allow-list-service.js'
+import { metrics } from '../../../src/utils/metrics.js'
 
 // Thing under test
 import { auth } from '../../../src/routes/auth-routes.js'
@@ -31,6 +32,10 @@ vi.mock('../../../src/auth/verify-token.js', () => ({
 
 vi.mock('../../../src/services/allow-list-service.js', () => ({
   allowListService: vi.fn()
+}))
+
+vi.mock('../../../src/utils/metrics.js', () => ({
+  metrics: { counter: vi.fn() }
 }))
 
 let route
@@ -93,10 +98,31 @@ describe('auth', () => {
 
     test('handler should return unauthorised view when not authenticated', async () => {
       const mockH = { view: vi.fn() }
-      const mockRequest = { auth: { isAuthenticated: false } }
+      const mockRequest = { auth: { isAuthenticated: false, error: new Error('Bell error') }, logger: { error: vi.fn() } }
       await route.handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith('unauthorised')
+    })
+
+    test('handler should log the reason when not authenticated', async () => {
+      const mockH = { view: vi.fn() }
+      const mockLoggerError = vi.fn()
+      const bellError = new Error('Bell error')
+      const mockRequest = { auth: { isAuthenticated: false, error: bellError }, logger: { error: mockLoggerError } }
+      await route.handler(mockRequest, mockH)
+
+      expect(mockLoggerError).toHaveBeenCalledWith(bellError, 'Defra Identity authentication failed')
+    })
+
+    test('handler should log and record a metric on successful sign in', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockLoggerInfo = vi.fn()
+      const mockRequest = createMockRequest({ logger: { info: mockLoggerInfo } })
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockLoggerInfo).toHaveBeenCalledWith('Defra Identity sign in successful')
+      expect(metrics.counter).toHaveBeenCalledWith('authSignInSuccess', 1)
     })
 
     test('handler should verify token when authenticated', async () => {
@@ -417,6 +443,7 @@ function createMockRequest (overrides = {}) {
     cookieAuth,
     yar,
     query: {},
+    logger: { info: vi.fn(), error: vi.fn() },
     ...overrides
   }
 }

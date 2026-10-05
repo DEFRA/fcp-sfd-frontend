@@ -8,7 +8,6 @@ import { getSignOutUrl } from '../../../src/auth/get-sign-out-url.js'
 import { validateState } from '../../../src/auth/state.js'
 import { verifyToken } from '../../../src/auth/verify-token.js'
 import { allowListService } from '../../../src/services/allow-list-service.js'
-import { metrics } from '../../../src/utils/metrics.js'
 
 // Thing under test
 import { auth } from '../../../src/routes/auth-routes.js'
@@ -117,12 +116,13 @@ describe('auth', () => {
     test('handler should log and record a metric on successful sign in', async () => {
       const mockH = { redirect: vi.fn() }
       const mockLoggerInfo = vi.fn()
-      const mockRequest = createMockRequest({ logger: { info: mockLoggerInfo } })
+      const mockMetricsCounter = vi.fn()
+      const mockRequest = createMockRequest({ logger: { info: mockLoggerInfo }, metrics: { counter: mockMetricsCounter } })
 
       await route.handler(mockRequest, mockH)
 
       expect(mockLoggerInfo).toHaveBeenCalledWith('Defra Identity sign in successful')
-      expect(metrics.counter).toHaveBeenCalledWith('authSignInSuccess', 1)
+      expect(mockMetricsCounter).toHaveBeenCalledWith('authSignInSuccess', 1)
     })
 
     test('handler should verify token when authenticated', async () => {
@@ -444,6 +444,7 @@ function createMockRequest (overrides = {}) {
     yar,
     query: {},
     logger: { info: vi.fn(), error: vi.fn() },
+    metrics: { counter: vi.fn() },
     ...overrides
   }
 }

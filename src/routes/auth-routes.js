@@ -4,7 +4,6 @@ import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
 import { allowListService } from '../services/allow-list-service.js'
-import { metrics } from '../utils/metrics.js'
 
 const AUTH_SIGN_IN_PATH = '/auth/sign-in'
 
@@ -68,7 +67,7 @@ const signInOidc = {
     request.cookieAuth.set({ sessionId })
 
     request.logger.info('Defra Identity sign in successful')
-    metrics.counter('authSignInSuccess', 1)
+    request.metrics.counter('authSignInSuccess', 1)
 
     // Redirect to the home route
     return h.redirect('/home')

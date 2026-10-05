@@ -266,6 +266,40 @@ describe('auth', () => {
       expect(getSignOutUrl).toHaveBeenCalledWith(mockRequest, 'token')
       expect(mockH.redirect).toHaveBeenCalledWith('https://sign-out-url.com')
     })
+
+    test('handler should drop session cache and clear cookie auth when session id present', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockCacheDrop = vi.fn()
+      const mockCookieAuthClear = vi.fn()
+      const mockRequest = {
+        yar: { reset: vi.fn() },
+        auth: { isAuthenticated: true, credentials: { sessionId: 'session-id', token: 'token' } },
+        server: { app: { cache: { drop: mockCacheDrop } } },
+        cookieAuth: { clear: mockCookieAuthClear }
+      }
+      getSignOutUrl.mockResolvedValue('https://sign-out-url.com')
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockCacheDrop).toHaveBeenCalledWith('session-id')
+      expect(mockCookieAuthClear).toHaveBeenCalled()
+    })
+
+    test('handler should not drop cache when session id missing', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockCacheDrop = vi.fn()
+      const mockRequest = {
+        yar: { reset: vi.fn() },
+        auth: { isAuthenticated: true, credentials: { token: 'token' } },
+        server: { app: { cache: { drop: mockCacheDrop } } },
+        cookieAuth: { clear: vi.fn() }
+      }
+      getSignOutUrl.mockResolvedValue('https://sign-out-url.com')
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockCacheDrop).not.toHaveBeenCalled()
+    })
   })
 
   describe('GET /auth/sign-out-oidc', () => {

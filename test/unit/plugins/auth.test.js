@@ -374,7 +374,7 @@ describe('auth', () => {
 
       test('should verify token time', async () => {
         await validate(request, session)
-        expect(jwtVerifyTimeSpy).toHaveBeenCalled()
+        expect(jwtVerifyTimeSpy).toHaveBeenCalledWith(expect.anything(), { timeSkewSec: 60 })
       })
 
       test('should return valid state if session exists and token is valid', async () => {

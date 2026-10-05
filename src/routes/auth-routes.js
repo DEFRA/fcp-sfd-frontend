@@ -81,6 +81,13 @@ const signOut = {
     if (!request.auth.isAuthenticated) {
       return h.redirect('/')
     }
+
+    // Clear the session cache and cookie here so the local session is invalidated even if the Defra ID round trip never completes
+    if (request.auth.credentials?.sessionId) {
+      await request.server.app.cache.drop(request.auth.credentials.sessionId)
+    }
+    request.cookieAuth.clear()
+
     const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
     return h.redirect(signOutUrl)
   }

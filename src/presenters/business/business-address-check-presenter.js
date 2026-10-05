@@ -15,7 +15,7 @@ const businessAddressCheckPresenter = (data) => {
 
   return {
     backLink,
-    changeLink: backLink?.href,
+    changeLink: backLink.href,
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
     userName: customer.userName ?? null,

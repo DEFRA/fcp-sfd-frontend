@@ -8,9 +8,11 @@ import { presenters } from '@defra/fcp-sfd-frontend-engine'
 const personalAddressCheckPresenter = (data) => {
   const { changePersonalAddress, address, userName } = data
 
+  const backLink = presenters.addressBackLink(changePersonalAddress?.postcodeLookup, 'personal')
+
   return {
-    backLink: presenters.addressBackLink(changePersonalAddress?.postcodeLookup, 'personal'),
-    changeLink: presenters.addressChangeLink(changePersonalAddress?.postcodeLookup, 'personal'),
+    backLink,
+    changeLink: backLink.href,
     pageTitle: 'Check your personal address is correct before submitting',
     metaDescription: 'Check the address for your personal account is correct.',
     userName: userName ?? null,

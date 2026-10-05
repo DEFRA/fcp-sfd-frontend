@@ -218,10 +218,10 @@ describe('personalAddressCheckPresenter', () => {
         }
       })
 
-      test('it should return changeLink as "/account-address-change"', () => {
+      test('it should return changeLink as "/account-address-select"', () => {
         const result = personalAddressCheckPresenter(data)
 
-        expect(result.changeLink).toEqual('/account-address-change')
+        expect(result.changeLink).toEqual('/account-address-select')
       })
     })
 

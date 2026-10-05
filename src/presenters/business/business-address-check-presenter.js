@@ -8,9 +8,11 @@ import { presenters } from '@defra/fcp-sfd-frontend-engine'
 const businessAddressCheckPresenter = (data) => {
   const { changeBusinessAddress, address, customer } = data
 
+  const backLink = presenters.addressBackLink(changeBusinessAddress?.postcodeLookup, 'business')
+
   return {
-    backLink: presenters.addressBackLink(changeBusinessAddress?.postcodeLookup, 'business'),
-    changeLink: presenters.addressChangeLink(changeBusinessAddress?.postcodeLookup, 'business'),
+    backLink,
+    changeLink: backLink.href,
     pageTitle: 'Check your business address is correct before submitting',
     metaDescription: 'Check the address for your business is correct.',
     userName: customer.userName ?? null,

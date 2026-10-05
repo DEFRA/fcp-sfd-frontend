@@ -8,6 +8,9 @@ import { presenters } from '@defra/fcp-sfd-frontend-engine'
 const businessAddressCheckPresenter = (data) => {
   const { changeBusinessAddress, address, customer } = data
 
+  // The "Change" link intentionally matches the back link: selecting "Change" should return the
+  // user to the same address select/enter page they would reach via the back link, so that their
+  // postcode and lookup results are retained (see internal service for the reference behaviour).
   const backLink = presenters.addressBackLink(changeBusinessAddress?.postcodeLookup, 'business')
 
   return {

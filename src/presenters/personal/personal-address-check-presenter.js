@@ -15,7 +15,7 @@ const personalAddressCheckPresenter = (data) => {
 
   return {
     backLink,
-    changeLink: backLink.href,
+    changeLink: backLink?.href,
     pageTitle: 'Check your personal address is correct before submitting',
     metaDescription: 'Check the address for your personal account is correct.',
     userName: userName ?? null,

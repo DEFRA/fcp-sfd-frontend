@@ -97,7 +97,7 @@ describe('auth', () => {
 
     test('handler should return unauthorised view when not authenticated', async () => {
       const mockH = { view: vi.fn() }
-      const mockRequest = { auth: { isAuthenticated: false, error: new Error('Bell error') }, logger: { error: vi.fn() } }
+      const mockRequest = { auth: { isAuthenticated: false, error: new Error('Bell error') }, logger: { warn: vi.fn() } }
       await route.handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith('unauthorised')
@@ -105,12 +105,12 @@ describe('auth', () => {
 
     test('handler should log the reason when not authenticated', async () => {
       const mockH = { view: vi.fn() }
-      const mockLoggerError = vi.fn()
+      const mockLoggerWarn = vi.fn()
       const bellError = new Error('Bell error')
-      const mockRequest = { auth: { isAuthenticated: false, error: bellError }, logger: { error: mockLoggerError } }
+      const mockRequest = { auth: { isAuthenticated: false, error: bellError }, logger: { warn: mockLoggerWarn } }
       await route.handler(mockRequest, mockH)
 
-      expect(mockLoggerError).toHaveBeenCalledWith(bellError, 'Defra Identity authentication failed')
+      expect(mockLoggerWarn).toHaveBeenCalledWith(bellError, 'Defra Identity authentication failed')
     })
 
     test('handler should log and record a metric on successful sign in', async () => {

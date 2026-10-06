@@ -249,6 +249,8 @@ describe('auth routes', () => {
     })
 
     test('should clear session cache if authenticated and session id', async () => {
+      await server.app.cache.set(credentials.sessionId, { isAuthenticated: true })
+
       await server.inject({
         url: path,
         auth: {
@@ -256,7 +258,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      const cache = await server.app.cache.get(credentials.profile.sessionId)
+      const cache = await server.app.cache.get(credentials.sessionId)
       expect(cache).toBeNull()
     })
 
@@ -301,6 +303,8 @@ describe('auth routes', () => {
     })
 
     test('should clear session cache if authenticated and session id', async () => {
+      await server.app.cache.set(credentials.sessionId, { isAuthenticated: true })
+
       await server.inject({
         url: path,
         auth: {
@@ -308,7 +312,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      const cache = await server.app.cache.get(credentials.profile.sessionId)
+      const cache = await server.app.cache.get(credentials.sessionId)
       expect(cache).toBeNull()
     })
 

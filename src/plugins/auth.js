@@ -4,6 +4,8 @@ import { refreshTokens } from '../auth/refresh-tokens.js'
 import { config } from '../config/index.js'
 import { getSbiFromRelationships } from '../auth/get-sbi-from-relationships.js'
 
+const TOKEN_EXPIRY_MARGIN_MS = 60 * 1000
+
 export const auth = {
   plugin: {
     name: 'auth',
@@ -107,8 +109,8 @@ async function validateToken (request, session) {
   // Verify Defra Identity token has not expired
   try {
     const decoded = Jwt.token.decode(userSession.token)
-    // Allow 60 second tolerance for clock skew between servers
-    Jwt.token.verifyTime(decoded, { timeSkewSec: 60 })
+    // Treat the token as expired slightly early so it is refreshed before the DAL sees it expire
+    Jwt.token.verifyTime(decoded, { now: Date.now() + TOKEN_EXPIRY_MARGIN_MS })
   } catch (err) {
     if (!config.get('defraId.refreshTokens')) {
       request.server?.logger?.info(err.message)

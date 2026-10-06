@@ -110,7 +110,7 @@ const signOutOidc = {
   },
   handler: async function (request, h) {
     if (request.auth.isAuthenticated) {
-      // Verify state parameter to prevent CSRF attacks
+      // Only reached if the session cookie survived /auth/sign-out; verify state before clearing it
       validateState(request, request.query.state)
 
       // Clear session as a fail safe as should already be cleared in /auth/sign-out

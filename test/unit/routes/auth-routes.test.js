@@ -33,10 +33,6 @@ vi.mock('../../../src/services/allow-list-service.js', () => ({
   allowListService: vi.fn()
 }))
 
-vi.mock('../../../src/utils/metrics.js', () => ({
-  metrics: { counter: vi.fn() }
-}))
-
 let route
 
 describe('auth', () => {

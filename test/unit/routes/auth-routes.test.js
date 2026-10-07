@@ -93,10 +93,32 @@ describe('auth', () => {
 
     test('handler should return unauthorised view when not authenticated', async () => {
       const mockH = { view: vi.fn() }
-      const mockRequest = { auth: { isAuthenticated: false } }
+      const mockRequest = { auth: { isAuthenticated: false, error: new Error('Bell error') }, logger: { warn: vi.fn() } }
       await route.handler(mockRequest, mockH)
 
       expect(mockH.view).toHaveBeenCalledWith('unauthorised')
+    })
+
+    test('handler should log the reason when not authenticated', async () => {
+      const mockH = { view: vi.fn() }
+      const mockLoggerWarn = vi.fn()
+      const bellError = new Error('Bell error')
+      const mockRequest = { auth: { isAuthenticated: false, error: bellError }, logger: { warn: mockLoggerWarn } }
+      await route.handler(mockRequest, mockH)
+
+      expect(mockLoggerWarn).toHaveBeenCalledWith(bellError, 'Defra Identity authentication failed')
+    })
+
+    test('handler should log and record a metric on successful sign in', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockLoggerInfo = vi.fn()
+      const mockMetricsCounter = vi.fn()
+      const mockRequest = createMockRequest({ logger: { info: mockLoggerInfo }, metrics: { counter: mockMetricsCounter } })
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockLoggerInfo).toHaveBeenCalledWith('Defra Identity sign in successful')
+      expect(mockMetricsCounter).toHaveBeenCalledWith('authSignInSuccess', 1)
     })
 
     test('handler should verify token when authenticated', async () => {
@@ -266,6 +288,40 @@ describe('auth', () => {
       expect(getSignOutUrl).toHaveBeenCalledWith(mockRequest, 'token')
       expect(mockH.redirect).toHaveBeenCalledWith('https://sign-out-url.com')
     })
+
+    test('handler should drop session cache and clear cookie auth when session id present', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockCacheDrop = vi.fn()
+      const mockCookieAuthClear = vi.fn()
+      const mockRequest = {
+        yar: { reset: vi.fn() },
+        auth: { isAuthenticated: true, credentials: { sessionId: 'session-id', token: 'token' } },
+        server: { app: { cache: { drop: mockCacheDrop } } },
+        cookieAuth: { clear: mockCookieAuthClear }
+      }
+      getSignOutUrl.mockResolvedValue('https://sign-out-url.com')
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockCacheDrop).toHaveBeenCalledWith('session-id')
+      expect(mockCookieAuthClear).toHaveBeenCalled()
+    })
+
+    test('handler should not drop cache when session id missing', async () => {
+      const mockH = { redirect: vi.fn() }
+      const mockCacheDrop = vi.fn()
+      const mockRequest = {
+        yar: { reset: vi.fn() },
+        auth: { isAuthenticated: true, credentials: { token: 'token' } },
+        server: { app: { cache: { drop: mockCacheDrop } } },
+        cookieAuth: { clear: vi.fn() }
+      }
+      getSignOutUrl.mockResolvedValue('https://sign-out-url.com')
+
+      await route.handler(mockRequest, mockH)
+
+      expect(mockCacheDrop).not.toHaveBeenCalled()
+    })
   })
 
   describe('GET /auth/sign-out-oidc', () => {
@@ -383,6 +439,8 @@ function createMockRequest (overrides = {}) {
     cookieAuth,
     yar,
     query: {},
+    logger: { info: vi.fn(), error: vi.fn() },
+    metrics: { counter: vi.fn() },
     ...overrides
   }
 }

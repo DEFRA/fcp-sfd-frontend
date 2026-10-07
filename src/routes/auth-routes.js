@@ -25,10 +25,11 @@ const signInOidc = {
     auth: { strategy: 'defra-id', mode: 'try' }
   },
   handler: async function (request, h) {
-    // If the user is not authenticated, redirect to the home page
+    // If the user is not authenticated, redirect to the unauthorised page
     // This should only occur if the user tries to access the sign-in page directly and not part of the sign-in flow
     // eg if the user has bookmarked the Defra Identity sign-in page or they have signed out and tried to go back in the browser
     if (!request.auth.isAuthenticated) {
+      request.logger.warn(request.auth.error, 'Defra Identity authentication failed')
       return h.view('unauthorised')
     }
     const { profile, token, refreshToken } = request.auth.credentials
@@ -65,6 +66,9 @@ const signInOidc = {
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
     request.cookieAuth.set({ sessionId })
 
+    request.logger.info('Defra Identity sign in successful')
+    request.metrics.counter('authSignInSuccess', 1)
+
     // Redirect to the home route
     return h.redirect('/home')
   }
@@ -78,9 +82,21 @@ const signOut = {
   },
   handler: async function (request, h) {
     await request.yar.reset()
+
+    // If not authenticated redirect to home page
     if (!request.auth.isAuthenticated) {
       return h.redirect('/')
     }
+
+    // Clear the session cache before redirecting to Defra ID to clear SSO session
+    // This ensures that the user is signed out of this service even if there is a failure with ending the SSO session
+    if (request.auth.credentials?.sessionId) {
+      await request.server.app.cache.drop(request.auth.credentials.sessionId)
+    }
+
+    // Clear local session cookie
+    request.cookieAuth.clear()
+
     const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
     return h.redirect(signOutUrl)
   }
@@ -94,13 +110,19 @@ const signOutOidc = {
   },
   handler: async function (request, h) {
     if (request.auth.isAuthenticated) {
+      // Only reached if the session cookie survived /auth/sign-out; verify state before clearing it
       validateState(request, request.query.state)
+
+      // Clear session as a fail safe as should already be cleared in /auth/sign-out
       if (request.auth.credentials?.sessionId) {
         // Clear the session cache
         await request.server.app.cache.drop(request.auth.credentials.sessionId)
       }
+
+      // Clear local session cookie as fail safe as should already be cleared in /auth/sign-out
       request.cookieAuth.clear()
     }
+
     return h.redirect('/signed-out')
   }
 }

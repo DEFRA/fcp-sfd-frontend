@@ -39,13 +39,15 @@ const postBusinessPhoneNumbersChange = {
       }
     },
     handler: (request, h) => {
+      const { yar, payload } = request
+
       // If a user didn't enter either of the numbers default its value to null
-      request.payload = {
-        businessTelephone: request.payload.businessTelephone ?? null,
-        businessMobile: request.payload.businessMobile ?? null
+      const phoneNumbers = {
+        businessTelephone: payload.businessTelephone ?? null,
+        businessMobile: payload.businessMobile ?? null
       }
 
-      setSessionData(request.yar, 'businessDetailsUpdate', 'changeBusinessPhoneNumbers', request.payload)
+      setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessPhoneNumbers', phoneNumbers)
 
       return h.redirect('/business-phone-numbers-check')
     }

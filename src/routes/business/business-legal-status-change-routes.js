@@ -9,7 +9,9 @@ const getBusinessLegalStatusChange = {
     auth: { scope: FULL_PERMISSIONS }
   },
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
+    const { auth } = request
+
+    const businessDetails = await fetchBusinessDetailsService(auth.credentials)
     const pageData = businessLegalStatusChangePresenter(businessDetails)
 
     return h.view('business/business-legal-status-change', pageData)

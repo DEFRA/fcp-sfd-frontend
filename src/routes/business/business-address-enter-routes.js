@@ -38,7 +38,9 @@ const postBusinessAddressEnter = {
       }
     },
     handler: (request, h) => {
-      setSessionData(request.yar, 'businessDetailsUpdate', 'changeBusinessAddress', request.payload)
+      const { yar, payload } = request
+
+      setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessAddress', payload)
 
       return h.redirect('/business-address-check')
     }

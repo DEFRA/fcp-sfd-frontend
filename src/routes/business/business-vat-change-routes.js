@@ -38,7 +38,9 @@ const postBusinessVatChange = {
       }
     },
     handler: async (request, h) => {
-      setSessionData(request.yar, 'businessDetailsUpdate', 'changeBusinessVat', request.payload.vatNumber)
+      const { yar, payload } = request
+
+      setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessVat', payload.vatNumber)
 
       return h.redirect('/business-vat-registration-number-check')
     }

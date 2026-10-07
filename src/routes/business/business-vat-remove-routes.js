@@ -12,7 +12,9 @@ const getBusinessVatRemove = {
     auth: { scope: FULL_PERMISSIONS }
   },
   handler: async (request, h) => {
-    const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
+    const { auth } = request
+
+    const businessDetails = await fetchBusinessDetailsService(auth.credentials)
     const pageData = businessVatRemovePresenter(businessDetails)
 
     return h.view('business/business-vat-registration-remove', pageData)
@@ -28,16 +30,20 @@ const postBusinessVatRemove = {
       payload: schemas.business.vat.remove,
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
+        const { auth } = request
+
         const errors = utils.formatValidationErrors(err.details || [])
-        const businessDetails = await fetchBusinessDetailsService(request.auth.credentials)
+        const businessDetails = await fetchBusinessDetailsService(auth.credentials)
         const pageData = businessVatRemovePresenter(businessDetails)
 
         return h.view('business/business-vat-registration-remove', { ...pageData, errors }).code(constants.statusCodes.BAD_REQUEST).takeover()
       }
     },
     handler: async (request, h) => {
-      if (request.payload.confirmRemove === 'yes') {
-        await updateBusinessVatRemoveService(request.yar, request.auth.credentials)
+      const { yar, auth, payload } = request
+
+      if (payload.confirmRemove === 'yes') {
+        await updateBusinessVatRemoveService(yar, auth.credentials)
       }
 
       return h.redirect('/business-details')

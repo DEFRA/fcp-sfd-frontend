@@ -50,7 +50,6 @@ describe('#proxy', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
     config.set('server.httpProxy', null)
-    config.set('server.httpsProxy', null)
 
     const proxyModule = await import('../../../src/utils/proxy.js')
     provideProxy = proxyModule.provideProxy
@@ -90,7 +89,7 @@ describe('#proxy', () => {
       let result
 
       beforeEach(() => {
-        config.set('server.httpsProxy', httpsProxyUrl)
+        config.set('server.httpProxy', httpsProxyUrl)
         result = provideProxy()
       })
 

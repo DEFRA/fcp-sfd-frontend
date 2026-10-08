@@ -17,6 +17,12 @@ export const featureToggleConfig = {
       format: Boolean,
       default: false,
       env: 'CPH_ENABLED'
+    },
+    grantsApiAllowListEnabled: {
+      doc: 'Sources grant allow lists from the Grants API',
+      format: Boolean,
+      default: false,
+      env: 'GRANTS_API_ALLOW_LIST_ENABLED'
     }
   }
 }

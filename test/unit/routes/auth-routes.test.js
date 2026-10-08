@@ -7,7 +7,7 @@ import { getPermissions } from '../../../src/auth/get-permissions.js'
 import { getSignOutUrl } from '../../../src/auth/get-sign-out-url.js'
 import { validateState } from '../../../src/auth/state.js'
 import { verifyToken } from '../../../src/auth/verify-token.js'
-import { allowListService } from '../../../src/services/allow-list-service.js'
+import { checkWoodlandManagementAllowList } from '../../../src/services/grants/check-woodland-management-allow-list-service.js'
 
 // Thing under test
 import { auth } from '../../../src/routes/auth-routes.js'
@@ -29,8 +29,8 @@ vi.mock('../../../src/auth/verify-token.js', () => ({
   verifyToken: vi.fn()
 }))
 
-vi.mock('../../../src/services/allow-list-service.js', () => ({
-  allowListService: vi.fn()
+vi.mock('../../../src/services/grants/check-woodland-management-allow-list-service.js', () => ({
+  checkWoodlandManagementAllowList: vi.fn()
 }))
 
 let route
@@ -141,7 +141,7 @@ describe('auth', () => {
       const mockH = { redirect: vi.fn() }
       const mockYarSet = vi.fn()
       const mockRequest = createMockRequest({ yar: { ...createMockRequest().yar, set: mockYarSet } })
-      allowListService.mockReturnValue(true)
+      checkWoodlandManagementAllowList.mockResolvedValue(true)
 
       await route.handler(mockRequest, mockH)
 

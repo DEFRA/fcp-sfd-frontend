@@ -7,6 +7,7 @@ import { dalConfig } from './dal.js'
 import { featureToggleConfig } from './feature-toggle.js'
 import { osPlacesConfig } from './os-places.js'
 import { allowListsConfig } from './allow-lists.js'
+import { grantsApiConfig } from './grants-api.js'
 import { servicesConfig } from './services.js'
 import { cookieConfig } from './cookie.js'
 import { googleAnalyticsConfig } from './google-analytics.js'
@@ -21,6 +22,7 @@ const config = convict({
   ...osPlacesConfig,
   ...featureToggleConfig,
   ...allowListsConfig,
+  ...grantsApiConfig,
   ...servicesConfig,
   ...cookieConfig,
   ...googleAnalyticsConfig,

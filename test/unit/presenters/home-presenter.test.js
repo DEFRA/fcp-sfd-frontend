@@ -145,6 +145,22 @@ describe('homePresenter', () => {
           status: 'do-not-show'
         })
       })
+
+      describe('and the Grants API supplied a URL', () => {
+        test('it should use that URL in preference to the configured endpoint', () => {
+          const result = homePresenter(
+            data,
+            permissionGroups,
+            enrolmentCount,
+            isOnWoodlandManagementAllowList,
+            'https://grants-ui.dev.cdp-int.defra.cloud/woodland'
+          )
+
+          expect(result.woodlandManagement.link).toBe(
+            'https://grants-ui.dev.cdp-int.defra.cloud/woodland?ssoOrgId=5565448'
+          )
+        })
+      })
     })
   })
 })

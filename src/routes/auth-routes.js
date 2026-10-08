@@ -3,7 +3,7 @@ import { getPermissions } from '../auth/get-permissions.js'
 import { getSignOutUrl } from '../auth/get-sign-out-url.js'
 import { validateState } from '../auth/state.js'
 import { verifyToken } from '../auth/verify-token.js'
-import { allowListService } from '../services/allow-list-service.js'
+import { checkWoodlandManagementAllowList } from '../services/grants/check-woodland-management-allow-list-service.js'
 
 const AUTH_SIGN_IN_PATH = '/auth/sign-in'
 
@@ -47,7 +47,10 @@ const signInOidc = {
       throw Boom.forbidden('Failed to retrieve permissions')
     }
 
-    const isOnWoodlandManagementAllowList = allowListService(sbi, crn, 'woodlandManagement')
+    const {
+      isAllowed: isOnWoodlandManagementAllowList,
+      url: woodlandManagementUrl
+    } = await checkWoodlandManagementAllowList(sbi, crn)
 
     // Store token and all useful data in the session cache
     await request.server.app.cache.set(sessionId, {
@@ -62,6 +65,7 @@ const signInOidc = {
 
     // Store lightweight flags like allow list in Yar for easy access
     request.yar.set('isOnWoodlandManagementAllowList', isOnWoodlandManagementAllowList)
+    request.yar.set('woodlandManagementUrl', woodlandManagementUrl)
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
     request.cookieAuth.set({ sessionId })

@@ -1,0 +1,21 @@
+# Points the frontend at a locally running grants-ui-backend so the Woodland
+# Management allow list is sourced from the Grants API instead of the
+# WOODLAND_MANAGEMENT_ALLOWED_* environment variables.
+#
+# grants-ui-backend lives in its own compose project on an isolated network, so
+# we reach it over the host via its published port rather than by service name.
+# Run it first with `docker compose up` in the grants-ui-backend repo, then seed
+# the allow list with ./scripts/seed-grants-allowlist.sh
+#
+# The secrets below are the local-only defaults hardcoded in grants-ui-backend's
+# own compose.yml. Real environments will use CDP managed secrets.
+services:
+  fcp-sfd-frontend:
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    environment:
+      GRANTS_API_ALLOW_LIST_ENABLED: true
+      GRANTS_API_BASE_URL: http://host.docker.internal:3001
+      GRANTS_API_AUTH_TOKEN: auth-token
+      GRANTS_API_ENCRYPTION_KEY: encryption-key
+      GRANTS_API_USER_CONTEXT_SECRET: allowlist-jwt-secret

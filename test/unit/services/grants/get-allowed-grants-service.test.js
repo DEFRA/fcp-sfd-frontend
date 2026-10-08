@@ -59,10 +59,13 @@ describe('getAllowedGrantsService', () => {
       })
     })
 
-    test('it returns the grant codes', async () => {
+    test('it returns the grants', async () => {
       const result = await getAllowedGrants(sbi, crn)
 
-      expect(result).toEqual(['woodland', 'grasslands'])
+      expect(result).toEqual([
+        { code: 'woodland', title: 'Woodland Management Plan' },
+        { code: 'grasslands', title: 'Grasslands' }
+      ])
     })
 
     test('it calls the allow list endpoint with both authentication headers', async () => {

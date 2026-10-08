@@ -9,6 +9,10 @@
 #
 # The secrets below are the local-only defaults hardcoded in grants-ui-backend's
 # own compose.yml. Real environments will use CDP managed secrets.
+#
+# The Woodland card links to the URL the Grants API returns, which it builds from
+# its own GRANTS_UI_BASE_URL. That defaults to http://localhost:3000, which is this
+# service's port, so set it to a real grants-ui host when running the backend locally.
 services:
   fcp-sfd-frontend:
     extra_hosts:

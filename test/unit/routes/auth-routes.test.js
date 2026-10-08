@@ -42,6 +42,7 @@ describe('auth', () => {
 
     verifyToken.mockResolvedValue()
     getPermissions.mockResolvedValue({ privileges: ['user'], businessName: 'Test Business' })
+    checkWoodlandManagementAllowList.mockResolvedValue({ isAllowed: false, url: null })
   })
 
   test('should return an array of routes', () => {
@@ -141,11 +142,15 @@ describe('auth', () => {
       const mockH = { redirect: vi.fn() }
       const mockYarSet = vi.fn()
       const mockRequest = createMockRequest({ yar: { ...createMockRequest().yar, set: mockYarSet } })
-      checkWoodlandManagementAllowList.mockResolvedValue(true)
+      checkWoodlandManagementAllowList.mockResolvedValue({
+        isAllowed: true,
+        url: 'https://grants-ui.test.cdp-int.defra.cloud/woodland'
+      })
 
       await route.handler(mockRequest, mockH)
 
       expect(mockYarSet).toHaveBeenCalledWith('isOnWoodlandManagementAllowList', true)
+      expect(mockYarSet).toHaveBeenCalledWith('woodlandManagementUrl', 'https://grants-ui.test.cdp-int.defra.cloud/woodland')
     })
 
     test('handler should set session cache with correct data', async () => {

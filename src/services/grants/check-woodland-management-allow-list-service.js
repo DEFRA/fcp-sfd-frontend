@@ -9,6 +9,10 @@
  * about it, and so the environment variable path can be deleted cleanly once the
  * Grants API integration is proven.
  *
+ * The Grants API also returns the URL for the grant, built from the base URL
+ * configured in whichever environment answered. Preferring that over our own
+ * `WMP_ENDPOINT` keeps the link pointing at the matching environment.
+ *
  * @module checkWoodlandManagementAllowListService
  */
 
@@ -22,16 +26,23 @@ import { getAllowedGrants } from './get-allowed-grants-service.js'
  *
  * @param {string|number} sbi - Single Business Identifier of the selected business
  * @param {string|number} crn - Customer Reference Number of the signed in user
- * @returns {Promise<boolean>} True when the user is on the allow list
+ * @returns {Promise<{ isAllowed: boolean, url: string|null }>} Whether the user is on the allow list, and the URL the Grants API supplied for the grant
  */
 const checkWoodlandManagementAllowList = async (sbi, crn) => {
   if (!config.get('featureToggle.grantsApiAllowListEnabled')) {
-    return allowListService(sbi, crn, 'woodlandManagement')
+    return {
+      isAllowed: allowListService(sbi, crn, 'woodlandManagement'),
+      url: null
+    }
   }
 
-  const allowedGrantCodes = await getAllowedGrants(sbi, crn)
+  const allowedGrants = await getAllowedGrants(sbi, crn)
+  const woodlandManagement = allowedGrants.find((grant) => grant.code === WOODLAND_MANAGEMENT_GRANT_CODE)
 
-  return allowedGrantCodes.includes(WOODLAND_MANAGEMENT_GRANT_CODE)
+  return {
+    isAllowed: Boolean(woodlandManagement),
+    url: woodlandManagement?.url ?? null
+  }
 }
 
 export {

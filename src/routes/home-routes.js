@@ -19,8 +19,9 @@ const home = {
     const { auth, yar } = request
 
     const isOnWoodlandManagementAllowList = yar.get('isOnWoodlandManagementAllowList')
+    const woodlandManagementUrl = yar.get('woodlandManagementUrl')
     const data = await fetchPersonalBusinessDetailsService(auth.credentials)
-    const pageData = homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount, isOnWoodlandManagementAllowList)
+    const pageData = homePresenter(data, auth.credentials.scope, auth.credentials.enrolmentCount, isOnWoodlandManagementAllowList, woodlandManagementUrl)
 
     return h.view('home', pageData)
   }

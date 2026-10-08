@@ -9,7 +9,8 @@
  * The service:
  * - Builds the two authentication headers the Grants API requires
  * - Calls `GET /allowlist/grants` with a short timeout
- * - Reduces the response to the list of grant codes the caller is allowed
+ * - Returns the allowed grants, including the environment specific URL the
+ *   Grants service builds for each one
  * - Degrades gracefully, returning an empty list on any failure
  *
  * Degrading gracefully matters because this runs during sign in. The allow list
@@ -33,11 +34,11 @@ const logger = createLogger()
 const ALLOW_LIST_PATH = '/allowlist/grants'
 
 /**
- * Fetches the grant codes the given user is allowed to access.
+ * Fetches the grants the given user is allowed to access.
  *
  * @param {string|number} sbi - Single Business Identifier of the selected business
  * @param {string|number} crn - Customer Reference Number of the signed in user
- * @returns {Promise<string[]>} Allowed grant codes, or an empty array if the call fails
+ * @returns {Promise<Array<{ code: string, title?: string, description?: string, url?: string }>>} Allowed grants, or an empty array if the call fails
  */
 const getAllowedGrants = async (sbi, crn) => {
   const { baseUrl, timeout } = config.get('grantsApiConfig')
@@ -64,7 +65,7 @@ const getAllowedGrants = async (sbi, crn) => {
 
     const { grants } = await response.json()
 
-    return (grants ?? []).map((grant) => grant.code)
+    return grants ?? []
   } catch (error) {
     // Covers network failures and the AbortSignal timeout above
     logger.error(error, 'Error connecting to the Grants API allow list endpoint')

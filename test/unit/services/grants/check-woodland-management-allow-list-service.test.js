@@ -43,7 +43,7 @@ describe('checkWoodlandManagementAllowListService', () => {
 
       expect(allowListService).toHaveBeenCalledWith(sbi, crn, 'woodlandManagement')
       expect(getAllowedGrants).not.toHaveBeenCalled()
-      expect(result).toBe(true)
+      expect(result).toEqual({ isAllowed: true, url: null })
     })
   })
 
@@ -52,30 +52,43 @@ describe('checkWoodlandManagementAllowListService', () => {
       config.get.mockReturnValue(true)
     })
 
-    test('it returns true when the Grants API returns the woodland grant', async () => {
-      getAllowedGrants.mockResolvedValue(['woodland'])
+    test('it returns the grant URL when the Grants API returns the woodland grant', async () => {
+      getAllowedGrants.mockResolvedValue([
+        { code: 'woodland', url: 'https://grants-ui.test.cdp-int.defra.cloud/woodland' }
+      ])
 
       const result = await checkWoodlandManagementAllowList(sbi, crn)
 
       expect(getAllowedGrants).toHaveBeenCalledWith(sbi, crn)
       expect(allowListService).not.toHaveBeenCalled()
-      expect(result).toBe(true)
+      expect(result).toEqual({
+        isAllowed: true,
+        url: 'https://grants-ui.test.cdp-int.defra.cloud/woodland'
+      })
     })
 
-    test('it returns false when the Grants API returns other grants only', async () => {
-      getAllowedGrants.mockResolvedValue(['grasslands'])
+    test('it returns a null URL when the Grants API omits one', async () => {
+      getAllowedGrants.mockResolvedValue([{ code: 'woodland' }])
 
       const result = await checkWoodlandManagementAllowList(sbi, crn)
 
-      expect(result).toBe(false)
+      expect(result).toEqual({ isAllowed: true, url: null })
     })
 
-    test('it returns false when the Grants API returns no grants', async () => {
+    test('it is not allowed when the Grants API returns other grants only', async () => {
+      getAllowedGrants.mockResolvedValue([{ code: 'grasslands', url: 'https://grants.test/grasslands' }])
+
+      const result = await checkWoodlandManagementAllowList(sbi, crn)
+
+      expect(result).toEqual({ isAllowed: false, url: null })
+    })
+
+    test('it is not allowed when the Grants API returns no grants', async () => {
       getAllowedGrants.mockResolvedValue([])
 
       const result = await checkWoodlandManagementAllowList(sbi, crn)
 
-      expect(result).toBe(false)
+      expect(result).toEqual({ isAllowed: false, url: null })
     })
   })
 })

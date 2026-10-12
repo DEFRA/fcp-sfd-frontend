@@ -47,7 +47,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     sbi: data.sbi,
     vatNumber: buildVatDisplay(data.vat, changeLinks.vat),
     tradeNumber: data.traderNumber ?? null,
-    vendorRegistrationNumber: data.vendorNumber ?? null,
+    vendorNumber: data.vendorNumber ?? null,
     countyParishHoldingNumbers,
     countyParishHoldingNumbersText: presenters.formatCphText(countyParishHoldingNumbers.length),
     businessLegalStatus: {

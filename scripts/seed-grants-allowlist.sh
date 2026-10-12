@@ -16,13 +16,21 @@
 # Usage:
 #   ./scripts/seed-grants-allowlist.sh [CRN] [SBI]
 #
+# With no args, seeds all of USERS below. Passing CRN/SBI seeds just that one pair.
+#
 # Defaults match the first user in defra-id.data.json, i.e. the user you get by
 # signing in through the Defra ID stub without changing anything.
 
 set -euo pipefail
 
-CRN="${1:-3000000000}"
-SBI="${2:-300145801}"
+if [[ $# -ge 1 ]]; then
+  USERS=("${1:-3000000000}:${2:-300145801}")
+else
+  USERS=(
+    '3000000000:300145801'
+    '1102838829:106284736'
+  )
+fi
 
 GRANT_CODE='woodland'
 GRANT_TITLE='Woodland Management Plan'
@@ -43,12 +51,18 @@ if [[ -z "${MONGO_CONTAINER}" ]]; then
   exit 1
 fi
 
-echo "Seeding '${GRANT_CODE}' allow list for CRN ${CRN} / SBI ${SBI}..."
+echo "Seeding '${GRANT_CODE}' allow list for: ${USERS[*]}..."
+
+# Built as a JS array literal of {crn, sbi} so mongosh can insert one crn + sbi entry per user.
+USERS_JSON='['
+for user in "${USERS[@]}"; do
+  USERS_JSON+="{crn:'${user%%:*}',sbi:'${user##*:}'},"
+done
+USERS_JSON+=']'
 
 docker exec -i "${MONGO_CONTAINER}" mongosh --quiet "${MONGO_DATABASE}" --eval "
   const grantCode = '${GRANT_CODE}'
-  const crn = '${CRN}'
-  const sbi = '${SBI}'
+  const users = ${USERS_JSON}
   const updatedAt = new Date()
 
   // Upserted on the same (grantCode, major, minor, patch) key the real ingest uses,
@@ -71,10 +85,12 @@ docker exec -i "${MONGO_CONTAINER}" mongosh --quiet "${MONGO_DATABASE}" --eval "
   // The real ingest replaces every entry for a grant atomically, so mirror that
   // here to keep this script idempotent.
   db.config__allowlist_entries.deleteMany({ grantCode })
-  db.config__allowlist_entries.insertMany([
-    { grantCode, type: 'crn', value: crn, updatedAt },
-    { grantCode, type: 'sbi', value: sbi, updatedAt }
-  ])
+  db.config__allowlist_entries.insertMany(
+    users.flatMap(({ crn, sbi }) => [
+      { grantCode, type: 'crn', value: crn, updatedAt },
+      { grantCode, type: 'sbi', value: sbi, updatedAt }
+    ])
+  )
 
   print('Seeded ' + db.config__allowlist_entries.countDocuments({ grantCode }) + ' allow list entries')
 "

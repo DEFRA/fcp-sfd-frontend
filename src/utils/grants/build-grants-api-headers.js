@@ -19,9 +19,8 @@ import Jwt from '@hapi/jwt'
 
 import { config } from '../../config/index.js'
 
-// The Grants API derives its AES key with scrypt using a fixed salt of the
-// literal string 'salt'. Not our choice, but it must match exactly or the
-// API cannot decrypt the token.
+// The Grants API derives its AES key with scrypt using a fixed salt of the literal string 'salt'.
+// It must match exactly or the API cannot decrypt the token.
 const SCRYPT_SALT = 'salt'
 const AES_KEY_LENGTH_BYTES = 32
 const AES_IV_LENGTH_BYTES = 12

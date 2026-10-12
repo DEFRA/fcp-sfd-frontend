@@ -6,17 +6,12 @@ import { getAllowedGrants } from '../../../../src/services/grants/get-allowed-gr
 
 // Mock dependencies
 import { config } from '../../../../src/config/index.js'
-import { proxyFetch } from '../../../../src/utils/proxy.js'
 
 // Mock imports
 vi.mock('../../../../src/config/index.js', () => ({
   config: {
     get: vi.fn()
   }
-}))
-
-vi.mock('../../../../src/utils/proxy.js', () => ({
-  proxyFetch: vi.fn()
 }))
 
 // The logger reads config at module load, which the mocked config above cannot satisfy
@@ -39,6 +34,7 @@ describe('getAllowedGrantsService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    global.fetch = vi.fn()
 
     config.get.mockReturnValue({
       baseUrl: 'http://grants-api.test',
@@ -48,7 +44,7 @@ describe('getAllowedGrantsService', () => {
 
   describe('when the Grants API returns grants', () => {
     beforeEach(() => {
-      proxyFetch.mockResolvedValue({
+      global.fetch.mockResolvedValue({
         ok: true,
         json: async () => ({
           grants: [
@@ -71,7 +67,7 @@ describe('getAllowedGrantsService', () => {
     test('it calls the allow list endpoint with both authentication headers', async () => {
       await getAllowedGrants(sbi, crn)
 
-      expect(proxyFetch).toHaveBeenCalledWith(
+      expect(global.fetch).toHaveBeenCalledWith(
         'http://grants-api.test/allowlist/grants',
         expect.objectContaining({
           method: 'GET',
@@ -86,7 +82,7 @@ describe('getAllowedGrantsService', () => {
 
   describe('when the user is allowed no grants', () => {
     beforeEach(() => {
-      proxyFetch.mockResolvedValue({
+      global.fetch.mockResolvedValue({
         ok: true,
         json: async () => ({ grants: [] })
       })
@@ -101,7 +97,7 @@ describe('getAllowedGrantsService', () => {
 
   describe.each([401, 500])('when the Grants API responds with a %i', (status) => {
     beforeEach(() => {
-      proxyFetch.mockResolvedValue({
+      global.fetch.mockResolvedValue({
         ok: false,
         status
       })
@@ -116,7 +112,7 @@ describe('getAllowedGrantsService', () => {
 
   describe('when the Grants API cannot be reached', () => {
     beforeEach(() => {
-      proxyFetch.mockRejectedValue(new Error('fetch failed'))
+      global.fetch.mockRejectedValue(new Error('fetch failed'))
     })
 
     test('it returns an empty array rather than throwing', async () => {

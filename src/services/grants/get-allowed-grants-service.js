@@ -14,9 +14,9 @@
  * - Degrades gracefully, returning an empty list on any failure
  *
  * Degrading gracefully matters because this runs during sign in. The allow list
- * only controls optional promotional cards, so a Grants outage must never block
- * a user from signing in. The trade-off is that a failure is indistinguishable
- * from "no grants" to the caller, which is why failures are logged here.
+ * only controls which grant cards are shown on the homepage, so a Grants outage
+ * must never block a user from signing in. The trade-off is that a failure is
+ * indistinguishable from "no grants" to the caller, which is why failures are logged here.
  *
  * @module getAllowedGrantsService
  */
@@ -27,7 +27,6 @@ import {
   buildAuthorizationHeader,
   buildUserContextHeader
 } from '../../utils/grants/build-grants-api-headers.js'
-import { proxyFetch } from '../../utils/proxy.js'
 
 const logger = createLogger()
 
@@ -44,7 +43,7 @@ const getAllowedGrants = async (sbi, crn) => {
   const { baseUrl, timeout } = config.get('grantsApiConfig')
 
   try {
-    const response = await proxyFetch(`${baseUrl}${ALLOW_LIST_PATH}`, {
+    const response = await fetch(`${baseUrl}${ALLOW_LIST_PATH}`, {
       method: 'GET',
       headers: {
         Authorization: buildAuthorizationHeader(),

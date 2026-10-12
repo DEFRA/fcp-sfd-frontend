@@ -78,7 +78,9 @@ describe('Home endpoint', () => {
             }
           },
           yar: {
-            get: vi.fn().mockReturnValue(true)
+            get: vi.fn((key) => {
+              return key === 'woodlandManagementUrl' ? 'https://grants-ui.test.cdp-int.defra.cloud/woodland' : true
+            })
           }
         }
 
@@ -96,7 +98,7 @@ describe('Home endpoint', () => {
         await home.handler(request, h)
 
         expect(fetchPersonalBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope, request.auth.credentials.enrolmentCount, true)
+        expect(homePresenter).toHaveBeenCalledWith(getMockData(), request.auth.credentials.scope, request.auth.credentials.enrolmentCount, true, 'https://grants-ui.test.cdp-int.defra.cloud/woodland')
         expect(h.view).toHaveBeenCalledWith('home', pageData)
       })
     })

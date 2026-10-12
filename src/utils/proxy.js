@@ -8,7 +8,7 @@ import { createLogger } from './logger.js'
 const logger = createLogger()
 
 const provideProxy = () => {
-  const proxyUrl = config.get('server.httpsProxy') ?? config.get('server.httpProxy')
+  const proxyUrl = config.get('server.httpProxy')
 
   if (!proxyUrl) {
     return null

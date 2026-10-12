@@ -6,7 +6,7 @@
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
 import { config } from '../config/index.js'
 
-const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList) => {
+const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList, woodlandManagementUrl) => {
   const presentedData = {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
@@ -30,7 +30,9 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
   }
 
   if (isOnWoodlandManagementAllowList) {
-    const woodlandManagementLink = config.get('servicesConfig.WMPEndpoint')
+    // Prefer the URL the Grants API supplied so the link matches the environment
+    // that answered; WMP_ENDPOINT is the fallback for the allow list env var path
+    const woodlandManagementLink = woodlandManagementUrl ?? config.get('servicesConfig.WMPEndpoint')
 
     presentedData.woodlandManagement = {
       link: `${woodlandManagementLink}?ssoOrgId=${data.business.organisationId}`,

@@ -166,7 +166,7 @@ const reselectBusiness = {
   }
 }
 
-export const auth = [
+export const authRoutes = [
   signIn,
   signInOidc,
   signOut,

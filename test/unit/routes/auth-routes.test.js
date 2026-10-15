@@ -10,7 +10,7 @@ import { verifyToken } from '../../../src/auth/verify-token.js'
 import { allowListService } from '../../../src/services/allow-list-service.js'
 
 // Thing under test
-import { auth } from '../../../src/routes/auth-routes.js'
+import { authRoutes } from '../../../src/routes/auth-routes.js'
 
 // Mocks
 vi.mock('../../../src/auth/get-permissions.js', () => ({
@@ -45,7 +45,7 @@ describe('auth', () => {
   })
 
   test('should return an array of routes', () => {
-    expect(auth).toBeInstanceOf(Array)
+    expect(authRoutes).toBeInstanceOf(Array)
   })
 
   describe('GET /auth/sign-in', () => {
@@ -446,5 +446,5 @@ function createMockRequest (overrides = {}) {
 }
 
 function getRoute (method, path) {
-  return auth.find(r => r.method === method && r.path === path)
+  return authRoutes.find(r => r.method === method && r.path === path)
 }

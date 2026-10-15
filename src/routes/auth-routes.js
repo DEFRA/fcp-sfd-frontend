@@ -25,14 +25,16 @@ const signInOidc = {
     auth: { strategy: 'defra-id', mode: 'try' }
   },
   handler: async function (request, h) {
+    const { auth, logger, server, yar, cookieAuth, metrics } = request
+
     // If the user is not authenticated, redirect to the unauthorised page
     // This should only occur if the user tries to access the sign-in page directly and not part of the sign-in flow
     // eg if the user has bookmarked the Defra Identity sign-in page or they have signed out and tried to go back in the browser
-    if (!request.auth.isAuthenticated) {
-      request.logger.warn(request.auth.error, 'Defra Identity authentication failed')
+    if (!auth.isAuthenticated) {
+      logger.warn(auth.error, 'Defra Identity authentication failed')
       return h.view('unauthorised')
     }
-    const { profile, token, refreshToken } = request.auth.credentials
+    const { profile, token, refreshToken } = auth.credentials
     // verify token returned from Defra Identity against public key
     await verifyToken(token)
 
@@ -50,7 +52,7 @@ const signInOidc = {
     const isOnWoodlandManagementAllowList = allowListService(sbi, crn, 'woodlandManagement')
 
     // Store token and all useful data in the session cache
-    await request.server.app.cache.set(sessionId, {
+    await server.app.cache.set(sessionId, {
       isAuthenticated: true,
       ...profile,
       sessionId,
@@ -61,13 +63,13 @@ const signInOidc = {
     })
 
     // Store lightweight flags like allow list in Yar for easy access
-    request.yar.set('isOnWoodlandManagementAllowList', isOnWoodlandManagementAllowList)
+    yar.set('isOnWoodlandManagementAllowList', isOnWoodlandManagementAllowList)
 
     // Create a new session using cookie authentication strategy which is used for all subsequent requests
-    request.cookieAuth.set({ sessionId })
+    cookieAuth.set({ sessionId })
 
-    request.logger.info('Defra Identity sign in successful')
-    request.metrics.counter('authSignInSuccess', 1)
+    logger.info('Defra Identity sign in successful')
+    metrics.counter('authSignInSuccess', 1)
 
     // Redirect to the home route
     return h.redirect('/home')
@@ -81,23 +83,25 @@ const signOut = {
     auth: { mode: 'try' }
   },
   handler: async function (request, h) {
-    await request.yar.reset()
+    const { auth, server, yar, cookieAuth } = request
+
+    await yar.reset()
 
     // If not authenticated redirect to home page
-    if (!request.auth.isAuthenticated) {
+    if (!auth.isAuthenticated) {
       return h.redirect('/')
     }
 
     // Clear the session cache before redirecting to Defra ID to clear SSO session
     // This ensures that the user is signed out of this service even if there is a failure with ending the SSO session
-    if (request.auth.credentials?.sessionId) {
-      await request.server.app.cache.drop(request.auth.credentials.sessionId)
+    if (auth.credentials?.sessionId) {
+      await server.app.cache.drop(auth.credentials.sessionId)
     }
 
     // Clear local session cookie
-    request.cookieAuth.clear()
+    cookieAuth.clear()
 
-    const signOutUrl = await getSignOutUrl(request, request.auth.credentials.token)
+    const signOutUrl = await getSignOutUrl(request, auth.credentials.token)
     return h.redirect(signOutUrl)
   }
 }
@@ -109,18 +113,20 @@ const signOutOidc = {
     auth: { mode: 'try' }
   },
   handler: async function (request, h) {
-    if (request.auth.isAuthenticated) {
+    const { auth, query, server, cookieAuth } = request
+
+    if (auth.isAuthenticated) {
       // Only reached if the session cookie survived /auth/sign-out; verify state before clearing it
-      validateState(request, request.query.state)
+      validateState(request, query.state)
 
       // Clear session as a fail safe as should already be cleared in /auth/sign-out
-      if (request.auth.credentials?.sessionId) {
+      if (auth.credentials?.sessionId) {
         // Clear the session cache
-        await request.server.app.cache.drop(request.auth.credentials.sessionId)
+        await server.app.cache.drop(auth.credentials.sessionId)
       }
 
       // Clear local session cookie as fail safe as should already be cleared in /auth/sign-out
-      request.cookieAuth.clear()
+      cookieAuth.clear()
     }
 
     return h.redirect('/signed-out')
@@ -148,7 +154,9 @@ const reselectBusiness = {
     auth: 'defra-id'
   },
   handler: async function (request, h) {
-    if (!request.auth.isAuthenticated) {
+    const { auth } = request
+
+    if (!auth.isAuthenticated) {
       return h.redirect(AUTH_SIGN_IN_PATH)
     }
 
@@ -158,7 +166,7 @@ const reselectBusiness = {
   }
 }
 
-export const auth = [
+export const authRoutes = [
   signIn,
   signInOidc,
   signOut,

@@ -5,7 +5,12 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { homePresenter } from '../../../src/presenters/home-presenter.js'
 
 // Test helpers
-import { VIEW_LEVEL_PERMISSION, AMEND_LEVEL_PERMISSION } from '../../../src/constants/scope/business-details.js'
+import {
+  VIEW_LEVEL_PERMISSION,
+  AMEND_LEVEL_PERMISSION,
+  MAKE_LEGAL_CHANGES_PERMISSION,
+  FULL_PERMISSION
+} from '../../../src/constants/scope/business-details.js'
 
 describe('homePresenter', () => {
   let data
@@ -46,7 +51,8 @@ describe('homePresenter', () => {
           text: 'View and update your personal details'
         },
         sbi: '123456789',
-        isOnWoodlandManagementAllowList: false
+        isOnWoodlandManagementAllowList: false,
+        grants: []
       })
     })
   })
@@ -143,6 +149,121 @@ describe('homePresenter', () => {
           link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
           title: 'Woodland Management Plan',
           status: 'do-not-show'
+        })
+      })
+    })
+  })
+
+  describe('the "grants" property', () => {
+    describe('when the user is not on the woodland management allow list', () => {
+      beforeEach(() => {
+        isOnWoodlandManagementAllowList = false
+      })
+
+      describe('and the user has make legal changes permission', () => {
+        beforeEach(() => {
+          permissionGroups = [MAKE_LEGAL_CHANGES_PERMISSION]
+        })
+
+        test('it should include the water management grant', () => {
+          const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+          expect(result.grants).toEqual([
+            {
+              link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
+              title: 'Water Management',
+              status: 'do-not-show'
+            }
+          ])
+        })
+      })
+
+      describe('and the user has full permission', () => {
+        beforeEach(() => {
+          permissionGroups = [FULL_PERMISSION]
+        })
+
+        test('it should include the water management grant', () => {
+          const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+          expect(result.grants).toEqual([
+            {
+              link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
+              title: 'Water Management',
+              status: 'do-not-show'
+            }
+          ])
+        })
+      })
+
+      describe('and the user only has view permission', () => {
+        beforeEach(() => {
+          permissionGroups = [VIEW_LEVEL_PERMISSION]
+        })
+
+        test('it should not include the water management grant', () => {
+          const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+          expect(result.grants).toEqual([])
+        })
+      })
+
+      describe('and the user only has amend permission', () => {
+        beforeEach(() => {
+          permissionGroups = [AMEND_LEVEL_PERMISSION]
+        })
+
+        test('it should not include the water management grant', () => {
+          const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+          expect(result.grants).toEqual([])
+        })
+      })
+    })
+
+    describe('when the user is on the woodland management allow list', () => {
+      beforeEach(() => {
+        isOnWoodlandManagementAllowList = true
+      })
+
+      describe('and the user only has view permission', () => {
+        beforeEach(() => {
+          permissionGroups = [VIEW_LEVEL_PERMISSION]
+        })
+
+        test('it should only include woodland management', () => {
+          const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+          expect(result.grants).toEqual([
+            {
+              link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
+              title: 'Woodland Management Plan',
+              status: 'do-not-show'
+            }
+          ])
+        })
+      })
+
+      describe('and the user has full permission', () => {
+        beforeEach(() => {
+          permissionGroups = [FULL_PERMISSION]
+        })
+
+        test('it should list both grants alphabetically by title', () => {
+          const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+          expect(result.grants).toEqual([
+            {
+              link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
+              title: 'Water Management',
+              status: 'do-not-show'
+            },
+            {
+              link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
+              title: 'Woodland Management Plan',
+              status: 'do-not-show'
+            }
+          ])
         })
       })
     })

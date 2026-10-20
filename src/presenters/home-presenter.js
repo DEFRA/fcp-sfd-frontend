@@ -3,7 +3,7 @@
  * @module homePresenter
  */
 
-import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
+import { VIEW_LEVEL_PERMISSION, LEGAL_PERMISSIONS } from '../constants/scope/business-details.js'
 import { config } from '../config/index.js'
 
 const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList) => {
@@ -39,6 +39,24 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
       status: 'do-not-show'
     }
   }
+
+  const grants = []
+
+  if (presentedData.woodlandManagement) {
+    grants.push(presentedData.woodlandManagement)
+  }
+
+  if (permissionGroups.some(permission => LEGAL_PERMISSIONS.includes(permission))) {
+    const waterManagementLink = config.get('servicesConfig.WaterManagementEndpoint')
+
+    grants.push({
+      link: `${waterManagementLink}?ssoOrgId=${data.business.organisationId}`,
+      title: 'Water Management',
+      status: 'do-not-show'
+    })
+  }
+
+  presentedData.grants = grants.sort((a, b) => a.title.localeCompare(b.title))
 
   return presentedData
 }

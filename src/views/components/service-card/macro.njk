@@ -4,9 +4,11 @@
   {% from "components/service-card/macro.njk" import serviceCard %}
 
   {{ serviceCard({
-    title: "Farm Payments Technical Test",
-    status: 'not-started',
-    link: "fp-check-your-details"
+    cards: [{
+      title: "Farm Payments Technical Test",
+      status: 'not-started',
+      link: "fp-check-your-details"
+    }]
   }) }}
 #}
 
@@ -15,17 +17,18 @@
 <div class="service-card custom-cards-margin">
   <div class="govuk-grid-column-two-thirds">
     <ul class="service-card__list service-card__list-cards">
+      {% for card in params.cards %}
       <li class="service-card__list-item-variant">
         <div class="service-card__list-item-wrapper-variant">
           <h3 class="govuk-heading-s">
-            {{ params.title }}
+            {{ card.title }}
           </h3>
 
           {# Only show status if not 'do-not-show' #}
-          {% if params.status != 'do-not-show' %}
+          {% if card.status != 'do-not-show' %}
             <p class="govuk-body">
-              <strong class="govuk-tag{% if params.status == 'not-started' %} govuk-tag--grey{% endif %}">
-                {% if params.status == 'not-started' %}
+              <strong class="govuk-tag{% if card.status == 'not-started' %} govuk-tag--grey{% endif %}">
+                {% if card.status == 'not-started' %}
                   Not started
                 {% else %}
                   In progress
@@ -33,20 +36,21 @@
               </strong>
             </p>
 
-            <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
-              {% if params.status == 'not-started' %}
+            <a href="{{ card.link }}" class="govuk-link govuk-link--no-visited-state service-card__link">
+              {% if card.status == 'not-started' %}
                 Start application
               {% else %}
                 Continue application
               {% endif %}
             </a>
           {% else %}
-            <a href="{{ params.link }}" class="govuk-link govuk-link--no-visited-state">
+            <a href="{{ card.link }}" class="govuk-link govuk-link--no-visited-state service-card__link">
               Go to application
             </a>
           {% endif %}
         </div>
       </li>
+      {% endfor %}
     </ul>
   </div>
 </div>

@@ -7,19 +7,21 @@ import { VIEW_LEVEL_PERMISSION, LEGAL_PERMISSIONS } from '../constants/scope/bus
 import { config } from '../config/index.js'
 
 const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList) => {
+  const { name, sbi, organisationId } = data.business
+
   const presentedData = {
     pageTitle: 'Your business',
     metaDescription: 'Home page for your business\'s schemes and details.',
     userName: data.userName,
     signOutLink: '/auth/sign-out',
-    businessName: data.business.name,
+    businessName: name,
     businessDetails: setBusinessDetails(permissionGroups),
     personalDetails: {
       link: '/personal-details',
       text: 'View and update your personal details'
     },
-    sbi: data.business.sbi,
-    isOnWoodlandManagementAllowList
+    sbi,
+    grants: setGrants(organisationId, permissionGroups, isOnWoodlandManagementAllowList)
   }
 
   if (enrolmentCount && enrolmentCount > 1) {
@@ -29,36 +31,37 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
     }
   }
 
+  return presentedData
+}
+
+const byTitle = (grantA, grantB) => grantA.title.localeCompare(grantB.title)
+
+const setGrants = (organisationId, permissionGroups, isOnWoodlandManagementAllowList) => {
+  const canMakeLegalChanges = LEGAL_PERMISSIONS.some(permission => permissionGroups.includes(permission))
+  const grants = []
+
   if (isOnWoodlandManagementAllowList) {
     const woodlandManagementLink = config.get('servicesConfig.WMPEndpoint')
 
-    presentedData.woodlandManagement = {
-      link: `${woodlandManagementLink}?ssoOrgId=${data.business.organisationId}`,
+    grants.push({
+      link: `${woodlandManagementLink}?ssoOrgId=${organisationId}`,
       title: 'Woodland Management Plan',
       // Status hidden for now; endpoint from grants not available yet. Will update in a future ticket.
       status: 'do-not-show'
-    }
+    })
   }
 
-  const grants = []
-
-  if (presentedData.woodlandManagement) {
-    grants.push(presentedData.woodlandManagement)
-  }
-
-  if (permissionGroups.some(permission => LEGAL_PERMISSIONS.includes(permission))) {
+  if (canMakeLegalChanges) {
     const waterManagementLink = config.get('servicesConfig.WaterManagementEndpoint')
 
     grants.push({
-      link: `${waterManagementLink}?ssoOrgId=${data.business.organisationId}`,
+      link: `${waterManagementLink}?ssoOrgId=${organisationId}`,
       title: 'Water Management',
       status: 'do-not-show'
     })
   }
 
-  presentedData.grants = grants.toSorted((a, b) => a.title.localeCompare(b.title))
-
-  return presentedData
+  return grants.toSorted(byTitle)
 }
 
 const setBusinessDetails = (permissionGroups) => {

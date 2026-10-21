@@ -51,7 +51,6 @@ describe('homePresenter', () => {
           text: 'View and update your personal details'
         },
         sbi: '123456789',
-        isOnWoodlandManagementAllowList: false,
         grants: []
       })
     })
@@ -126,30 +125,6 @@ describe('homePresenter', () => {
         const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
         expect(result.backLink).toBeUndefined()
-      })
-    })
-  })
-
-  describe('the "isOnWoodlandManagementAllowList" property', () => {
-    describe('when the user is on the allow list', () => {
-      beforeEach(() => {
-        isOnWoodlandManagementAllowList = true
-      })
-
-      test('it should return true', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
-
-        expect(result.isOnWoodlandManagementAllowList).toBe(true)
-      })
-
-      test('it should return woodland management data', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
-
-        expect(result.woodlandManagement).toEqual({
-          link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
-          title: 'Woodland Management Plan',
-          status: 'do-not-show'
-        })
       })
     })
   })

@@ -56,7 +56,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
     })
   }
 
-  presentedData.grants = grants.sort((a, b) => a.title.localeCompare(b.title))
+  presentedData.grants = grants.toSorted((a, b) => a.title.localeCompare(b.title))
 
   return presentedData
 }

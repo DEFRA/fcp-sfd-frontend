@@ -93,7 +93,7 @@ const formatAddress = (businessAddress) => {
  */
 const buildVatDisplay = (vatNumber, vatChangeState) => {
   const hasVat = Boolean(vatNumber)
-  const value = vatNumber || 'No number added'
+  const value = vatNumber || 'Not added'
   const linkStyling = 'govuk-link--no-visited-state'
 
   // If no vatChangeState it means the user does not have permission to change VAT details

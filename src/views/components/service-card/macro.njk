@@ -42,10 +42,11 @@
               {% else %}
                 Continue application
               {% endif %}
+              <span class="govuk-visually-hidden"> for {{ card.title }}</span>
             </a>
           {% else %}
             <a href="{{ card.link }}" class="govuk-link govuk-link--no-visited-state service-card__link">
-              Go to application
+              Go to application<span class="govuk-visually-hidden"> for {{ card.title }}</span>
             </a>
           {% endif %}
         </div>

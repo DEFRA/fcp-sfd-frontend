@@ -91,7 +91,7 @@ describe('businessDetailsPresenter', () => {
           value: 'GB123456789'
         },
         tradeNumber: data.traderNumber,
-        vendorRegistrationNumber: data.vendorNumber,
+        vendorNumber: data.vendorNumber,
         countyParishHoldingNumbers: ['12/123/1234'],
         countyParishHoldingNumbersText: 'County Parish Holding (CPH) number',
         businessLegalStatus: {
@@ -495,13 +495,13 @@ describe('businessDetailsPresenter', () => {
     })
   })
 
-  describe('the "vendorRegistrationNumber" property', () => {
+  describe('the "vendorNumber" property', () => {
     describe('when the property is null', () => {
       test('it should return null', () => {
         data.vendorNumber = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.vendorRegistrationNumber).toEqual(null)
+        expect(result.vendorNumber).toEqual(null)
       })
     })
   })

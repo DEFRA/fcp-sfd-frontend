@@ -9,7 +9,7 @@
  * @module updatePersonalEmailChangeService
  */
 
-import { constants, mutations } from '@defra/fcp-sfd-frontend-engine'
+import { constants, mutations, utils } from '@defra/fcp-sfd-frontend-engine'
 import { updateDalService } from '../DAL/update-dal-service.js'
 import { fetchPersonalChangeService } from './fetch-personal-change-service.js'
 import { flashNotification } from '../../utils/notifications/flash-notification.js'
@@ -21,14 +21,7 @@ const updatePersonalEmailChangeService = async (yar, credentials) => {
     return
   }
 
-  const variables = {
-    input: {
-      email: {
-        address: personalDetails.changePersonalEmail
-      },
-      crn: personalDetails.crn
-    }
-  }
+  const variables = utils.buildUpdateCustomerEmailVariables(personalDetails.changePersonalEmail, personalDetails.crn)
 
   await updateDalService(mutations.updateCustomerEmail, variables, credentials.sessionId)
 

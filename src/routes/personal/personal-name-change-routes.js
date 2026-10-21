@@ -34,7 +34,9 @@ const postPersonalNameChange = {
       }
     },
     handler: async (request, h) => {
-      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalName', request.payload)
+      const { yar, payload } = request
+
+      setSessionData(yar, 'personalDetailsUpdate', 'changePersonalName', payload)
 
       return h.redirect('/account-name-check')
     }

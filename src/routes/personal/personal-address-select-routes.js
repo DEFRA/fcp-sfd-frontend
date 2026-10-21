@@ -41,13 +41,15 @@ const postPersonalAddressSelect = {
       }
     },
     handler: async (request, h) => {
-      const personalDetails = await fetchPersonalChangeService(request.yar, request.auth.credentials, 'changePersonalAddresses')
+      const { yar, auth, payload } = request
+
+      const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalAddresses')
 
       const selectedAddress = personalDetails.changePersonalAddresses.find((address) => {
         // Concatenate UPRN and displayAddress to create a unique identifier.
         // Multiple addresses can share the same UPRN (e.g., multiple units in a building),
         // so UPRN alone is not unique. Using both properties ensures each address is truly distinct.
-        return `${address.uprn}${address.displayAddress}` === request.payload.addresses
+        return `${address.uprn}${address.displayAddress}` === payload.addresses
       })
 
       if (!selectedAddress) {
@@ -56,7 +58,7 @@ const postPersonalAddressSelect = {
 
       selectedAddress.postcodeLookup = true
 
-      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalAddress', selectedAddress)
+      setSessionData(yar, 'personalDetailsUpdate', 'changePersonalAddress', selectedAddress)
 
       return h.redirect('/account-address-check')
     }

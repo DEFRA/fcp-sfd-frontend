@@ -372,9 +372,16 @@ describe('auth', () => {
         expect(jwtDecodeSpy).toHaveBeenCalledWith(session.token)
       })
 
-      test('should verify token time', async () => {
+      test('should verify token time with an early expiry margin', async () => {
+        const now = Date.now()
+        vi.useFakeTimers()
+        vi.setSystemTime(now)
+
         await validate(request, session)
-        expect(jwtVerifyTimeSpy).toHaveBeenCalled()
+
+        expect(jwtVerifyTimeSpy).toHaveBeenCalledWith(expect.anything(), { now: now + 60 * 1000 })
+
+        vi.useRealTimers()
       })
 
       test('should return valid state if session exists and token is valid', async () => {

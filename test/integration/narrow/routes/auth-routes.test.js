@@ -247,6 +247,34 @@ describe('auth routes', () => {
       expect(response.statusCode).toBe(constants.statusCodes.FOUND)
       expect(response.headers.location).toBe('/')
     })
+
+    test('should clear session cache if authenticated and session id', async () => {
+      await server.app.cache.set(credentials.sessionId, { isAuthenticated: true })
+
+      await server.inject({
+        url: path,
+        auth: {
+          strategy: 'session',
+          credentials
+        }
+      })
+      const cache = await server.app.cache.get(credentials.sessionId)
+      expect(cache).toBeNull()
+    })
+
+    test('should clear session cookie if authenticated and session id', async () => {
+      const response = await server.inject({
+        url: path,
+        auth: {
+          strategy: 'session',
+          credentials
+        }
+      })
+      const sessionCookie = response.headers['set-cookie'].find(cookie => cookie.startsWith('sid='))
+      expect(sessionCookie).toBeDefined()
+      expect(sessionCookie).toMatch(/Expires=/)
+      expect(sessionCookie).toMatch(/Max-Age=0/)
+    })
   })
 
   describe('GET /auth/sign-out-oidc', () => {
@@ -275,6 +303,8 @@ describe('auth routes', () => {
     })
 
     test('should clear session cache if authenticated and session id', async () => {
+      await server.app.cache.set(credentials.sessionId, { isAuthenticated: true })
+
       await server.inject({
         url: path,
         auth: {
@@ -282,7 +312,7 @@ describe('auth routes', () => {
           credentials
         }
       })
-      const cache = await server.app.cache.get(credentials.profile.sessionId)
+      const cache = await server.app.cache.get(credentials.sessionId)
       expect(cache).toBeNull()
     })
 

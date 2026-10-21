@@ -22,7 +22,7 @@ const getBusinessDetails = {
       yar.set('businessDetailsValidation', { businessDetailsValid: false, sectionsNeedingUpdate })
     }
 
-    const permissionGroup = checkBusinessPermissionGroupService(request.auth.credentials.scope)
+    const permissionGroup = checkBusinessPermissionGroupService(auth.credentials.scope)
     const pageData = businessDetailsPresenter(businessDetails, yar, permissionGroup, hasValidBusinessDetails, sectionsNeedingUpdate)
 
     return h.view('business/business-details.njk', pageData)

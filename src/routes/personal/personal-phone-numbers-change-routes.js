@@ -34,13 +34,15 @@ const postPersonalPhoneNumbersChange = {
       }
     },
     handler: (request, h) => {
+      const { yar, payload } = request
+
       // If a user didn't enter either of the numbers default its value to null
-      request.payload = {
-        personalTelephone: request.payload.personalTelephone ?? null,
-        personalMobile: request.payload.personalMobile ?? null
+      const phoneNumbers = {
+        personalTelephone: payload.personalTelephone ?? null,
+        personalMobile: payload.personalMobile ?? null
       }
 
-      setSessionData(request.yar, 'personalDetailsUpdate', 'changePersonalPhoneNumbers', request.payload)
+      setSessionData(yar, 'personalDetailsUpdate', 'changePersonalPhoneNumbers', phoneNumbers)
 
       return h.redirect('/account-phone-numbers-check')
     }

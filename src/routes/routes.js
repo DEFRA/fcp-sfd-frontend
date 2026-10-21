@@ -1,5 +1,5 @@
 import { health } from './health-routes.js'
-import { auth } from './auth-routes.js'
+import { authRoutes } from './auth-routes.js'
 import { homeRoutes } from './home-routes.js'
 import { errors } from './errors/error-routes.js'
 import { signedOut } from './signed-out-routes.js'
@@ -16,7 +16,7 @@ const nonProductionRoutes =
 
 export const routes = [
   health,
-  ...auth,
+  ...authRoutes,
   ...homeRoutes,
   ...errors,
   signedOut,

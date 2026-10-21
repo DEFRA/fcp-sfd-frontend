@@ -37,6 +37,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
 const byTitle = (grantA, grantB) => grantA.title.localeCompare(grantB.title)
 
 const setGrants = (organisationId, permissionGroups, isOnWoodlandManagementAllowList) => {
+  // Only users who can make legal changes to the business see Water Management
   const canMakeLegalChanges = LEGAL_PERMISSIONS.some(permission => permissionGroups.includes(permission))
   const grants = []
 

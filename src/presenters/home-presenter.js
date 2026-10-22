@@ -36,16 +36,18 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
 
 const byTitle = (grantA, grantB) => grantA.title.localeCompare(grantB.title)
 
+const buildGrantLink = (baseUrl, organisationId) => {
+  return `${baseUrl}?ssoOrgId=${organisationId}`
+}
+
 const setGrants = (organisationId, permissionGroups, isOnWoodlandManagementAllowList) => {
   // Only users who can make legal changes to the business see Water Management
   const canMakeLegalChanges = LEGAL_PERMISSIONS.some(permission => permissionGroups.includes(permission))
   const grants = []
 
   if (isOnWoodlandManagementAllowList) {
-    const woodlandManagementLink = config.get('servicesConfig.WMPEndpoint')
-
     grants.push({
-      link: `${woodlandManagementLink}?ssoOrgId=${organisationId}`,
+      link: buildGrantLink(config.get('servicesConfig.WMPEndpoint'), organisationId),
       title: 'Woodland Management Plan',
       // Status hidden for now; endpoint from grants not available yet. Will update in a future ticket.
       status: 'do-not-show'
@@ -53,10 +55,8 @@ const setGrants = (organisationId, permissionGroups, isOnWoodlandManagementAllow
   }
 
   if (canMakeLegalChanges) {
-    const waterManagementLink = config.get('servicesConfig.WaterManagementEndpoint')
-
     grants.push({
-      link: `${waterManagementLink}?ssoOrgId=${organisationId}`,
+      link: buildGrantLink(config.get('servicesConfig.WaterManagementEndpoint'), organisationId),
       title: 'Water Management',
       status: 'do-not-show'
     })

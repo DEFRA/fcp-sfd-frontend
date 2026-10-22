@@ -1,5 +1,6 @@
 import { config } from '../../config/index.js'
 import { createLogger } from '../../utils/logger.js'
+import { getBankDetailsServiceToken } from './get-service-token.js'
 
 const logger = createLogger()
 
@@ -41,10 +42,11 @@ export const checkBankDetailsServiceHealth = async () => {
  * exists to prove the frontend can call and consume real endpoints from that
  * service, ahead of any real data being available.
  *
+ * @param {import('@aws-sdk/client-sts').STSClient} sts
  * @param {string} sbi
  * @returns {Promise<object|null>} the bank details, or null if the call failed
  */
-export const getBankDetails = async (sbi) => {
+export const getBankDetails = async (sts, sbi) => {
   const endpoint = config.get('bankDetailsConfig.endpoint')
 
   if (!endpoint) {
@@ -53,7 +55,14 @@ export const getBankDetails = async (sbi) => {
   }
 
   try {
-    const response = await fetch(`${endpoint}/bank-details/${sbi}`)
+    const headers = {}
+
+    if (config.get('server.cdpEnvironment') !== 'local') {
+      const token = await getBankDetailsServiceToken(sts)
+      headers.Authorization = `Bearer ${token}`
+    }
+
+    const response = await fetch(`${endpoint}/bank-details/${sbi}`, { headers })
 
     if (!response.ok) {
       throw new Error(`Unexpected status code: ${response.status}`)

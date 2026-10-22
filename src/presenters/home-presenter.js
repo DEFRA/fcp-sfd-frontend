@@ -34,7 +34,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
   return presentedData
 }
 
-const byTitle = (grantA, grantB) => grantA.title.localeCompare(grantB.title)
+const compareByTitleAlphabetically = (grantA, grantB) => grantA.title.localeCompare(grantB.title)
 
 const buildGrantLink = (baseUrl, organisationId) => {
   return `${baseUrl}?ssoOrgId=${organisationId}`
@@ -62,7 +62,7 @@ const setGrants = (organisationId, permissionGroups, isOnWoodlandManagementAllow
     })
   }
 
-  return grants.toSorted(byTitle)
+  return grants.toSorted(compareByTitleAlphabetically)
 }
 
 const setBusinessDetails = (permissionGroups) => {

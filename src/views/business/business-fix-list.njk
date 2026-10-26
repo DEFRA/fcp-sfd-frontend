@@ -201,8 +201,12 @@
             {% endif %}
 
             {% if section === 'vat' %}
-              <h2 class="govuk-heading-m">Business VAT number</h2>
+              <h2 class="govuk-heading-m">VAT registration number</h2>
               {{ govukInput({
+                label: {
+                  text: "VAT registration number",
+                  classes: "govuk-visually-hidden"
+                },
                 hint: {
                   html: "
                     <div>If you are adding or updating your VAT number, enter the 9 digit number on your VAT registration certificate. You only need to enter the numbers. For example, if your VAT registration number is GB123456789, you should enter 123456789.</div>

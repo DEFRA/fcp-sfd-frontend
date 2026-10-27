@@ -3,7 +3,7 @@
  * @module homePresenter
  */
 
-import { VIEW_LEVEL_PERMISSION, LEGAL_PERMISSIONS } from '../constants/scope/business-details.js'
+import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
 import { config } from '../config/index.js'
 
 const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList) => {
@@ -21,7 +21,7 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
       text: 'View and update your personal details'
     },
     sbi,
-    grants: setGrants(organisationId, permissionGroups, isOnWoodlandManagementAllowList)
+    grants: setGrants(organisationId, isOnWoodlandManagementAllowList)
   }
 
   if (enrolmentCount && enrolmentCount > 1) {
@@ -40,9 +40,7 @@ const buildGrantLink = (baseUrl, organisationId) => {
   return `${baseUrl}?ssoOrgId=${organisationId}`
 }
 
-const setGrants = (organisationId, permissionGroups, isOnWoodlandManagementAllowList) => {
-  // Only users who can make legal changes to the business see Water Management
-  const canMakeLegalChanges = LEGAL_PERMISSIONS.some(permission => permissionGroups.includes(permission))
+const setGrants = (organisationId, isOnWoodlandManagementAllowList) => {
   const grants = []
 
   if (isOnWoodlandManagementAllowList) {
@@ -54,13 +52,12 @@ const setGrants = (organisationId, permissionGroups, isOnWoodlandManagementAllow
     })
   }
 
-  if (canMakeLegalChanges) {
-    grants.push({
-      link: buildGrantLink(config.get('servicesConfig.WaterManagementEndpoint'), organisationId),
-      title: 'Water Management',
-      status: 'do-not-show'
-    })
-  }
+  // Access to Water Management is managed by the grants team, so every user sees the link
+  grants.push({
+    link: buildGrantLink(config.get('servicesConfig.WaterManagementEndpoint'), organisationId),
+    title: 'Water Management',
+    status: 'do-not-show'
+  })
 
   return grants.toSorted(compareByTitleAlphabetically)
 }

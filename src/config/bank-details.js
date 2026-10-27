@@ -1,5 +1,5 @@
 export const bankDetailsConfig = {
-  bankDetailsConfig: {
+  bankDetails: {
     endpoint: {
       doc: 'Endpoint for the fcp-sfd-bank-details service',
       format: String,

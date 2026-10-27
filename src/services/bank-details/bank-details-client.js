@@ -12,7 +12,7 @@ const logger = createLogger()
  * @returns {Promise<boolean>} true if the health check succeeded, false otherwise
  */
 export const checkBankDetailsServiceHealth = async () => {
-  const endpoint = config.get('bankDetailsConfig.endpoint')
+  const endpoint = config.get('bankDetails.endpoint')
 
   if (!endpoint) {
     logger.info('BANK_DETAILS_ENDPOINT not configured, skipping health check')
@@ -45,7 +45,7 @@ export const checkBankDetailsServiceHealth = async () => {
  * @returns {Promise<object|null>} the bank details, or null if the call failed
  */
 export const getBankDetails = async (sbi) => {
-  const endpoint = config.get('bankDetailsConfig.endpoint')
+  const endpoint = config.get('bankDetails.endpoint')
 
   if (!endpoint) {
     logger.info('BANK_DETAILS_ENDPOINT not configured, skipping bank details fetch')

@@ -1,5 +1,6 @@
 import { config } from '../../config/index.js'
 import { createLogger } from '../../utils/logger.js'
+import { getWebIdentityToken } from './web-identity-token.js'
 
 const logger = createLogger()
 
@@ -9,9 +10,10 @@ const logger = createLogger()
  * This exists to prove server-to-server connectivity between fcp-sfd-frontend
  * and fcp-sfd-bank-details, ahead of any real bank details endpoints being built.
  *
+ * @param {object} stsClient - The `STSClient` object
  * @returns {Promise<boolean>} true if the health check succeeded, false otherwise
  */
-export const checkBankDetailsServiceHealth = async () => {
+export const checkBankDetailsServiceHealth = async (stsClient) => {
   const endpoint = config.get('bankDetails.endpoint')
 
   if (!endpoint) {
@@ -20,7 +22,9 @@ export const checkBankDetailsServiceHealth = async () => {
   }
 
   try {
-    const response = await fetch(`${endpoint}/health`)
+    const headers = await buildAuthorizationHeaders(stsClient)
+
+    const response = await fetch(`${endpoint}/health`, { headers })
 
     if (!response.ok) {
       throw new Error(`Unexpected status code: ${response.status}`)
@@ -42,9 +46,10 @@ export const checkBankDetailsServiceHealth = async () => {
  * service, ahead of any real data being available.
  *
  * @param {string} sbi
+ * @param {object} stsClient - The `STSClient` object
  * @returns {Promise<object|null>} the bank details, or null if the call failed
  */
-export const getBankDetails = async (sbi) => {
+export const getBankDetails = async (sbi, stsClient) => {
   const endpoint = config.get('bankDetails.endpoint')
 
   if (!endpoint) {
@@ -53,7 +58,9 @@ export const getBankDetails = async (sbi) => {
   }
 
   try {
-    const response = await fetch(`${endpoint}/bank-details/${sbi}`)
+    const headers = await buildAuthorizationHeaders(stsClient)
+
+    const response = await fetch(`${endpoint}/bank-details/${sbi}`, { headers })
 
     if (!response.ok) {
       throw new Error(`Unexpected status code: ${response.status}`)
@@ -64,4 +71,15 @@ export const getBankDetails = async (sbi) => {
     logger.error(error, 'fcp-sfd-bank-details bank details fetch failed')
     return null
   }
+}
+
+const buildAuthorizationHeaders = async (stsClient) => {
+  const headers = {}
+  const token = await getWebIdentityToken(stsClient)
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
+  return headers
 }

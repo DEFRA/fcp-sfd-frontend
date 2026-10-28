@@ -51,3 +51,7 @@ const getWebIdentityToken = async (stsClient) => {
 
   return pendingRequest
 }
+
+export {
+  getWebIdentityToken
+}

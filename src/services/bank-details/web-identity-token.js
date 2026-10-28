@@ -2,7 +2,7 @@ import { GetWebIdentityTokenCommand } from '@aws-sdk/client-sts'
 import { config } from '../../config/index.js'
 
 const SIGNING_ALGORITHM = 'RS256'
-const REFRESH_MARGIN_MS = 60 * 1000
+const REFRESH_MARGIN_MS = 60000
 
 let cachedToken = null
 let pendingRequest = null
@@ -32,8 +32,8 @@ const getWebIdentityToken = async (stsClient) => {
     return null
   }
 
-  // cache hit: still valid beyond refresh margin
-  if (cachedToken && cachedToken.expiresAt.getTime - Date.now() > REFRESH_MARGIN_MS) {
+  // cache: check the cached token is still valid beyond refresh margin
+  if (cachedToken && cachedToken.expiresAt.getTime() - Date.now() > REFRESH_MARGIN_MS) {
     return cachedToken.token
   }
 

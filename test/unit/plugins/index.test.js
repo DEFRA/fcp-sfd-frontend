@@ -8,6 +8,7 @@ import { auth } from '../../../src/plugins/auth.js'
 import { cookies } from '../../../src/plugins/cookies.js'
 import { plugins } from '../../../src/plugins/index.js'
 import { router } from '../../../src/plugins/router.js'
+import { awsClients } from '../../../src/plugins/aws-clients.js'
 
 describe('registerPlugins', () => {
   test('should contain csp plugin', async () => {
@@ -48,5 +49,10 @@ describe('registerPlugins', () => {
   test('should contain headers plugin', async () => {
     const headersIndex = plugins.findIndex(plugin => plugin.name === 'headers')
     expect(headersPlugin).toEqual(plugins[headersIndex])
+  })
+
+  test('should contain awsClients plugin', async () => {
+    const awsClientsIndex = plugins.findIndex(plugin => plugin.plugin?.name === 'aws-clients')
+    expect(awsClients).toEqual(plugins[awsClientsIndex])
   })
 })

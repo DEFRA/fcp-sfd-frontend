@@ -3,7 +3,7 @@ import { STSClient } from '@aws-sdk/client-sts'
 export const awsClients = {
   plugin: {
     name: 'aws-clients',
-    register(server) {
+    register (server) {
       const sts = new STSClient()
 
       server.decorate('server', 'sts', sts)

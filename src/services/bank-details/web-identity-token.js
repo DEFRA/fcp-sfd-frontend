@@ -38,6 +38,7 @@ const getWebIdentityToken = async (stsClient) => {
   }
 
   // in-flight dedupe: concurrent callers share one STS request
+  // and on failures the pending request is cleared so it isn't reused
   if (!pendingRequest) {
     pendingRequest = generateWebIdentityToken(stsClient)
       .then((result) => {

@@ -73,6 +73,12 @@ export const getBankDetails = async (sbi, stsClient) => {
   }
 }
 
+/**
+ * Shared helper to build the authorization headers
+ *
+ * @param {object} stsClient - The `STSClient` object
+ * @returns {object} headers - The 
+ */
 const buildAuthorizationHeaders = async (stsClient) => {
   const headers = {}
   const token = await getWebIdentityToken(stsClient)

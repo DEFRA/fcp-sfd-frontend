@@ -11,8 +11,9 @@ export const bankDetailsRoutes = [
     options: {
       auth: false
     },
-    handler: async (_request, h) => {
-      const isHealthy = await checkBankDetailsServiceHealth()
+    handler: async (request, h) => {
+      const { sts } = request
+      const isHealthy = await checkBankDetailsServiceHealth(sts)
 
       return h.response({ message: isHealthy ? 'success' : 'failure' })
     }
@@ -24,8 +25,8 @@ export const bankDetailsRoutes = [
       auth: false
     },
     handler: async (request, h) => {
-      const { sbi } = request.params
-      const bankDetails = await getBankDetails(sbi)
+      const { params: { sbi }, sts } = request
+      const bankDetails = await getBankDetails(sbi, sts)
 
       if (!bankDetails) {
         return h.response({ message: 'failure' }).code(502)

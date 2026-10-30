@@ -16,6 +16,7 @@ const getDalData = () => ({
       traderNumber: '010203040506070880980',
       vendorNumber: '694523',
       legalStatus: { code: 102111, type: 'Sole Proprietorship' },
+      registrationNumbers: { companiesHouse: null, charityCommission: null },
       type: { code: 101443, type: 'Not Specified' },
       address: {
         pafOrganisationName: 'Corp ltd',

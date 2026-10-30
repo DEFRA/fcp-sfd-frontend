@@ -99,6 +99,7 @@ describe('businessDetailsPresenter', () => {
           action: 'Change',
           changeLink: null
         },
+        legalStatusRegistrationNumber: null,
         businessType: {
           value: data.type,
           action: 'Change',
@@ -627,6 +628,122 @@ describe('businessDetailsPresenter', () => {
               classes: 'govuk-link--no-visited-state'
             }
           ]
+        })
+      })
+    })
+  })
+
+  describe('the "legalStatusRegistrationNumber" property', () => {
+    describe('when the legal status requires a company registration number', () => {
+      test('it shows the company registration number', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Company registration number',
+          value: '12345678'
+        })
+      })
+
+      test('it returns "Not added" when no company registration number is held', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: null, charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Company registration number',
+          value: 'Not added'
+        })
+      })
+
+      test('it returns "Not added" when only a charity commission registration number is held', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: null, charityCommission: '1234567' }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber.value).toBe('Not added')
+      })
+    })
+
+    describe('when the legal status requires a charity commission registration number', () => {
+      beforeEach(() => {
+        data.legalStatusCode = 102101
+      })
+
+      test('it shows the charity commission registration number', () => {
+        data.registrationNumbers = { companiesHouse: null, charityCommission: '1234567' }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Charity commission registration number',
+          value: '1234567'
+        })
+      })
+
+      test('it returns "Not added" when no charity commission registration number is held', () => {
+        data.registrationNumbers = { companiesHouse: null, charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Charity commission registration number',
+          value: 'Not added'
+        })
+      })
+
+      test('it returns "Not added" when only a company registration number is held', () => {
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber.value).toBe('Not added')
+      })
+
+      test('it returns "Not added" when the registration numbers are missing', () => {
+        delete data.registrationNumbers
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber.value).toBe('Not added')
+      })
+    })
+
+    describe('when the legal status does not require a registration number', () => {
+      test('it returns null even when a number is held', () => {
+        data.legalStatusCode = 102111
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: '1234567' }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toBeNull()
+      })
+    })
+
+    describe('when there is no legal status code', () => {
+      test('it returns null', () => {
+        data.legalStatusCode = null
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toBeNull()
+      })
+    })
+
+    describe('when the permission level is view', () => {
+      test('it still shows the registration number', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, 'view', hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Company registration number',
+          value: '12345678'
         })
       })
     })

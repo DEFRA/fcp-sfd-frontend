@@ -260,11 +260,11 @@ describe('businessDetailsPresenter', () => {
 
   describe('the "vatNumber" property', () => {
     describe('when the property is null for view only permission', () => {
-      test('it should return "No number added" for value', () => {
+      test('it should return "Not added" for value', () => {
         data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.vatNumber.value).toEqual('No number added')
+        expect(result.vatNumber.value).toEqual('Not added')
       })
 
       test('it should return null for action and change link', () => {
@@ -281,11 +281,11 @@ describe('businessDetailsPresenter', () => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
 
-      test('it should return "No number added" for value', () => {
+      test('it should return "Not added" for value', () => {
         data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.vatNumber.value).toEqual('No number added')
+        expect(result.vatNumber.value).toEqual('Not added')
       })
 
       test('it should return "Add" for action and the change link', () => {
@@ -383,10 +383,10 @@ describe('businessDetailsPresenter', () => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
       })
 
-      test('it should return "No number added" for value', () => {
+      test('it should return "Not added" for value', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.vatNumber.value).toEqual('No number added')
+        expect(result.vatNumber.value).toEqual('Not added')
       })
 
       test('it should return "Add" for action and the change link via business-fix', () => {

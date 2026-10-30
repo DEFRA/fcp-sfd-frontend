@@ -135,15 +135,23 @@
             {% endif %}
 
             {% if section === 'vat' %}
+              {% set displayVatNumber %}
+                {% if vatNumber %}
+                  <span>{{ vatNumber }}</span>
+                {% else %}
+                  <span class="govuk-hint display-inline">Not added</span>
+                {% endif %}
+              {% endset %}
+
               {% set rowItem = {
-                key: { text: "Vat number" },
-                value: { text: vatNumber },
+                key: { text: "VAT registration number" },
+                value: { html: displayVatNumber },
                 actions: {
                   items: [
                     {
                       href: changeLink,
                       text: "Change",
-                      visuallyHiddenText: "change vat number",
+                      visuallyHiddenText: "VAT registration number",
                       classes: "govuk-link--no-visited-state"
                     }
                   ]

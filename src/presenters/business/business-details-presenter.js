@@ -55,6 +55,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       action: presenters.getActionText(data.legalStatus),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
+    legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data),
     businessType: {
       value: data.type ?? 'Not added',
       action: presenters.getActionText(data.type),
@@ -66,6 +67,41 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
 const formatAddress = (businessAddress) => {
   const lines = presenters.formatBusinessAddress(businessAddress)
   return lines.length > 0 ? lines : 'Not added'
+}
+
+/**
+ * Builds the registration number row for the business details page.
+ *
+ * Only charity and company legal statuses hold a registration number, so this
+ * returns null for every other status and the view omits the row entirely.
+ * Only the number matching the legal status is shown.
+ *
+ * @param {Object} data - The mapped business details
+ *
+ * @returns {{label: string, value: string}|null} The row data, or null when the legal status has no registration number
+ */
+const buildLegalStatusRegistrationNumberDisplay = (data) => {
+  // The DAL returns the legal status code as a number, the engine codes are strings
+  const legalStatusCode = String(data.legalStatusCode ?? '')
+  const registrationNumbers = data.registrationNumbers ?? {}
+
+  let label
+  let number
+
+  if (constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
+    label = 'Charity commission registration number'
+    number = registrationNumbers.charityCommission
+  } else if (constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
+    label = 'Company registration number'
+    number = registrationNumbers.companiesHouse
+  } else {
+    return null
+  }
+
+  return {
+    label,
+    value: number || 'Not added'
+  }
 }
 
 /**

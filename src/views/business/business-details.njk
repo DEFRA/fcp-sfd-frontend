@@ -270,6 +270,22 @@
         %}
       {% endif %}
 
+      {% if legalStatusRegistrationNumber %}
+        {% set legalStatusRegistrationNumberDisplay %}
+          {% if legalStatusRegistrationNumber.value === 'Not added' %}
+            <span class="govuk-hint display-inline">{{ legalStatusRegistrationNumber.value }}</span>
+          {% else %}
+            <span>{{ legalStatusRegistrationNumber.value }}</span>
+          {% endif %}
+        {% endset %}
+
+        {% set _ = referenceRows.push({
+            key: { text: legalStatusRegistrationNumber.label },
+            value: { html: legalStatusRegistrationNumberDisplay }
+          })
+        %}
+      {% endif %}
+
     {{ govukSummaryList({ rows: referenceRows }) }}
 
     <h2 class="govuk-heading-m">

@@ -37,11 +37,11 @@
             </p>
 
             <a href="{{ card.link }}" class="govuk-link govuk-link--no-visited-state service-card__link">
-              {% if card.status == 'not-started' %}
+              {%- if card.status == 'not-started' -%}
                 Start application
-              {% else %}
+              {%- else -%}
                 Continue application
-              {% endif %}
+              {%- endif -%}
               <span class="govuk-visually-hidden"> for {{ card.title }}</span>
             </a>
           {% else %}

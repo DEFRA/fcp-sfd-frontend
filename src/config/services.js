@@ -7,7 +7,7 @@ export const servicesConfig = {
       nullable: true,
       env: 'WMP_ENDPOINT'
     },
-    WaterManagementEndpoint: {
+    waterManagementEndpoint: {
       doc: 'Endpoint to reach grants Water Management',
       format: String,
       default: null,

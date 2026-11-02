@@ -4,11 +4,11 @@ const defaultTestContext = {
   getAssetPath: (input) => input
 }
 
-export const renderTemplate = (template, context = {}) => {
+export const renderTemplate = (templateString, context = {}) => {
   const mergedContext = {
     ...defaultTestContext,
     ...context
   }
 
-  return nunjucksEnvironment.renderString(template, mergedContext)
+  return nunjucksEnvironment.renderString(templateString, mergedContext)
 }

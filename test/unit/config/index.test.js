@@ -140,14 +140,14 @@ describe('Config', () => {
     test('should return Water Management endpoint from environment variable if set', async () => {
       const { config } = await import('../../../src/config/index.js')
 
-      expect(config.get('servicesConfig.WaterManagementEndpoint')).toBe('http://mock-water-management')
+      expect(config.get('servicesConfig.waterManagementEndpoint')).toBe('http://mock-water-management')
     })
 
     test('should return null if Water Management endpoint environment variable is not set', async () => {
       delete process.env.WATER_MANAGEMENT_ENDPOINT
       const { config } = await import('../../../src/config/index.js')
 
-      expect(config.get('servicesConfig.WaterManagementEndpoint')).toBe(null)
+      expect(config.get('servicesConfig.waterManagementEndpoint')).toBe(null)
     })
   })
 

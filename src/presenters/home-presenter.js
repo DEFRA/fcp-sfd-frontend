@@ -34,11 +34,11 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
   return presentedData
 }
 
-const compareByTitleAlphabetically = (grantA, grantB) => grantA.title.localeCompare(grantB.title)
-
 const buildGrantLink = (baseUrl, organisationId) => {
   return `${baseUrl}?ssoOrgId=${organisationId}`
 }
+
+const compareByTitleAlphabetically = (grantA, grantB) => grantA.title.localeCompare(grantB.title)
 
 const setGrants = (organisationId, isOnWoodlandManagementAllowList) => {
   const grants = []
@@ -55,7 +55,7 @@ const setGrants = (organisationId, isOnWoodlandManagementAllowList) => {
   // Access is managed by the grants team, so there is no allow list; the toggle only controls rollout
   if (config.get('featureToggle.waterManagementEnabled')) {
     grants.push({
-      link: buildGrantLink(config.get('servicesConfig.WaterManagementEndpoint'), organisationId),
+      link: buildGrantLink(config.get('servicesConfig.waterManagementEndpoint'), organisationId),
       title: 'Water Management grant round 3',
       status: 'do-not-show'
     })

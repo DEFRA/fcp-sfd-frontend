@@ -10,5 +10,5 @@ export const renderTemplate = (template, context = {}) => {
     ...context
   }
 
-  return nunjucksEnvironment.render(template, mergedContext)
+  return nunjucksEnvironment.renderString(template, mergedContext)
 }

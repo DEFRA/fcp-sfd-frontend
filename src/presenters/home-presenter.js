@@ -55,7 +55,7 @@ const setGrants = (organisationId, isOnWoodlandManagementAllowList) => {
   // Access to Water Management is managed by the grants team, so every user sees the link
   grants.push({
     link: buildGrantLink(config.get('servicesConfig.WaterManagementEndpoint'), organisationId),
-    title: 'Water Management',
+    title: 'Water Management grant round 3',
     status: 'do-not-show'
   })
 

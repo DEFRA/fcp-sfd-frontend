@@ -54,7 +54,7 @@ describe('homePresenter', () => {
         grants: [
           {
             link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
-            title: 'Water Management',
+            title: 'Water Management grant round 3',
             status: 'do-not-show'
           }
         ]
@@ -152,7 +152,7 @@ describe('homePresenter', () => {
           expect(result.grants).toEqual([
             {
               link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
-              title: 'Water Management',
+              title: 'Water Management grant round 3',
               status: 'do-not-show'
             }
           ])
@@ -170,7 +170,7 @@ describe('homePresenter', () => {
           expect(result.grants).toEqual([
             {
               link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
-              title: 'Water Management',
+              title: 'Water Management grant round 3',
               status: 'do-not-show'
             }
           ])
@@ -188,7 +188,7 @@ describe('homePresenter', () => {
           expect(result.grants).toEqual([
             {
               link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
-              title: 'Water Management',
+              title: 'Water Management grant round 3',
               status: 'do-not-show'
             }
           ])
@@ -206,7 +206,7 @@ describe('homePresenter', () => {
           expect(result.grants).toEqual([
             {
               link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
-              title: 'Water Management',
+              title: 'Water Management grant round 3',
               status: 'do-not-show'
             }
           ])
@@ -230,7 +230,7 @@ describe('homePresenter', () => {
           expect(result.grants).toEqual([
             {
               link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
-              title: 'Water Management',
+              title: 'Water Management grant round 3',
               status: 'do-not-show'
             },
             {
@@ -253,7 +253,7 @@ describe('homePresenter', () => {
           expect(result.grants).toEqual([
             {
               link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
-              title: 'Water Management',
+              title: 'Water Management grant round 3',
               status: 'do-not-show'
             },
             {

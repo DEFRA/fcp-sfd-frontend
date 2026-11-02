@@ -52,12 +52,14 @@ const setGrants = (organisationId, isOnWoodlandManagementAllowList) => {
     })
   }
 
-  // Access to Water Management is managed by the grants team, so every user sees the link
-  grants.push({
-    link: buildGrantLink(config.get('servicesConfig.WaterManagementEndpoint'), organisationId),
-    title: 'Water Management grant round 3',
-    status: 'do-not-show'
-  })
+  // Access is managed by the grants team, so there is no allow list; the toggle only controls rollout
+  if (config.get('featureToggle.waterManagementEnabled')) {
+    grants.push({
+      link: buildGrantLink(config.get('servicesConfig.WaterManagementEndpoint'), organisationId),
+      title: 'Water Management grant round 3',
+      status: 'do-not-show'
+    })
+  }
 
   return grants.toSorted(compareByTitleAlphabetically)
 }

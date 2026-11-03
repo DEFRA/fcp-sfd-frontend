@@ -1,6 +1,9 @@
 // Test framework dependencies
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
+// Test helpers
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+
 // Thing under test
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
 
@@ -14,6 +17,8 @@ import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/
 vi.mock('../../../../src/presenters/business/business-details-change-links-presenter.js', () => ({
   businessDetailsChangeLinksPresenter: vi.fn()
 }))
+
+const { NOT_ADDED_TEXT } = constants
 
 describe('businessDetailsPresenter', () => {
   let yar
@@ -77,7 +82,7 @@ describe('businessDetailsPresenter', () => {
           changeLink: undefined,
           action: 'Change',
           telephone: data.landline,
-          mobile: 'Not added'
+          mobile: NOT_ADDED_TEXT
         },
         businessEmail: {
           value: data.email,
@@ -99,6 +104,7 @@ describe('businessDetailsPresenter', () => {
           action: 'Change',
           changeLink: null
         },
+        legalStatusRegistrationNumber: null,
         businessType: {
           value: data.type,
           action: 'Change',
@@ -218,19 +224,19 @@ describe('businessDetailsPresenter', () => {
     })
 
     describe('when the telephone property is missing', () => {
-      test('it should return the text "Not added"', () => {
+      test('it should return NOT_ADDED_TEXT', () => {
         data.landline = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.businessTelephone.telephone).toEqual('Not added')
+        expect(result.businessTelephone.telephone).toEqual(NOT_ADDED_TEXT)
       })
     })
 
     describe('when the businessMobile property is missing', () => {
-      test('it should return the text "Not added"', () => {
+      test('it should return NOT_ADDED_TEXT', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.businessTelephone.mobile).toEqual('Not added')
+        expect(result.businessTelephone.mobile).toEqual(NOT_ADDED_TEXT)
       })
     })
 
@@ -260,11 +266,11 @@ describe('businessDetailsPresenter', () => {
 
   describe('the "vatNumber" property', () => {
     describe('when the property is null for view only permission', () => {
-      test('it should return "Not added" for value', () => {
+      test('it should return NOT_ADDED_TEXT for value', () => {
         data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.vatNumber.value).toEqual('Not added')
+        expect(result.vatNumber.value).toEqual(NOT_ADDED_TEXT)
       })
 
       test('it should return null for action and change link', () => {
@@ -281,11 +287,11 @@ describe('businessDetailsPresenter', () => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
 
-      test('it should return "Not added" for value', () => {
+      test('it should return NOT_ADDED_TEXT for value', () => {
         data.vat = null
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.vatNumber.value).toEqual('Not added')
+        expect(result.vatNumber.value).toEqual(NOT_ADDED_TEXT)
       })
 
       test('it should return "Add" for action and the change link', () => {
@@ -383,10 +389,10 @@ describe('businessDetailsPresenter', () => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
       })
 
-      test('it should return "Not added" for value', () => {
+      test('it should return NOT_ADDED_TEXT for value', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
-        expect(result.vatNumber.value).toEqual('Not added')
+        expect(result.vatNumber.value).toEqual(NOT_ADDED_TEXT)
       })
 
       test('it should return "Add" for action and the change link via business-fix', () => {
@@ -627,6 +633,122 @@ describe('businessDetailsPresenter', () => {
               classes: 'govuk-link--no-visited-state'
             }
           ]
+        })
+      })
+    })
+  })
+
+  describe('the "legalStatusRegistrationNumber" property', () => {
+    describe('when the legal status requires a company registration number', () => {
+      test('it shows the company registration number', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Company registration number',
+          value: '12345678'
+        })
+      })
+
+      test('it returns NOT_ADDED_TEXT when no company registration number is held', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: null, charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Company registration number',
+          value: NOT_ADDED_TEXT
+        })
+      })
+
+      test('it returns NOT_ADDED_TEXT when only a charity commission registration number is held', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: null, charityCommission: '1234567' }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber.value).toBe(NOT_ADDED_TEXT)
+      })
+    })
+
+    describe('when the legal status requires a charity commission registration number', () => {
+      beforeEach(() => {
+        data.legalStatusCode = 102101
+      })
+
+      test('it shows the charity commission registration number', () => {
+        data.registrationNumbers = { companiesHouse: null, charityCommission: '1234567' }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Charity commission registration number',
+          value: '1234567'
+        })
+      })
+
+      test('it returns NOT_ADDED_TEXT when no charity commission registration number is held', () => {
+        data.registrationNumbers = { companiesHouse: null, charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Charity commission registration number',
+          value: NOT_ADDED_TEXT
+        })
+      })
+
+      test('it returns NOT_ADDED_TEXT when only a company registration number is held', () => {
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber.value).toBe(NOT_ADDED_TEXT)
+      })
+
+      test('it returns NOT_ADDED_TEXT when the registration numbers are missing', () => {
+        delete data.registrationNumbers
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber.value).toBe(NOT_ADDED_TEXT)
+      })
+    })
+
+    describe('when the legal status does not require a registration number', () => {
+      test('it returns null even when a number is held', () => {
+        data.legalStatusCode = 102111
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: '1234567' }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toBeNull()
+      })
+    })
+
+    describe('when there is no legal status code', () => {
+      test('it returns null', () => {
+        data.legalStatusCode = null
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toBeNull()
+      })
+    })
+
+    describe('when the permission level is view', () => {
+      test('it still shows the registration number', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, 'view', hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Company registration number',
+          value: '12345678'
         })
       })
     })

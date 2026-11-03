@@ -4,6 +4,8 @@
  */
 
 import { services } from '@defra/fcp-sfd-frontend-engine'
+import { BUSINESS_JOURNEY } from '../constants/journeys.js'
+import { BUSINESS_REGISTRATION_NUMBER_SESSION_FIELDS } from '../constants/business-registration-number-session-fields.js'
 
 /**
  * Creates a pre-handler that validates required session data exists before allowing access to a route.
@@ -47,6 +49,23 @@ export const checkSessionDataGuard = (journey, fieldName) => {
       // Continue to the route handler
       return true
     }
+  }
+}
+
+/**
+ * Pre-handler for the registration number check routes. The session holds either a company or a charity
+ * number depending on the legal status, so unlike `checkSessionDataGuard` only one of the fields is required.
+ */
+export const checkRegistrationNumberSessionGuard = {
+  method: (request, h) => {
+    const sessionData = request.yar.get(BUSINESS_JOURNEY.sessionKey) || {}
+    const hasRegistrationNumber = BUSINESS_REGISTRATION_NUMBER_SESSION_FIELDS.some(field => sessionData[field] != null)
+
+    if (!hasRegistrationNumber) {
+      return h.redirect(BUSINESS_JOURNEY.redirectPath).takeover()
+    }
+
+    return true
   }
 }
 

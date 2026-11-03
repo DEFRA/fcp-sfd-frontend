@@ -9,7 +9,7 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
 
 // Things under test
 import { services } from '@defra/fcp-sfd-frontend-engine'
-import { checkSessionDataGuard, checkInterrupterJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
+import { checkSessionDataGuard, checkRegistrationNumberSessionGuard, checkInterrupterJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
 import {
   PERSONAL_JOURNEY,
   BUSINESS_JOURNEY
@@ -221,6 +221,48 @@ describe('pre-handlers', () => {
 
         expect(takeoverMock).toHaveBeenCalled()
       })
+    })
+  })
+
+  describe('checkRegistrationNumberSessionGuard', () => {
+    let request
+
+    beforeEach(() => {
+      request = {
+        yar: {
+          get: vi.fn()
+        }
+      }
+    })
+
+    test.each([
+      'changeBusinessCompanyRegistrationNumber',
+      'changeBusinessCharityCommissionRegistrationNumber'
+    ])('it allows the request to continue when %s is in session', async (field) => {
+      request.yar.get.mockReturnValue({ [field]: '12345678' })
+
+      const result = await checkRegistrationNumberSessionGuard.method(request, h)
+
+      expect(result).toBe(true)
+      expect(h.redirect).not.toHaveBeenCalled()
+    })
+
+    test('it redirects to the business details page when neither number is in session', async () => {
+      request.yar.get.mockReturnValue({})
+
+      await checkRegistrationNumberSessionGuard.method(request, h)
+
+      expect(request.yar.get).toHaveBeenCalledWith(BUSINESS_JOURNEY.sessionKey)
+      expect(h.redirect).toHaveBeenCalledWith(BUSINESS_JOURNEY.redirectPath)
+      expect(takeoverMock).toHaveBeenCalled()
+    })
+
+    test('it redirects when there is no session data at all', async () => {
+      request.yar.get.mockReturnValue(undefined)
+
+      await checkRegistrationNumberSessionGuard.method(request, h)
+
+      expect(h.redirect).toHaveBeenCalledWith(BUSINESS_JOURNEY.redirectPath)
     })
   })
 

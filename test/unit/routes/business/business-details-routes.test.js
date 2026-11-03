@@ -87,7 +87,7 @@ describe('business details', () => {
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
         expect(validateBusinessDetailsService).toHaveBeenCalledWith(getMockData())
         expect(checkBusinessPermissionGroupService).toHaveBeenCalledWith(request.auth.credentials.scope)
-        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, 'full', true, [])
+        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, 'full', true, [], true)
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
 

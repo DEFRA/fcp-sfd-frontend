@@ -281,7 +281,15 @@
 
         {% set _ = referenceRows.push({
             key: { text: legalStatusRegistrationNumber.label },
-            value: { html: legalStatusRegistrationNumberDisplay }
+            value: { html: legalStatusRegistrationNumberDisplay },
+            actions: {
+              items: [{
+                href: legalStatusRegistrationNumber.changeLink,
+                text: legalStatusRegistrationNumber.action,
+                visuallyHiddenText: legalStatusRegistrationNumber.label | lower,
+                classes: "govuk-link--no-visited-state"
+              }]
+            } if legalStatusRegistrationNumber.changeLink
           })
         %}
       {% endif %}

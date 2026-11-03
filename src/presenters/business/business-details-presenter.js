@@ -9,7 +9,7 @@ import { businessDetailsChangeLinksPresenter } from './business-details-change-l
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
 
-const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
+const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate, canChangeRegistrationNumber = false) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
   const countyParishHoldingNumbers = presenters.formatCph(data.countyParishHoldingNumbers)
 
@@ -56,7 +56,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       action: presenters.getActionText(data.legalStatus),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
-    legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data),
+    legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data, canChangeRegistrationNumber),
     businessType: {
       value: data.type ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.type),
@@ -78,10 +78,11 @@ const formatAddress = (businessAddress) => {
  * Only the number matching the legal status is shown.
  *
  * @param {Object} data - The mapped business details
+ * @param {boolean} canChangeRegistrationNumber - Whether the user has permission to make legal changes
  *
- * @returns {{label: string, value: string}|null} The row data, or null when the legal status has no registration number
+ * @returns {{label: string, value: string, action?: string, changeLink?: string}|null} The row data, or null when the legal status has no registration number
  */
-const buildLegalStatusRegistrationNumberDisplay = (data) => {
+const buildLegalStatusRegistrationNumberDisplay = (data, canChangeRegistrationNumber) => {
   // The DAL returns the legal status code as a number, the engine codes are strings
   const legalStatusCode = String(data.legalStatusCode ?? '')
   const registrationNumbers = data.registrationNumbers ?? {}
@@ -101,7 +102,11 @@ const buildLegalStatusRegistrationNumberDisplay = (data) => {
 
   return {
     label,
-    value: number || NOT_ADDED_TEXT
+    value: number || NOT_ADDED_TEXT,
+    ...(canChangeRegistrationNumber && {
+      action: presenters.getActionText(number),
+      changeLink: BUSINESS_CHANGE_LINKS.businessLegalStatusRegistrationNumber
+    })
   }
 }
 

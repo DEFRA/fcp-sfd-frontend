@@ -10,6 +10,8 @@ import { businessNameChangeRoutes } from './business-name-change-routes.js'
 import { businessNameCheckRoutes } from './business-name-check-routes.js'
 import { businessPhoneNumbersChangeRoutes } from './business-phone-numbers-change-routes.js'
 import { businessPhoneNumbersCheckRoutes } from './business-phone-numbers-check-routes.js'
+import { businessRegistrationNumberChangeRoutes } from './business-registration-number-change-routes.js'
+import { businessRegistrationNumberCheckRoutes } from './business-registration-number-check-routes.js'
 import { businessTypeRoutes } from './business-type-change-routes.js'
 import { businessVatChangeRoutes } from './business-vat-change-routes.js'
 import { businessVatCheckRoutes } from './business-vat-check-routes.js'
@@ -31,6 +33,8 @@ export const businessRoutes = [
   ...businessNameCheckRoutes,
   ...businessPhoneNumbersChangeRoutes,
   ...businessPhoneNumbersCheckRoutes,
+  ...businessRegistrationNumberChangeRoutes,
+  ...businessRegistrationNumberCheckRoutes,
   ...businessTypeRoutes,
   ...businessVatChangeRoutes,
   ...businessVatCheckRoutes,

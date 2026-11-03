@@ -1,6 +1,6 @@
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { businessDetailsPresenter } from '../../presenters/business/business-details-presenter.js'
-import { VIEW_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { VIEW_PERMISSIONS, LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { validateBusinessDetailsService } from '../../services/business/validate-business-details-service.js'
 import { checkBusinessPermissionGroupService } from '../../services/business/check-business-permission-group-service.js'
 
@@ -23,7 +23,8 @@ const getBusinessDetails = {
     }
 
     const permissionGroup = checkBusinessPermissionGroupService(auth.credentials.scope)
-    const pageData = businessDetailsPresenter(businessDetails, yar, permissionGroup, hasValidBusinessDetails, sectionsNeedingUpdate)
+    const canChangeRegistrationNumber = auth.credentials.scope.some(permission => LEGAL_PERMISSIONS.includes(permission))
+    const pageData = businessDetailsPresenter(businessDetails, yar, permissionGroup, hasValidBusinessDetails, sectionsNeedingUpdate, canChangeRegistrationNumber)
 
     return h.view('business/business-details.njk', pageData)
   }

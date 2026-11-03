@@ -117,23 +117,55 @@ describe('cookies plugin', () => {
       expect(getCurrentPolicy).not.toHaveBeenCalled()
     })
 
-    test.each([
-      constants.statusCodes.FORBIDDEN,
-      constants.statusCodes.BAD_REQUEST,
-      constants.statusCodes.INTERNAL_SERVER_ERROR
-    ])('should not add cookiesPolicy when the status code is %i', (statusCode) => {
-      const request = {
-        response: {
-          variety: 'view',
-          statusCode,
-          source: { context: {} }
+    describe('when the status code is FORBIDDEN', () => {
+      test('should not add cookiesPolicy', () => {
+        const request = {
+          response: {
+            variety: 'view',
+            statusCode: constants.statusCodes.FORBIDDEN,
+            source: { context: {} }
+          }
         }
-      }
-      const h = { continue: Symbol('continue') }
+        const h = { continue: Symbol('continue') }
 
-      onPreResponseHandler(request, h)
+        onPreResponseHandler(request, h)
 
-      expect(getCurrentPolicy).not.toHaveBeenCalled()
+        expect(getCurrentPolicy).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the status code is BAD_REQUEST', () => {
+      test('should not add cookiesPolicy', () => {
+        const request = {
+          response: {
+            variety: 'view',
+            statusCode: constants.statusCodes.BAD_REQUEST,
+            source: { context: {} }
+          }
+        }
+        const h = { continue: Symbol('continue') }
+
+        onPreResponseHandler(request, h)
+
+        expect(getCurrentPolicy).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the status code is INTERNAL_SERVER_ERROR', () => {
+      test('should not add cookiesPolicy', () => {
+        const request = {
+          response: {
+            variety: 'view',
+            statusCode: constants.statusCodes.INTERNAL_SERVER_ERROR,
+            source: { context: {} }
+          }
+        }
+        const h = { continue: Symbol('continue') }
+
+        onPreResponseHandler(request, h)
+
+        expect(getCurrentPolicy).not.toHaveBeenCalled()
+      })
     })
   })
 })

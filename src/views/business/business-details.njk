@@ -279,9 +279,25 @@
           {% endif %}
         {% endset %}
 
+        {% if legalStatusRegistrationNumber.changeLink %}
+          {% set legalStatusRegistrationNumberActions = {
+            items: [
+              {
+                href: legalStatusRegistrationNumber.changeLink,
+                text: legalStatusRegistrationNumber.action,
+                visuallyHiddenText: legalStatusRegistrationNumber.label,
+                classes: "govuk-link--no-visited-state"
+              }
+            ]
+          } %}
+        {% else %}
+          {% set legalStatusRegistrationNumberActions = null %}
+        {% endif %}
+
         {% set _ = referenceRows.push({
             key: { text: legalStatusRegistrationNumber.label },
-            value: { html: legalStatusRegistrationNumberDisplay }
+            value: { html: legalStatusRegistrationNumberDisplay },
+            actions: legalStatusRegistrationNumberActions
           })
         %}
       {% endif %}

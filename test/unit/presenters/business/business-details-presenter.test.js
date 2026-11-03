@@ -648,7 +648,9 @@ describe('businessDetailsPresenter', () => {
 
         expect(result.legalStatusRegistrationNumber).toEqual({
           label: 'Company registration number',
-          value: '12345678'
+          value: '12345678',
+          action: 'Change',
+          changeLink: null
         })
       })
 
@@ -660,7 +662,9 @@ describe('businessDetailsPresenter', () => {
 
         expect(result.legalStatusRegistrationNumber).toEqual({
           label: 'Company registration number',
-          value: NOT_ADDED_TEXT
+          value: NOT_ADDED_TEXT,
+          action: 'Add',
+          changeLink: null
         })
       })
 
@@ -686,7 +690,9 @@ describe('businessDetailsPresenter', () => {
 
         expect(result.legalStatusRegistrationNumber).toEqual({
           label: 'Charity commission registration number',
-          value: '1234567'
+          value: '1234567',
+          action: 'Change',
+          changeLink: null
         })
       })
 
@@ -697,7 +703,9 @@ describe('businessDetailsPresenter', () => {
 
         expect(result.legalStatusRegistrationNumber).toEqual({
           label: 'Charity commission registration number',
-          value: NOT_ADDED_TEXT
+          value: NOT_ADDED_TEXT,
+          action: 'Add',
+          changeLink: null
         })
       })
 
@@ -748,7 +756,54 @@ describe('businessDetailsPresenter', () => {
 
         expect(result.legalStatusRegistrationNumber).toEqual({
           label: 'Company registration number',
-          value: '12345678'
+          value: '12345678',
+          action: 'Change',
+          changeLink: null
+        })
+      })
+    })
+
+    describe('when the permission level is amend', () => {
+      test('it does not return a change link', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, 'amend', hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber.changeLink).toBeNull()
+      })
+    })
+
+    describe('when the permission level is full', () => {
+      beforeEach(() => {
+        permissionLevel = 'full'
+      })
+
+      test('it returns the company registration number change link when the business is a company', () => {
+        data.legalStatusCode = 102109
+        data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Company registration number',
+          value: '12345678',
+          action: 'Change',
+          changeLink: '/business-company-registration-number-change'
+        })
+      })
+
+      test('it returns the charity registration number add link when the charity has no number', () => {
+        data.legalStatusCode = 102101
+        data.registrationNumbers = { companiesHouse: null, charityCommission: null }
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.legalStatusRegistrationNumber).toEqual({
+          label: 'Charity commission registration number',
+          value: NOT_ADDED_TEXT,
+          action: 'Add',
+          changeLink: '/business-charity-registration-number-change'
         })
       })
     })

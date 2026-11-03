@@ -56,7 +56,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       action: presenters.getActionText(data.legalStatus),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
-    legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data),
+    legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data, permissionLevel),
     businessType: {
       value: data.type ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.type),
@@ -78,30 +78,36 @@ const formatAddress = (businessAddress) => {
  * Only the number matching the legal status is shown.
  *
  * @param {Object} data - The mapped business details
+ * @param {string} permissionLevel - The user's permission level, only 'full' can add or change the number
  *
- * @returns {{label: string, value: string}|null} The row data, or null when the legal status has no registration number
+ * @returns {{label: string, value: string, action: string, changeLink: string|null}|null} The row data, or null when the legal status has no registration number
  */
-const buildLegalStatusRegistrationNumberDisplay = (data) => {
+const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
   // The DAL returns the legal status code as a number, the engine codes are strings
   const legalStatusCode = String(data.legalStatusCode ?? '')
   const registrationNumbers = data.registrationNumbers ?? {}
 
   let label
   let number
+  let changeLink
 
   if (constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Charity commission registration number'
     number = registrationNumbers.charityCommission
+    changeLink = BUSINESS_CHANGE_LINKS.businessCharityRegistrationNumber
   } else if (constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Company registration number'
     number = registrationNumbers.companiesHouse
+    changeLink = BUSINESS_CHANGE_LINKS.businessCompanyRegistrationNumber
   } else {
     return null
   }
 
   return {
     label,
-    value: number || NOT_ADDED_TEXT
+    value: number || NOT_ADDED_TEXT,
+    action: presenters.getActionText(number),
+    changeLink: permissionLevel === 'full' ? changeLink : null
   }
 }
 

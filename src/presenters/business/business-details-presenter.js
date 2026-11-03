@@ -7,6 +7,7 @@ import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
+const { NOT_ADDED_TEXT } = constants
 
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
@@ -29,18 +30,18 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
     },
     businessName: {
-      value: data.businessName || 'Not added',
+      value: data.businessName || NOT_ADDED_TEXT,
       changeLink: changeLinks.businessName,
       action: presenters.getActionText(data.businessName)
     },
     businessTelephone: {
-      telephone: data.landline || 'Not added',
-      mobile: data.mobile || 'Not added',
+      telephone: data.landline || NOT_ADDED_TEXT,
+      mobile: data.mobile || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.landline || data.mobile),
       changeLink: changeLinks.businessTelephone
     },
     businessEmail: {
-      value: data.email || 'Not added',
+      value: data.email || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.email),
       changeLink: changeLinks.businessEmail
     },
@@ -51,13 +52,13 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     countyParishHoldingNumbers,
     countyParishHoldingNumbersText: presenters.formatCphText(countyParishHoldingNumbers.length),
     businessLegalStatus: {
-      value: data.legalStatus ?? 'Not added',
+      value: data.legalStatus ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.legalStatus),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
     legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data),
     businessType: {
-      value: data.type ?? 'Not added',
+      value: data.type ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.type),
       changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessType : null
     }
@@ -66,7 +67,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
 
 const formatAddress = (businessAddress) => {
   const lines = presenters.formatBusinessAddress(businessAddress)
-  return lines.length > 0 ? lines : 'Not added'
+  return lines.length > 0 ? lines : NOT_ADDED_TEXT
 }
 
 /**
@@ -100,7 +101,7 @@ const buildLegalStatusRegistrationNumberDisplay = (data) => {
 
   return {
     label,
-    value: number || 'Not added'
+    value: number || NOT_ADDED_TEXT
   }
 }
 
@@ -129,7 +130,7 @@ const buildLegalStatusRegistrationNumberDisplay = (data) => {
  */
 const buildVatDisplay = (vatNumber, vatChangeState) => {
   const hasVat = Boolean(vatNumber)
-  const value = vatNumber || 'Not added'
+  const value = vatNumber || NOT_ADDED_TEXT
   const linkStyling = 'govuk-link--no-visited-state'
 
   // If no vatChangeState it means the user does not have permission to change VAT details

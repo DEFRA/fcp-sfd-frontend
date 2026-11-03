@@ -17,6 +17,12 @@ export const featureToggleConfig = {
       format: Boolean,
       default: false,
       env: 'CPH_ENABLED'
+    },
+    waterManagementEnabled: {
+      doc: 'Enables the Water Management grant tile on the home page',
+      format: Boolean,
+      default: false,
+      env: 'WATER_MANAGEMENT_ENABLED'
     }
   }
 }

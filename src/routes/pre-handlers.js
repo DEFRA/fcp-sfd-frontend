@@ -3,7 +3,9 @@
  * Redirects to the specified path if required session data is missing or invalid.
  */
 
+import Boom from '@hapi/boom'
 import { services } from '@defra/fcp-sfd-frontend-engine'
+import { fetchBusinessDetailsService } from '../services/business/fetch-business-details-service.js'
 
 /**
  * Creates a pre-handler that validates required session data exists before allowing access to a route.
@@ -83,6 +85,33 @@ export const checkInterrupterJourneyPreHandler = (journey) => {
       }
 
       return true
+    }
+  }
+}
+
+/**
+ * Creates a pre-handler that returns a 404 unless the business's legal status code is in the allowed list.
+ * Used to stop users reaching a registration number journey that doesn't apply to their legal status.
+ *
+ * @param {string[]} allowedLegalStatusCodes - Legal status codes permitted to access the route
+ * @returns {Object} Hapi pre-handler object
+ *
+ * @example
+ * pre: [checkLegalStatusGuard(constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES)]
+ */
+export const checkLegalStatusGuard = (allowedLegalStatusCodes) => {
+  return {
+    method: async (request, h) => {
+      const { auth } = request
+
+      const businessDetails = await fetchBusinessDetailsService(auth.credentials)
+      const legalStatusCode = String(businessDetails.legalStatusCode ?? '')
+
+      if (!allowedLegalStatusCodes.includes(legalStatusCode)) {
+        throw Boom.notFound()
+      }
+
+      return h.continue
     }
   }
 }

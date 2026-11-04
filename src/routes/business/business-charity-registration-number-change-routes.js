@@ -3,12 +3,16 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessCharityRegistrationNumberChangePresenter } from '../../presenters/business/business-charity-registration-number-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkLegalStatusGuard } from '../pre-handlers.js'
+
+const legalStatusGuard = checkLegalStatusGuard(constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES)
 
 const getBusinessCharityRegistrationNumberChange = {
   method: 'GET',
   path: '/business-charity-registration-number-change',
   options: {
-    auth: { scope: FULL_PERMISSIONS }
+    auth: { scope: FULL_PERMISSIONS },
+    pre: [legalStatusGuard]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,6 +28,7 @@ const postBusinessCharityRegistrationNumberChange = {
   path: '/business-charity-registration-number-change',
   options: {
     auth: { scope: FULL_PERMISSIONS },
+    pre: [legalStatusGuard],
     validate: {
       payload: schemas.business.legalStatusRegistration.charity,
       options: { abortEarly: false },

@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Test helpers
 import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
@@ -19,6 +20,10 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
 
 vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
   fetchBusinessChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
+  fetchBusinessDetailsService: vi.fn()
 }))
 
 describe('business charity commission registration number change', () => {
@@ -72,6 +77,55 @@ describe('business charity commission registration number change', () => {
         await getBusinessCharityRegistrationNumberChange.handler(request, h)
 
         expect(h.view).toHaveBeenCalledWith('business/business-charity-registration-number-change', getPageData())
+      })
+    })
+  })
+
+  describe('legal status guard', () => {
+    const guardRequest = { auth: { credentials: { sbi: '800000001' } } }
+    const h = { continue: Symbol('continue') }
+
+    describe('when the business has a charity legal status', () => {
+      beforeEach(() => {
+        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102101' })
+      })
+
+      describe('and the request is a GET', () => {
+        test('it allows access', async () => {
+          const guard = getBusinessCharityRegistrationNumberChange.options.pre.at(-1)
+
+          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+        })
+      })
+
+      describe('and the request is a POST', () => {
+        test('it allows access', async () => {
+          const guard = postBusinessCharityRegistrationNumberChange.options.pre.at(-1)
+
+          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+        })
+      })
+    })
+
+    describe('when the business does not have a charity legal status', () => {
+      beforeEach(() => {
+        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102102' })
+      })
+
+      describe('and the request is a GET', () => {
+        test('it returns a 404', async () => {
+          const guard = getBusinessCharityRegistrationNumberChange.options.pre.at(-1)
+
+          await expect(guard.method(guardRequest, h)).rejects.toMatchObject({ output: { statusCode: 404 } })
+        })
+      })
+
+      describe('and the request is a POST', () => {
+        test('it returns a 404', async () => {
+          const guard = postBusinessCharityRegistrationNumberChange.options.pre.at(-1)
+
+          await expect(guard.method(guardRequest, h)).rejects.toMatchObject({ output: { statusCode: 404 } })
+        })
       })
     })
   })

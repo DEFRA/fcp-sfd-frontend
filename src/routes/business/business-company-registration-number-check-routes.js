@@ -3,14 +3,17 @@ import { updateBusinessCompanyRegistrationNumberChangeService } from '../../serv
 import { businessCompanyRegistrationNumberCheckPresenter } from '../../presenters/business/business-company-registration-number-check-presenter.js'
 import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+import { checkLegalStatusGuard, checkSessionDataGuard } from '../pre-handlers.js'
+
+const legalStatusGuard = checkLegalStatusGuard(constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES)
 
 const getBusinessCompanyRegistrationNumberCheck = {
   method: 'GET',
   path: '/business-company-registration-number-check',
   options: {
     auth: { scope: FULL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber'), legalStatusGuard]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +30,7 @@ const postBusinessCompanyRegistrationNumberCheck = {
   path: '/business-company-registration-number-check',
   options: {
     auth: { scope: FULL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber'), legalStatusGuard]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

@@ -3,6 +3,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
+import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { updateBusinessCompanyRegistrationNumberChangeService } from '../../../../src/services/business/update-business-company-registration-number-change-service.js'
 
 // Test helpers
@@ -17,6 +18,9 @@ vi.mock('../../../../src/services/business/fetch-business-change-service.js', ()
   fetchBusinessChangeService: vi.fn()
 }))
 
+vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
+  fetchBusinessDetailsService: vi.fn()
+}))
 vi.mock('../../../../src/services/business/update-business-company-registration-number-change-service.js', () => ({
   updateBusinessCompanyRegistrationNumberChangeService: vi.fn()
 }))
@@ -55,8 +59,8 @@ describe('business company registration number check', () => {
         expect(getBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
+      test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
+        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -94,6 +98,55 @@ describe('business company registration number check', () => {
     })
   })
 
+  describe('legal status guard', () => {
+    const guardRequest = { auth: { credentials: { sbi: '800000001' } } }
+    const h = { continue: Symbol('continue') }
+
+    describe('when the business has a company legal status', () => {
+      beforeEach(() => {
+        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102102' })
+      })
+
+      describe('and the request is a GET', () => {
+        test('it allows access', async () => {
+          const guard = getBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+
+          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+        })
+      })
+
+      describe('and the request is a POST', () => {
+        test('it allows access', async () => {
+          const guard = postBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+
+          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+        })
+      })
+    })
+
+    describe('when the business does not have a company legal status', () => {
+      beforeEach(() => {
+        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102101' })
+      })
+
+      describe('and the request is a GET', () => {
+        test('it returns a 404', async () => {
+          const guard = getBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+
+          await expect(guard.method(guardRequest, h)).rejects.toMatchObject({ output: { statusCode: 404 } })
+        })
+      })
+
+      describe('and the request is a POST', () => {
+        test('it returns a 404', async () => {
+          const guard = postBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+
+          await expect(guard.method(guardRequest, h)).rejects.toMatchObject({ output: { statusCode: 404 } })
+        })
+      })
+    })
+  })
+
   describe('POST /business-company-registration-number-check', () => {
     beforeEach(() => {
       h = {
@@ -108,8 +161,8 @@ describe('business company registration number check', () => {
         expect(postBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
+      test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
+        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
       })
 
       test('it redirects to the /business-details page', async () => {

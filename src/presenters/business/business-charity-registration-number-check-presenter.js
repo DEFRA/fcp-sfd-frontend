@@ -3,14 +3,12 @@
  * @module businessCharityRegistrationNumberCheckPresenter
  */
 
-import { constants } from '@defra/fcp-sfd-frontend-engine'
-
-const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
+import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
 
 const businessCharityRegistrationNumberCheckPresenter = (data) => {
   return {
-    backLink: { href: BUSINESS_CHANGE_LINKS.businessCharityRegistrationNumber },
-    changeLink: BUSINESS_CHANGE_LINKS.businessCharityRegistrationNumber,
+    backLink: { href: REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber },
+    changeLink: REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber,
     pageTitle: 'Check your charity commission registration number is correct before submitting',
     metaDescription: 'Check the charity commission registration number for your business is correct.',
     userName: data.customer.userName ?? null,

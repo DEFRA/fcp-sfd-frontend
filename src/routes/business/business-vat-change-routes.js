@@ -2,13 +2,13 @@ import { utils, constants, schemas } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessVatChangePresenter } from '../../presenters/business/business-vat-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
-import { FULL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
 const getBusinessVatChange = {
   method: 'GET',
   path: '/business-vat-registration-number-change',
   options: {
-    auth: { scope: FULL_PERMISSIONS }
+    auth: { scope: LEGAL_PERMISSIONS }
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -23,7 +23,7 @@ const postBusinessVatChange = {
   method: 'POST',
   path: '/business-vat-registration-number-change',
   options: {
-    auth: { scope: FULL_PERMISSIONS },
+    auth: { scope: LEGAL_PERMISSIONS },
     validate: {
       payload: schemas.business.vat.change,
       options: { abortEarly: false },

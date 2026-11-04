@@ -10,7 +10,7 @@
  * - Users with "amend" permission can only update address, phone, and email.
  *   If the invalid data includes sections they cannot update (e.g., name), they are
  *   directed to the RPA/support page.
- * - Users with "full" permission can also update the business name.
+ * - Users with "legal" permission (make legal changes or full) can also update the business name and VAT.
  * - The "business details interrupter" can step in when something is invalid,
  *   forcing the user to fix that specific section before they’re allowed to
  *   change anything else.
@@ -55,7 +55,7 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
     vat: resolveVatLink(permissionLevel, interrupter)
   }
 
-  if (permissionLevel === 'full') {
+  if (permissionLevel === 'legal') {
     links.businessName = resolveChangeLink(interrupter, 'name', BUSINESS_CHANGE_LINKS.businessName)
   }
 
@@ -69,7 +69,7 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
  * - 'interrupter' - forced via business-fix
  */
 const resolveVatLink = (permissionLevel, interrupter) => {
-  if (permissionLevel !== 'full') {
+  if (permissionLevel !== 'legal') {
     return null
   }
 

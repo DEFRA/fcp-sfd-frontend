@@ -6,7 +6,7 @@ import { fetchBusinessChangeService } from '../../../../src/services/business/fe
 import { updateBusinessNameChangeService } from '../../../../src/services/business/update-business-name-change-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessNameCheckRoutes } from '../../../../src/routes/business/business-name-check-routes.js'
@@ -52,7 +52,7 @@ describe('business name check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessNameCheck.method).toBe('GET')
         expect(getBusinessNameCheck.path).toBe('/business-name-check')
-        expect(getBusinessNameCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessNameCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
@@ -105,7 +105,7 @@ describe('business name check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessNameCheck.method).toBe('POST')
         expect(postBusinessNameCheck.path).toBe('/business-name-check')
-        expect(postBusinessNameCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessNameCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data', () => {

@@ -54,13 +54,13 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     businessLegalStatus: {
       value: data.legalStatus ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.legalStatus),
-      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
+      changeLink: permissionLevel === 'legal' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
     legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data),
     businessType: {
       value: data.type ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.type),
-      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessType : null
+      changeLink: permissionLevel === 'legal' ? BUSINESS_CHANGE_LINKS.businessType : null
     }
   }
 }

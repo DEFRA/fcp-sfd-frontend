@@ -129,19 +129,19 @@ describe('businessDetailsPresenter', () => {
         permissionLevel = 'amend'
       })
 
-      test('returns "View and update your business details" when user has amend or full permission', () => {
+      test('returns "View and update your business details" when user has amend or legal permission', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.pageTitle).toEqual('View and update your business details')
       })
     })
 
-    describe('when the permission level is full', () => {
+    describe('when the permission level is legal', () => {
       beforeEach(() => {
-        permissionLevel = 'full'
+        permissionLevel = 'legal'
       })
 
-      test('returns "View and update your business details" when user has amend or full permission', () => {
+      test('returns "View and update your business details" when user has amend or legal permission', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.pageTitle).toEqual('View and update your business details')
@@ -178,9 +178,9 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the user has full permission', () => {
+    describe('when the user has legal permission', () => {
       beforeEach(() => {
-        permissionLevel = 'full'
+        permissionLevel = 'legal'
       })
 
       test('returns null', () => {
@@ -282,7 +282,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property is null for view full permission', () => {
+    describe('when the property is null for view legal permission', () => {
       beforeEach(() => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
@@ -312,7 +312,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property has a value for full permissions', () => {
+    describe('when the property has a value for legal permissions', () => {
       beforeEach(() => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
@@ -348,7 +348,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property has a value for full permissions with interrupter', () => {
+    describe('when the property has a value for legal permissions with interrupter', () => {
       beforeEach(() => {
         data.vat = 'GB987654321'
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
@@ -383,7 +383,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property is null for full permissions with interrupter', () => {
+    describe('when the property is null for legal permissions with interrupter', () => {
       beforeEach(() => {
         data.vat = null
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
@@ -596,9 +596,9 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the permission level is full', () => {
+    describe('when the permission level is legal', () => {
       beforeEach(() => {
-        permissionLevel = 'full'
+        permissionLevel = 'legal'
 
         businessDetailsChangeLinksPresenter.mockReturnValue({
           businessAddress: '/business-address-change',

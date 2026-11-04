@@ -6,7 +6,7 @@ import { fetchBusinessDetailsService } from '../../../../src/services/business/f
 import { updateBusinessVatRemoveService } from '../../../../src/services/business/update-business-vat-remove-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessVatRemoveRoutes } from '../../../../src/routes/business/business-vat-remove-routes.js'
@@ -59,7 +59,7 @@ describe('business VAT remove', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessVatRemove.method).toBe('GET')
         expect(getBusinessVatRemove.path).toBe('/business-vat-registration-remove')
-        expect(getBusinessVatRemove.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessVatRemove.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('it calls fetchBusinessDetailService', async () => {
@@ -81,7 +81,7 @@ describe('business VAT remove', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessVatRemove.method).toBe('POST')
         expect(postBusinessVatRemove.path).toBe('/business-vat-registration-remove')
-        expect(postBusinessVatRemove.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessVatRemove.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       describe('and the payload confirmRemove property is "yes"', () => {

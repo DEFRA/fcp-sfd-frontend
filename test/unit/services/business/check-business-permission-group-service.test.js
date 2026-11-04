@@ -5,32 +5,44 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { checkBusinessPermissionGroupService } from '../../../../src/services/business/check-business-permission-group-service.js'
 
 // Constants
-import { FULL_PERMISSIONS, AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { FULL_PERMISSION, MAKE_LEGAL_CHANGES_PERMISSION, AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 describe('checkBusinessPermissionGroupService', () => {
   let permissionLevels
 
-  describe('when the user has full permission', () => {
+  describe('when the user has make legal changes permission', () => {
     beforeEach(() => {
-      permissionLevels = [FULL_PERMISSIONS[0]]
+      permissionLevels = [MAKE_LEGAL_CHANGES_PERMISSION]
     })
 
-    test('it returns "full"', () => {
+    test('it returns "legal"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toBe('full')
+      expect(result).toBe('legal')
     })
   })
 
-  describe('when the user has both full and amend permission', () => {
+  describe('when the user has full permission', () => {
     beforeEach(() => {
-      permissionLevels = [FULL_PERMISSIONS[0], AMEND_PERMISSIONS[0]]
+      permissionLevels = [FULL_PERMISSION]
     })
 
-    test('it prioritises full permission and returns "full"', () => {
+    test('it returns "legal" as it behaves the same as make legal changes', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toBe('full')
+      expect(result).toBe('legal')
+    })
+  })
+
+  describe('when the user has both make legal changes and amend permission', () => {
+    beforeEach(() => {
+      permissionLevels = [MAKE_LEGAL_CHANGES_PERMISSION, AMEND_PERMISSIONS[0]]
+    })
+
+    test('it prioritises legal permission and returns "legal"', () => {
+      const result = checkBusinessPermissionGroupService(permissionLevels)
+
+      expect(result).toBe('legal')
     })
   })
 

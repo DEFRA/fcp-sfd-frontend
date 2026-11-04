@@ -103,9 +103,9 @@ describe('businessDetailsChangeLinksPresenter', () => {
     })
   })
 
-  describe('when the user has full permission', () => {
+  describe('when the user has legal permission', () => {
     beforeEach(() => {
-      permissionLevel = 'full'
+      permissionLevel = 'legal'
     })
 
     describe('and all sections are valid', () => {

@@ -21,7 +21,7 @@ const updateBusinessCompanyRegistrationNumberChangeService = async (yar, credent
     return
   }
 
-  // A business only ever holds one registration number, so the charity number is always cleared
+  // A business should only ever hold one registration number, so the charity number is always cleared
   const variables = utils.buildUpdateBusinessRegistrationNumbersVariables(businessDetails.changeBusinessCompanyRegistrationNumber, null, businessDetails.sbi)
 
   await updateDalService(mutations.updateBusinessRegistrationNumbers, variables, credentials.sessionId)

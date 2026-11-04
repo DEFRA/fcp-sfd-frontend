@@ -18,7 +18,6 @@ const getBusinessCompanyRegistrationNumberCheck = {
   handler: async (request, h) => {
     const { yar, auth } = request
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCompanyRegistrationNumber')
-
     const pageData = businessCompanyRegistrationNumberCheckPresenter(businessDetails)
 
     return h.view('business/business-company-registration-number-check', pageData)

@@ -5,12 +5,29 @@ import { describe, test, expect, beforeEach } from 'vitest'
 import { checkBusinessPermissionGroupService } from '../../../../src/services/business/check-business-permission-group-service.js'
 
 // Constants
-import { FULL_PERMISSION, MAKE_LEGAL_CHANGES_PERMISSION, AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import {
+  FULL_PERMISSION,
+  MAKE_LEGAL_CHANGES_PERMISSION,
+  AMEND_LEVEL_PERMISSION,
+  VIEW_LEVEL_PERMISSION
+} from '../../../../src/constants/scope/business-details.js'
 
 describe('checkBusinessPermissionGroupService', () => {
   let permissionLevels
 
-  describe('when the user has make legal changes permission', () => {
+  describe('when the user has full permission only', () => {
+    beforeEach(() => {
+      permissionLevels = [FULL_PERMISSION]
+    })
+
+    test('it returns "legal"', () => {
+      const result = checkBusinessPermissionGroupService(permissionLevels)
+
+      expect(result).toBe('legal')
+    })
+  })
+
+  describe('when the user has make legal changes permission only', () => {
     beforeEach(() => {
       permissionLevels = [MAKE_LEGAL_CHANGES_PERMISSION]
     })
@@ -22,33 +39,9 @@ describe('checkBusinessPermissionGroupService', () => {
     })
   })
 
-  describe('when the user has full permission', () => {
-    beforeEach(() => {
-      permissionLevels = [FULL_PERMISSION]
-    })
-
-    test('it returns "legal" as it behaves the same as make legal changes', () => {
-      const result = checkBusinessPermissionGroupService(permissionLevels)
-
-      expect(result).toBe('legal')
-    })
-  })
-
-  describe('when the user has both make legal changes and amend permission', () => {
-    beforeEach(() => {
-      permissionLevels = [MAKE_LEGAL_CHANGES_PERMISSION, AMEND_PERMISSIONS[0]]
-    })
-
-    test('it prioritises legal permission and returns "legal"', () => {
-      const result = checkBusinessPermissionGroupService(permissionLevels)
-
-      expect(result).toBe('legal')
-    })
-  })
-
   describe('when the user has amend permission only', () => {
     beforeEach(() => {
-      permissionLevels = [AMEND_PERMISSIONS[0]]
+      permissionLevels = [AMEND_LEVEL_PERMISSION]
     })
 
     test('it returns "amend"', () => {
@@ -60,7 +53,7 @@ describe('checkBusinessPermissionGroupService', () => {
 
   describe('when the user has view permission only', () => {
     beforeEach(() => {
-      permissionLevels = ['view']
+      permissionLevels = [VIEW_LEVEL_PERMISSION]
     })
 
     test('it returns "view"', () => {
@@ -79,6 +72,26 @@ describe('checkBusinessPermissionGroupService', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
       expect(result).toBe('view')
+    })
+  })
+
+  describe('when the user has multiple permissions', () => {
+    test('it returns "legal" for full and amend permission', () => {
+      const result = checkBusinessPermissionGroupService([FULL_PERMISSION, AMEND_LEVEL_PERMISSION])
+
+      expect(result).toBe('legal')
+    })
+
+    test('it returns "legal" for make legal changes and amend permission', () => {
+      const result = checkBusinessPermissionGroupService([MAKE_LEGAL_CHANGES_PERMISSION, AMEND_LEVEL_PERMISSION])
+
+      expect(result).toBe('legal')
+    })
+
+    test('it returns "legal" regardless of the order permissions are listed', () => {
+      const result = checkBusinessPermissionGroupService([VIEW_LEVEL_PERMISSION, AMEND_LEVEL_PERMISSION, MAKE_LEGAL_CHANGES_PERMISSION])
+
+      expect(result).toBe('legal')
     })
   })
 })

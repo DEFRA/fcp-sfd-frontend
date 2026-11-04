@@ -92,5 +92,25 @@ describe('businessCharityRegistrationNumberCheckPresenter', () => {
         expect(result.charityCommissionRegistrationNumber).toEqual('7654321')
       })
     })
+
+    describe('when there is no changed number', () => {
+      test('it should return the stored number as the charityCommissionRegistrationNumber', () => {
+        const result = businessCharityRegistrationNumberCheckPresenter(data)
+
+        expect(result.charityCommissionRegistrationNumber).toEqual('12345678')
+      })
+    })
+
+    describe('when there is no changed number and registrationNumbers is missing', () => {
+      beforeEach(() => {
+        delete data.registrationNumbers
+      })
+
+      test('it should return charityCommissionRegistrationNumber as null', () => {
+        const result = businessCharityRegistrationNumberCheckPresenter(data)
+
+        expect(result.charityCommissionRegistrationNumber).toEqual(null)
+      })
+    })
   })
 })

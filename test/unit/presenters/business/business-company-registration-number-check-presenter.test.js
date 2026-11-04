@@ -92,5 +92,25 @@ describe('businessCompanyRegistrationNumberCheckPresenter', () => {
         expect(result.companyRegistrationNumber).toEqual('SC123456')
       })
     })
+
+    describe('when there is no changed number', () => {
+      test('it should return the stored number as the companyRegistrationNumber', () => {
+        const result = businessCompanyRegistrationNumberCheckPresenter(data)
+
+        expect(result.companyRegistrationNumber).toEqual('12345678')
+      })
+    })
+
+    describe('when there is no changed number and registrationNumbers is missing', () => {
+      beforeEach(() => {
+        delete data.registrationNumbers
+      })
+
+      test('it should return companyRegistrationNumber as null', () => {
+        const result = businessCompanyRegistrationNumberCheckPresenter(data)
+
+        expect(result.companyRegistrationNumber).toEqual(null)
+      })
+    })
   })
 })

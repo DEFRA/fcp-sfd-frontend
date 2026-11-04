@@ -5,6 +5,7 @@
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
+import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
@@ -94,11 +95,11 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
   if (constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Charity commission registration number'
     number = registrationNumbers.charityCommission
-    changeLink = BUSINESS_CHANGE_LINKS.businessCharityRegistrationNumber
+    changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber
   } else if (constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Company registration number'
     number = registrationNumbers.companiesHouse
-    changeLink = BUSINESS_CHANGE_LINKS.businessCompanyRegistrationNumber
+    changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCompanyRegistrationNumber
   } else {
     return null
   }

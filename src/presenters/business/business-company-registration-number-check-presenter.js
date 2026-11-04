@@ -3,14 +3,12 @@
  * @module businessCompanyRegistrationNumberCheckPresenter
  */
 
-import { constants } from '@defra/fcp-sfd-frontend-engine'
-
-const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
+import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
 
 const businessCompanyRegistrationNumberCheckPresenter = (data) => {
   return {
-    backLink: { href: BUSINESS_CHANGE_LINKS.businessCompanyRegistrationNumber },
-    changeLink: BUSINESS_CHANGE_LINKS.businessCompanyRegistrationNumber,
+    backLink: { href: REGISTRATION_NUMBER_CHANGE_LINKS.businessCompanyRegistrationNumber },
+    changeLink: REGISTRATION_NUMBER_CHANGE_LINKS.businessCompanyRegistrationNumber,
     pageTitle: 'Check your company registration number is correct before submitting',
     metaDescription: 'Check the company registration number for your business is correct.',
     userName: data.customer.userName ?? null,

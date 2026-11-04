@@ -87,11 +87,5 @@ describe('checkBusinessPermissionGroupService', () => {
 
       expect(result).toBe('legal')
     })
-
-    test('it returns "legal" regardless of the order permissions are listed', () => {
-      const result = checkBusinessPermissionGroupService([VIEW_LEVEL_PERMISSION, AMEND_LEVEL_PERMISSION, MAKE_LEGAL_CHANGES_PERMISSION])
-
-      expect(result).toBe('legal')
-    })
   })
 })

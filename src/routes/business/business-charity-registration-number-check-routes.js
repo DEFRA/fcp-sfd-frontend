@@ -4,19 +4,23 @@ import { businessCharityRegistrationNumberCheckPresenter } from '../../presenter
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
 import { constants } from '@defra/fcp-sfd-frontend-engine'
-import { checkLegalStatusGuard, checkSessionDataGuard } from '../pre-handlers.js'
-
-const legalStatusGuard = checkLegalStatusGuard(constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES)
+import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessCharityRegistrationNumberCheck = {
   method: 'GET',
   path: '/business-charity-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber'), legalStatusGuard]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+    const businessLegalStatusCode = String(yar.get('businessLegalStatusCode') ?? '')
+
+    if (!constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
+      return h.redirect('/business-details')
+    }
+
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCharityRegistrationNumber')
     const pageData = businessCharityRegistrationNumberCheckPresenter(businessDetails)
 
@@ -29,10 +33,16 @@ const postBusinessCharityRegistrationNumberCheck = {
   path: '/business-charity-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber'), legalStatusGuard]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+    const businessLegalStatusCode = String(yar.get('businessLegalStatusCode') ?? '')
+
+    if (!constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
+      return h.redirect('/business-details')
+    }
+
     await updateBusinessCharityRegistrationNumberChangeService(yar, auth.credentials)
 
     return h.redirect('/business-details')

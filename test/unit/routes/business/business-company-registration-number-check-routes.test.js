@@ -3,7 +3,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { updateBusinessCompanyRegistrationNumberChangeService } from '../../../../src/services/business/update-business-company-registration-number-change-service.js'
 
 // Test helpers
@@ -18,16 +17,13 @@ vi.mock('../../../../src/services/business/fetch-business-change-service.js', ()
   fetchBusinessChangeService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
-}))
 vi.mock('../../../../src/services/business/update-business-company-registration-number-change-service.js', () => ({
   updateBusinessCompanyRegistrationNumberChangeService: vi.fn()
 }))
 
 describe('business company registration number check', () => {
   const request = {
-    yar: {},
+    yar: { get: vi.fn() },
     auth: {
       credentials: {
         sbi: '800000001',
@@ -41,6 +37,7 @@ describe('business company registration number check', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    request.yar.get.mockReturnValue('102102')
   })
 
   describe('GET /business-company-registration-number-check', () => {
@@ -59,8 +56,8 @@ describe('business company registration number check', () => {
         expect(getBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
-        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
       })
 
       describe('pre-handler execution', () => {
@@ -98,58 +95,96 @@ describe('business company registration number check', () => {
     })
   })
 
-  describe('legal status guard', () => {
-    const guardRequest = { auth: { credentials: { sbi: '800000001' } } }
-    const redirectStub = {}
-    const h = {
-      continue: Symbol('continue'),
-      redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
-    }
+  describe('legal status check', () => {
+    beforeEach(() => {
+      h = {
+        redirect: vi.fn(),
+        view: vi.fn().mockReturnValue({})
+      }
+
+      fetchBusinessChangeService.mockReturnValue(getMockData())
+    })
 
     describe('when the business has a company legal status', () => {
       beforeEach(() => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102102' })
+        request.yar.get.mockReturnValue('102102')
       })
 
       describe('and the request is a GET', () => {
-        test('it allows access', async () => {
-          const guard = getBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+        test('it renders the page', async () => {
+          await getBusinessCompanyRegistrationNumberCheck.handler(request, h)
 
-          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+          expect(h.redirect).not.toHaveBeenCalled()
+          expect(h.view).toHaveBeenCalled()
         })
       })
 
       describe('and the request is a POST', () => {
-        test('it allows access', async () => {
-          const guard = postBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+        test('it saves the change', async () => {
+          await postBusinessCompanyRegistrationNumberCheck.handler(request, h)
 
-          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+          expect(updateBusinessCompanyRegistrationNumberChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
         })
+      })
+    })
+
+    describe('when the business has a company legal status stored as a number', () => {
+      beforeEach(() => {
+        request.yar.get.mockReturnValue(102102)
+      })
+
+      test('it renders the page', async () => {
+        await getBusinessCompanyRegistrationNumberCheck.handler(request, h)
+
+        expect(h.redirect).not.toHaveBeenCalled()
+        expect(h.view).toHaveBeenCalled()
       })
     })
 
     describe('when the business does not have a company legal status', () => {
       beforeEach(() => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102101' })
+        request.yar.get.mockReturnValue('102101')
       })
 
       describe('and the request is a GET', () => {
-        test('it redirects to the home page', async () => {
-          const guard = getBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
-          const result = await guard.method(guardRequest, h)
+        test('it redirects to the business details page', async () => {
+          await getBusinessCompanyRegistrationNumberCheck.handler(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/home')
-          expect(result).toBe(redirectStub)
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(fetchBusinessChangeService).not.toHaveBeenCalled()
         })
       })
 
       describe('and the request is a POST', () => {
-        test('it redirects to the home page', async () => {
-          const guard = postBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
-          const result = await guard.method(guardRequest, h)
+        test('it redirects to the business details page without saving the change', async () => {
+          await postBusinessCompanyRegistrationNumberCheck.handler(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/home')
-          expect(result).toBe(redirectStub)
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(updateBusinessCompanyRegistrationNumberChangeService).not.toHaveBeenCalled()
+        })
+      })
+    })
+
+    describe('when the legal status code is not in the session', () => {
+      beforeEach(() => {
+        request.yar.get.mockReturnValue(undefined)
+      })
+
+      describe('and the request is a GET', () => {
+        test('it redirects to the business details page', async () => {
+          await getBusinessCompanyRegistrationNumberCheck.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(fetchBusinessChangeService).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the request is a POST', () => {
+        test('it redirects to the business details page without saving the change', async () => {
+          await postBusinessCompanyRegistrationNumberCheck.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(updateBusinessCompanyRegistrationNumberChangeService).not.toHaveBeenCalled()
         })
       })
     })
@@ -169,8 +204,8 @@ describe('business company registration number check', () => {
         expect(postBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
-        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
       })
 
       test('it redirects to the /business-details page', async () => {

@@ -4,19 +4,23 @@ import { businessCompanyRegistrationNumberCheckPresenter } from '../../presenter
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
 import { constants } from '@defra/fcp-sfd-frontend-engine'
-import { checkLegalStatusGuard, checkSessionDataGuard } from '../pre-handlers.js'
-
-const legalStatusGuard = checkLegalStatusGuard(constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES)
+import { checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessCompanyRegistrationNumberCheck = {
   method: 'GET',
   path: '/business-company-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber'), legalStatusGuard]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+    const businessLegalStatusCode = String(yar.get('businessLegalStatusCode') ?? '')
+
+    if (!constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
+      return h.redirect('/business-details')
+    }
+
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCompanyRegistrationNumber')
     const pageData = businessCompanyRegistrationNumberCheckPresenter(businessDetails)
 
@@ -29,10 +33,16 @@ const postBusinessCompanyRegistrationNumberCheck = {
   path: '/business-company-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber'), legalStatusGuard]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+    const businessLegalStatusCode = String(yar.get('businessLegalStatusCode') ?? '')
+
+    if (!constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
+      return h.redirect('/business-details')
+    }
+
     await updateBusinessCompanyRegistrationNumberChangeService(yar, auth.credentials)
 
     return h.redirect('/business-details')

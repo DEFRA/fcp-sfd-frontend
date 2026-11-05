@@ -1,29 +1,19 @@
 // Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
-// Things under test
-import { services } from '@defra/fcp-sfd-frontend-engine'
-import { fetchBusinessDetailsService } from '../../../src/services/business/fetch-business-details-service.js'
-import {
-  checkSessionDataGuard,
-  checkInterrupterJourneyPreHandler,
-  checkLegalStatusGuard
-} from '../../../src/routes/pre-handlers.js'
-import {
-  PERSONAL_JOURNEY,
-  BUSINESS_JOURNEY
-} from '../../../src/constants/journeys.js'
-
-// Mocks
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   services: {
     checkInterrupterJourneySession: vi.fn()
   }
 }))
 
-vi.mock('../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
-}))
+// Things under test
+import { services } from '@defra/fcp-sfd-frontend-engine'
+import { checkSessionDataGuard, checkInterrupterJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
+import {
+  PERSONAL_JOURNEY,
+  BUSINESS_JOURNEY
+} from '../../../src/constants/journeys.js'
 
 describe('pre-handlers', () => {
   let h
@@ -288,52 +278,6 @@ describe('pre-handlers', () => {
         expect(services.checkInterrupterJourneySession).toHaveBeenCalledWith(request.yar, journey.journeyKey)
         expect(result).toBe(true)
         expect(h.redirect).not.toHaveBeenCalled()
-      })
-    })
-  })
-
-  describe('checkLegalStatusGuard', () => {
-    let request
-    let preHandler
-
-    beforeEach(() => {
-      h.continue = Symbol('continue')
-      request = { auth: { credentials: { sbi: '800000001', crn: '9000000001', sessionId: 'abc' } } }
-      preHandler = checkLegalStatusGuard(['102102', '102109'])
-    })
-
-    describe('when the legal status code is allowed', () => {
-      test('it continues to the handler', async () => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: 102102 })
-
-        const result = await preHandler.method(request, h)
-
-        expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
-        expect(result).toBe(h.continue)
-      })
-    })
-
-    describe('when the legal status code is not allowed', () => {
-      test('it redirects to the home page', async () => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: 101111 })
-
-        const result = await preHandler.method(request, h)
-
-        expect(h.redirect).toHaveBeenCalledWith('/home')
-        expect(takeoverMock).toHaveBeenCalled()
-        expect(result).toEqual({})
-      })
-    })
-
-    describe('when there is no legal status code', () => {
-      test('it redirects to the home page', async () => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: null })
-
-        const result = await preHandler.method(request, h)
-
-        expect(h.redirect).toHaveBeenCalledWith('/home')
-        expect(takeoverMock).toHaveBeenCalled()
-        expect(result).toEqual({})
       })
     })
   })

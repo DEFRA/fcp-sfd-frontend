@@ -3,7 +3,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 
 // Things we need to mock
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 import { updateBusinessCharityRegistrationNumberChangeService } from '../../../../src/services/business/update-business-charity-registration-number-change-service.js'
 
 // Test helpers
@@ -18,17 +17,13 @@ vi.mock('../../../../src/services/business/fetch-business-change-service.js', ()
   fetchBusinessChangeService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
-}))
-
 vi.mock('../../../../src/services/business/update-business-charity-registration-number-change-service.js', () => ({
   updateBusinessCharityRegistrationNumberChangeService: vi.fn()
 }))
 
 describe('business charity commission registration number check', () => {
   const request = {
-    yar: {},
+    yar: { get: vi.fn() },
     auth: {
       credentials: {
         sbi: '800000001',
@@ -42,6 +37,7 @@ describe('business charity commission registration number check', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    request.yar.get.mockReturnValue('102101')
   })
 
   describe('GET /business-charity-registration-number-check', () => {
@@ -60,8 +56,8 @@ describe('business charity commission registration number check', () => {
         expect(getBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
-        expect(getBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(2)
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(getBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(1)
       })
 
       describe('pre-handler execution', () => {
@@ -99,58 +95,96 @@ describe('business charity commission registration number check', () => {
     })
   })
 
-  describe('legal status guard', () => {
-    const guardRequest = { auth: { credentials: { sbi: '800000001' } } }
-    const redirectStub = {}
-    const h = {
-      continue: Symbol('continue'),
-      redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
-    }
+  describe('legal status check', () => {
+    beforeEach(() => {
+      h = {
+        redirect: vi.fn(),
+        view: vi.fn().mockReturnValue({})
+      }
+
+      fetchBusinessChangeService.mockReturnValue(getMockData())
+    })
 
     describe('when the business has a charity legal status', () => {
       beforeEach(() => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102101' })
+        request.yar.get.mockReturnValue('102101')
       })
 
       describe('and the request is a GET', () => {
-        test('it allows access', async () => {
-          const guard = getBusinessCharityRegistrationNumberCheck.options.pre.at(-1)
+        test('it renders the page', async () => {
+          await getBusinessCharityRegistrationNumberCheck.handler(request, h)
 
-          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+          expect(h.redirect).not.toHaveBeenCalled()
+          expect(h.view).toHaveBeenCalled()
         })
       })
 
       describe('and the request is a POST', () => {
-        test('it allows access', async () => {
-          const guard = postBusinessCharityRegistrationNumberCheck.options.pre.at(-1)
+        test('it saves the change', async () => {
+          await postBusinessCharityRegistrationNumberCheck.handler(request, h)
 
-          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+          expect(updateBusinessCharityRegistrationNumberChangeService).toHaveBeenCalledWith(request.yar, request.auth.credentials)
         })
+      })
+    })
+
+    describe('when the business has a charity legal status stored as a number', () => {
+      beforeEach(() => {
+        request.yar.get.mockReturnValue(102101)
+      })
+
+      test('it renders the page', async () => {
+        await getBusinessCharityRegistrationNumberCheck.handler(request, h)
+
+        expect(h.redirect).not.toHaveBeenCalled()
+        expect(h.view).toHaveBeenCalled()
       })
     })
 
     describe('when the business does not have a charity legal status', () => {
       beforeEach(() => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102102' })
+        request.yar.get.mockReturnValue('102102')
       })
 
       describe('and the request is a GET', () => {
-        test('it redirects to the home page', async () => {
-          const guard = getBusinessCharityRegistrationNumberCheck.options.pre.at(-1)
-          const result = await guard.method(guardRequest, h)
+        test('it redirects to the business details page', async () => {
+          await getBusinessCharityRegistrationNumberCheck.handler(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/home')
-          expect(result).toBe(redirectStub)
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(fetchBusinessChangeService).not.toHaveBeenCalled()
         })
       })
 
       describe('and the request is a POST', () => {
-        test('it redirects to the home page', async () => {
-          const guard = postBusinessCharityRegistrationNumberCheck.options.pre.at(-1)
-          const result = await guard.method(guardRequest, h)
+        test('it redirects to the business details page without saving the change', async () => {
+          await postBusinessCharityRegistrationNumberCheck.handler(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/home')
-          expect(result).toBe(redirectStub)
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(updateBusinessCharityRegistrationNumberChangeService).not.toHaveBeenCalled()
+        })
+      })
+    })
+
+    describe('when the legal status code is not in the session', () => {
+      beforeEach(() => {
+        request.yar.get.mockReturnValue(undefined)
+      })
+
+      describe('and the request is a GET', () => {
+        test('it redirects to the business details page', async () => {
+          await getBusinessCharityRegistrationNumberCheck.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(fetchBusinessChangeService).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the request is a POST', () => {
+        test('it redirects to the business details page without saving the change', async () => {
+          await postBusinessCharityRegistrationNumberCheck.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(updateBusinessCharityRegistrationNumberChangeService).not.toHaveBeenCalled()
         })
       })
     })
@@ -170,8 +204,8 @@ describe('business charity commission registration number check', () => {
         expect(postBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
-        expect(postBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(2)
+      test('should have a pre-handler to guard against missing session data', () => {
+        expect(postBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(1)
       })
 
       test('it redirects to the /business-details page', async () => {

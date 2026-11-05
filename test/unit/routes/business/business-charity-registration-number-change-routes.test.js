@@ -4,7 +4,6 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
-import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Test helpers
 import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
@@ -22,10 +21,6 @@ vi.mock('../../../../src/services/business/fetch-business-change-service.js', ()
   fetchBusinessChangeService: vi.fn()
 }))
 
-vi.mock('../../../../src/services/business/fetch-business-details-service.js', () => ({
-  fetchBusinessDetailsService: vi.fn()
-}))
-
 describe('business charity commission registration number change', () => {
   let request
   let h
@@ -40,6 +35,7 @@ describe('business charity commission registration number change', () => {
     vi.clearAllMocks()
 
     request = {
+      yar: { get: vi.fn().mockReturnValue('102101') },
       auth: { credentials },
       payload: {}
     }
@@ -81,58 +77,93 @@ describe('business charity commission registration number change', () => {
     })
   })
 
-  describe('legal status guard', () => {
-    const guardRequest = { auth: { credentials: { sbi: '800000001' } } }
-    const redirectStub = {}
-    const h = {
-      continue: Symbol('continue'),
-      redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
-    }
+  describe('legal status check', () => {
+    beforeEach(() => {
+      fetchBusinessChangeService.mockResolvedValue(getMockData())
+      request.payload = { charityCommissionRegistrationNumber: '12345678' }
+    })
 
     describe('when the business has a charity legal status', () => {
       beforeEach(() => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102101' })
+        request.yar.get.mockReturnValue('102101')
       })
 
       describe('and the request is a GET', () => {
-        test('it allows access', async () => {
-          const guard = getBusinessCharityRegistrationNumberChange.options.pre.at(-1)
+        test('it renders the page', async () => {
+          await getBusinessCharityRegistrationNumberChange.handler(request, h)
 
-          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+          expect(h.redirect).not.toHaveBeenCalled()
+          expect(h.view).toHaveBeenCalled()
         })
       })
 
       describe('and the request is a POST', () => {
-        test('it allows access', async () => {
-          const guard = postBusinessCharityRegistrationNumberChange.options.pre.at(-1)
+        test('it saves the change and redirects to the check page', async () => {
+          await postBusinessCharityRegistrationNumberChange.options.handler(request, h)
 
-          expect(await guard.method(guardRequest, h)).toBe(h.continue)
+          expect(setSessionData).toHaveBeenCalled()
+          expect(h.redirect).toHaveBeenCalledWith('/business-charity-registration-number-check')
         })
+      })
+    })
+
+    describe('when the business has a charity legal status stored as a number', () => {
+      beforeEach(() => {
+        request.yar.get.mockReturnValue(102101)
+      })
+
+      test('it renders the page', async () => {
+        await getBusinessCharityRegistrationNumberChange.handler(request, h)
+
+        expect(h.redirect).not.toHaveBeenCalled()
+        expect(h.view).toHaveBeenCalled()
       })
     })
 
     describe('when the business does not have a charity legal status', () => {
       beforeEach(() => {
-        fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: '102102' })
+        request.yar.get.mockReturnValue('102102')
       })
 
       describe('and the request is a GET', () => {
-        test('it redirects to the home page', async () => {
-          const guard = getBusinessCharityRegistrationNumberChange.options.pre.at(-1)
-          const result = await guard.method(guardRequest, h)
+        test('it redirects to the business details page', async () => {
+          await getBusinessCharityRegistrationNumberChange.handler(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/home')
-          expect(result).toBe(redirectStub)
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(fetchBusinessChangeService).not.toHaveBeenCalled()
         })
       })
 
       describe('and the request is a POST', () => {
-        test('it redirects to the home page', async () => {
-          const guard = postBusinessCharityRegistrationNumberChange.options.pre.at(-1)
-          const result = await guard.method(guardRequest, h)
+        test('it redirects to the business details page', async () => {
+          await postBusinessCharityRegistrationNumberChange.options.handler(request, h)
 
-          expect(h.redirect).toHaveBeenCalledWith('/home')
-          expect(result).toBe(redirectStub)
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(setSessionData).not.toHaveBeenCalled()
+        })
+      })
+    })
+
+    describe('when the legal status code is not in the session', () => {
+      beforeEach(() => {
+        request.yar.get.mockReturnValue(undefined)
+      })
+
+      describe('and the request is a GET', () => {
+        test('it redirects to the business details page', async () => {
+          await getBusinessCharityRegistrationNumberChange.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(fetchBusinessChangeService).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the request is a POST', () => {
+        test('it redirects to the business details page', async () => {
+          await postBusinessCharityRegistrationNumberChange.options.handler(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(setSessionData).not.toHaveBeenCalled()
         })
       })
     })

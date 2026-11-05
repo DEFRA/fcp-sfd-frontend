@@ -314,23 +314,26 @@ describe('pre-handlers', () => {
     })
 
     describe('when the legal status code is not allowed', () => {
-      test('it throws a 404 error', async () => {
+      test('it redirects to the home page', async () => {
         fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: 101111 })
 
-        await expect(preHandler.method(request, h)).rejects.toMatchObject({
-          isBoom: true,
-          output: { statusCode: 404 }
-        })
+        const result = await preHandler.method(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/home')
+        expect(takeoverMock).toHaveBeenCalled()
+        expect(result).toEqual({})
       })
     })
 
     describe('when there is no legal status code', () => {
-      test('it throws a 404 error', async () => {
+      test('it redirects to the home page', async () => {
         fetchBusinessDetailsService.mockResolvedValue({ legalStatusCode: null })
 
-        await expect(preHandler.method(request, h)).rejects.toMatchObject({
-          output: { statusCode: 404 }
-        })
+        const result = await preHandler.method(request, h)
+
+        expect(h.redirect).toHaveBeenCalledWith('/home')
+        expect(takeoverMock).toHaveBeenCalled()
+        expect(result).toEqual({})
       })
     })
   })

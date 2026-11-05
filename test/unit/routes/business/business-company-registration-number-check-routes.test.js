@@ -100,7 +100,11 @@ describe('business company registration number check', () => {
 
   describe('legal status guard', () => {
     const guardRequest = { auth: { credentials: { sbi: '800000001' } } }
-    const h = { continue: Symbol('continue') }
+    const redirectStub = {}
+    const h = {
+      continue: Symbol('continue'),
+      redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
+    }
 
     describe('when the business has a company legal status', () => {
       beforeEach(() => {
@@ -130,18 +134,22 @@ describe('business company registration number check', () => {
       })
 
       describe('and the request is a GET', () => {
-        test('it returns a 404', async () => {
+        test('it redirects to the home page', async () => {
           const guard = getBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+          const result = await guard.method(guardRequest, h)
 
-          await expect(guard.method(guardRequest, h)).rejects.toMatchObject({ output: { statusCode: 404 } })
+          expect(h.redirect).toHaveBeenCalledWith('/home')
+          expect(result).toBe(redirectStub)
         })
       })
 
       describe('and the request is a POST', () => {
-        test('it returns a 404', async () => {
+        test('it redirects to the home page', async () => {
           const guard = postBusinessCompanyRegistrationNumberCheck.options.pre.at(-1)
+          const result = await guard.method(guardRequest, h)
 
-          await expect(guard.method(guardRequest, h)).rejects.toMatchObject({ output: { statusCode: 404 } })
+          expect(h.redirect).toHaveBeenCalledWith('/home')
+          expect(result).toBe(redirectStub)
         })
       })
     })

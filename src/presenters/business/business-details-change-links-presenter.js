@@ -10,7 +10,7 @@
  * - Users with "amend" permission can only update address, phone, and email.
  *   If the invalid data includes sections they cannot update (e.g., name), they are
  *   directed to the RPA/support page.
- * - Users with "full" permission can also update the business name.
+ * - Users with "legal" permission (make legal changes or full) can also update the business name and VAT.
  * - The "business details interrupter" can step in when something is invalid,
  *   forcing the user to fix that specific section before they’re allowed to
  *   change anything else.
@@ -27,13 +27,14 @@
 
 import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
+import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
 const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const interrupter = getInterrupterState(hasValidBusinessDetails, sectionsNeedingUpdate)
 
-  if (permissionLevel === 'view') {
+  if (permissionLevel === PERMISSION_GROUP.VIEW) {
     return {
       vat: null
     }
@@ -55,7 +56,7 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
     vat: resolveVatLink(permissionLevel, interrupter)
   }
 
-  if (permissionLevel === 'full') {
+  if (permissionLevel === PERMISSION_GROUP.LEGAL) {
     links.businessName = resolveChangeLink(interrupter, 'name', BUSINESS_CHANGE_LINKS.businessName)
   }
 
@@ -69,7 +70,7 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
  * - 'interrupter' - forced via business-fix
  */
 const resolveVatLink = (permissionLevel, interrupter) => {
-  if (permissionLevel !== 'full') {
+  if (permissionLevel !== PERMISSION_GROUP.LEGAL) {
     return null
   }
 
@@ -104,7 +105,7 @@ const resolveChangeLink = (interrupter, section, normalLink) => {
  * they are not allowed to update.
  */
 const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
-  if (permissionLevel === 'amend') {
+  if (permissionLevel === PERMISSION_GROUP.AMEND) {
     return sectionsNeedingUpdate.includes('name')
   }
 

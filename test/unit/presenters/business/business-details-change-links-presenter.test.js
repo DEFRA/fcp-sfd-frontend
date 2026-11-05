@@ -6,6 +6,7 @@ import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/
 
 // Test helpers
 import { constants } from '@defra/fcp-sfd-frontend-engine'
+import { PERMISSION_GROUP } from '../../../../src/constants/scope/business-details.js'
 
 // Mock dependencies
 import { config } from '../../../../src/config/index.js'
@@ -30,7 +31,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
     // Default: interrupter ON
     config.get.mockReturnValue(true)
 
-    permissionLevel = 'view'
+    permissionLevel = PERMISSION_GROUP.VIEW
     hasValidBusinessDetails = true
     sectionsNeedingUpdate = []
   })
@@ -47,7 +48,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
   describe('when the user has amend permission', () => {
     beforeEach(() => {
-      permissionLevel = 'amend'
+      permissionLevel = PERMISSION_GROUP.AMEND
     })
 
     describe('and there are no blocked sections', () => {
@@ -103,9 +104,9 @@ describe('businessDetailsChangeLinksPresenter', () => {
     })
   })
 
-  describe('when the user has full permission', () => {
+  describe('when the user has legal permission', () => {
     beforeEach(() => {
-      permissionLevel = 'full'
+      permissionLevel = PERMISSION_GROUP.LEGAL
     })
 
     describe('and all sections are valid', () => {

@@ -77,7 +77,7 @@ describe('homePresenter', () => {
       })
     })
 
-    describe('when the user has amend or full permissions', () => {
+    describe('when the user has amend or legal permissions', () => {
       beforeEach(() => {
         permissionGroups = [AMEND_LEVEL_PERMISSION]
       })

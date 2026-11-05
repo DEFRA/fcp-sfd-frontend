@@ -3,6 +3,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Test helpers
 import { constants } from '@defra/fcp-sfd-frontend-engine'
+import { PERMISSION_GROUP } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessDetailsPresenter } from '../../../../src/presenters/business/business-details-presenter.js'
@@ -37,7 +38,7 @@ describe('businessDetailsPresenter', () => {
       flash: vi.fn().mockReturnValue([{ title: 'Update', text: 'Business details updated successfully' }])
     }
 
-    permissionLevel = 'view'
+    permissionLevel = PERMISSION_GROUP.VIEW
     hasValidBusinessDetails = true
     sectionsNeedingUpdate = []
     businessDetailsChangeLinksPresenter.mockReturnValue({ vat: null })
@@ -126,22 +127,22 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the permission level is amend', () => {
       beforeEach(() => {
-        permissionLevel = 'amend'
+        permissionLevel = PERMISSION_GROUP.AMEND
       })
 
-      test('returns "View and update your business details" when user has amend or full permission', () => {
+      test('returns "View and update your business details" when user has amend or legal permission', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.pageTitle).toEqual('View and update your business details')
       })
     })
 
-    describe('when the permission level is full', () => {
+    describe('when the permission level is legal', () => {
       beforeEach(() => {
-        permissionLevel = 'full'
+        permissionLevel = PERMISSION_GROUP.LEGAL
       })
 
-      test('returns "View and update your business details" when user has amend or full permission', () => {
+      test('returns "View and update your business details" when user has amend or legal permission', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.pageTitle).toEqual('View and update your business details')
@@ -152,7 +153,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "permissionsText" property', () => {
     describe('when the user has amend permission', () => {
       beforeEach(() => {
-        permissionLevel = 'amend'
+        permissionLevel = PERMISSION_GROUP.AMEND
       })
 
       test('returns amend-level permissions text', () => {
@@ -166,7 +167,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the user has view permission', () => {
       beforeEach(() => {
-        permissionLevel = 'view'
+        permissionLevel = PERMISSION_GROUP.VIEW
       })
 
       test('returns view-level permissions text', () => {
@@ -178,9 +179,9 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the user has full permission', () => {
+    describe('when the user has legal permission', () => {
       beforeEach(() => {
-        permissionLevel = 'full'
+        permissionLevel = PERMISSION_GROUP.LEGAL
       })
 
       test('returns null', () => {
@@ -282,7 +283,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property is null for view full permission', () => {
+    describe('when the property is null for view legal permission', () => {
       beforeEach(() => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
@@ -312,7 +313,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property has a value for full permissions', () => {
+    describe('when the property has a value for legal permissions', () => {
       beforeEach(() => {
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'normal' })
       })
@@ -348,7 +349,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property has a value for full permissions with interrupter', () => {
+    describe('when the property has a value for legal permissions with interrupter', () => {
       beforeEach(() => {
         data.vat = 'GB987654321'
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
@@ -383,7 +384,7 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the property is null for full permissions with interrupter', () => {
+    describe('when the property is null for legal permissions with interrupter', () => {
       beforeEach(() => {
         data.vat = null
         businessDetailsChangeLinksPresenter.mockReturnValue({ vat: 'interrupter' })
@@ -554,7 +555,7 @@ describe('businessDetailsPresenter', () => {
   describe('the "changeLinks" property', () => {
     describe('when the permission level is less than amend', () => {
       beforeEach(() => {
-        permissionLevel = 'view'
+        permissionLevel = PERMISSION_GROUP.VIEW
         businessDetailsChangeLinksPresenter.mockReturnValue({})
       })
 
@@ -573,7 +574,7 @@ describe('businessDetailsPresenter', () => {
 
     describe('when the permission level is amend and there are no blockers', () => {
       beforeEach(() => {
-        permissionLevel = 'amend'
+        permissionLevel = PERMISSION_GROUP.AMEND
 
         businessDetailsChangeLinksPresenter.mockReturnValue({
           businessAddress: '/business-address-change',
@@ -596,9 +597,9 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
-    describe('when the permission level is full', () => {
+    describe('when the permission level is legal', () => {
       beforeEach(() => {
-        permissionLevel = 'full'
+        permissionLevel = PERMISSION_GROUP.LEGAL
 
         businessDetailsChangeLinksPresenter.mockReturnValue({
           businessAddress: '/business-address-change',
@@ -744,7 +745,7 @@ describe('businessDetailsPresenter', () => {
         data.legalStatusCode = 102109
         data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
 
-        const result = businessDetailsPresenter(data, yar, 'view', hasValidBusinessDetails, sectionsNeedingUpdate)
+        const result = businessDetailsPresenter(data, yar, PERMISSION_GROUP.VIEW, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.legalStatusRegistrationNumber).toEqual({
           label: 'Company registration number',

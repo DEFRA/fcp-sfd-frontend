@@ -6,7 +6,7 @@ import { setSessionData } from '../../../../src/utils/session/set-session-data.j
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessNameChangeRoutes } from '../../../../src/routes/business/business-name-change-routes.js'
@@ -63,7 +63,7 @@ describe('business name change', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessNameChange.method).toBe('GET')
         expect(getBusinessNameChange.path).toBe('/business-name-change')
-        expect(getBusinessNameChange.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessNameChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('it calls fetchBusinessChangeService', async () => {
@@ -96,7 +96,7 @@ describe('business name change', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessNameChange.method).toBe('POST')
         expect(postBusinessNameChange.path).toBe('/business-name-change')
-        expect(postBusinessNameChange.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessNameChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

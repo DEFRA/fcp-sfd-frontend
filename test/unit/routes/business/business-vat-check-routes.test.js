@@ -6,7 +6,7 @@ import { fetchBusinessChangeService } from '../../../../src/services/business/fe
 import { updateBusinessVatChangeService } from '../../../../src/services/business/update-business-vat-change-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessVatCheckRoutes } from '../../../../src/routes/business/business-vat-check-routes.js'
@@ -52,7 +52,7 @@ describe('business VAT check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessVatCheck.method).toBe('GET')
         expect(getBusinessVatCheck.path).toBe('/business-vat-registration-number-check')
-        expect(getBusinessVatCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessVatCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
@@ -105,7 +105,7 @@ describe('business VAT check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessVatCheck.method).toBe('POST')
         expect(postBusinessVatCheck.path).toBe('/business-vat-registration-number-check')
-        expect(postBusinessVatCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessVatCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data', () => {

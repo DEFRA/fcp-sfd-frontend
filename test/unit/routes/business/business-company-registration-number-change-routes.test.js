@@ -7,7 +7,7 @@ import { fetchBusinessChangeService } from '../../../../src/services/business/fe
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessCompanyRegistrationNumberChangeRoutes } from '../../../../src/routes/business/business-company-registration-number-change-routes.js'
@@ -64,7 +64,7 @@ describe('business company registration number change', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessCompanyRegistrationNumberChange.method).toBe('GET')
         expect(getBusinessCompanyRegistrationNumberChange.path).toBe('/business-company-registration-number-change')
-        expect(getBusinessCompanyRegistrationNumberChange.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessCompanyRegistrationNumberChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('it calls fetchBusinessChangeService', async () => {
@@ -141,7 +141,7 @@ describe('business company registration number change', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessCompanyRegistrationNumberChange.method).toBe('POST')
         expect(postBusinessCompanyRegistrationNumberChange.path).toBe('/business-company-registration-number-change')
-        expect(postBusinessCompanyRegistrationNumberChange.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessCompanyRegistrationNumberChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

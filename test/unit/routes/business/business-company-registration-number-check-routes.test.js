@@ -7,7 +7,7 @@ import { fetchBusinessDetailsService } from '../../../../src/services/business/f
 import { updateBusinessCompanyRegistrationNumberChangeService } from '../../../../src/services/business/update-business-company-registration-number-change-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessCompanyRegistrationNumberCheckRoutes } from '../../../../src/routes/business/business-company-registration-number-check-routes.js'
@@ -56,7 +56,7 @@ describe('business company registration number check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessCompanyRegistrationNumberCheck.method).toBe('GET')
         expect(getBusinessCompanyRegistrationNumberCheck.path).toBe('/business-company-registration-number-check')
-        expect(getBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
@@ -158,7 +158,7 @@ describe('business company registration number check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessCompanyRegistrationNumberCheck.method).toBe('POST')
         expect(postBusinessCompanyRegistrationNumberCheck.path).toBe('/business-company-registration-number-check')
-        expect(postBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {

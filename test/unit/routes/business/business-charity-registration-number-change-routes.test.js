@@ -7,7 +7,7 @@ import { fetchBusinessChangeService } from '../../../../src/services/business/fe
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessCharityRegistrationNumberChangeRoutes } from '../../../../src/routes/business/business-charity-registration-number-change-routes.js'
@@ -64,7 +64,7 @@ describe('business charity commission registration number change', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessCharityRegistrationNumberChange.method).toBe('GET')
         expect(getBusinessCharityRegistrationNumberChange.path).toBe('/business-charity-registration-number-change')
-        expect(getBusinessCharityRegistrationNumberChange.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessCharityRegistrationNumberChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('it calls fetchBusinessChangeService', async () => {
@@ -141,7 +141,7 @@ describe('business charity commission registration number change', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessCharityRegistrationNumberChange.method).toBe('POST')
         expect(postBusinessCharityRegistrationNumberChange.path).toBe('/business-charity-registration-number-change')
-        expect(postBusinessCharityRegistrationNumberChange.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessCharityRegistrationNumberChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       describe('and the validation passes', () => {

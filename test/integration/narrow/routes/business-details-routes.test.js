@@ -7,6 +7,8 @@ vi.mock('../../../../src/services/business/fetch-business-details-service.js', (
   fetchBusinessDetailsService: vi.fn().mockResolvedValue({
     businessName: 'Agile Farm Ltd',
     sbi: '876543210',
+    legalStatusCode: 102109,
+    registrationNumbers: { companiesHouse: '12345678', charityCommission: null },
     customer: { userName: 'Alfred Waldron' }
   })
 }))
@@ -37,6 +39,20 @@ describe('business details route', () => {
     if (server) {
       await server.stop()
     }
+  })
+
+  test('shows the company registration number change link with make legal changes permission', async () => {
+    const response = await getBusinessDetails(['BUSINESS_DETAILS:MAKE_LEGAL_CHANGES'])
+    const $ = cheerio.load(response.result)
+
+    expect($('a[href="/business-company-registration-number-change"]').length).toBe(1)
+  })
+
+  test('does not show the company registration number change link with amend permission', async () => {
+    const response = await getBusinessDetails(['BUSINESS_DETAILS:AMEND'])
+    const $ = cheerio.load(response.result)
+
+    expect($('a[href="/business-company-registration-number-change"]').length).toBe(0)
   })
 
   test('shows the business name and VAT change links with make legal changes permission', async () => {

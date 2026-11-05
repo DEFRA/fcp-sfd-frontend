@@ -7,7 +7,7 @@ import { fetchBusinessDetailsService } from '../../../../src/services/business/f
 import { updateBusinessCharityRegistrationNumberChangeService } from '../../../../src/services/business/update-business-charity-registration-number-change-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessCharityRegistrationNumberCheckRoutes } from '../../../../src/routes/business/business-charity-registration-number-check-routes.js'
@@ -57,7 +57,7 @@ describe('business charity commission registration number check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessCharityRegistrationNumberCheck.method).toBe('GET')
         expect(getBusinessCharityRegistrationNumberCheck.path).toBe('/business-charity-registration-number-check')
-        expect(getBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {
@@ -159,7 +159,7 @@ describe('business charity commission registration number check', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessCharityRegistrationNumberCheck.method).toBe('POST')
         expect(postBusinessCharityRegistrationNumberCheck.path).toBe('/business-charity-registration-number-check')
-        expect(postBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(postBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('should have a pre-handler to guard against missing session data and an unsupported legal status', () => {

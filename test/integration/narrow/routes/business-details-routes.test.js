@@ -41,35 +41,60 @@ describe('business details route', () => {
     }
   })
 
-  test('shows the company registration number change link with make legal changes permission', async () => {
-    const response = await getBusinessDetails(['BUSINESS_DETAILS:MAKE_LEGAL_CHANGES'])
-    const $ = cheerio.load(response.result)
+  describe('when the user has full permission', () => {
+    test('it shows the legal change links', async () => {
+      const response = await getBusinessDetails(['BUSINESS_DETAILS:FULL_PERMISSION'])
+      const $ = cheerio.load(response.result)
 
-    expect($('a[href="/business-company-registration-number-change"]').length).toBe(1)
+      expect(response.statusCode).toBe(constants.statusCodes.OK)
+      expect($('a[href="/business-name-change"]').length).toBe(1)
+      expect($('a[href="/business-vat-registration-number-change"]').length).toBe(1)
+      expect($('a[href="/business-type-change"]').length).toBe(1)
+      expect($('a[href="/business-legal-status-change"]').length).toBe(1)
+      expect($('a[href="/business-company-registration-number-change"]').length).toBe(1)
+    })
   })
 
-  test('does not show the company registration number change link with amend permission', async () => {
-    const response = await getBusinessDetails(['BUSINESS_DETAILS:AMEND'])
-    const $ = cheerio.load(response.result)
+  describe('when the user has make legal changes permission', () => {
+    test('it shows the legal change links', async () => {
+      const response = await getBusinessDetails(['BUSINESS_DETAILS:MAKE_LEGAL_CHANGES'])
+      const $ = cheerio.load(response.result)
 
-    expect($('a[href="/business-company-registration-number-change"]').length).toBe(0)
+      expect(response.statusCode).toBe(constants.statusCodes.OK)
+      expect($('a[href="/business-name-change"]').length).toBe(1)
+      expect($('a[href="/business-vat-registration-number-change"]').length).toBe(1)
+      expect($('a[href="/business-type-change"]').length).toBe(1)
+      expect($('a[href="/business-legal-status-change"]').length).toBe(1)
+      expect($('a[href="/business-company-registration-number-change"]').length).toBe(1)
+    })
   })
 
-  test('shows the business name and VAT change links with make legal changes permission', async () => {
-    const response = await getBusinessDetails(['BUSINESS_DETAILS:MAKE_LEGAL_CHANGES'])
-    const $ = cheerio.load(response.result)
+  describe('when the user has amend permission', () => {
+    test('it does not show the legal change links', async () => {
+      const response = await getBusinessDetails(['BUSINESS_DETAILS:AMEND'])
+      const $ = cheerio.load(response.result)
 
-    expect(response.statusCode).toBe(constants.statusCodes.OK)
-    expect($('a[href="/business-name-change"]').length).toBe(1)
-    expect($('a[href="/business-vat-registration-number-change"]').length).toBe(1)
+      expect(response.statusCode).toBe(constants.statusCodes.OK)
+      expect($('a[href="/business-name-change"]').length).toBe(0)
+      expect($('a[href="/business-vat-registration-number-change"]').length).toBe(0)
+      expect($('a[href="/business-type-change"]').length).toBe(0)
+      expect($('a[href="/business-legal-status-change"]').length).toBe(0)
+      expect($('a[href="/business-company-registration-number-change"]').length).toBe(0)
+    })
   })
 
-  test('does not show the business name and VAT change links with amend permission', async () => {
-    const response = await getBusinessDetails(['BUSINESS_DETAILS:AMEND'])
-    const $ = cheerio.load(response.result)
+  describe('when the user has view permission', () => {
+    test('it does not show the legal change links', async () => {
+      const response = await getBusinessDetails(['BUSINESS_DETAILS:VIEW'])
+      const $ = cheerio.load(response.result)
 
-    expect(response.statusCode).toBe(constants.statusCodes.OK)
-    expect($('a[href="/business-name-change"]').length).toBe(0)
-    expect($('a[href="/business-vat-registration-number-change"]').length).toBe(0)
+      expect(response.statusCode).toBe(constants.statusCodes.OK)
+      expect($('a[href="/business-name-change"]').length).toBe(0)
+      expect($('a[href="/business-vat-registration-number-change"]').length).toBe(0)
+      expect($('a[href="/business-type-change"]').length).toBe(0)
+      expect($('a[href="/business-legal-status-change"]').length).toBe(0)
+      expect($('a[href="/business-company-registration-number-change"]').length).toBe(0)
+      expect($('a[href="/business-address-change"]').length).toBe(0)
+    })
   })
 })

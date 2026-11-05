@@ -5,6 +5,7 @@
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
+import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
@@ -20,7 +21,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
-    pageTitle: permissionLevel === 'view' ? 'View business details' : 'View and update your business details',
+    pageTitle: permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
     permissionsText: setPermissionsText(permissionLevel),
@@ -54,13 +55,13 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     businessLegalStatus: {
       value: data.legalStatus ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.legalStatus),
-      changeLink: permissionLevel === 'legal' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
+      changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
     legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data),
     businessType: {
       value: data.type ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.type),
-      changeLink: permissionLevel === 'legal' ? BUSINESS_CHANGE_LINKS.businessType : null
+      changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? BUSINESS_CHANGE_LINKS.businessType : null
     }
   }
 }
@@ -209,11 +210,11 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
 }
 
 const setPermissionsText = (permissionLevel) => {
-  if (permissionLevel === 'amend') {
+  if (permissionLevel === PERMISSION_GROUP.AMEND) {
     return 'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
   }
 
-  if (permissionLevel === 'view') {
+  if (permissionLevel === PERMISSION_GROUP.VIEW) {
     return 'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
   }
 

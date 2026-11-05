@@ -8,7 +8,7 @@ import { checkBusinessPermissionGroupService } from '../../../../src/services/bu
 import { validateBusinessDetailsService } from '../../../../src/services/business/validate-business-details-service.js'
 
 // Test helpers
-import { VIEW_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { VIEW_PERMISSIONS, PERMISSION_GROUP } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessDetailsRoutes } from '../../../../src/routes/business/business-details-routes.js'
@@ -66,7 +66,7 @@ describe('business details', () => {
         fetchBusinessDetailsService.mockResolvedValue(getMockData())
         businessDetailsPresenter.mockReturnValue(pageData)
         validateBusinessDetailsService.mockReturnValue({ hasValidBusinessDetails: true, sectionsNeedingUpdate: [] })
-        checkBusinessPermissionGroupService.mockReturnValue('legal')
+        checkBusinessPermissionGroupService.mockReturnValue(PERMISSION_GROUP.LEGAL)
       })
 
       test('it has the correct path and auth scope configured', () => {
@@ -87,7 +87,7 @@ describe('business details', () => {
         expect(fetchBusinessDetailsService).toHaveBeenCalledWith(request.auth.credentials)
         expect(validateBusinessDetailsService).toHaveBeenCalledWith(getMockData())
         expect(checkBusinessPermissionGroupService).toHaveBeenCalledWith(request.auth.credentials.scope)
-        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, 'legal', true, [])
+        expect(businessDetailsPresenter).toHaveBeenCalledWith(getMockData(), request.yar, PERMISSION_GROUP.LEGAL, true, [])
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
 

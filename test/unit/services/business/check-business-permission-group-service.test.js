@@ -9,7 +9,8 @@ import {
   FULL_PERMISSION,
   MAKE_LEGAL_CHANGES_PERMISSION,
   AMEND_LEVEL_PERMISSION,
-  VIEW_LEVEL_PERMISSION
+  VIEW_LEVEL_PERMISSION,
+  PERMISSION_GROUP
 } from '../../../../src/constants/scope/business-details.js'
 
 describe('checkBusinessPermissionGroupService', () => {
@@ -23,7 +24,7 @@ describe('checkBusinessPermissionGroupService', () => {
     test('it returns "legal"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toBe('legal')
+      expect(result).toBe(PERMISSION_GROUP.LEGAL)
     })
   })
 
@@ -35,7 +36,7 @@ describe('checkBusinessPermissionGroupService', () => {
     test('it returns "legal"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toBe('legal')
+      expect(result).toBe(PERMISSION_GROUP.LEGAL)
     })
   })
 
@@ -47,7 +48,7 @@ describe('checkBusinessPermissionGroupService', () => {
     test('it returns "amend"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toBe('amend')
+      expect(result).toBe(PERMISSION_GROUP.AMEND)
     })
   })
 
@@ -59,7 +60,7 @@ describe('checkBusinessPermissionGroupService', () => {
     test('it returns "view"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toBe('view')
+      expect(result).toBe(PERMISSION_GROUP.VIEW)
     })
   })
 
@@ -71,7 +72,7 @@ describe('checkBusinessPermissionGroupService', () => {
     test('it defaults to "view"', () => {
       const result = checkBusinessPermissionGroupService(permissionLevels)
 
-      expect(result).toBe('view')
+      expect(result).toBe(PERMISSION_GROUP.VIEW)
     })
   })
 
@@ -79,13 +80,13 @@ describe('checkBusinessPermissionGroupService', () => {
     test('it returns "legal" for full and amend permission', () => {
       const result = checkBusinessPermissionGroupService([FULL_PERMISSION, AMEND_LEVEL_PERMISSION])
 
-      expect(result).toBe('legal')
+      expect(result).toBe(PERMISSION_GROUP.LEGAL)
     })
 
     test('it returns "legal" for make legal changes and amend permission', () => {
       const result = checkBusinessPermissionGroupService([MAKE_LEGAL_CHANGES_PERMISSION, AMEND_LEVEL_PERMISSION])
 
-      expect(result).toBe('legal')
+      expect(result).toBe(PERMISSION_GROUP.LEGAL)
     })
   })
 })

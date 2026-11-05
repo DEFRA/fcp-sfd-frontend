@@ -10,20 +10,20 @@
  * @module checkBusinessPermissionGroupService
  */
 
-import { LEGAL_PERMISSIONS, AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS, AMEND_PERMISSIONS, PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 
 const checkBusinessPermissionGroupService = (permissionLevels) => {
   const legalPermission = permissionLevels.some(permission => LEGAL_PERMISSIONS.includes(permission))
   if (legalPermission) {
-    return 'legal'
+    return PERMISSION_GROUP.LEGAL
   }
 
   const amendPermission = permissionLevels.some(permission => AMEND_PERMISSIONS.includes(permission))
   if (amendPermission) {
-    return 'amend'
+    return PERMISSION_GROUP.AMEND
   }
 
-  return 'view'
+  return PERMISSION_GROUP.VIEW
 }
 
 export {

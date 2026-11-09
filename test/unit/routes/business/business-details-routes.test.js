@@ -91,6 +91,12 @@ describe('business details', () => {
         expect(h.view).toHaveBeenCalledWith('business/business-details.njk', pageData)
       })
 
+      test('it stores the business legal status code in the session', async () => {
+        await getBusinessDetails.handler(request, h)
+
+        expect(request.yar.set).toHaveBeenCalledWith('businessLegalStatusCode', '102111')
+      })
+
       test('stores validation summary when business details are invalid', async () => {
         validateBusinessDetailsService.mockReturnValue({ hasValidBusinessDetails: false, sectionsNeedingUpdate: ['name'] })
 
@@ -132,6 +138,7 @@ const getMockData = () => {
     vendorNumber: '699368',
     countyParishHoldingNumber: '12/563/0998',
     businessLegalStatus: 'Sole proprietorship',
+    legalStatusCode: '102111',
     businessType: 'Central or local government',
     userName: 'Alfred Waldron'
   }

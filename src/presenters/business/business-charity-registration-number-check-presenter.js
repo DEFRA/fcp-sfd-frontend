@@ -1,0 +1,23 @@
+/**
+ * Formats data ready for presenting in the `/business-charity-registration-number-check` page
+ * @module businessCharityRegistrationNumberCheckPresenter
+ */
+
+import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
+
+const businessCharityRegistrationNumberCheckPresenter = (data) => {
+  return {
+    backLink: { href: REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber },
+    changeLink: REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber,
+    pageTitle: 'Check your charity commission registration number is correct before submitting',
+    metaDescription: 'Check the charity commission registration number for your business is correct.',
+    userName: data.customer.userName ?? null,
+    charityCommissionRegistrationNumber: data.changeBusinessCharityRegistrationNumber ?? data.registrationNumbers?.charityCommission ?? null,
+    businessName: data.businessName ?? null,
+    sbi: data.sbi ?? null
+  }
+}
+
+export {
+  businessCharityRegistrationNumberCheckPresenter
+}

@@ -1,6 +1,5 @@
 /**
- * Returns the `businessDetails` from the session cache if defined,
- * otherwise queries the DAL, maps the response, updates the cache
+ * Queries the DAL for the business details, maps the response
  * and returns the mapped payload
  *
  * @module fetchBusinessDetailsService

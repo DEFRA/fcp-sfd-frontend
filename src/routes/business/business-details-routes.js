@@ -16,6 +16,9 @@ const getBusinessDetails = {
     yar.clear('businessDetailsValidation')
 
     const businessDetails = await fetchBusinessDetailsService(auth.credentials)
+    // Read by the company and charity registration number routes to check the legal status
+    yar.set('businessLegalStatusCode', businessDetails.legalStatusCode)
+
     const { hasValidBusinessDetails, sectionsNeedingUpdate } = validateBusinessDetailsService(businessDetails)
 
     if (!hasValidBusinessDetails) {

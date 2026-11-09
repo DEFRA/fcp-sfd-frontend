@@ -6,6 +6,8 @@ import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
 import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { checkSessionDataGuard } from '../pre-handlers.js'
 
+const BUSINESS_DETAILS_PATH = '/business-details'
+
 const getBusinessCompanyRegistrationNumberCheck = {
   method: 'GET',
   path: '/business-company-registration-number-check',
@@ -18,7 +20,7 @@ const getBusinessCompanyRegistrationNumberCheck = {
     const businessLegalStatusCode = String(yar.get('businessLegalStatusCode') ?? '')
 
     if (!constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
-      return h.redirect('/business-details')
+      return h.redirect(BUSINESS_DETAILS_PATH)
     }
 
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCompanyRegistrationNumber')
@@ -40,12 +42,12 @@ const postBusinessCompanyRegistrationNumberCheck = {
     const businessLegalStatusCode = String(yar.get('businessLegalStatusCode') ?? '')
 
     if (!constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
-      return h.redirect('/business-details')
+      return h.redirect(BUSINESS_DETAILS_PATH)
     }
 
     await updateBusinessCompanyRegistrationNumberChangeService(yar, auth.credentials)
 
-    return h.redirect('/business-details')
+    return h.redirect(BUSINESS_DETAILS_PATH)
   }
 }
 

@@ -24,6 +24,14 @@ const generateWebIdentityToken = async (stsClient) => {
   return { token: WebIdentityToken, expiresAt: Expiration }
 }
 
+/**
+ * Returns a cached AWS WebIdentity token for fcp-sfd-bank-details, requesting a new one
+ * from STS when the cached token is within a minute of expiry.
+ *
+ * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
+ * @returns {Promise<string|null>} the token, or null when ENVIRONMENT is local
+ * @throws when the STS call fails
+ */
 const getWebIdentityToken = async (stsClient) => {
   // local: fcp-sfd-bank-details bypasses auth and there's no STS
   const environment = config.get('server.cdpEnvironment')
@@ -32,8 +40,10 @@ const getWebIdentityToken = async (stsClient) => {
     return null
   }
 
-  // cache: check the cached token is still valid beyond refresh margin
-  if (cachedToken && cachedToken.expiresAt.getTime() - Date.now() > REFRESH_MARGIN_MS) {
+  // cache: check the cached token is still valid beyond refresh margin.
+  // `Expiration` is optional on the STS response, so guard it rather than cache
+  // an entry whose expiry can never be read
+  if (cachedToken?.expiresAt && cachedToken.expiresAt.getTime() - Date.now() > REFRESH_MARGIN_MS) {
     return cachedToken.token
   }
 

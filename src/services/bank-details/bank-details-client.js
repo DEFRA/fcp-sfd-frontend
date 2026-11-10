@@ -4,13 +4,15 @@ import { getWebIdentityToken } from './web-identity-token.js'
 
 const logger = createLogger()
 
+const BANK_DETAILS_TIMEOUT_MS = 5000
+
 /**
  * Calls the fcp-sfd-bank-details service's health endpoint.
  *
  * This exists to prove server-to-server connectivity between fcp-sfd-frontend
  * and fcp-sfd-bank-details, ahead of any real bank details endpoints being built.
  *
- * @param {object} stsClient - The `STSClient` object
+ * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
  * @returns {Promise<boolean>} true if the health check succeeded, false otherwise
  */
 export const checkBankDetailsServiceHealth = async (stsClient) => {
@@ -24,7 +26,10 @@ export const checkBankDetailsServiceHealth = async (stsClient) => {
   try {
     const headers = await buildAuthorizationHeaders(stsClient)
 
-    const response = await fetch(`${endpoint}/health`, { headers })
+    const response = await fetch(`${endpoint}/health`, {
+      headers,
+      signal: AbortSignal.timeout(BANK_DETAILS_TIMEOUT_MS)
+    })
 
     if (!response.ok) {
       throw new Error(`Unexpected status code: ${response.status}`)
@@ -46,7 +51,7 @@ export const checkBankDetailsServiceHealth = async (stsClient) => {
  * service, ahead of any real data being available.
  *
  * @param {string} sbi
- * @param {object} stsClient - The `STSClient` object
+ * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
  * @returns {Promise<object|null>} the bank details, or null if the call failed
  */
 export const getBankDetails = async (sbi, stsClient) => {
@@ -60,7 +65,10 @@ export const getBankDetails = async (sbi, stsClient) => {
   try {
     const headers = await buildAuthorizationHeaders(stsClient)
 
-    const response = await fetch(`${endpoint}/bank-details/${sbi}`, { headers })
+    const response = await fetch(`${endpoint}/bank-details/${encodeURIComponent(sbi)}`, {
+      headers,
+      signal: AbortSignal.timeout(BANK_DETAILS_TIMEOUT_MS)
+    })
 
     if (!response.ok) {
       throw new Error(`Unexpected status code: ${response.status}`)
@@ -74,10 +82,10 @@ export const getBankDetails = async (sbi, stsClient) => {
 }
 
 /**
- * Shared helper to build the authorization headers
+ * Shared helper to build the authorization headers for calls to fcp-sfd-bank-details.
  *
- * @param {object} stsClient - The `STSClient` object
- * @returns {object} headers - The
+ * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
+ * @returns {Promise<object>} the headers, empty when running locally
  */
 const buildAuthorizationHeaders = async (stsClient) => {
   const headers = {}

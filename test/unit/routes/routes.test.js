@@ -22,8 +22,8 @@ describe('routes', () => {
     vi.unstubAllEnvs()
   })
 
-  test('should not register the bank details diagnostic routes in prod', async () => {
-    const paths = await importRoutesFor('prod')
+  test.each(['prod', 'ext-test', 'perf-test'])('should not register the bank details diagnostic routes in %s', async (environment) => {
+    const paths = await importRoutesFor(environment)
 
     for (const path of diagnosticPaths) {
       expect(paths).not.toContain(path)

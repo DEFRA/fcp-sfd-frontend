@@ -76,7 +76,8 @@ describe('bank details client', () => {
         await checkBankDetailsServiceHealth(mockStsClient)
 
         expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/health`, {
-          headers: { Authorization: `Bearer ${mockToken}` }
+          headers: { Authorization: `Bearer ${mockToken}` },
+          signal: expect.any(AbortSignal)
         })
       })
 
@@ -93,7 +94,10 @@ describe('bank details client', () => {
 
         await checkBankDetailsServiceHealth(mockStsClient)
 
-        expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/health`, { headers: {} })
+        expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/health`, {
+          headers: {},
+          signal: expect.any(AbortSignal)
+        })
       })
     })
 
@@ -157,8 +161,18 @@ describe('bank details client', () => {
         await getBankDetails(sbi, mockStsClient)
 
         expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/bank-details/${sbi}`, {
-          headers: { Authorization: `Bearer ${mockToken}` }
+          headers: { Authorization: `Bearer ${mockToken}` },
+          signal: expect.any(AbortSignal)
         })
+      })
+
+      test('should encode the SBI so an encoded traversal cannot reach another path', async () => {
+        await getBankDetails('..%2Fhealth', mockStsClient)
+
+        const [url] = mockFetch.mock.calls[0]
+
+        expect(url).toBe(`${endpoint}/bank-details/..%252Fhealth`)
+        expect(new URL(url).pathname).toBe('/bank-details/..%252Fhealth')
       })
 
       test('should return the bank details when the service responds ok', async () => {
@@ -174,7 +188,10 @@ describe('bank details client', () => {
 
         await getBankDetails(sbi, mockStsClient)
 
-        expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/bank-details/${sbi}`, { headers: {} })
+        expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/bank-details/${sbi}`, {
+          headers: {},
+          signal: expect.any(AbortSignal)
+        })
       })
     })
 

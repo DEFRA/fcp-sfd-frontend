@@ -1,5 +1,6 @@
 // Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
+import Hapi from '@hapi/hapi'
 
 // Things we need to mock
 const mockCheckBankDetailsServiceHealth = vi.fn()
@@ -99,6 +100,37 @@ describe('bank details routes', () => {
 
       expect(mockH.response).toHaveBeenCalledWith({ message: 'failure' })
       expect(mockResponse.code).toHaveBeenCalledWith(502)
+    })
+
+    // The handler tests above bypass Joi, so validation needs a real server
+    describe('SBI validation', () => {
+      let server
+
+      beforeEach(async () => {
+        server = Hapi.server()
+        server.route(route)
+      })
+
+      test('should accept a valid 9 digit SBI', async () => {
+        mockGetBankDetails.mockResolvedValue(mockBankDetails)
+
+        const response = await server.inject({ method: 'GET', url: '/bank-details-check/123456789' })
+
+        expect(response.statusCode).toBe(200)
+        expect(mockGetBankDetails).toHaveBeenCalledWith('123456789', undefined)
+      })
+
+      test.each([
+        ['an encoded traversal', '/bank-details-check/..%2Fhealth'],
+        ['a nested encoded traversal', '/bank-details-check/..%2F..%2Fanything'],
+        ['a non-numeric value', '/bank-details-check/abc'],
+        ['too few digits', '/bank-details-check/12345678']
+      ])('should reject %s with 400 without calling the bank details client', async (_description, url) => {
+        const response = await server.inject({ method: 'GET', url })
+
+        expect(response.statusCode).toBe(400)
+        expect(mockGetBankDetails).not.toHaveBeenCalled()
+      })
     })
   })
 })

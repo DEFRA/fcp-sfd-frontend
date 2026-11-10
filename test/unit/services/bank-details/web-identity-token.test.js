@@ -119,11 +119,41 @@ describe('getWebIdentityToken', () => {
     })
   })
 
+  describe('when the STS response has no expiry', () => {
+    test('should not cache it, so the next call goes back to STS', async () => {
+      mockStsClient.send.mockResolvedValue({ WebIdentityToken: 'mock-token-1' })
+
+      const first = await getWebIdentityToken(mockStsClient)
+      const second = await getWebIdentityToken(mockStsClient)
+
+      expect(first).toBe('mock-token-1')
+      expect(second).toBe('mock-token-1')
+      expect(mockStsClient.send).toHaveBeenCalledTimes(2)
+    })
+  })
+
   describe('when STS fails', () => {
     test('should throw the STS error', async () => {
       mockStsClient.send.mockRejectedValue(new Error('AccessDenied'))
 
       await expect(getWebIdentityToken(mockStsClient)).rejects.toThrow('AccessDenied')
+    })
+
+    test('should reject every concurrent caller sharing the in-flight request, then retry', async () => {
+      mockStsClient.send.mockRejectedValueOnce(new Error('AccessDenied'))
+
+      const results = await Promise.allSettled([
+        getWebIdentityToken(mockStsClient),
+        getWebIdentityToken(mockStsClient)
+      ])
+
+      expect(results.map((result) => result.status)).toEqual(['rejected', 'rejected'])
+      expect(mockStsClient.send).toHaveBeenCalledTimes(1)
+
+      const token = await getWebIdentityToken(mockStsClient)
+
+      expect(token).toBe('mock-token-1')
+      expect(mockStsClient.send).toHaveBeenCalledTimes(2)
     })
 
     test('should retry STS on the next call rather than reuse the failure', async () => {

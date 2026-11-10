@@ -1,6 +1,7 @@
 // Test framework dependencies
 import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest'
 import Hapi from '@hapi/hapi'
+import { STSClient } from '@aws-sdk/client-sts'
 
 // Things we need to mock
 const mockSts = { destroy: vi.fn() }
@@ -34,6 +35,15 @@ describe('awsClients plugin', () => {
 
   test('should decorate the server with the STS client', () => {
     expect(server.sts).toBe(mockSts)
+  })
+
+  test('should construct the STS client with connection and request timeouts', () => {
+    expect(STSClient).toHaveBeenCalledWith({
+      requestHandler: {
+        connectionTimeout: 2000,
+        requestTimeout: 5000
+      }
+    })
   })
 
   test('should decorate the request with the same STS client', async () => {

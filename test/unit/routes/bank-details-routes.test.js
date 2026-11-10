@@ -15,7 +15,7 @@ vi.mock('../../../src/services/bank-details/bank-details-client.js', () => ({
 const { bankDetailsRoutes } = await import('../../../src/routes/bank-details-routes.js')
 
 const mockStsClient = { send: vi.fn() }
-const mockBankDetails = { sbi: '123456789', bankName: 'Test Bank' }
+const mockBankDetails = { sbi: '800000001', bankName: 'Test Bank' }
 
 const mockResponse = {
   code: vi.fn().mockReturnThis()
@@ -68,7 +68,7 @@ describe('bank details routes', () => {
 
   describe('GET /bank-details-check/{sbi}', () => {
     const route = getRoute('/bank-details-check/{sbi}')
-    const request = { params: { sbi: '123456789' }, sts: mockStsClient }
+    const request = { params: { sbi: '800000001' }, sts: mockStsClient }
 
     test('should have the correct method and not require auth', () => {
       expect(route.method).toBe('GET')
@@ -80,7 +80,7 @@ describe('bank details routes', () => {
 
       await route.handler(request, mockH)
 
-      expect(mockGetBankDetails).toHaveBeenCalledWith('123456789', mockStsClient)
+      expect(mockGetBankDetails).toHaveBeenCalledWith('800000001', mockStsClient)
     })
 
     test('should return the bank details when they are found', async () => {
@@ -114,10 +114,10 @@ describe('bank details routes', () => {
       test('should accept a valid 9 digit SBI', async () => {
         mockGetBankDetails.mockResolvedValue(mockBankDetails)
 
-        const response = await server.inject({ method: 'GET', url: '/bank-details-check/123456789' })
+        const response = await server.inject({ method: 'GET', url: '/bank-details-check/800000001' })
 
         expect(response.statusCode).toBe(200)
-        expect(mockGetBankDetails).toHaveBeenCalledWith('123456789', undefined)
+        expect(mockGetBankDetails).toHaveBeenCalledWith('800000001', undefined)
       })
 
       test.each([

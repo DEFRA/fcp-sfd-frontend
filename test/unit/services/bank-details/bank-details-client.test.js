@@ -31,7 +31,7 @@ const endpoint = 'https://fcp-sfd-bank-details.test'
 const mockStsClient = { send: vi.fn() }
 const mockToken = 'mock-web-identity-token'
 const mockBankDetails = {
-  sbi: '123456789',
+  sbi: '800000001',
   accountName: 'Test Account',
   accountNumber: '00000000',
   sortCode: '00-00-00',
@@ -136,7 +136,7 @@ describe('bank details client', () => {
   })
 
   describe('getBankDetails', () => {
-    const sbi = '123456789'
+    const sbi = '800000001'
 
     describe('when the endpoint is not configured', () => {
       test('should return null without requesting a token or calling the service', async () => {

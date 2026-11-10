@@ -23,6 +23,12 @@ export const featureToggleConfig = {
       format: Boolean,
       default: false,
       env: 'WATER_MANAGEMENT_ENABLED'
+    },
+    viewLand: {
+      doc: 'Enables the view land feature',
+      format: Boolean,
+      default: false,
+      env: 'VIEW_LAND_ENABLED'
     }
   }
 }

@@ -1,11 +1,15 @@
 // Test framework dependencies
-import { describe, test, expect, beforeEach } from 'vitest'
+import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest'
 
 // Thing under test
 import { homePresenter } from '../../../src/presenters/home-presenter.js'
 
 // Test helpers
-import { VIEW_LEVEL_PERMISSION, AMEND_LEVEL_PERMISSION } from '../../../src/constants/scope/business-details.js'
+import { config } from '../../../src/config/index.js'
+import {
+  VIEW_LEVEL_PERMISSION,
+  AMEND_LEVEL_PERMISSION
+} from '../../../src/constants/scope/business-details.js'
 
 describe('homePresenter', () => {
   let data
@@ -46,7 +50,13 @@ describe('homePresenter', () => {
           text: 'View and update your personal details'
         },
         sbi: '123456789',
-        isOnWoodlandManagementAllowList: false
+        grants: [
+          {
+            link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
+            title: 'Water Management grant round 3',
+            status: 'do-not-show'
+          }
+        ]
       })
     })
   })
@@ -67,7 +77,7 @@ describe('homePresenter', () => {
       })
     })
 
-    describe('when the user has amend or full permissions', () => {
+    describe('when the user has amend or legal permissions', () => {
       beforeEach(() => {
         permissionGroups = [AMEND_LEVEL_PERMISSION]
       })
@@ -124,26 +134,77 @@ describe('homePresenter', () => {
     })
   })
 
-  describe('the "isOnWoodlandManagementAllowList" property', () => {
-    describe('when the user is on the allow list', () => {
+  describe('the "grants" property', () => {
+    describe('when the user is not on the woodland management allow list', () => {
+      beforeEach(() => {
+        isOnWoodlandManagementAllowList = false
+      })
+
+      test('it should include only the water management grant', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+        expect(result.grants).toEqual([
+          {
+            link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
+            title: 'Water Management grant round 3',
+            status: 'do-not-show'
+          }
+        ])
+      })
+    })
+
+    describe('when the user is on the woodland management allow list', () => {
       beforeEach(() => {
         isOnWoodlandManagementAllowList = true
       })
 
-      test('it should return true', () => {
+      test('it should list both grants alphabetically by title', () => {
         const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
 
-        expect(result.isOnWoodlandManagementAllowList).toBe(true)
+        expect(result.grants).toEqual([
+          {
+            link: 'https://grants-ui.test.cdp-int.defra.cloud/water-management?ssoOrgId=5565448',
+            title: 'Water Management grant round 3',
+            status: 'do-not-show'
+          },
+          {
+            link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
+            title: 'Woodland Management Plan',
+            status: 'do-not-show'
+          }
+        ])
+      })
+    })
+
+    describe('when the water management toggle is off', () => {
+      beforeEach(() => {
+        const originalGet = config.get.bind(config)
+
+        vi.spyOn(config, 'get').mockImplementation((key) => {
+          return key === 'featureToggle.waterManagementEnabled' ? false : originalGet(key)
+        })
       })
 
-      test('it should return woodland management data', () => {
-        const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+      afterEach(() => {
+        vi.restoreAllMocks()
+      })
 
-        expect(result.woodlandManagement).toEqual({
-          link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
-          title: 'Woodland Management Plan',
-          status: 'do-not-show'
-        })
+      test('it should not include any grants when not on the woodland management allow list', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, false)
+
+        expect(result.grants).toEqual([])
+      })
+
+      test('it should include only the woodland management grant when on the allow list', () => {
+        const result = homePresenter(data, permissionGroups, enrolmentCount, true)
+
+        expect(result.grants).toEqual([
+          {
+            link: 'https://grants-ui.test.cdp-int.defra.cloud/woodland?ssoOrgId=5565448',
+            title: 'Woodland Management Plan',
+            status: 'do-not-show'
+          }
+        ])
       })
     })
   })

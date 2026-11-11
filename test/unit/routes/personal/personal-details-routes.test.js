@@ -6,9 +6,13 @@ import { fetchPersonalDetailsService } from '../../../../src/services/personal/f
 import { personalDetailsPresenter } from '../../../../src/presenters/personal/personal-details-presenter.js'
 import { validatePersonalDetailsService } from '../../../../src/services/personal/validate-personal-details-service.js'
 
+// Test helpers
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+
 // Thing under test
 import { personalDetailsRoutes } from '../../../../src/routes/personal/personal-details-routes.js'
 const [getPersonalDetails] = personalDetailsRoutes
+const { NOT_ADDED_TEXT } = constants
 
 // Mocks
 vi.mock('../../../../src/services/personal/fetch-personal-details-service.js', () => ({
@@ -145,6 +149,6 @@ const getPageData = () => ({
   fullName: 'Alfred Waldron',
   dateOfBirth: '1980-01-01',
   personalTelephone: '01234567890',
-  personalMobile: 'Not added',
+  personalMobile: NOT_ADDED_TEXT,
   personalEmail: 'test@email.com'
 })

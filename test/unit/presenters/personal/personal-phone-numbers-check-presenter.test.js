@@ -61,7 +61,7 @@ describe('personalPhoneNumbersCheckPresenter', () => {
         delete data.changePersonalPhoneNumbers.personalTelephone
       })
 
-      test('it should return personalTelephone as "Not added"', () => {
+      test('it should return personalTelephone as null', () => {
         const result = personalPhoneNumbersCheckPresenter(data)
 
         expect(result.personalTelephone.telephone).toEqual(null)
@@ -75,7 +75,7 @@ describe('personalPhoneNumbersCheckPresenter', () => {
         delete data.changePersonalPhoneNumbers.personalMobile
       })
 
-      test('it should return personalMobile as "Not added"', () => {
+      test('it should return personalMobile as null', () => {
         const result = personalPhoneNumbersCheckPresenter(data)
 
         expect(result.personalTelephone.mobile).toEqual(null)

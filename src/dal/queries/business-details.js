@@ -12,6 +12,10 @@ export const businessDetailsQuery = `
         code
         type
       }
+      registrationNumbers {
+        companiesHouse
+        charityCommission
+      }
       type {
         code
         type
@@ -71,6 +75,10 @@ export const businessDetailsQueryWithoutCph = `
       legalStatus {
         code
         type
+      }
+      registrationNumbers {
+        companiesHouse
+        charityCommission
       }
       type {
         code

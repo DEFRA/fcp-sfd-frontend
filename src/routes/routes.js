@@ -11,8 +11,12 @@ import { catchAllNotFound } from './catch-all-routes.js'
 import { bankDetailsRoutes } from './bank-details-routes.js'
 import { config } from '../config/index.js'
 
+// Allow list rather than "not prod" so the unauthenticated diagnostic routes never
+// reach internet-facing environments such as ext-test
+const DIAGNOSTIC_ENVIRONMENTS = ['local', 'dev', 'test']
+
 const nonProductionRoutes =
-  config.get('server.cdpEnvironment') === 'prod' ? [] : bankDetailsRoutes
+  DIAGNOSTIC_ENVIRONMENTS.includes(config.get('server.cdpEnvironment')) ? bankDetailsRoutes : []
 
 export const routes = [
   health,

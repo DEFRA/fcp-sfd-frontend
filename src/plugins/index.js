@@ -17,6 +17,7 @@ import { session } from './session.js'
 import { sso } from './sso.js'
 import { requestContext } from './request-context.js'
 import { cookies } from './cookies.js'
+import { awsClients } from './aws-clients.js'
 
 export const plugins = [
   Crumb,
@@ -37,5 +38,6 @@ export const plugins = [
   vision,
   router,
   sso,
-  requestContext
+  requestContext,
+  awsClients
 ]

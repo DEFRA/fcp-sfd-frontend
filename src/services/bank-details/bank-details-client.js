@@ -1,7 +1,10 @@
 import { config } from '../../config/index.js'
 import { createLogger } from '../../utils/logger.js'
+import { getWebIdentityToken } from './web-identity-token.js'
 
 const logger = createLogger()
+
+const BANK_DETAILS_TIMEOUT_MS = 5000
 
 /**
  * Calls the fcp-sfd-bank-details service's health endpoint.
@@ -9,10 +12,11 @@ const logger = createLogger()
  * This exists to prove server-to-server connectivity between fcp-sfd-frontend
  * and fcp-sfd-bank-details, ahead of any real bank details endpoints being built.
  *
+ * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
  * @returns {Promise<boolean>} true if the health check succeeded, false otherwise
  */
-export const checkBankDetailsServiceHealth = async () => {
-  const endpoint = config.get('bankDetailsConfig.endpoint')
+export const checkBankDetailsServiceHealth = async (stsClient) => {
+  const endpoint = config.get('bankDetails.endpoint')
 
   if (!endpoint) {
     logger.info('BANK_DETAILS_ENDPOINT not configured, skipping health check')
@@ -20,7 +24,12 @@ export const checkBankDetailsServiceHealth = async () => {
   }
 
   try {
-    const response = await fetch(`${endpoint}/health`)
+    const headers = await buildAuthorizationHeaders(stsClient)
+
+    const response = await fetch(`${endpoint}/health`, {
+      headers,
+      signal: AbortSignal.timeout(BANK_DETAILS_TIMEOUT_MS)
+    })
 
     if (!response.ok) {
       throw new Error(`Unexpected status code: ${response.status}`)
@@ -42,10 +51,11 @@ export const checkBankDetailsServiceHealth = async () => {
  * service, ahead of any real data being available.
  *
  * @param {string} sbi
+ * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
  * @returns {Promise<object|null>} the bank details, or null if the call failed
  */
-export const getBankDetails = async (sbi) => {
-  const endpoint = config.get('bankDetailsConfig.endpoint')
+export const getBankDetails = async (sbi, stsClient) => {
+  const endpoint = config.get('bankDetails.endpoint')
 
   if (!endpoint) {
     logger.info('BANK_DETAILS_ENDPOINT not configured, skipping bank details fetch')
@@ -53,7 +63,12 @@ export const getBankDetails = async (sbi) => {
   }
 
   try {
-    const response = await fetch(`${endpoint}/bank-details/${sbi}`)
+    const headers = await buildAuthorizationHeaders(stsClient)
+
+    const response = await fetch(`${endpoint}/bank-details/${encodeURIComponent(sbi)}`, {
+      headers,
+      signal: AbortSignal.timeout(BANK_DETAILS_TIMEOUT_MS)
+    })
 
     if (!response.ok) {
       throw new Error(`Unexpected status code: ${response.status}`)
@@ -64,4 +79,21 @@ export const getBankDetails = async (sbi) => {
     logger.error(error, 'fcp-sfd-bank-details bank details fetch failed')
     return null
   }
+}
+
+/**
+ * Shared helper to build the authorization headers for calls to fcp-sfd-bank-details.
+ *
+ * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
+ * @returns {Promise<object>} the headers, empty when running locally
+ */
+const buildAuthorizationHeaders = async (stsClient) => {
+  const headers = {}
+  const token = await getWebIdentityToken(stsClient)
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`
+  }
+
+  return headers
 }

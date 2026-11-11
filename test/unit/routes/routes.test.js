@@ -1,8 +1,6 @@
 // Test framework dependencies
 import { vi, beforeEach, afterEach, describe, test, expect } from 'vitest'
 
-const diagnosticPaths = ['/bank-details-check', '/bank-details-check/{sbi}']
-
 // routes.js decides which routes to include at import time, so re-import per environment
 const importRoutesFor = async (environment) => {
   vi.stubEnv('ENVIRONMENT', environment)
@@ -22,19 +20,57 @@ describe('routes', () => {
     vi.unstubAllEnvs()
   })
 
-  test.each(['prod', 'ext-test', 'perf-test'])('should not register the bank details diagnostic routes in %s', async (environment) => {
-    const paths = await importRoutesFor(environment)
+  describe('when the environment is "prod"', () => {
+    test('it does not register the bank details diagnostic routes', async () => {
+      const paths = await importRoutesFor('prod')
 
-    for (const path of diagnosticPaths) {
-      expect(paths).not.toContain(path)
-    }
+      expect(paths).not.toContain('/bank-details-check')
+      expect(paths).not.toContain('/bank-details-check/{sbi}')
+    })
   })
 
-  test.each(['local', 'dev', 'test'])('should register the bank details diagnostic routes in %s', async (environment) => {
-    const paths = await importRoutesFor(environment)
+  describe('when the environment is "ext-test"', () => {
+    test('it does not register the bank details diagnostic routes', async () => {
+      const paths = await importRoutesFor('ext-test')
 
-    for (const path of diagnosticPaths) {
-      expect(paths).toContain(path)
-    }
+      expect(paths).not.toContain('/bank-details-check')
+      expect(paths).not.toContain('/bank-details-check/{sbi}')
+    })
+  })
+
+  describe('when the environment is "perf-test"', () => {
+    test('it does not register the bank details diagnostic routes', async () => {
+      const paths = await importRoutesFor('perf-test')
+
+      expect(paths).not.toContain('/bank-details-check')
+      expect(paths).not.toContain('/bank-details-check/{sbi}')
+    })
+  })
+
+  describe('when the environment is "local"', () => {
+    test('it registers the bank details diagnostic routes', async () => {
+      const paths = await importRoutesFor('local')
+
+      expect(paths).toContain('/bank-details-check')
+      expect(paths).toContain('/bank-details-check/{sbi}')
+    })
+  })
+
+  describe('when the environment is "dev"', () => {
+    test('it registers the bank details diagnostic routes', async () => {
+      const paths = await importRoutesFor('dev')
+
+      expect(paths).toContain('/bank-details-check')
+      expect(paths).toContain('/bank-details-check/{sbi}')
+    })
+  })
+
+  describe('when the environment is "test"', () => {
+    test('it registers the bank details diagnostic routes', async () => {
+      const paths = await importRoutesFor('test')
+
+      expect(paths).toContain('/bank-details-check')
+      expect(paths).toContain('/bank-details-check/{sbi}')
+    })
   })
 })

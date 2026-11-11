@@ -120,16 +120,40 @@ describe('bank details routes', () => {
         expect(mockGetBankDetails).toHaveBeenCalledWith('800000001', undefined)
       })
 
-      test.each([
-        ['an encoded traversal', '/bank-details-check/..%2Fhealth'],
-        ['a nested encoded traversal', '/bank-details-check/..%2F..%2Fanything'],
-        ['a non-numeric value', '/bank-details-check/abc'],
-        ['too few digits', '/bank-details-check/12345678']
-      ])('should reject %s with 400 without calling the bank details client', async (_description, url) => {
-        const response = await server.inject({ method: 'GET', url })
+      describe('and the SBI is an encoded traversal', () => {
+        test('should reject with 400 without calling the bank details client', async () => {
+          const response = await server.inject({ method: 'GET', url: '/bank-details-check/..%2Fhealth' })
 
-        expect(response.statusCode).toBe(400)
-        expect(mockGetBankDetails).not.toHaveBeenCalled()
+          expect(response.statusCode).toBe(400)
+          expect(mockGetBankDetails).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the SBI is a nested encoded traversal', () => {
+        test('should reject with 400 without calling the bank details client', async () => {
+          const response = await server.inject({ method: 'GET', url: '/bank-details-check/..%2F..%2Fanything' })
+
+          expect(response.statusCode).toBe(400)
+          expect(mockGetBankDetails).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the SBI is a non-numeric value', () => {
+        test('should reject with 400 without calling the bank details client', async () => {
+          const response = await server.inject({ method: 'GET', url: '/bank-details-check/abc' })
+
+          expect(response.statusCode).toBe(400)
+          expect(mockGetBankDetails).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the SBI has too few digits', () => {
+        test('should reject with 400 without calling the bank details client', async () => {
+          const response = await server.inject({ method: 'GET', url: '/bank-details-check/12345678' })
+
+          expect(response.statusCode).toBe(400)
+          expect(mockGetBankDetails).not.toHaveBeenCalled()
+        })
       })
     })
   })

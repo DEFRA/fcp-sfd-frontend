@@ -37,7 +37,8 @@ describe('getWebIdentityToken', () => {
     vi.clearAllMocks()
     // The token cache is module-level state, so re-import for a clean cache in each test
     vi.resetModules()
-    ;({ getWebIdentityToken } = await import('../../../../src/services/bank-details/web-identity-token.js'))
+    const webIdentityTokenModule = await import('../../../../src/services/bank-details/web-identity-token.js')
+    getWebIdentityToken = webIdentityTokenModule.getWebIdentityToken
 
     mockStsClient = { send: vi.fn().mockResolvedValue(stsResponse('mock-token-1')) }
     useEnvironment('test')

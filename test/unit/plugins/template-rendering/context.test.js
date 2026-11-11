@@ -85,11 +85,11 @@ describe('When webpack manifest file read fails', () => {
     await testContext(mockRequest)
 
     expect(mockLoggerErrorFn).toHaveBeenCalledWith(
-      expect.stringContaining('Webpack'),
-      expect.any(Error)
+      { err: expect.any(Error) },
+      expect.stringContaining('Webpack')
     )
-    expect(mockLoggerErrorFn.mock.calls[0][0]).toContain('assets-manifest.json')
-    expect(mockLoggerErrorFn.mock.calls[0][0]).toContain('ENOENT: no such file or directory')
+    expect(mockLoggerErrorFn.mock.calls[0][0].err.message).toContain('ENOENT: no such file or directory')
+    expect(mockLoggerErrorFn.mock.calls[0][1]).toContain('assets-manifest.json')
   })
 })
 

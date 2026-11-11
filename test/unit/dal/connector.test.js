@@ -11,6 +11,7 @@ vi.mock('../../../src/config/index.js', () => ({
   config: {
     get: vi.fn((key) => {
       if (key === 'dalConfig.endpoint') return 'http://test-dal-endpoint/graphql'
+      if (key === 'server.tracing.header') return 'x-cdp-request-id'
       return null
     })
   }
@@ -20,6 +21,14 @@ vi.mock('../../../src/utils/logger.js', () => ({
   createLogger: vi.fn().mockReturnValue({
     error: vi.fn()
   })
+}))
+
+const { mockWithTraceId } = vi.hoisted(() => ({
+  mockWithTraceId: vi.fn((headerName, headers) => ({ ...headers, [headerName]: 'trace-id-123' }))
+}))
+
+vi.mock('@defra/hapi-tracing', () => ({
+  withTraceId: mockWithTraceId
 }))
 
 vi.mock('../../../src/services/DAL/token/get-token-service.js', () => ({
@@ -107,6 +116,21 @@ describe('DAL (data access layer) connector', () => {
     })
   })
 
+  describe('x-cdp-request-id header', () => {
+    test('should add the configured trace header to the DAL request headers', async () => {
+      mockSuccessfulDalResponse()
+
+      await dalConnector.query(exampleQuery, { sbi: 800000001 })
+
+      expect(mockWithTraceId).toHaveBeenCalledWith(
+        'x-cdp-request-id',
+        expect.objectContaining({ 'gateway-type': 'external', Authorization: 'mocked-token' })
+      )
+      const [, options] = global.fetch.mock.calls[0]
+      expect(options.headers['x-cdp-request-id']).toBe('trace-id-123')
+    })
+  })
+
   describe('when the DAL returns a GraphQL error', () => {
     test('should return a formatted error response', async () => {
       global.fetch = vi.fn().mockResolvedValue({
@@ -135,6 +159,47 @@ describe('DAL (data access layer) connector', () => {
       expect(result.errors[0].message).toBe('SBI not found')
       expect(result.errors[0].extensions.code).toBe('NOT_FOUND')
       expect(result.statusCode).toBe(404)
+    })
+
+    test('should log the DAL error codes and messages in tenant-settable fields without upstream response bodies', async () => {
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 404,
+        json: async () => ({
+          data: null,
+          errors: [
+            {
+              message: 'SBI not found',
+              extensions: {
+                code: 'NOT_FOUND',
+                response: { status: 404 },
+                parsedBody: { message: 'No business for jo.bloggs@example.com' }
+              }
+            }
+          ]
+        })
+      })
+
+      const { createLogger } = await import('../../../src/utils/logger.js')
+      const mockLogger = createLogger()
+
+      await dalConnector.query(exampleQuery, { sbi: 800000001 })
+
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        {
+          error: {
+            type: 'DalGraphQLError',
+            code: 'NOT_FOUND',
+            message: 'SBI not found'
+          },
+          event: {
+            outcome: 'failure',
+            reason: 'DAL responded with status 404'
+          }
+        },
+        'DAL responded with errors'
+      )
+      expect(JSON.stringify(mockLogger.error.mock.calls[0])).not.toContain('jo.bloggs@example.com')
     })
 
     test('should treat partial success responses as a failure', async () => {

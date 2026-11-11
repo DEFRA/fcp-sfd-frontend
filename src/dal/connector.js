@@ -18,9 +18,11 @@
  */
 
 import { constants } from '@defra/fcp-sfd-frontend-engine'
+import { withTraceId } from '@defra/hapi-tracing'
 import { createLogger } from '../utils/logger.js'
 import { config } from '../config/index.js'
 import { formatDalResponse, handleDalResponse } from './dal-response.js'
+import { toDalErrorLog } from './dal-error-log.js'
 import { getTokenService } from '../services/DAL/token/get-token-service.js'
 
 const logger = createLogger()
@@ -39,12 +41,12 @@ const resolveForwardedUserToken = async (sessionCache, sessionId, forwardedUserT
 // Assembles the fetch options for a DAL GraphQL request.
 const buildDalRequest = (bearerToken, forwardedUserToken, graphqlQuery, variables) => ({
   method: 'POST',
-  headers: {
+  headers: withTraceId(config.get('server.tracing.header'), {
     'Content-type': 'application/json',
     'gateway-type': 'external',
     Authorization: bearerToken,
     'x-forwarded-authorization': forwardedUserToken
-  },
+  }),
   body: JSON.stringify({ query: graphqlQuery, variables })
 })
 
@@ -124,7 +126,7 @@ const executeDalQuery = async (graphqlQuery, variables, sessionCache, tokenCache
   const result = handleDalResponse(responseBody)
 
   if (result.errors) {
-    logger.error('DAL responded with errors', result)
+    logger.error(toDalErrorLog(result), 'DAL responded with errors')
   }
 
   return result

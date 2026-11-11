@@ -29,6 +29,18 @@ export const featureToggleConfig = {
       format: Boolean,
       default: false,
       env: 'VIEW_LAND_ENABLED'
+    },
+    updatePersonalDetails: {
+      doc: 'Enables personal details update functionality (change links)',
+      format: Boolean,
+      default: true,
+      env: 'UPDATE_PERSONAL_DETAILS'
+    },
+    updateBusinessDetails: {
+      doc: 'Enables business details update functionality (change links)',
+      format: Boolean,
+      default: true,
+      env: 'UPDATE_BUSINESS_DETAILS'
     }
   }
 }

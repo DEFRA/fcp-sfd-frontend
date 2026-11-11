@@ -474,4 +474,65 @@ describe('personalDetailsPresenter', () => {
       })
     })
   })
+
+  describe('when UPDATE_PERSONAL_DETAILS feature toggle is disabled', () => {
+    beforeEach(() => {
+      config.get.mockImplementation((key) => {
+        if (key === 'featureToggle.updatePersonalDetails') return false
+        return true
+      })
+    })
+
+    test('all change links are set to null', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.personalName.changeLink).toBeNull()
+      expect(result.dob.changeLink).toBeNull()
+      expect(result.personalAddress.changeLink).toBeNull()
+      expect(result.personalTelephone.changeLink).toBeNull()
+      expect(result.personalEmail.changeLink).toBeNull()
+    })
+
+    test('updateDisabledWarning is set with warning title and message', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.updateDisabledWarning).toEqual({
+        title: 'Warning',
+        text: 'Due to a technical issue you are currently unable to update your personal details. Please try again later'
+      })
+    })
+
+    test('other data is still presented correctly', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.personalName.fullName).toBe('John M Doe')
+      expect(result.personalName.action).toBe('Change')
+      expect(result.personalAddress.address).toBeDefined()
+      expect(result.personalEmail.email).toBe(data.email)
+    })
+  })
+
+  describe('when UPDATE_PERSONAL_DETAILS feature toggle is enabled', () => {
+    beforeEach(() => {
+      config.get.mockImplementation((key) => {
+        if (key === 'featureToggle.updatePersonalDetails') return true
+        return true
+      })
+    })
+
+    test('updateDisabledWarning is null', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.updateDisabledWarning).toBeNull()
+    })
+
+    test('all change links are present', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.personalName.changeLink).toBeDefined()
+      expect(result.personalName.changeLink).not.toBeNull()
+      expect(result.dob.changeLink).toBeDefined()
+      expect(result.dob.changeLink).not.toBeNull()
+    })
+  })
 })

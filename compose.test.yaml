@@ -19,6 +19,8 @@ services:
       DEFRA_ID_POLICY: test-policy
       PERSONAL_DETAILS_INTERRUPTER_ENABLED: false
       BUSINESS_DETAILS_INTERRUPTER_ENABLED: false
+      UPDATE_PERSONAL_DETAILS: ${UPDATE_PERSONAL_DETAILS:-true}
+      UPDATE_BUSINESS_DETAILS: ${UPDATE_BUSINESS_DETAILS:-true}
       CPH_ENABLED: false
       WATER_MANAGEMENT_ENABLED: true
       WATER_MANAGEMENT_ENDPOINT: https://grants-ui.test.cdp-int.defra.cloud/water-management

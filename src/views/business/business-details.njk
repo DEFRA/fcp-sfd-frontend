@@ -30,6 +30,15 @@
         {% endif %}
       {% endif %}
 
+      {# Update disabled warning #}
+      {% if updateDisabledWarning %}
+        {{ govukNotificationBanner({
+          type: "warning",
+          titleText: updateDisabledWarning.title,
+          text: updateDisabledWarning.text
+        })}}
+      {% endif %}
+
     <h1 class="govuk-heading-l">
       {{ pageTitle }}
     </h1>

@@ -13,10 +13,17 @@ import { getMappedData } from '../../../mocks/mock-business-details.js'
 
 // Mock dependencies
 import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/business/business-details-change-links-presenter.js'
+import { config } from '../../../../src/config/index.js'
 
 // Mock imports
 vi.mock('../../../../src/presenters/business/business-details-change-links-presenter.js', () => ({
   businessDetailsChangeLinksPresenter: vi.fn()
+}))
+
+vi.mock('../../../../src/config/index.js', () => ({
+  config: {
+    get: vi.fn()
+  }
 }))
 
 const { NOT_ADDED_TEXT } = constants
@@ -807,6 +814,56 @@ describe('businessDetailsPresenter', () => {
           changeLink: '/business-charity-registration-number-change'
         })
       })
+    })
+  })
+
+  describe('when UPDATE_BUSINESS_DETAILS feature toggle is disabled', () => {
+    beforeEach(() => {
+      config.get.mockImplementation((key) => {
+        if (key === 'featureToggle.updateBusinessDetails') return false
+        return true
+      })
+      businessDetailsChangeLinksPresenter.mockReturnValue({
+        businessAddress: '/business-address-change',
+        businessName: '/business-name-change',
+        businessTelephone: '/business-phone-numbers-change',
+        businessEmail: '/business-email-change',
+        vat: null
+      })
+    })
+
+    test('all change links are set to null', () => {
+      const result = businessDetailsPresenter(data, yar, PERMISSION_GROUP.EDIT, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+      expect(result.businessAddress.changeLink).toBeNull()
+      expect(result.businessName.changeLink).toBeNull()
+      expect(result.businessTelephone.changeLink).toBeNull()
+      expect(result.businessEmail.changeLink).toBeNull()
+      expect(result.businessLegalStatus.changeLink).toBeNull()
+      expect(result.businessType.changeLink).toBeNull()
+    })
+
+    test('updateDisabledWarning is set with warning title and message', () => {
+      const result = businessDetailsPresenter(data, yar, PERMISSION_GROUP.EDIT, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+      expect(result.updateDisabledWarning).toEqual({
+        title: 'Warning',
+        text: 'Due to a technical issue you are currently unable to update your business details. Please try again later'
+      })
+    })
+
+    test('legalStatusRegistrationNumber is null', () => {
+      const result = businessDetailsPresenter(data, yar, PERMISSION_GROUP.EDIT, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+      expect(result.legalStatusRegistrationNumber).toBeNull()
+    })
+
+    test('other data is still presented correctly', () => {
+      const result = businessDetailsPresenter(data, yar, PERMISSION_GROUP.EDIT, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+      expect(result.businessName.value).toBe(data.businessName)
+      expect(result.businessAddress.value).toBeDefined()
+      expect(result.sbi).toBe(data.sbi)
     })
   })
 })

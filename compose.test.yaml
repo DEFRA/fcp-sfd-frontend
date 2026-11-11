@@ -20,7 +20,10 @@ services:
       PERSONAL_DETAILS_INTERRUPTER_ENABLED: false
       BUSINESS_DETAILS_INTERRUPTER_ENABLED: false
       CPH_ENABLED: false
+      WATER_MANAGEMENT_ENABLED: true
+      WATER_MANAGEMENT_ENDPOINT: https://grants-ui.test.cdp-int.defra.cloud/water-management
       WMP_ENDPOINT: https://grants-ui.test.cdp-int.defra.cloud/woodland
+      VIEW_LAND_ENABLED: ${VIEW_LAND_ENABLED:-false}
     depends_on:
       fcp-dal-api:
         condition: service_started

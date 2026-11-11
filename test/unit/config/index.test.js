@@ -117,6 +117,40 @@ describe('Config', () => {
     })
   })
 
+  describe('Services', () => {
+    beforeEach(() => {
+      vi.resetModules()
+      process.env.WMP_ENDPOINT = 'http://mock-wmp'
+      process.env.WATER_MANAGEMENT_ENDPOINT = 'http://mock-water-management'
+    })
+
+    test('should return WMP endpoint from environment variable if set', async () => {
+      const { config } = await import('../../../src/config/index.js')
+
+      expect(config.get('servicesConfig.WMPEndpoint')).toBe('http://mock-wmp')
+    })
+
+    test('should return null if WMP endpoint environment variable is not set', async () => {
+      delete process.env.WMP_ENDPOINT
+      const { config } = await import('../../../src/config/index.js')
+
+      expect(config.get('servicesConfig.WMPEndpoint')).toBe(null)
+    })
+
+    test('should return Water Management endpoint from environment variable if set', async () => {
+      const { config } = await import('../../../src/config/index.js')
+
+      expect(config.get('servicesConfig.waterManagementEndpoint')).toBe('http://mock-water-management')
+    })
+
+    test('should return null if Water Management endpoint environment variable is not set', async () => {
+      delete process.env.WATER_MANAGEMENT_ENDPOINT
+      const { config } = await import('../../../src/config/index.js')
+
+      expect(config.get('servicesConfig.waterManagementEndpoint')).toBe(null)
+    })
+  })
+
   describe('Data access layer (DAL)', () => {
     beforeEach(() => {
       vi.resetModules()

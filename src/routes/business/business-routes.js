@@ -2,6 +2,10 @@ import { businessAddressChangeRoutes } from './business-address-change-routes.js
 import { businessAddressSelectRoutes } from './business-address-select-routes.js'
 import { businessAddressEnterRoutes } from './business-address-enter-routes.js'
 import { businessAddressCheckRoutes } from './business-address-check-routes.js'
+import { businessCharityRegistrationNumberChangeRoutes } from './business-charity-registration-number-change-routes.js'
+import { businessCharityRegistrationNumberCheckRoutes } from './business-charity-registration-number-check-routes.js'
+import { businessCompanyRegistrationNumberChangeRoutes } from './business-company-registration-number-change-routes.js'
+import { businessCompanyRegistrationNumberCheckRoutes } from './business-company-registration-number-check-routes.js'
 import { businessDetailsRoutes } from './business-details-routes.js'
 import { businessEmailChangeRoutes } from './business-email-change-routes.js'
 import { businessEmailCheckRoutes } from './business-email-check-routes.js'
@@ -23,6 +27,10 @@ export const businessRoutes = [
   ...businessAddressSelectRoutes,
   ...businessAddressEnterRoutes,
   ...businessAddressCheckRoutes,
+  ...businessCharityRegistrationNumberChangeRoutes,
+  ...businessCharityRegistrationNumberCheckRoutes,
+  ...businessCompanyRegistrationNumberChangeRoutes,
+  ...businessCompanyRegistrationNumberCheckRoutes,
   ...businessDetailsRoutes,
   ...businessEmailChangeRoutes,
   ...businessEmailCheckRoutes,

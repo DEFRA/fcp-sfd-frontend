@@ -5,7 +5,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
 // Test helpers
-import { FULL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessTypeRoutes } from '../../../../src/routes/business/business-type-change-routes.js'
@@ -47,7 +47,7 @@ describe('business type change', () => {
       test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessTypeChange.method).toBe('GET')
         expect(getBusinessTypeChange.path).toBe('/business-type-change')
-        expect(getBusinessTypeChange.options.auth.scope).toBe(FULL_PERMISSIONS)
+        expect(getBusinessTypeChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
       test('it fetches the data from the fetchBusinessDetailsService', async () => {

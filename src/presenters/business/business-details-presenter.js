@@ -5,8 +5,11 @@
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
+import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
+import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
+const { NOT_ADDED_TEXT } = constants
 
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
@@ -19,7 +22,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
-    pageTitle: permissionLevel === 'view' ? 'View business details' : 'View and update your business details',
+    pageTitle: permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
     permissionsText: setPermissionsText(permissionLevel),
@@ -29,18 +32,18 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
     },
     businessName: {
-      value: data.businessName || 'Not added',
+      value: data.businessName || NOT_ADDED_TEXT,
       changeLink: changeLinks.businessName,
       action: presenters.getActionText(data.businessName)
     },
     businessTelephone: {
-      telephone: data.landline || 'Not added',
-      mobile: data.mobile || 'Not added',
+      telephone: data.landline || NOT_ADDED_TEXT,
+      mobile: data.mobile || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.landline || data.mobile),
       changeLink: changeLinks.businessTelephone
     },
     businessEmail: {
-      value: data.email || 'Not added',
+      value: data.email || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.email),
       changeLink: changeLinks.businessEmail
     },
@@ -51,21 +54,63 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     countyParishHoldingNumbers,
     countyParishHoldingNumbersText: presenters.formatCphText(countyParishHoldingNumbers.length),
     businessLegalStatus: {
-      value: data.legalStatus ?? 'Not added',
+      value: data.legalStatus ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.legalStatus),
-      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
+      changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
+    legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data, permissionLevel),
     businessType: {
-      value: data.type ?? 'Not added',
+      value: data.type ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.type),
-      changeLink: permissionLevel === 'full' ? BUSINESS_CHANGE_LINKS.businessType : null
+      changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? BUSINESS_CHANGE_LINKS.businessType : null
     }
   }
 }
 
 const formatAddress = (businessAddress) => {
   const lines = presenters.formatBusinessAddress(businessAddress)
-  return lines.length > 0 ? lines : 'Not added'
+  return lines.length > 0 ? lines : NOT_ADDED_TEXT
+}
+
+/**
+ * Builds the registration number row for the business details page.
+ *
+ * Only charity and company legal statuses hold a registration number, so this
+ * returns null for every other status and the view omits the row entirely.
+ * Only the number matching the legal status is shown.
+ *
+ * @param {Object} data - The mapped business details
+ * @param {string} permissionLevel - The user's permission level, only 'legal' can add or change the number
+ *
+ * @returns {{label: string, value: string, action: string, changeLink: string|null}|null} The row data, or null when the legal status has no registration number
+ */
+const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
+  // The DAL returns the legal status code as a number, the engine codes are strings
+  const legalStatusCode = String(data.legalStatusCode ?? '')
+  const registrationNumbers = data.registrationNumbers ?? {}
+
+  let label
+  let number
+  let changeLink
+
+  if (constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
+    label = 'Charity commission registration number'
+    number = registrationNumbers.charityCommission
+    changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber
+  } else if (constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
+    label = 'Company registration number'
+    number = registrationNumbers.companiesHouse
+    changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCompanyRegistrationNumber
+  } else {
+    return null
+  }
+
+  return {
+    label,
+    value: number || NOT_ADDED_TEXT,
+    action: presenters.getActionText(number),
+    changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? changeLink : null
+  }
 }
 
 /**
@@ -93,7 +138,7 @@ const formatAddress = (businessAddress) => {
  */
 const buildVatDisplay = (vatNumber, vatChangeState) => {
   const hasVat = Boolean(vatNumber)
-  const value = vatNumber || 'Not added'
+  const value = vatNumber || NOT_ADDED_TEXT
   const linkStyling = 'govuk-link--no-visited-state'
 
   // If no vatChangeState it means the user does not have permission to change VAT details
@@ -172,11 +217,11 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
 }
 
 const setPermissionsText = (permissionLevel) => {
-  if (permissionLevel === 'amend') {
+  if (permissionLevel === PERMISSION_GROUP.AMEND) {
     return 'You only have permission to update contact details for this business. You can ask the business to raise your permission level.'
   }
 
-  if (permissionLevel === 'view') {
+  if (permissionLevel === PERMISSION_GROUP.VIEW) {
     return 'You do not have permission to update details for this business. You can ask the business to raise your permission level.'
   }
 

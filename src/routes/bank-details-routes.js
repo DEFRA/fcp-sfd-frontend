@@ -26,8 +26,8 @@ export const bankDetailsRoutes = [
     path: '/bank-details-check/{sbi}',
     options: {
       auth: false,
-      // Hapi decodes %2F in path params, so without this an encoded traversal
-      // such as `..%2Fhealth` would reach other paths on fcp-sfd-bank-details
+      // Only allow a 9-digit SBI. Hapi decodes %2F to "/" in path params, so without this
+      // a value like `..%2Fhealth` could be used to call other URLs on fcp-sfd-bank-details
       validate: {
         params: Joi.object({
           sbi: Joi.string().pattern(/^\d{9}$/).required()

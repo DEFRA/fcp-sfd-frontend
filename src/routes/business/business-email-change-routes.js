@@ -3,6 +3,7 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessEmailChangePresenter } from '../../presenters/business/business-email-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const getBusinessEmailChange = {
   method: 'GET',
@@ -12,6 +13,15 @@ const getBusinessEmailChange = {
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+
+    if (!isBusinessFieldAccessible('email')) {
+      const pageData = businessEmailChangePresenter(await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessEmail'))
+      return h.view('business/business-email-change', {
+        ...pageData,
+        notification: getDisabledFieldNotification('business email address')
+      }).code(constants.statusCodes.LOCKED)
+    }
+
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessEmail')
     const pageData = businessEmailChangePresenter(businessDetails)
 
@@ -32,6 +42,17 @@ const postBusinessEmailChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
+        if (!isBusinessFieldAccessible('email')) {
+          const errors = utils.formatValidationErrors(err.details || [])
+          const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessEmail')
+          const pageData = businessEmailChangePresenter(businessDetails, payload.businessEmail)
+          return h.view('business/business-email-change', {
+            ...pageData,
+            errors,
+            notification: getDisabledFieldNotification('business email address')
+          }).code(constants.statusCodes.BAD_REQUEST).takeover()
+        }
+
         const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessEmail')
         const pageData = businessEmailChangePresenter(businessDetails, payload.businessEmail)
@@ -40,6 +61,14 @@ const postBusinessEmailChange = {
       }
     },
     handler: async (request, h) => {
+      if (!isBusinessFieldAccessible('email')) {
+        return h.view('business/business-email-change', {
+          backLink: { href: '/business-details' },
+          pageTitle: 'What is the business email address?',
+          notification: getDisabledFieldNotification('business email address')
+        }).code(constants.statusCodes.LOCKED)
+      }
+
       const { yar, payload } = request
 
       setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessEmail', payload.businessEmail)
@@ -53,3 +82,4 @@ export const businessEmailChangeRoutes = [
   getBusinessEmailChange,
   postBusinessEmailChange
 ]
+

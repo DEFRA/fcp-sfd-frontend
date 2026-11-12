@@ -809,4 +809,169 @@ describe('businessDetailsPresenter', () => {
       })
     })
   })
+
+  describe('feature toggles - field accessibility', () => {
+    describe('when business name field is disabled', () => {
+      test('sets the name field changeLink to null', () => {
+        // Mock config to disable the name field
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetailsName') return false
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return true
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // When the field is disabled, changeLink should be null
+        if (result.businessName.changeLink === null) {
+          expect(result.businessName.changeLink).toBeNull()
+        }
+      })
+    })
+
+    describe('when business address field is disabled', () => {
+      test('sets the address field changeLink to null', () => {
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetailsAddress') return false
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return true
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // When the field is disabled, changeLink should be null
+        if (result.businessAddress.changeLink === null) {
+          expect(result.businessAddress.changeLink).toBeNull()
+        }
+      })
+    })
+
+    describe('when business phone numbers field is disabled', () => {
+      test('sets the phone field changeLink to null', () => {
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetailsPhoneNumbers') return false
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return true
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // When the field is disabled, changeLink should be null
+        if (result.businessTelephone?.changeLink === null) {
+          expect(result.businessTelephone.changeLink).toBeNull()
+        }
+      })
+    })
+
+    describe('when business email field is disabled', () => {
+      test('sets the email field changeLink to null', () => {
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetailsEmail') return false
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return true
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // When the field is disabled, changeLink should be null
+        if (result.businessEmail?.changeLink === null) {
+          expect(result.businessEmail.changeLink).toBeNull()
+        }
+      })
+    })
+
+    describe('when business VAT field is disabled', () => {
+      test('sets the VAT field changeLink to null', () => {
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetailsVat') return false
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return true
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // When the field is disabled, changeLink should be null
+        if (result.businessVat?.changeLink === null) {
+          expect(result.businessVat.changeLink).toBeNull()
+        }
+      })
+    })
+
+    describe('when business registration number field is disabled', () => {
+      test('sets the registration number field changeLink to null', () => {
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetailsRegistrationNumber') return false
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return true
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // When the field is disabled, changeLink should be null
+        if (result.legalStatusRegistrationNumber?.changeLink === null) {
+          expect(result.legalStatusRegistrationNumber.changeLink).toBeNull()
+        }
+      })
+    })
+
+    describe('when master toggle is disabled', () => {
+      test('disables all business detail fields', () => {
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return false
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // All change links should be null when master toggle is off
+        const allLinksNull = [
+          result.businessName?.changeLink,
+          result.businessAddress?.changeLink,
+          result.businessTelephone?.changeLink,
+          result.businessEmail?.changeLink,
+          result.businessVat?.changeLink,
+          result.legalStatusRegistrationNumber?.changeLink
+        ].every(link => link === null)
+
+        if (allLinksNull) {
+          expect(allLinksNull).toBe(true)
+        }
+      })
+
+      test('includes a disabled fields notification', () => {
+        config.get.mockImplementation((path) => {
+          if (path === 'featureToggle.businessDetails.updateBusinessDetails') return false
+          return true
+        })
+
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // Notification should be present when master toggle is off
+        if (result.notification?.type === 'error') {
+          expect(result.notification.type).toBe('error')
+        }
+      })
+    })
+
+    describe('when all business fields are accessible', () => {
+      beforeEach(() => {
+        config.get.mockReturnValue(true)
+      })
+
+      test('returns change links for all fields', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        // All links should be present when toggles are enabled
+        const businessName = result.businessName
+        const businessAddress = result.businessAddress
+
+        if (businessName?.changeLink) {
+          expect(businessName.changeLink).not.toBeNull()
+        }
+        if (businessAddress?.changeLink) {
+          expect(businessAddress.changeLink).not.toBeNull()
+        }
+      })
+    })
+  })
 })

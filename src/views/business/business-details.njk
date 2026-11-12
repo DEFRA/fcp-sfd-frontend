@@ -17,14 +17,14 @@
       {% if notification %}
         {% if notification.html %}
           {{ govukNotificationBanner({
-            type: "success",
-            titleText: notification.title,
+            type: notification.type or "success",
+            titleText: notification.titleText or notification.title,
             html: notification.html
           })}}
         {% else %}
           {{ govukNotificationBanner({
-            type: "success",
-            titleText: notification.title,
+            type: notification.type or "success",
+            titleText: notification.titleText or notification.title,
             text: notification.text
           })}}
         {% endif %}

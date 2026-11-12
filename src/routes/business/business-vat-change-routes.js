@@ -3,6 +3,7 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessVatChangePresenter } from '../../presenters/business/business-vat-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const getBusinessVatChange = {
   method: 'GET',
@@ -12,6 +13,15 @@ const getBusinessVatChange = {
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+
+    if (!isBusinessFieldAccessible('vat')) {
+      const pageData = businessVatChangePresenter(await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat'))
+      return h.view('business/business-vat-registration-number-change', {
+        ...pageData,
+        notification: getDisabledFieldNotification('business VAT registration number')
+      }).code(constants.statusCodes.LOCKED)
+    }
+
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
     const pageData = businessVatChangePresenter(businessDetails)
 
@@ -30,6 +40,17 @@ const postBusinessVatChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
+        if (!isBusinessFieldAccessible('vat')) {
+          const errors = utils.formatValidationErrors(err.details || [])
+          const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
+          const pageData = businessVatChangePresenter(businessDetails, payload.vatNumber)
+          return h.view('business/business-vat-registration-number-change', {
+            ...pageData,
+            errors,
+            notification: getDisabledFieldNotification('business VAT registration number')
+          }).code(constants.statusCodes.BAD_REQUEST).takeover()
+        }
+
         const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessVat')
         const pageData = businessVatChangePresenter(businessDetails, payload.vatNumber)
@@ -38,6 +59,14 @@ const postBusinessVatChange = {
       }
     },
     handler: async (request, h) => {
+      if (!isBusinessFieldAccessible('vat')) {
+        return h.view('business/business-vat-registration-number-change', {
+          backLink: { href: '/business-details' },
+          pageTitle: 'What is the VAT registration number?',
+          notification: getDisabledFieldNotification('business VAT registration number')
+        }).code(constants.statusCodes.LOCKED)
+      }
+
       const { yar, payload } = request
 
       setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessVat', payload.vatNumber)
@@ -51,3 +80,4 @@ export const businessVatChangeRoutes = [
   getBusinessVatChange,
   postBusinessVatChange
 ]
+

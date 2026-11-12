@@ -24,6 +24,19 @@ services:
       WATER_MANAGEMENT_ENDPOINT: https://grants-ui.test.cdp-int.defra.cloud/water-management
       WMP_ENDPOINT: https://grants-ui.test.cdp-int.defra.cloud/woodland
       VIEW_LAND_ENABLED: ${VIEW_LAND_ENABLED:-false}
+      UPDATE_BUSINESS_DETAILS: true
+      UPDATE_BUSINESS_DETAILS_NAME: true
+      UPDATE_BUSINESS_DETAILS_ADDRESS: true
+      UPDATE_BUSINESS_DETAILS_PHONE: true
+      UPDATE_BUSINESS_DETAILS_EMAIL: true
+      UPDATE_BUSINESS_DETAILS_VAT: true
+      UPDATE_BUSINESS_DETAILS_REGISTRATION_NUMBER: true
+      UPDATE_PERSONAL_DETAILS: true
+      UPDATE_PERSONAL_DETAILS_NAME: true
+      UPDATE_PERSONAL_DETAILS_DOB: true
+      UPDATE_PERSONAL_DETAILS_ADDRESS: true
+      UPDATE_PERSONAL_DETAILS_PHONE: true
+      UPDATE_PERSONAL_DETAILS_EMAIL: true
     depends_on:
       fcp-dal-api:
         condition: service_started

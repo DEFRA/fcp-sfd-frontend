@@ -3,6 +3,7 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessNameChangePresenter } from '../../presenters/business/business-name-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const getBusinessNameChange = {
   method: 'GET',
@@ -12,6 +13,15 @@ const getBusinessNameChange = {
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+
+    if (!isBusinessFieldAccessible('name')) {
+      const pageData = businessNameChangePresenter(await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName'))
+      return h.view('business/business-name-change', {
+        ...pageData,
+        notification: getDisabledFieldNotification('business name')
+      }).code(constants.statusCodes.LOCKED)
+    }
+
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
     const pageData = businessNameChangePresenter(businessDetails)
 
@@ -30,6 +40,17 @@ const postBusinessNameChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
+        if (!isBusinessFieldAccessible('name')) {
+          const errors = utils.formatValidationErrors(err.details || [])
+          const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
+          const pageData = businessNameChangePresenter(businessDetails, payload.businessName)
+          return h.view('business/business-name-change', {
+            ...pageData,
+            errors,
+            notification: getDisabledFieldNotification('business name')
+          }).code(constants.statusCodes.BAD_REQUEST).takeover()
+        }
+
         const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessName')
         const pageData = businessNameChangePresenter(businessDetails, payload.businessName)
@@ -38,6 +59,14 @@ const postBusinessNameChange = {
       }
     },
     handler: async (request, h) => {
+      if (!isBusinessFieldAccessible('name')) {
+        return h.view('business/business-name-change', {
+          backLink: { href: '/business-details' },
+          pageTitle: 'What is the business name?',
+          notification: getDisabledFieldNotification('business name')
+        }).code(constants.statusCodes.LOCKED)
+      }
+
       const { yar, payload } = request
 
       setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessName', payload.businessName)
@@ -51,3 +80,4 @@ export const businessNameChangeRoutes = [
   getBusinessNameChange,
   postBusinessNameChange
 ]
+

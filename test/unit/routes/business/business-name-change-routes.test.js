@@ -4,6 +4,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchBusinessChangeService } from '../../../../src/services/business/fetch-business-change-service.js'
+import { config } from '../../../../src/config/index.js'
+import { isBusinessFieldAccessible } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
+import { getDisabledFieldNotification } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
 
 // Test helpers
 import { LEGAL_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
@@ -19,6 +22,17 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
 
 vi.mock('../../../../src/services/business/fetch-business-change-service.js', () => ({
   fetchBusinessChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/config/index.js', () => ({
+  config: {
+    get: vi.fn()
+  }
+}))
+
+vi.mock('../../../../src/utils/feature-toggle/check-field-accessibility.js', () => ({
+  isBusinessFieldAccessible: vi.fn(),
+  getDisabledFieldNotification: vi.fn()
 }))
 
 describe('business name change', () => {
@@ -48,6 +62,11 @@ describe('business name change', () => {
       redirect: vi.fn(),
       view: vi.fn(() => responseStub)
     }
+
+    // Default: all fields accessible, config returns true
+    config.get.mockReturnValue(true)
+    isBusinessFieldAccessible.mockReturnValue(true)
+    getDisabledFieldNotification.mockReturnValue(null)
   })
 
   describe('GET /business-name-change', () => {
@@ -185,3 +204,194 @@ const getPageDataError = () => {
     }
   }
 }
+
+describe('feature toggles - business name field', () => {
+  beforeEach(() => {
+    fetchBusinessChangeService.mockResolvedValue({
+      businessName: 'Agile Farm Ltd',
+      sbi: '123456789',
+      customer: { userName: 'Alfred Waldron' }
+    })
+  })
+
+  describe('when business name field is disabled', () => {
+    beforeEach(() => {
+      isBusinessFieldAccessible.mockReturnValue(false)
+      getDisabledFieldNotification.mockReturnValue({
+        type: 'error',
+        titleText: 'Important',
+        text: 'Sorry, there is a problem with the service. You cannot update your business name right now. Please try again later.'
+      })
+    })
+
+    describe('on GET request', () => {
+      test('returns 423 LOCKED status', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await getBusinessNameChange.handler(request, h)
+
+        expect(responseStub.code).toHaveBeenCalledWith(423)
+      })
+
+      test('renders the view with error notification', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await getBusinessNameChange.handler(request, h)
+
+        const callArgs = h.view.mock.calls[0]
+        expect(callArgs[1].notification).toBeDefined()
+        expect(callArgs[1].notification.type).toBe('error')
+      })
+    })
+
+    describe('on POST request', () => {
+      beforeEach(() => {
+        request.payload = { businessName: 'New business Name ltd' }
+      })
+
+      test('returns 423 LOCKED status', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postBusinessNameChange.options.handler(request, h)
+
+        expect(responseStub.code).toHaveBeenCalledWith(423)
+      })
+
+      test('does not proceed with submission', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postBusinessNameChange.options.handler(request, h)
+
+        expect(setSessionData).not.toHaveBeenCalled()
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('renders the view with error notification', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postBusinessNameChange.options.handler(request, h)
+
+        const callArgs = h.view.mock.calls[0]
+        expect(callArgs[1].notification).toBeDefined()
+        expect(callArgs[1].notification.type).toBe('error')
+      })
+    })
+
+    describe('on POST request validation failure', () => {
+      let err
+
+      beforeEach(() => {
+        err = {
+          details: [
+            {
+              message: 'Enter business name',
+              path: ['businessName'],
+              type: 'string.empty'
+            }
+          ]
+        }
+      })
+
+      test('returns 423 LOCKED status instead of validation error', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postBusinessNameChange.options.validate.failAction(request, h, err)
+
+        expect(responseStub.code).toHaveBeenCalledWith(423)
+      })
+
+      test('renders the view with error notification', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postBusinessNameChange.options.validate.failAction(request, h, err)
+
+        const callArgs = h.view.mock.calls[0]
+        expect(callArgs[1].notification).toBeDefined()
+        expect(callArgs[1].notification.type).toBe('error')
+      })
+    })
+  })
+
+  describe('when business name field is enabled', () => {
+    beforeEach(() => {
+      isBusinessFieldAccessible.mockReturnValue(true)
+      getDisabledFieldNotification.mockReturnValue(null)
+      fetchBusinessChangeService.mockResolvedValue({
+        businessName: 'Agile Farm Ltd',
+        sbi: '123456789',
+        customer: { userName: 'Alfred Waldron' }
+      })
+    })
+
+    describe('on GET request', () => {
+      test('does not return 423 LOCKED status', async () => {
+        await getBusinessNameChange.handler(request, h)
+
+        const responseStub = h.view.mock.results[0].value
+        expect(responseStub.code).not.toHaveBeenCalledWith(423)
+      })
+
+      test('renders normally without error notification', async () => {
+        await getBusinessNameChange.handler(request, h)
+
+        expect(h.view).toHaveBeenCalledWith('business/business-name-change', getPageData())
+      })
+    })
+
+    describe('on POST request', () => {
+      beforeEach(() => {
+        request.payload = { businessName: 'New business Name ltd' }
+
+        fetchBusinessChangeService.mockResolvedValue({
+          businessName: 'Agile Farm Ltd',
+          sbi: '123456789',
+          customer: { userName: 'Alfred Waldron' },
+          changeBusinessName: request.payload.businessName
+        })
+      })
+
+      test('proceeds with normal submission', async () => {
+        await postBusinessNameChange.options.handler(request, h)
+
+        expect(setSessionData).toHaveBeenCalled()
+        expect(h.redirect).toHaveBeenCalledWith('/business-name-check')
+      })
+    })
+  })
+})
+

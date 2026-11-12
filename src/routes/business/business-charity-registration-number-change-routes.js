@@ -3,6 +3,7 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessCharityRegistrationNumberChangePresenter } from '../../presenters/business/business-charity-registration-number-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const getBusinessCharityRegistrationNumberChange = {
   method: 'GET',
@@ -16,6 +17,14 @@ const getBusinessCharityRegistrationNumberChange = {
 
     if (!constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
       return h.redirect('/business-details')
+    }
+
+    if (!isBusinessFieldAccessible('registrationNumber')) {
+      const pageData = businessCharityRegistrationNumberChangePresenter(await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCharityRegistrationNumber'))
+      return h.view('business/business-charity-registration-number-change', {
+        ...pageData,
+        notification: getDisabledFieldNotification('business registration number')
+      }).code(constants.statusCodes.LOCKED)
     }
 
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCharityRegistrationNumber')
@@ -36,6 +45,17 @@ const postBusinessCharityRegistrationNumberChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
+        if (!isBusinessFieldAccessible('registrationNumber')) {
+          const errors = utils.formatValidationErrors(err.details || [])
+          const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCharityRegistrationNumber')
+          const pageData = businessCharityRegistrationNumberChangePresenter(businessDetails, payload.charityCommissionRegistrationNumber)
+          return h.view('business/business-charity-registration-number-change', {
+            ...pageData,
+            errors,
+            notification: getDisabledFieldNotification('business registration number')
+          }).code(constants.statusCodes.BAD_REQUEST).takeover()
+        }
+
         const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCharityRegistrationNumber')
         const pageData = businessCharityRegistrationNumberChangePresenter(businessDetails, payload.charityCommissionRegistrationNumber)
@@ -51,6 +71,14 @@ const postBusinessCharityRegistrationNumberChange = {
         return h.redirect('/business-details')
       }
 
+      if (!isBusinessFieldAccessible('registrationNumber')) {
+        return h.view('business/business-charity-registration-number-change', {
+          backLink: { href: '/business-details' },
+          pageTitle: 'What is the charity registration number?',
+          notification: getDisabledFieldNotification('business registration number')
+        }).code(constants.statusCodes.LOCKED)
+      }
+
       setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessCharityRegistrationNumber', payload.charityCommissionRegistrationNumber)
 
       return h.redirect('/business-charity-registration-number-check')
@@ -62,3 +90,4 @@ export const businessCharityRegistrationNumberChangeRoutes = [
   getBusinessCharityRegistrationNumberChange,
   postBusinessCharityRegistrationNumberChange
 ]
+

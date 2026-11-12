@@ -15,14 +15,14 @@
       {% if notification %}
         {% if notification.html %}
           {{ govukNotificationBanner({
-            type: "success",
-            titleText: notification.title,
+            type: notification.type or "success",
+            titleText: notification.titleText or notification.title,
             html: notification.html
           })}}
         {% else %}
           {{ govukNotificationBanner({
-            type: "success",
-            titleText: notification.title,
+            type: notification.type or "success",
+            titleText: notification.titleText or notification.title,
             text: notification.text
           })}}
         {% endif %}
@@ -88,7 +88,7 @@
           value: {
             text: personalName.fullName
           },
-          actions: {
+          actions: personalName.changeLink ? {
             items: [
               {
                 href: personalName.changeLink,
@@ -97,7 +97,7 @@
                 classes: "govuk-link--no-visited-state"
               }
             ]
-          }
+          } : null
         },
         {
           key: {
@@ -106,7 +106,7 @@
           value: {
             html: displayDOB
           },
-          actions: {
+          actions: dob.changeLink ? {
             items: [
               {
                 href: dob.changeLink,
@@ -115,7 +115,7 @@
                 classes: "govuk-link--no-visited-state"
               }
             ]
-          }
+          } : null
         },
         {
           key: {
@@ -132,7 +132,7 @@
           value: {
             html: formattedAddress
           },
-          actions: {
+          actions: personalAddress.changeLink ? {
             items: [
               {
                 href: personalAddress.changeLink,
@@ -141,7 +141,7 @@
                 classes: "govuk-link--no-visited-state"
               }
             ]
-          }
+          } : null
         },
         {
           key: {
@@ -150,7 +150,7 @@
           value: {
             html: displayPersonalTelephone
           },
-          actions: {
+          actions: personalTelephone.changeLink ? {
             items: [
               {
                 href: personalTelephone.changeLink,
@@ -159,7 +159,7 @@
                 classes: "govuk-link--no-visited-state"
               }
             ]
-          }
+          } : null
         },
         {
           key: {
@@ -168,7 +168,7 @@
           value: {
             html: displayPersonalEmail
           },
-          actions: {
+          actions: personalEmail.changeLink ? {
             items: [
               {
                 href: personalEmail.changeLink,
@@ -177,7 +177,7 @@
                 classes: "govuk-link--no-visited-state"
               }
             ]
-          }
+          } : null
         }
       ]
     }) }}

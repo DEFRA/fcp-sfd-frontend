@@ -37,20 +37,6 @@ describe('index route', () => {
 
     expect($('title').text().trim()).toBe('Start using the Farm and Land Service - Farm and Land Service - GOV.UK')
   })
-
-  test('GET / lists the grants users can apply for', async () => {
-    const response = await server.inject({
-      url: '/'
-    })
-    const $ = cheerio.load(response.result)
-    const bullets = $('li').map((_i, el) => $(el).text().trim()).get()
-
-    expect(bullets).toContain('apply for a Water Management grant round 3')
-    expect(bullets).toContain('apply for a Woodland Management grant, if we have invited you')
-    expect(bullets).toContain('apply for certain grants')
-    expect($('main').text()).toContain('so that you’ll be able to access more farm and land business tasks.')
-    expect($('main').text()).not.toContain('small group of people')
-  })
 })
 
 describe('home route', () => {

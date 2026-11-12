@@ -4,13 +4,12 @@
  */
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
-import { config } from '../../config/index.js'
+import { canUpdatePersonalField, getPersonalDetailsWarning } from '../../services/update-disable-service.js'
 
 const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
 
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
-  const updatePersonalDetailsEnabled = config.get('featureToggle.updatePersonalDetails')
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
   const { action: dobAction, formattedDob } = formatDob(data.dateOfBirth.full)
 
@@ -20,10 +19,7 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,
-    updateDisabledWarning: !updatePersonalDetailsEnabled ? {
-      title: 'Warning',
-      text: 'Due to a technical issue you are currently unable to update your personal details. Please try again later'
-    } : null,
+    updateDisabledWarning: getPersonalDetailsWarning(),
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',
     userName: data.userName ?? null,
@@ -31,28 +27,28 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
     personalName: {
       fullName: data.fullNameJoined,
       action: getActionText(data.fullNameJoined),
-      changeLink: updatePersonalDetailsEnabled ? changeLinks.name : null
+      changeLink: canUpdatePersonalField('name') ? changeLinks.name : null
     },
     dob: {
       fullDateOfBirth: formattedDob,
       action: dobAction,
-      changeLink: updatePersonalDetailsEnabled ? changeLinks.dob : null
+      changeLink: canUpdatePersonalField('dob') ? changeLinks.dob : null
     },
     personalAddress: {
       address: formatAddress(data.address),
       action: getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1),
-      changeLink: updatePersonalDetailsEnabled ? changeLinks.address : null
+      changeLink: canUpdatePersonalField('address') ? changeLinks.address : null
     },
     personalTelephone: {
       telephone: data.telephone || NOT_ADDED_TEXT,
       mobile: data.mobile || NOT_ADDED_TEXT,
       action: getActionText(data.telephone || data.mobile),
-      changeLink: updatePersonalDetailsEnabled ? changeLinks.phone : null
+      changeLink: canUpdatePersonalField('phone') ? changeLinks.phone : null
     },
     personalEmail: {
       email: data.email || NOT_ADDED_TEXT,
       action: getActionText(data.email),
-      changeLink: updatePersonalDetailsEnabled ? changeLinks.email : null
+      changeLink: canUpdatePersonalField('email') ? changeLinks.email : null
     }
   }
 }

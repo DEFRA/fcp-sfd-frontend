@@ -4,7 +4,7 @@
  */
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
-import { config } from '../../config/index.js'
+import { canUpdateBusinessField, getBusinessDetailsWarning } from '../../services/update-disable-service.js'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
 import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
@@ -13,7 +13,6 @@ const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
 
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
-  const updateBusinessDetailsEnabled = config.get('featureToggle.updateBusinessDetails')
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
   const countyParishHoldingNumbers = presenters.formatCph(data.countyParishHoldingNumbers)
 
@@ -24,37 +23,34 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
-    updateDisabledWarning: !updateBusinessDetailsEnabled ? {
-      title: 'Warning',
-      text: 'Due to a technical issue you are currently unable to update your business details. Please try again later'
-    } : null,
+    updateDisabledWarning: getBusinessDetailsWarning(),
     pageTitle: permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
     permissionsText: setPermissionsText(permissionLevel),
     businessAddress: {
       value: formatAddress(data.address),
-      changeLink: updateBusinessDetailsEnabled ? changeLinks.businessAddress : null,
+      changeLink: canUpdateBusinessField('businessAddress') ? changeLinks.businessAddress : null,
       action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
     },
     businessName: {
       value: data.businessName || NOT_ADDED_TEXT,
-      changeLink: updateBusinessDetailsEnabled ? changeLinks.businessName : null,
+      changeLink: canUpdateBusinessField('businessName') ? changeLinks.businessName : null,
       action: presenters.getActionText(data.businessName)
     },
     businessTelephone: {
       telephone: data.landline || NOT_ADDED_TEXT,
       mobile: data.mobile || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.landline || data.mobile),
-      changeLink: updateBusinessDetailsEnabled ? changeLinks.businessTelephone : null
+      changeLink: canUpdateBusinessField('businessPhone') ? changeLinks.businessTelephone : null
     },
     businessEmail: {
       value: data.email || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.email),
-      changeLink: updateBusinessDetailsEnabled ? changeLinks.businessEmail : null
+      changeLink: canUpdateBusinessField('businessEmail') ? changeLinks.businessEmail : null
     },
     sbi: data.sbi,
-    vatNumber: buildVatDisplay(data.vat, updateBusinessDetailsEnabled ? changeLinks.vat : null),
+    vatNumber: buildVatDisplay(data.vat, canUpdateBusinessField('vat') ? changeLinks.vat : null),
     tradeNumber: data.traderNumber ?? null,
     vendorNumber: data.vendorNumber ?? null,
     countyParishHoldingNumbers,
@@ -62,13 +58,13 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     businessLegalStatus: {
       value: data.legalStatus ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.legalStatus),
-      changeLink: (updateBusinessDetailsEnabled && permissionLevel === PERMISSION_GROUP.LEGAL) ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
+      changeLink: (canUpdateBusinessField('businessLegalStatus') && permissionLevel === PERMISSION_GROUP.LEGAL) ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
     },
-    legalStatusRegistrationNumber: updateBusinessDetailsEnabled ? buildLegalStatusRegistrationNumberDisplay(data, permissionLevel) : null,
+    legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data, permissionLevel),
     businessType: {
       value: data.type ?? NOT_ADDED_TEXT,
       action: presenters.getActionText(data.type),
-      changeLink: (updateBusinessDetailsEnabled && permissionLevel === PERMISSION_GROUP.LEGAL) ? BUSINESS_CHANGE_LINKS.businessType : null
+      changeLink: (canUpdateBusinessField('businessType') && permissionLevel === PERMISSION_GROUP.LEGAL) ? BUSINESS_CHANGE_LINKS.businessType : null
     }
   }
 }
@@ -98,15 +94,18 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
   let label
   let number
   let changeLink
+  let toggleField
 
   if (constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Charity commission registration number'
     number = registrationNumbers.charityCommission
     changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber
+    toggleField = 'charityRegistration'
   } else if (constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Company registration number'
     number = registrationNumbers.companiesHouse
     changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCompanyRegistrationNumber
+    toggleField = 'companyRegistration'
   } else {
     return null
   }
@@ -115,7 +114,7 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
     label,
     value: number || NOT_ADDED_TEXT,
     action: presenters.getActionText(number),
-    changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? changeLink : null
+    changeLink: (permissionLevel === PERMISSION_GROUP.LEGAL && canUpdateBusinessField(toggleField)) ? changeLink : null
   }
 }
 

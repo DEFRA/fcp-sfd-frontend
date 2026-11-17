@@ -85,6 +85,23 @@ describe('businessDetailsChangeLinksPresenter', () => {
       })
     })
 
+    describe('and the VAT number needs updating', () => {
+      beforeEach(() => {
+        sectionsNeedingUpdate = ['email', 'vat'] // Amend cannot update 'vat'
+      })
+
+      test('it returns the no permission placeholder links', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result).toEqual({
+          businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+          businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+          businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+          vat: null
+        })
+      })
+    })
+
     describe('when the interrupter feature toggle is ON', () => {
       beforeEach(() => {
         config.get.mockReturnValue(true)

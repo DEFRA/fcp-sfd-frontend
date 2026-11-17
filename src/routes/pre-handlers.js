@@ -4,6 +4,8 @@
  */
 
 import { services } from '@defra/fcp-sfd-frontend-engine'
+import { checkBusinessPermissionGroupService } from '../services/business/check-business-permission-group-service.js'
+import { LEGAL_ONLY_FIX_SECTIONS, PERMISSION_GROUP } from '../constants/scope/business-details.js'
 
 /**
  * Creates a pre-handler that validates required session data exists before allowing access to a route.
@@ -79,6 +81,62 @@ export const checkInterrupterJourneyPreHandler = (journey) => {
       const isValid = services.checkInterrupterJourneySession(yar, journey.journeyKey)
 
       if (!isValid) {
+        return h.redirect(journey.redirectPath).takeover()
+      }
+
+      return true
+    }
+  }
+}
+
+/**
+ * Creates a Hapi pre-handler that stops users without legal permission from fixing the
+ * business name or VAT number.
+ * Used to guard the business fix/interrupter journey routes.
+ *
+ * Checks `sectionsNeedingUpdate` (set by the business details page), `orderedSectionsToFix`
+ * (set once the fix journey starts) and the `source` query parameter so the same guard works
+ * on every route in the journey.
+ *
+ * @param {Object} journey - Journey configuration object with journeyKey and redirectPath properties
+ * @returns {Object} Hapi pre-handler object
+ *
+ * @example
+ * import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
+ * import { checkBusinessFixPermissionsPreHandler } from '../pre-handlers.js'
+ *
+ * const postFixList = {
+ *   method: 'POST',
+ *   path: '/business-fix-list',
+ *   options: {
+ *     pre: [checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+ *   },
+ *   handler: async (request, h) => { ... }
+ * }
+ */
+export const checkBusinessFixPermissionsPreHandler = (journey) => {
+  return {
+    method: (request, h) => {
+      const { yar, auth, query } = request
+
+      const permissionGroup = checkBusinessPermissionGroupService(auth.credentials.scope)
+
+      if (permissionGroup === PERMISSION_GROUP.LEGAL) {
+        return true
+      }
+
+      const sessionData = yar.get(journey.journeyKey) || {}
+
+      // Either list may be missing from the session, so fall back to an empty list
+      const sectionsNeedingUpdate = sessionData.sectionsNeedingUpdate ?? []
+      const orderedSectionsToFix = sessionData.orderedSectionsToFix ?? []
+
+      // The fix journey adds `source` to the sections to fix when it starts, so it must be checked too
+      const allSectionsToCheck = sectionsNeedingUpdate.concat(orderedSectionsToFix, query?.source ?? [])
+
+      const requiresLegalPermission = allSectionsToCheck.some(section => LEGAL_ONLY_FIX_SECTIONS.includes(section))
+
+      if (requiresLegalPermission) {
         return h.redirect(journey.redirectPath).takeover()
       }
 

@@ -9,11 +9,17 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
 
 // Things under test
 import { services } from '@defra/fcp-sfd-frontend-engine'
-import { checkSessionDataGuard, checkInterrupterJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
+import { checkSessionDataGuard, checkInterrupterJourneyPreHandler, checkBusinessFixPermissionsPreHandler } from '../../../src/routes/pre-handlers.js'
 import {
   PERSONAL_JOURNEY,
-  BUSINESS_JOURNEY
+  BUSINESS_JOURNEY,
+  BUSINESS_DETAILS_VALIDATION_JOURNEY
 } from '../../../src/constants/journeys.js'
+import {
+  AMEND_LEVEL_PERMISSION,
+  FULL_PERMISSION,
+  MAKE_LEGAL_CHANGES_PERMISSION
+} from '../../../src/constants/scope/business-details.js'
 
 describe('pre-handlers', () => {
   let h
@@ -278,6 +284,145 @@ describe('pre-handlers', () => {
         expect(services.checkInterrupterJourneySession).toHaveBeenCalledWith(request.yar, journey.journeyKey)
         expect(result).toBe(true)
         expect(h.redirect).not.toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('checkBusinessFixPermissionsPreHandler', () => {
+    let request
+    let sessionData
+
+    beforeEach(() => {
+      sessionData = {}
+
+      request = {
+        yar: {
+          get: vi.fn(() => sessionData)
+        },
+        auth: {
+          credentials: {
+            scope: [AMEND_LEVEL_PERMISSION]
+          }
+        }
+      }
+    })
+
+    describe('when the user has full permission', () => {
+      beforeEach(() => {
+        request.auth.credentials.scope = [FULL_PERMISSION]
+        sessionData.orderedSectionsToFix = ['name', 'vat']
+      })
+
+      test('it should allow the request to continue', () => {
+        const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+        const result = preHandler.method(request, h)
+
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the user has make legal changes permission', () => {
+      beforeEach(() => {
+        request.auth.credentials.scope = [MAKE_LEGAL_CHANGES_PERMISSION]
+        sessionData.orderedSectionsToFix = ['name', 'vat']
+      })
+
+      test('it should allow the request to continue', () => {
+        const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+        const result = preHandler.method(request, h)
+
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the user has amend permission', () => {
+      describe('and the sections to fix include the VAT number', () => {
+        beforeEach(() => {
+          sessionData.orderedSectionsToFix = ['email', 'vat']
+        })
+
+        test('it should redirect to the business details page', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          preHandler.method(request, h)
+
+          expect(request.yar.get).toHaveBeenCalledWith('businessDetailsValidation')
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(takeoverMock).toHaveBeenCalled()
+        })
+      })
+
+      describe('and the sections needing update include the business name', () => {
+        beforeEach(() => {
+          sessionData.sectionsNeedingUpdate = ['name', 'phone']
+        })
+
+        test('it should redirect to the business details page', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          preHandler.method(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(takeoverMock).toHaveBeenCalled()
+        })
+      })
+
+      describe('and the source query parameter is the business name', () => {
+        beforeEach(() => {
+          request.query = { source: 'name' }
+          sessionData.sectionsNeedingUpdate = ['email']
+        })
+
+        test('it should redirect to the business details page', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          preHandler.method(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(takeoverMock).toHaveBeenCalled()
+        })
+      })
+
+      describe('and the source query parameter is a section they can change', () => {
+        beforeEach(() => {
+          request.query = { source: 'email' }
+          sessionData.sectionsNeedingUpdate = ['email']
+        })
+
+        test('it should allow the request to continue', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const result = preHandler.method(request, h)
+
+          expect(result).toBe(true)
+          expect(h.redirect).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the sections to fix are ones they can change', () => {
+        beforeEach(() => {
+          sessionData.orderedSectionsToFix = ['address', 'phone', 'email']
+        })
+
+        test('it should allow the request to continue', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const result = preHandler.method(request, h)
+
+          expect(result).toBe(true)
+          expect(h.redirect).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and there is no fix journey session data', () => {
+        beforeEach(() => {
+          request.yar.get.mockReturnValue(null)
+        })
+
+        test('it should allow the request to continue', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const result = preHandler.method(request, h)
+
+          expect(result).toBe(true)
+          expect(h.redirect).not.toHaveBeenCalled()
+        })
       })
     })
   })

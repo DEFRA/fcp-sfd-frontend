@@ -94,8 +94,9 @@ export const checkInterrupterJourneyPreHandler = (journey) => {
  * business name or VAT number.
  * Used to guard the business fix/interrupter journey routes.
  *
- * Checks `sectionsNeedingUpdate` (set by the business details page) and `orderedSectionsToFix`
- * (set once the fix journey starts) so the same guard works on every route in the journey.
+ * Checks `sectionsNeedingUpdate` (set by the business details page), `orderedSectionsToFix`
+ * (set once the fix journey starts) and the `source` query parameter so the same guard works
+ * on every route in the journey.
  *
  * @param {Object} journey - Journey configuration object with journeyKey and redirectPath properties
  * @returns {Object} Hapi pre-handler object
@@ -116,7 +117,7 @@ export const checkInterrupterJourneyPreHandler = (journey) => {
 export const checkBusinessFixPermissionsPreHandler = (journey) => {
   return {
     method: (request, h) => {
-      const { yar, auth } = request
+      const { yar, auth, query } = request
 
       const permissionGroup = checkBusinessPermissionGroupService(auth.credentials.scope)
 
@@ -130,7 +131,8 @@ export const checkBusinessFixPermissionsPreHandler = (journey) => {
       const sectionsNeedingUpdate = sessionData.sectionsNeedingUpdate ?? []
       const orderedSectionsToFix = sessionData.orderedSectionsToFix ?? []
 
-      const allSectionsToCheck = sectionsNeedingUpdate.concat(orderedSectionsToFix)
+      // The fix journey adds `source` to the sections to fix when it starts, so it must be checked too
+      const allSectionsToCheck = sectionsNeedingUpdate.concat(orderedSectionsToFix, query?.source ?? [])
 
       const requiresLegalPermission = allSectionsToCheck.some(section => LEGAL_ONLY_FIX_SECTIONS.includes(section))
 

@@ -367,6 +367,36 @@ describe('pre-handlers', () => {
         })
       })
 
+      describe('and the source query parameter is the business name', () => {
+        beforeEach(() => {
+          request.query = { source: 'name' }
+          sessionData.sectionsNeedingUpdate = ['email']
+        })
+
+        test('it should redirect to the business details page', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          preHandler.method(request, h)
+
+          expect(h.redirect).toHaveBeenCalledWith('/business-details')
+          expect(takeoverMock).toHaveBeenCalled()
+        })
+      })
+
+      describe('and the source query parameter is a section they can change', () => {
+        beforeEach(() => {
+          request.query = { source: 'email' }
+          sessionData.sectionsNeedingUpdate = ['email']
+        })
+
+        test('it should allow the request to continue', () => {
+          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const result = preHandler.method(request, h)
+
+          expect(result).toBe(true)
+          expect(h.redirect).not.toHaveBeenCalled()
+        })
+      })
+
       describe('and the sections to fix are ones they can change', () => {
         beforeEach(() => {
           sessionData.orderedSectionsToFix = ['address', 'phone', 'email']

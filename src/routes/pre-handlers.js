@@ -90,9 +90,8 @@ export const checkInterrupterJourneyPreHandler = (journey) => {
 }
 
 /**
- * Creates a Hapi pre-handler that stops users without legal permission from fixing
- * business details sections only they can change (e.g. business name and VAT).
- * Redirects to the given path if any section to fix needs legal permission.
+ * Creates a Hapi pre-handler that stops users without legal permission from fixing the
+ * business name or VAT number. It redirects them to the journey's redirect path if either needs fixing.
  * Used to guard the business fix/interrupter journey routes.
  *
  * Checks `sectionsNeedingUpdate` (set by the business details page) and `orderedSectionsToFix`

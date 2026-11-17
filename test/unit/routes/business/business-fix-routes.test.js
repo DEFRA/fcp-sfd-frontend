@@ -6,11 +6,11 @@ import { businessFixPresenter } from '../../../../src/presenters/business/busine
 import { services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
-import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
-
 // Thing under test
 import { businessFixRoutes } from '../../../../src/routes/business/business-fix-routes.js'
 const [getBusinessFix, postBusinessFix] = businessFixRoutes
+
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Mocks
 vi.mock('../../../../src/presenters/business/business-fix-presenter.js', () => ({

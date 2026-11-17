@@ -91,7 +91,7 @@ export const checkInterrupterJourneyPreHandler = (journey) => {
 
 /**
  * Creates a Hapi pre-handler that stops users without legal permission from fixing the
- * business name or VAT number. It redirects them to the journey's redirect path if either needs fixing.
+ * business name or VAT number.
  * Used to guard the business fix/interrupter journey routes.
  *
  * Checks `sectionsNeedingUpdate` (set by the business details page) and `orderedSectionsToFix`
@@ -125,9 +125,16 @@ export const checkBusinessFixPermissionsPreHandler = (journey) => {
       }
 
       const sessionData = yar.get(journey.journeyKey) || {}
-      const sections = [...(sessionData.sectionsNeedingUpdate ?? []), ...(sessionData.orderedSectionsToFix ?? [])]
 
-      if (sections.some(section => LEGAL_ONLY_FIX_SECTIONS.includes(section))) {
+      // Either list may be missing from the session, so fall back to an empty list
+      const sectionsNeedingUpdate = sessionData.sectionsNeedingUpdate ?? []
+      const orderedSectionsToFix = sessionData.orderedSectionsToFix ?? []
+
+      const allSectionsToCheck = sectionsNeedingUpdate.concat(orderedSectionsToFix)
+
+      const requiresLegalPermission = allSectionsToCheck.some(section => LEGAL_ONLY_FIX_SECTIONS.includes(section))
+
+      if (requiresLegalPermission) {
         return h.redirect(journey.redirectPath).takeover()
       }
 

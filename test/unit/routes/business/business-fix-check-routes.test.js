@@ -5,11 +5,12 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
 import { updateBusinessFixService } from '../../../../src/services/business/update-business-fix-service.js'
 
-import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Thing under test
 import { businessFixCheckRoutes } from '../../../../src/routes/business/business-fix-check-routes.js'
 const [getBusinessFixCheck, postBusinessFixCheck] = businessFixCheckRoutes
+
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
 
 // Mocks
 vi.mock('../../../../src/services/business/fetch-business-fix-service.js', () => ({

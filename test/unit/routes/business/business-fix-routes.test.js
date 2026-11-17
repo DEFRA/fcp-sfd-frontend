@@ -6,6 +6,8 @@ import { businessFixPresenter } from '../../../../src/presenters/business/busine
 import { services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchBusinessDetailsService } from '../../../../src/services/business/fetch-business-details-service.js'
 
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessFixRoutes } from '../../../../src/routes/business/business-fix-routes.js'
 const [getBusinessFix, postBusinessFix] = businessFixRoutes
@@ -59,9 +61,14 @@ describe('business fix routes', () => {
         businessFixPresenter.mockReturnValue(getPageData())
       })
 
-      test('should have the correct method and path configured', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessFix.method).toBe('GET')
         expect(getBusinessFix.path).toBe('/business-fix')
+        expect(getBusinessFix.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have a pre-handler to guard business fix permissions', () => {
+        expect(getBusinessFix.options.pre).toHaveLength(1)
       })
 
       test('it calls fetchBusinessDetailsService', async () => {
@@ -114,9 +121,14 @@ describe('business fix routes', () => {
       }
     })
 
-    test('should have the correct method and path configured', () => {
+    test('should have the correct method, path and auth scope configured', () => {
       expect(postBusinessFix.method).toBe('POST')
       expect(postBusinessFix.path).toBe('/business-fix')
+      expect(postBusinessFix.options.auth.scope).toBe(AMEND_PERMISSIONS)
+    })
+
+    test('should have a pre-handler to guard business fix permissions', () => {
+      expect(postBusinessFix.options.pre).toHaveLength(1)
     })
 
     test('it redirects to the business fix list page', async () => {

@@ -5,6 +5,8 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { fetchBusinessFixService } from '../../../../src/services/business/fetch-business-fix-service.js'
 import { updateBusinessFixService } from '../../../../src/services/business/update-business-fix-service.js'
 
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Thing under test
 import { businessFixCheckRoutes } from '../../../../src/routes/business/business-fix-check-routes.js'
 const [getBusinessFixCheck, postBusinessFixCheck] = businessFixCheckRoutes
@@ -59,13 +61,14 @@ describe('business fix check routes', () => {
         })
       })
 
-      test('should have the correct method and path configured', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessFixCheck.method).toBe('GET')
         expect(getBusinessFixCheck.path).toBe('/business-fix-check')
+        expect(getBusinessFixCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard the interrupted journey session', () => {
-        expect(getBusinessFixCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard the interrupted journey session and business fix permissions', () => {
+        expect(getBusinessFixCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -111,13 +114,14 @@ describe('business fix check routes', () => {
     })
 
     describe('when a request succeeds', () => {
-      test('should have the correct method and path configured', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessFixCheck.method).toBe('POST')
         expect(postBusinessFixCheck.path).toBe('/business-fix-check')
+        expect(postBusinessFixCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard the interrupted journey session', () => {
-        expect(postBusinessFixCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard the interrupted journey session and business fix permissions', () => {
+        expect(postBusinessFixCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

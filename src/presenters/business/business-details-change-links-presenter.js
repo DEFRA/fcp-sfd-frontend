@@ -8,7 +8,7 @@
  * Key points:
  * - Users with "view" permission do not see any change links.
  * - Users with "amend" permission can only update address, phone, and email.
- *   If the invalid data includes sections they cannot update (e.g., name), they are
+ *   If the invalid data includes sections they cannot update (e.g., name or VAT), they are
  *   directed to the RPA/support page.
  * - Users with "legal" permission (make legal changes or full) can also update the business name and VAT.
  * - The "business details interrupter" can step in when something is invalid,
@@ -27,7 +27,7 @@
 
 import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
-import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
+import { LEGAL_ONLY_FIX_SECTIONS, PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
@@ -106,7 +106,7 @@ const resolveChangeLink = (interrupter, section, normalLink) => {
  */
 const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
   if (permissionLevel === PERMISSION_GROUP.AMEND) {
-    return sectionsNeedingUpdate.includes('name')
+    return sectionsNeedingUpdate.some(section => LEGAL_ONLY_FIX_SECTIONS.includes(section))
   }
 
   return false

@@ -2,13 +2,18 @@ import { fetchBusinessFixService } from '../../services/business/fetch-business-
 import { businessFixCheckPresenter } from '../../presenters/business/business-fix-check-presenter.js'
 import { updateBusinessFixService } from '../../services/business/update-business-fix-service.js'
 import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
-import { checkInterrupterJourneyPreHandler } from '../pre-handlers.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkInterrupterJourneyPreHandler, checkBusinessFixPermissionsPreHandler } from '../pre-handlers.js'
 
 const getBusinessFixCheck = {
   method: 'GET',
   path: '/business-fix-check',
   options: {
-    pre: [checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [
+      checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY),
+      checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+    ]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -25,7 +30,11 @@ const postBusinessFixCheck = {
   method: 'POST',
   path: '/business-fix-check',
   options: {
-    pre: [checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [
+      checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY),
+      checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+    ]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

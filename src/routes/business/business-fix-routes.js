@@ -1,12 +1,18 @@
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { businessFixPresenter } from '../../presenters/business/business-fix-presenter.js'
 import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
+import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFixPermissionsPreHandler } from '../pre-handlers.js'
 
 import { services } from '@defra/fcp-sfd-frontend-engine'
 
 const getBusinessFix = {
   method: 'GET',
   path: '/business-fix',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+  },
   handler: async (request, h) => {
     const { yar, query, auth } = request
 
@@ -28,6 +34,10 @@ const getBusinessFix = {
 const postBusinessFix = {
   method: 'POST',
   path: '/business-fix',
+  options: {
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+  },
   handler: async (_request, h) => {
     return h.redirect('/business-fix-list')
   }

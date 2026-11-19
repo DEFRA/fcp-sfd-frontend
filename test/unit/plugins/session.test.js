@@ -1,6 +1,7 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 import Yar from '@hapi/yar'
 
+// Mocks
 const mockConfigGet = vi.fn()
 vi.mock('../../../src/config/index.js', () => ({
   config: {
@@ -8,6 +9,7 @@ vi.mock('../../../src/config/index.js', () => ({
   }
 }))
 
+// Things under test
 let session
 
 describe('session', () => {

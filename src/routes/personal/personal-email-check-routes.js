@@ -2,13 +2,13 @@ import { fetchPersonalChangeService } from '../../services/personal/fetch-person
 import { updatePersonalEmailChangeService } from '../../services/personal/update-personal-email-change-service.js'
 import { personalEmailCheckPresenter } from '../../presenters/personal/personal-email-check-presenter.js'
 import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkPersonalFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalEmailCheck = {
   method: 'GET',
   path: '/account-email-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail')]
+    pre: [checkPersonalFieldAccessibleGuard('email'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalEmailCheck = {
   method: 'POST',
   path: '/account-email-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail')]
+    pre: [checkPersonalFieldAccessibleGuard('email'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

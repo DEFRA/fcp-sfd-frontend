@@ -7,9 +7,20 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   }
 }))
 
+vi.mock('../../../src/utils/feature-toggle/check-field-accessibility.js', () => ({
+  isBusinessFieldAccessible: vi.fn(),
+  isPersonalFieldAccessible: vi.fn()
+}))
+
 // Things under test
 import { services } from '@defra/fcp-sfd-frontend-engine'
-import { checkSessionDataGuard, checkInterrupterJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
+import { isBusinessFieldAccessible, isPersonalFieldAccessible } from '../../../src/utils/feature-toggle/check-field-accessibility.js'
+import {
+  checkSessionDataGuard,
+  checkInterrupterJourneyPreHandler,
+  checkBusinessFieldAccessibleGuard,
+  checkPersonalFieldAccessibleGuard
+} from '../../../src/routes/pre-handlers.js'
 import {
   PERSONAL_JOURNEY,
   BUSINESS_JOURNEY
@@ -26,6 +37,48 @@ describe('pre-handlers', () => {
     h = {
       redirect: vi.fn().mockReturnValue({ takeover: takeoverMock })
     }
+  })
+
+  describe('checkBusinessFieldAccessibleGuard', () => {
+    test('it should allow the request to continue when the field is enabled', () => {
+      isBusinessFieldAccessible.mockReturnValue(true)
+
+      const result = checkBusinessFieldAccessibleGuard('vat').method({}, h)
+
+      expect(isBusinessFieldAccessible).toHaveBeenCalledWith('vat')
+      expect(result).toBe(true)
+      expect(h.redirect).not.toHaveBeenCalled()
+    })
+
+    test('it should redirect to business details when the field is disabled', () => {
+      isBusinessFieldAccessible.mockReturnValue(false)
+
+      checkBusinessFieldAccessibleGuard('vat').method({}, h)
+
+      expect(h.redirect).toHaveBeenCalledWith('/business-details')
+      expect(takeoverMock).toHaveBeenCalled()
+    })
+  })
+
+  describe('checkPersonalFieldAccessibleGuard', () => {
+    test('it should allow the request to continue when the field is enabled', () => {
+      isPersonalFieldAccessible.mockReturnValue(true)
+
+      const result = checkPersonalFieldAccessibleGuard('dob').method({}, h)
+
+      expect(isPersonalFieldAccessible).toHaveBeenCalledWith('dob')
+      expect(result).toBe(true)
+      expect(h.redirect).not.toHaveBeenCalled()
+    })
+
+    test('it should redirect to personal details when the field is disabled', () => {
+      isPersonalFieldAccessible.mockReturnValue(false)
+
+      checkPersonalFieldAccessibleGuard('dob').method({}, h)
+
+      expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+      expect(takeoverMock).toHaveBeenCalled()
+    })
   })
 
   describe('checkSessionDataGuard', () => {

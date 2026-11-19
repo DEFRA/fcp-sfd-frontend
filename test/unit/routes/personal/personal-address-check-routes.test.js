@@ -51,7 +51,7 @@ describe('personal address check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalAddressCheck.options.pre).toHaveLength(1)
+        expect(getPersonalAddressCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -103,7 +103,7 @@ describe('personal address check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalAddressCheck.options.pre).toHaveLength(1)
+        expect(postPersonalAddressCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

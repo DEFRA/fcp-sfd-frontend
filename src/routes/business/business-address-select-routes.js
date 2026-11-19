@@ -11,7 +11,7 @@ const getBusinessAddressSelect = {
   path: '/business-address-select',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses']), checkBusinessFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -28,7 +28,7 @@ const postBusinessAddressSelect = {
   path: '/business-address-select',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])],
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses']), checkBusinessFieldAccessibleGuard('address')],
     validate: {
       payload: schemas.osPlaces.addresses,
       options: { abortEarly: false },

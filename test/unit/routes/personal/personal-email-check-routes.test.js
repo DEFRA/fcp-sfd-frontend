@@ -51,7 +51,7 @@ describe('personal email check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalEmailCheck.options.pre).toHaveLength(1)
+        expect(getPersonalEmailCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -103,7 +103,7 @@ describe('personal email check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalEmailCheck.options.pre).toHaveLength(1)
+        expect(postPersonalEmailCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

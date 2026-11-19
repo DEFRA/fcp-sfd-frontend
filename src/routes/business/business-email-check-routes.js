@@ -10,7 +10,7 @@ const getBusinessEmailCheck = {
   path: '/business-email-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('email'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail'), checkBusinessFieldAccessibleGuard('email')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessEmailCheck = {
   path: '/business-email-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('email'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail'), checkBusinessFieldAccessibleGuard('email')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

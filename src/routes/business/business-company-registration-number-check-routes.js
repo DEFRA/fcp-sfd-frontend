@@ -13,7 +13,7 @@ const getBusinessCompanyRegistrationNumberCheck = {
   path: '/business-company-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('registrationNumber'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber'), checkBusinessFieldAccessibleGuard('registrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -35,7 +35,7 @@ const postBusinessCompanyRegistrationNumberCheck = {
   path: '/business-company-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('registrationNumber'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCompanyRegistrationNumber'), checkBusinessFieldAccessibleGuard('registrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

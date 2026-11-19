@@ -8,7 +8,7 @@ const getPersonalNameCheck = {
   method: 'GET',
   path: '/account-name-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('name'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName'), checkPersonalFieldAccessibleGuard('name')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalNameCheck = {
   method: 'POST',
   path: '/account-name-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('name'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName'), checkPersonalFieldAccessibleGuard('name')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

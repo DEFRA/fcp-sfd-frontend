@@ -10,7 +10,7 @@ const getBusinessNameCheck = {
   path: '/business-name-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('name'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName'), checkBusinessFieldAccessibleGuard('name')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessNameCheck = {
   path: '/business-name-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('name'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName'), checkBusinessFieldAccessibleGuard('name')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

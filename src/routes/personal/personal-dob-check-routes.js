@@ -8,7 +8,7 @@ const getPersonalDobCheck = {
   method: 'GET',
   path: '/account-date-of-birth-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('dob'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob'), checkPersonalFieldAccessibleGuard('dob')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalDobCheck = {
   method: 'POST',
   path: '/account-date-of-birth-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('dob'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob'), checkPersonalFieldAccessibleGuard('dob')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

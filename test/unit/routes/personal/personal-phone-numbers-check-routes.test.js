@@ -51,7 +51,7 @@ describe('personal phone numbers check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalPhoneNumbersCheck.options.pre).toHaveLength(1)
+        expect(getPersonalPhoneNumbersCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -103,7 +103,7 @@ describe('personal phone numbers check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalPhoneNumbersCheck.options.pre).toHaveLength(1)
+        expect(postPersonalPhoneNumbersCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

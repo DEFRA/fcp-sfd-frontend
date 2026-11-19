@@ -56,7 +56,7 @@ describe('business name check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessNameCheck.options.pre).toHaveLength(1)
+        expect(getBusinessNameCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -109,7 +109,7 @@ describe('business name check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessNameCheck.options.pre).toHaveLength(1)
+        expect(postBusinessNameCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

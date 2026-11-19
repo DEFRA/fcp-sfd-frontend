@@ -10,7 +10,7 @@ const getBusinessAddressCheck = {
   path: '/business-address-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress'), checkBusinessFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessAddressCheck = {
   path: '/business-address-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress'), checkBusinessFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

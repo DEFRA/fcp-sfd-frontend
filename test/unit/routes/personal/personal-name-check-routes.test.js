@@ -51,7 +51,7 @@ describe('personal name check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalNameCheck.options.pre).toHaveLength(1)
+        expect(getPersonalNameCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -102,7 +102,7 @@ describe('personal name check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalNameCheck.options.pre).toHaveLength(1)
+        expect(postPersonalNameCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

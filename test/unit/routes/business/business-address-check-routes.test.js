@@ -56,7 +56,7 @@ describe('business address check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessAddressCheck.options.pre).toHaveLength(1)
+        expect(getBusinessAddressCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -156,7 +156,7 @@ describe('business address check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessAddressCheck.options.pre).toHaveLength(1)
+        expect(postBusinessAddressCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

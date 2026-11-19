@@ -8,7 +8,7 @@ const getPersonalPhoneNumbersCheck = {
   method: 'GET',
   path: '/account-phone-numbers-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('phone'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers'), checkPersonalFieldAccessibleGuard('phone')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalPhoneNumbersCheck = {
   method: 'POST',
   path: '/account-phone-numbers-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('phone'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers'), checkPersonalFieldAccessibleGuard('phone')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

@@ -8,7 +8,7 @@ const getPersonalEmailCheck = {
   method: 'GET',
   path: '/account-email-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('email'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail'), checkPersonalFieldAccessibleGuard('email')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalEmailCheck = {
   method: 'POST',
   path: '/account-email-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('email'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalEmail'), checkPersonalFieldAccessibleGuard('email')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

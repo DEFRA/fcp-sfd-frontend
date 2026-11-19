@@ -10,7 +10,7 @@ const getBusinessVatCheck = {
   path: '/business-vat-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('vat'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessVat')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessVat'), checkBusinessFieldAccessibleGuard('vat')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessVatCheck = {
   path: '/business-vat-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('vat'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessVat')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessVat'), checkBusinessFieldAccessibleGuard('vat')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

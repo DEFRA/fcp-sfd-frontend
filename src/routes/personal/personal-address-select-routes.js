@@ -10,7 +10,7 @@ const getPersonalAddressSelect = {
   method: 'GET',
   path: '/account-address-select',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('address'), checkSessionDataGuard(PERSONAL_JOURNEY, ['changePersonalPostcode', 'changePersonalAddresses'])]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, ['changePersonalPostcode', 'changePersonalAddresses']), checkPersonalFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -26,7 +26,7 @@ const postPersonalAddressSelect = {
   method: 'POST',
   path: '/account-address-select',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('address'), checkSessionDataGuard(PERSONAL_JOURNEY, ['changePersonalPostcode', 'changePersonalAddresses'])],
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, ['changePersonalPostcode', 'changePersonalAddresses']), checkPersonalFieldAccessibleGuard('address')],
     validate: {
       payload: schemas.osPlaces.addresses,
       options: { abortEarly: false },

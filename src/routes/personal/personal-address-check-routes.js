@@ -8,7 +8,7 @@ const getPersonalAddressCheck = {
   method: 'GET',
   path: '/account-address-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('address'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalAddress')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalAddress'), checkPersonalFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalAddressCheck = {
   method: 'POST',
   path: '/account-address-check',
   options: {
-    pre: [checkPersonalFieldAccessibleGuard('address'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalAddress')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalAddress'), checkPersonalFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

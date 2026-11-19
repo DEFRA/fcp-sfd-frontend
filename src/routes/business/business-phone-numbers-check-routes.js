@@ -10,7 +10,7 @@ const getBusinessPhoneNumbersCheck = {
   path: '/business-phone-numbers-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('phone'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessPhoneNumbers')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessPhoneNumbers'), checkBusinessFieldAccessibleGuard('phone')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessPhoneNumbersCheck = {
   path: '/business-phone-numbers-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkBusinessFieldAccessibleGuard('phone'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessPhoneNumbers')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessPhoneNumbers'), checkBusinessFieldAccessibleGuard('phone')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

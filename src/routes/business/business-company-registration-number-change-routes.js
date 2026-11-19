@@ -3,6 +3,7 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessCompanyRegistrationNumberChangePresenter } from '../../presenters/business/business-company-registration-number-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const getBusinessCompanyRegistrationNumberChange = {
   method: 'GET',
@@ -16,6 +17,14 @@ const getBusinessCompanyRegistrationNumberChange = {
 
     if (!constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(businessLegalStatusCode)) {
       return h.redirect('/business-details')
+    }
+
+    if (!isBusinessFieldAccessible('registrationNumber')) {
+      const pageData = businessCompanyRegistrationNumberChangePresenter(await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCompanyRegistrationNumber'))
+      return h.view('business/business-company-registration-number-change', {
+        ...pageData,
+        notification: getDisabledFieldNotification('business registration number')
+      }).code(constants.statusCodes.LOCKED)
     }
 
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCompanyRegistrationNumber')
@@ -36,6 +45,17 @@ const postBusinessCompanyRegistrationNumberChange = {
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
 
+        if (!isBusinessFieldAccessible('registrationNumber')) {
+          const errors = utils.formatValidationErrors(err.details || [])
+          const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCompanyRegistrationNumber')
+          const pageData = businessCompanyRegistrationNumberChangePresenter(businessDetails, payload.companyRegistrationNumber)
+          return h.view('business/business-company-registration-number-change', {
+            ...pageData,
+            errors,
+            notification: getDisabledFieldNotification('business registration number')
+          }).code(constants.statusCodes.BAD_REQUEST).takeover()
+        }
+
         const errors = utils.formatValidationErrors(err.details || [])
         const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessCompanyRegistrationNumber')
         const pageData = businessCompanyRegistrationNumberChangePresenter(businessDetails, payload.companyRegistrationNumber)
@@ -51,6 +71,14 @@ const postBusinessCompanyRegistrationNumberChange = {
         return h.redirect('/business-details')
       }
 
+      if (!isBusinessFieldAccessible('registrationNumber')) {
+        return h.view('business/business-company-registration-number-change', {
+          backLink: { href: '/business-details' },
+          pageTitle: 'What is the company registration number?',
+          notification: getDisabledFieldNotification('business registration number')
+        }).code(constants.statusCodes.LOCKED)
+      }
+
       setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessCompanyRegistrationNumber', payload.companyRegistrationNumber)
 
       return h.redirect('/business-company-registration-number-check')
@@ -62,3 +90,4 @@ export const businessCompanyRegistrationNumberChangeRoutes = [
   getBusinessCompanyRegistrationNumberChange,
   postBusinessCompanyRegistrationNumberChange
 ]
+

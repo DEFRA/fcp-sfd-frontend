@@ -58,7 +58,7 @@ describe('personal address select routes', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalAddressSelect.options.pre).toHaveLength(1)
+        expect(getPersonalAddressSelect.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -192,7 +192,7 @@ describe('personal address select routes', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalAddressSelect.options.pre).toHaveLength(1)
+        expect(postPersonalAddressSelect.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

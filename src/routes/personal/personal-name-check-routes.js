@@ -2,13 +2,13 @@ import { personalNameCheckPresenter } from '../../presenters/personal/personal-n
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalNameChangeService } from '../../services/personal/update-personal-name-change-service.js'
 import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkPersonalFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalNameCheck = {
   method: 'GET',
   path: '/account-name-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName'), checkPersonalFieldAccessibleGuard('name')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalNameCheck = {
   method: 'POST',
   path: '/account-name-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalName'), checkPersonalFieldAccessibleGuard('name')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

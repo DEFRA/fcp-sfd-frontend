@@ -63,7 +63,7 @@ describe('business address select change', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessAddressSelect.options.pre).toHaveLength(1)
+        expect(getBusinessAddressSelect.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -198,7 +198,7 @@ describe('business address select change', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessAddressSelect.options.pre).toHaveLength(1)
+        expect(postBusinessAddressSelect.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

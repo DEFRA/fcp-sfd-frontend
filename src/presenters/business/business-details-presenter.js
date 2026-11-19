@@ -7,6 +7,7 @@ import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
 import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
@@ -14,6 +15,7 @@ const { NOT_ADDED_TEXT } = constants
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
   const countyParishHoldingNumbers = presenters.formatCph(data.countyParishHoldingNumbers)
+  const disabledNotification = getDisabledFieldsNotification()
 
   return {
     backLink: {
@@ -21,34 +23,34 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
       href: '/home'
     },
     businessNameHeader: data.businessName ?? null,
-    notification: yar ? yar.flash('notification')[0] : null,
+    notification: disabledNotification || (yar ? yar.flash('notification')[0] : null),
     pageTitle: permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details',
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
     permissionsText: setPermissionsText(permissionLevel),
     businessAddress: {
       value: formatAddress(data.address),
-      changeLink: changeLinks.businessAddress,
+      changeLink: isBusinessFieldAccessible('address') ? changeLinks.businessAddress : null,
       action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
     },
     businessName: {
       value: data.businessName || NOT_ADDED_TEXT,
-      changeLink: changeLinks.businessName,
+      changeLink: isBusinessFieldAccessible('name') ? changeLinks.businessName : null,
       action: presenters.getActionText(data.businessName)
     },
     businessTelephone: {
       telephone: data.landline || NOT_ADDED_TEXT,
       mobile: data.mobile || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.landline || data.mobile),
-      changeLink: changeLinks.businessTelephone
+      changeLink: isBusinessFieldAccessible('phone') ? changeLinks.businessTelephone : null
     },
     businessEmail: {
       value: data.email || NOT_ADDED_TEXT,
       action: presenters.getActionText(data.email),
-      changeLink: changeLinks.businessEmail
+      changeLink: isBusinessFieldAccessible('email') ? changeLinks.businessEmail : null
     },
     sbi: data.sbi,
-    vatNumber: buildVatDisplay(data.vat, changeLinks.vat),
+    vatNumber: buildVatDisplay(data.vat, isBusinessFieldAccessible('vat') ? changeLinks.vat : null),
     tradeNumber: data.traderNumber ?? null,
     vendorNumber: data.vendorNumber ?? null,
     countyParishHoldingNumbers,
@@ -109,7 +111,7 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
     label,
     value: number || NOT_ADDED_TEXT,
     action: presenters.getActionText(number),
-    changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? changeLink : null
+    changeLink: (permissionLevel === PERMISSION_GROUP.LEGAL && isBusinessFieldAccessible('registrationNumber')) ? changeLink : null
   }
 }
 
@@ -226,6 +228,32 @@ const setPermissionsText = (permissionLevel) => {
   }
 
   return null
+}
+
+/**
+ * Builds an error notification for the first business field that is switched off by a feature toggle
+ *
+ * @returns {Object|null} Notification object, or null if every field is enabled
+ */
+const getDisabledFieldsNotification = () => {
+  const DISABLED_FIELD_LABELS = {
+    name: 'business name',
+    address: 'business address',
+    phone: 'business phone numbers',
+    email: 'business email address',
+    vat: 'business VAT registration number',
+    registrationNumber: 'business registration number'
+  }
+
+  const firstDisabledField = Object.keys(DISABLED_FIELD_LABELS).find((field) => {
+    return !isBusinessFieldAccessible(field)
+  })
+
+  if (!firstDisabledField) {
+    return null
+  }
+
+  return getDisabledFieldNotification(DISABLED_FIELD_LABELS[firstDisabledField])
 }
 
 export {

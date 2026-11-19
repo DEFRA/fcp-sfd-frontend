@@ -2,10 +2,14 @@ import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { personalAddressEnterPresenter } from '../../presenters/personal/personal-address-enter-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { checkPersonalFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getPersonalAddressEnter = {
   method: 'GET',
   path: '/account-address-enter',
+  options: {
+    pre: [checkPersonalFieldAccessibleGuard('address')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalAddress')
@@ -19,6 +23,7 @@ const postPersonalAddressEnter = {
   method: 'POST',
   path: '/account-address-enter',
   options: {
+    pre: [checkPersonalFieldAccessibleGuard('address')],
     validate: {
       payload: schemas.personal.address,
       options: { abortEarly: false },

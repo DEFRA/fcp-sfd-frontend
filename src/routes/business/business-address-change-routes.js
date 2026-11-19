@@ -5,6 +5,7 @@ import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
 import { businessAddressChangeErrorService } from '../../services/business/business-address-change-error-service.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const getBusinessAddressChange = {
   method: 'GET',
@@ -14,6 +15,15 @@ const getBusinessAddressChange = {
   },
   handler: async (request, h) => {
     const { yar, auth } = request
+
+    if (!isBusinessFieldAccessible('address')) {
+      const pageData = businessAddressChangePresenter(await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessPostcode'))
+      return h.view('business/business-address-change', {
+        ...pageData,
+        notification: getDisabledFieldNotification('business address')
+      }).code(constants.statusCodes.LOCKED)
+    }
+
     const businessDetails = await fetchBusinessChangeService(yar, auth.credentials, 'changeBusinessPostcode')
     const pageData = businessAddressChangePresenter(businessDetails)
 
@@ -31,6 +41,15 @@ const postBusinessAddressChange = {
       options: { abortEarly: false },
       failAction: async (request, h, err) => {
         const { yar, auth, payload } = request
+
+        if (!isBusinessFieldAccessible('address')) {
+          const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.postcode, err.details)
+          return h.view('business/business-address-change', {
+            ...pageData,
+            notification: getDisabledFieldNotification('business address')
+          }).code(constants.statusCodes.BAD_REQUEST).takeover()
+        }
+
         const pageData = await businessAddressChangeErrorService(yar, auth.credentials, payload.postcode, err.details)
 
         return h.view('business/business-address-change', pageData).code(constants.statusCodes.BAD_REQUEST).takeover()
@@ -38,6 +57,14 @@ const postBusinessAddressChange = {
     }
   },
   handler: async (request, h) => {
+    if (!isBusinessFieldAccessible('address')) {
+      return h.view('business/business-address-change', {
+        backLink: { href: '/business-details' },
+        pageTitle: 'What is the business address?',
+        notification: getDisabledFieldNotification('business address')
+      }).code(constants.statusCodes.LOCKED)
+    }
+
     const { yar, auth, payload } = request
 
     setSessionData(yar, 'businessDetailsUpdate', 'changeBusinessPostcode', payload)
@@ -57,3 +84,4 @@ export const businessAddressChangeRoutes = [
   getBusinessAddressChange,
   postBusinessAddressChange
 ]
+

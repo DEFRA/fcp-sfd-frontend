@@ -2,13 +2,13 @@ import { personalDobCheckPresenter } from '../../presenters/personal/personal-do
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalDobChangeService } from '../../services/personal/update-personal-dob-change-service.js'
 import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkPersonalFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalDobCheck = {
   method: 'GET',
   path: '/account-date-of-birth-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob'), checkPersonalFieldAccessibleGuard('dob')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalDobCheck = {
   method: 'POST',
   path: '/account-date-of-birth-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob')]
+    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalDob'), checkPersonalFieldAccessibleGuard('dob')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

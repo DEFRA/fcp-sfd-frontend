@@ -5,6 +5,7 @@
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
+import { isPersonalFieldAccessible, getDisabledFieldMessage } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
@@ -12,13 +13,15 @@ const { NOT_ADDED_TEXT } = constants
 const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNeedingUpdate) => {
   const changeLinks = formatChangeLinks(hasValidPersonalDetails, sectionsNeedingUpdate)
   const { action: dobAction, formattedDob } = formatDob(data.dateOfBirth.full)
+  const disabledFields = getDisabledPersonalFields()
+  const disabledNotification = getDisabledFieldsNotification(disabledFields)
 
   return {
     backLink: {
       text: data.business.name ? presenters.formatBackLink(data.business.name) : 'Back',
       href: '/home'
     },
-    notification: yar ? yar.flash('notification')[0] : null,
+    notification: disabledNotification || (yar ? yar.flash('notification')[0] : null),
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',
     userName: data.userName ?? null,
@@ -26,28 +29,28 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
     personalName: {
       fullName: data.fullNameJoined,
       action: getActionText(data.fullNameJoined),
-      changeLink: changeLinks.name
+      changeLink: isPersonalFieldAccessible('name') ? changeLinks.name : null
     },
     dob: {
       fullDateOfBirth: formattedDob,
       action: dobAction,
-      changeLink: changeLinks.dob
+      changeLink: isPersonalFieldAccessible('dob') ? changeLinks.dob : null
     },
     personalAddress: {
       address: formatAddress(data.address),
       action: getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1),
-      changeLink: changeLinks.address
+      changeLink: isPersonalFieldAccessible('address') ? changeLinks.address : null
     },
     personalTelephone: {
       telephone: data.telephone || NOT_ADDED_TEXT,
       mobile: data.mobile || NOT_ADDED_TEXT,
       action: getActionText(data.telephone || data.mobile),
-      changeLink: changeLinks.phone
+      changeLink: isPersonalFieldAccessible('phone') ? changeLinks.phone : null
     },
     personalEmail: {
       email: data.email || NOT_ADDED_TEXT,
       action: getActionText(data.email),
-      changeLink: changeLinks.email
+      changeLink: isPersonalFieldAccessible('email') ? changeLinks.email : null
     }
   }
 }
@@ -120,6 +123,52 @@ const formatDob = (dob) => {
   return {
     formattedDob: presenters.formatLongDate(date),
     action: 'Change'
+  }
+}
+
+/**
+ * Gets list of disabled personal fields based on feature toggles
+ *
+ * @returns {Array<{field: string, label: string}>} List of disabled fields with their labels
+ */
+const getDisabledPersonalFields = () => {
+  const fieldLabels = {
+    name: 'full name',
+    dob: 'date of birth',
+    address: 'personal address',
+    phone: 'personal phone numbers',
+    email: 'personal email address'
+  }
+
+  const disabledFields = []
+
+  Object.entries(fieldLabels).forEach(([field, label]) => {
+    if (!isPersonalFieldAccessible(field)) {
+      disabledFields.push({ field, label })
+    }
+  })
+
+  return disabledFields
+}
+
+/**
+ * Builds a notification banner for disabled personal fields
+ *
+ * @param {Array<{field: string, label: string}>} disabledFields - List of disabled fields
+ * @returns {Object|null} Notification object or null if no disabled fields
+ */
+const getDisabledFieldsNotification = (disabledFields) => {
+  if (disabledFields.length === 0) {
+    return null
+  }
+
+  const label = disabledFields[0].label
+  const message = getDisabledFieldMessage(label)
+
+  return {
+    type: 'error',
+    titleText: 'Important',
+    text: message
   }
 }
 

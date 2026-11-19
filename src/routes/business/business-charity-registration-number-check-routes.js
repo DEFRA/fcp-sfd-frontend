@@ -4,7 +4,7 @@ import { businessCharityRegistrationNumberCheckPresenter } from '../../presenter
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
 import { constants } from '@defra/fcp-sfd-frontend-engine'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkBusinessFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const BUSINESS_DETAILS_PATH = '/business-details'
 
@@ -13,7 +13,7 @@ const getBusinessCharityRegistrationNumberCheck = {
   path: '/business-charity-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber'), checkBusinessFieldAccessibleGuard('registrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -35,7 +35,7 @@ const postBusinessCharityRegistrationNumberCheck = {
   path: '/business-charity-registration-number-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber')]
+    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessCharityRegistrationNumber'), checkBusinessFieldAccessibleGuard('registrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

@@ -4,6 +4,9 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
+import { config } from '../../../../src/config/index.js'
+import { isPersonalFieldAccessible } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
+import { getDisabledFieldNotification } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
 
 // Thing under test
 import { personalNameChangeRoutes } from '../../../../src/routes/personal/personal-name-change-routes.js'
@@ -16,6 +19,17 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
 
 vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', () => ({
   fetchPersonalChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/config/index.js', () => ({
+  config: {
+    get: vi.fn()
+  }
+}))
+
+vi.mock('../../../../src/utils/feature-toggle/check-field-accessibility.js', () => ({
+  isPersonalFieldAccessible: vi.fn(),
+  getDisabledFieldNotification: vi.fn()
 }))
 
 describe('personal name change', () => {
@@ -45,6 +59,11 @@ describe('personal name change', () => {
       redirect: vi.fn(),
       view: vi.fn(() => responseStub)
     }
+
+    // Default: all fields accessible, config returns true
+    config.get.mockReturnValue(true)
+    isPersonalFieldAccessible.mockReturnValue(true)
+    getDisabledFieldNotification.mockReturnValue(null)
   })
 
   describe('GET /personal-name-change', () => {
@@ -186,3 +205,190 @@ const getPageDataError = () => {
     }
   }
 }
+
+describe('feature toggles - personal name field', () => {
+  beforeEach(() => {
+    fetchPersonalChangeService.mockReturnValue(getMockData())
+  })
+
+  describe('when personal name field is disabled', () => {
+    beforeEach(() => {
+      isPersonalFieldAccessible.mockReturnValue(false)
+      getDisabledFieldNotification.mockReturnValue({
+        type: 'error',
+        titleText: 'Important',
+        text: 'Sorry, there is a problem with the service. You cannot update your full name right now. Please try again later.'
+      })
+    })
+
+    describe('on GET request', () => {
+      test('returns 423 LOCKED status', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await getPersonalNameChange.handler(request, h)
+
+        expect(responseStub.code).toHaveBeenCalledWith(423)
+      })
+
+      test('renders the view with error notification', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await getPersonalNameChange.handler(request, h)
+
+        const callArgs = h.view.mock.calls[0]
+        expect(callArgs[1].notification).toBeDefined()
+        expect(callArgs[1].notification.type).toBe('error')
+      })
+    })
+
+    describe('on POST request', () => {
+      beforeEach(() => {
+        request.payload = {
+          first: 'John',
+          middle: 'A',
+          last: 'Doe'
+        }
+      })
+
+      test('returns 423 LOCKED status', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postPersonalNameChange.options.handler(request, h)
+
+        expect(responseStub.code).toHaveBeenCalledWith(423)
+      })
+
+      test('does not proceed with submission', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postPersonalNameChange.options.handler(request, h)
+
+        expect(setSessionData).not.toHaveBeenCalled()
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('renders the view with error notification', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postPersonalNameChange.options.handler(request, h)
+
+        const callArgs = h.view.mock.calls[0]
+        expect(callArgs[1].notification).toBeDefined()
+        expect(callArgs[1].notification.type).toBe('error')
+      })
+    })
+
+    describe('on POST request validation failure', () => {
+      let err
+
+      beforeEach(() => {
+        err = {
+          details: [
+            {
+              message: 'Enter your first name',
+              path: ['first'],
+              type: 'string.empty'
+            }
+          ]
+        }
+      })
+
+      test('returns 423 LOCKED status instead of validation error', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postPersonalNameChange.options.validate.failAction(request, h, err)
+
+        expect(responseStub.code).toHaveBeenCalledWith(423)
+      })
+
+      test('renders the view with error notification', async () => {
+        const responseStub = {
+          code: vi.fn().mockReturnThis(),
+          takeover: vi.fn().mockReturnThis()
+        }
+
+        h.view.mockReturnValue(responseStub)
+
+        await postPersonalNameChange.options.validate.failAction(request, h, err)
+
+        const callArgs = h.view.mock.calls[0]
+        expect(callArgs[1].notification).toBeDefined()
+        expect(callArgs[1].notification.type).toBe('error')
+      })
+    })
+  })
+
+  describe('when personal name field is enabled', () => {
+    beforeEach(() => {
+      isPersonalFieldAccessible.mockReturnValue(true)
+      getDisabledFieldNotification.mockReturnValue(null)
+      fetchPersonalChangeService.mockReturnValue(getMockData())
+    })
+
+    describe('on GET request', () => {
+      test('does not return 423 LOCKED status', async () => {
+        await getPersonalNameChange.handler(request, h)
+
+        const responseStub = h.view.mock.results[0].value
+        expect(responseStub.code).not.toHaveBeenCalledWith(423)
+      })
+
+      test('renders normally without error notification', async () => {
+        await getPersonalNameChange.handler(request, h)
+
+        const callArgs = h.view.mock.calls[0]
+        expect(callArgs[0]).toBe('personal/personal-name-change')
+      })
+    })
+
+    describe('on POST request', () => {
+      beforeEach(() => {
+        request.payload = {
+          first: 'John',
+          middle: 'A',
+          last: 'Doe'
+        }
+
+        fetchPersonalChangeService.mockResolvedValue({ ...getMockData(), changePersonalName: request.payload })
+      })
+
+      test('proceeds with normal submission', async () => {
+        await postPersonalNameChange.options.handler(request, h)
+
+        expect(setSessionData).toHaveBeenCalled()
+        expect(h.redirect).toHaveBeenCalledWith('/account-name-check')
+      })
+    })
+  })
+})
+

@@ -57,7 +57,7 @@ describe('business company registration number check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
+        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -205,7 +205,7 @@ describe('business company registration number check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
+        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
       })
 
       test('it redirects to the /business-details page', async () => {

@@ -56,7 +56,7 @@ describe('business VAT check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessVatCheck.options.pre).toHaveLength(1)
+        expect(getBusinessVatCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -109,7 +109,7 @@ describe('business VAT check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessVatCheck.options.pre).toHaveLength(1)
+        expect(postBusinessVatCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

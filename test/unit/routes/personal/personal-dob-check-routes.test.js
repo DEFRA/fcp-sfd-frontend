@@ -51,7 +51,7 @@ describe('personal dob check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalDobCheck.options.pre).toHaveLength(1)
+        expect(getPersonalDobCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -103,7 +103,7 @@ describe('personal dob check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalDobCheck.options.pre).toHaveLength(1)
+        expect(postPersonalDobCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

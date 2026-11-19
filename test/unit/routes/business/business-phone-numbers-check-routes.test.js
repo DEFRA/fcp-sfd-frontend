@@ -56,7 +56,7 @@ describe('business phone numbers check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessPhoneNumbersCheck.options.pre).toHaveLength(1)
+        expect(getBusinessPhoneNumbersCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
@@ -109,7 +109,7 @@ describe('business phone numbers check', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessPhoneNumbersCheck.options.pre).toHaveLength(1)
+        expect(postBusinessPhoneNumbersCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {

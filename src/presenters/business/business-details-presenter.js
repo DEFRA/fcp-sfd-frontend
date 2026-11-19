@@ -7,7 +7,7 @@ import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
 import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
-import { isBusinessFieldAccessible, getDisabledFieldMessage } from '../../utils/feature-toggle/check-field-accessibility.js'
+import { isBusinessFieldAccessible, getDisabledFieldNotification } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
@@ -15,8 +15,7 @@ const { NOT_ADDED_TEXT } = constants
 const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate) => {
   const changeLinks = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
   const countyParishHoldingNumbers = presenters.formatCph(data.countyParishHoldingNumbers)
-  const disabledFields = getDisabledBusinessFields()
-  const disabledNotification = getDisabledFieldsNotification(disabledFields)
+  const disabledNotification = getDisabledFieldsNotification()
 
   return {
     backLink: {
@@ -232,12 +231,12 @@ const setPermissionsText = (permissionLevel) => {
 }
 
 /**
- * Gets list of disabled business fields based on feature toggles
+ * Builds an error notification for the first business field that is switched off by a feature toggle
  *
- * @returns {Array<{field: string, label: string}>} List of disabled fields with their labels
+ * @returns {Object|null} Notification object, or null if every field is enabled
  */
-const getDisabledBusinessFields = () => {
-  const fieldLabels = {
+const getDisabledFieldsNotification = () => {
+  const DISABLED_FIELD_LABELS = {
     name: 'business name',
     address: 'business address',
     phone: 'business phone numbers',
@@ -246,36 +245,15 @@ const getDisabledBusinessFields = () => {
     registrationNumber: 'business registration number'
   }
 
-  const disabledFields = []
-
-  Object.entries(fieldLabels).forEach(([field, label]) => {
-    if (!isBusinessFieldAccessible(field)) {
-      disabledFields.push({ field, label })
-    }
+  const firstDisabledField = Object.keys(DISABLED_FIELD_LABELS).find((field) => {
+    return !isBusinessFieldAccessible(field)
   })
 
-  return disabledFields
-}
-
-/**
- * Builds a notification banner for disabled business fields
- *
- * @param {Array<{field: string, label: string}>} disabledFields - List of disabled fields
- * @returns {Object|null} Notification object or null if no disabled fields
- */
-const getDisabledFieldsNotification = (disabledFields) => {
-  if (disabledFields.length === 0) {
+  if (!firstDisabledField) {
     return null
   }
 
-  const label = disabledFields[0].label
-  const message = getDisabledFieldMessage(label)
-
-  return {
-    type: 'error',
-    titleText: 'Important',
-    text: message
-  }
+  return getDisabledFieldNotification(DISABLED_FIELD_LABELS[firstDisabledField])
 }
 
 export {

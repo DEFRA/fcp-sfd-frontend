@@ -4,12 +4,14 @@ import { fetchBusinessDetailsService } from '../../services/business/fetch-busin
 import { updateBusinessVatRemoveService } from '../../services/business/update-business-vat-remove-service.js'
 import { businessVatRemovePresenter } from '../../presenters/business/business-vat-remove-presenter.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessVatRemove = {
   method: 'GET',
   path: '/business-vat-registration-remove',
   options: {
-    auth: { scope: LEGAL_PERMISSIONS }
+    auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('vat')]
   },
   handler: async (request, h) => {
     const { auth } = request
@@ -26,6 +28,7 @@ const postBusinessVatRemove = {
   path: '/business-vat-registration-remove',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('vat')],
     validate: {
       payload: schemas.business.vat.remove,
       options: { abortEarly: false },

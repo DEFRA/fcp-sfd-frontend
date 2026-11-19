@@ -3,14 +3,14 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { updateBusinessAddressChangeService } from '../../services/business/update-business-address-change-service.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkBusinessFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessAddressCheck = {
   method: 'GET',
   path: '/business-address-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')]
+    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessAddressCheck = {
   path: '/business-address-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')]
+    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessAddress')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

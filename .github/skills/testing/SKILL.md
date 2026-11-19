@@ -19,6 +19,40 @@ description: Testing standards and conventions for this project. Use when writin
 - Integration route tests use `server.inject()` and can reuse stubs from `test/mocks/setup-server-mocks.js`.
 - Test structure rules live in `.github/instructions/tests.instructions.md`.
 
+## Test file structure and comments
+
+Organize imports and declarations at the top of test files with these standard comments (in order, excluding groups not needed):
+
+```js
+// Test framework dependencies
+import { describe, test, expect, vi, beforeEach } from 'vitest'
+
+// Mocks
+vi.mock('path/to/module-a.js', () => ({
+  exportedFunction: vi.fn()
+}))
+
+vi.mock('path/to/module-b.js', () => ({
+  exportedThing: vi.fn()
+}))
+
+// Test helpers
+import { constants } from '@defra/fcp-sfd-frontend-engine'
+import { testUtilityFunction } from '../../support/test-helpers.js'
+import { exportedFunction, exportedThing } from 'path/to/module-a.js'
+
+// Things under test
+import { functionBeingTested } from '../../../src/services/my-service.js'
+```
+
+**Rules:**
+- Each group must have a comment label
+- Mocks must come before their corresponding imports
+- Groups are listed alphabetically within each section
+- Omit a group entirely if not needed (don't add empty sections)
+- Test helpers include mocked imports, constants, and app utilities needed for testing
+- "Things under test" contains only the actual code being tested
+
 ## Mocking and isolation
 
 - Valid patterns in this repo include `vi.mock()`, `vi.doMock()`, `vi.spyOn()`, and `vi.fn()`.

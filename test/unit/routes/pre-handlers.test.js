@@ -1,19 +1,30 @@
 // Test framework dependencies
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 
+// Mocks
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   services: {
     checkInterrupterJourneySession: vi.fn()
   }
 }))
 
-// Things under test
+vi.mock('../../../src/utils/feature-toggle/check-field-accessibility.js', () => ({
+  isBusinessFieldAccessible: vi.fn(),
+  isPersonalFieldAccessible: vi.fn()
+}))
+
+// Test helpers
 import { services } from '@defra/fcp-sfd-frontend-engine'
-import { checkSessionDataGuard, checkInterrupterJourneyPreHandler } from '../../../src/routes/pre-handlers.js'
+import { PERSONAL_JOURNEY, BUSINESS_JOURNEY } from '../../../src/constants/journeys.js'
+import { isBusinessFieldAccessible, isPersonalFieldAccessible } from '../../../src/utils/feature-toggle/check-field-accessibility.js'
+
+// Things under test
 import {
-  PERSONAL_JOURNEY,
-  BUSINESS_JOURNEY
-} from '../../../src/constants/journeys.js'
+  checkSessionDataGuard,
+  checkInterrupterJourneyPreHandler,
+  checkBusinessFieldAccessibleGuard,
+  checkPersonalFieldAccessibleGuard
+} from '../../../src/routes/pre-handlers.js'
 
 describe('pre-handlers', () => {
   let h
@@ -278,6 +289,250 @@ describe('pre-handlers', () => {
         expect(services.checkInterrupterJourneySession).toHaveBeenCalledWith(request.yar, journey.journeyKey)
         expect(result).toBe(true)
         expect(h.redirect).not.toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('checkBusinessFieldAccessibleGuard', () => {
+    let request
+
+    beforeEach(() => {
+      vi.clearAllMocks()
+      request = {}
+    })
+
+    describe('when the business field is accessible', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockReturnValue(true)
+      })
+
+      test('it allows the request to continue for name field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('name')
+        const result = guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('name')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for address field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('address')
+        const result = guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('address')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for phone field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('phone')
+        const result = guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('phone')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for email field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('email')
+        const result = guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('email')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for vat field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('vat')
+        const result = guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('vat')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for registrationNumber field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('registrationNumber')
+        const result = guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('registrationNumber')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the business field is not accessible', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockReturnValue(false)
+        takeoverMock = vi.fn().mockReturnValue({})
+        h.redirect = vi.fn().mockReturnValue({ takeover: takeoverMock })
+      })
+
+      test('it redirects to the business details page for name field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('name')
+        guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('name')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the business details page for address field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('address')
+        guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('address')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the business details page for phone field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('phone')
+        guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('phone')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the business details page for email field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('email')
+        guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('email')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the business details page for vat field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('vat')
+        guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('vat')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the business details page for registrationNumber field', () => {
+        const guard = checkBusinessFieldAccessibleGuard('registrationNumber')
+        guard.method(request, h)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('registrationNumber')
+        expect(h.redirect).toHaveBeenCalledWith('/business-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('checkPersonalFieldAccessibleGuard', () => {
+    let request
+
+    beforeEach(() => {
+      vi.clearAllMocks()
+      request = {}
+    })
+
+    describe('when the personal field is accessible', () => {
+      beforeEach(() => {
+        isPersonalFieldAccessible.mockReturnValue(true)
+      })
+
+      test('it allows the request to continue for name field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('name')
+        const result = guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('name')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for dob field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('dob')
+        const result = guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('dob')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for address field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('address')
+        const result = guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('address')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for phone field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('phone')
+        const result = guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('phone')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+
+      test('it allows the request to continue for email field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('email')
+        const result = guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('email')
+        expect(result).toBe(true)
+        expect(h.redirect).not.toHaveBeenCalled()
+      })
+    })
+
+    describe('when the personal field is not accessible', () => {
+      beforeEach(() => {
+        isPersonalFieldAccessible.mockReturnValue(false)
+        takeoverMock = vi.fn().mockReturnValue({})
+        h.redirect = vi.fn().mockReturnValue({ takeover: takeoverMock })
+      })
+
+      test('it redirects to the personal details page for name field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('name')
+        guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('name')
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the personal details page for dob field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('dob')
+        guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('dob')
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the personal details page for address field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('address')
+        guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('address')
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the personal details page for phone field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('phone')
+        guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('phone')
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(takeoverMock).toHaveBeenCalled()
+      })
+
+      test('it redirects to the personal details page for email field', () => {
+        const guard = checkPersonalFieldAccessibleGuard('email')
+        guard.method(request, h)
+
+        expect(isPersonalFieldAccessible).toHaveBeenCalledWith('email')
+        expect(h.redirect).toHaveBeenCalledWith('/personal-details')
+        expect(takeoverMock).toHaveBeenCalled()
       })
     })
   })

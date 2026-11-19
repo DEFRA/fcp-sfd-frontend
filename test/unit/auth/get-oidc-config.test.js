@@ -1,5 +1,7 @@
+// Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
+// Mocks
 const mockPayload = { authorization_endpoint: 'https://example.com/auth' }
 const mockWellKnownUrl = 'https://example.com/.well-known/openid-configuration'
 
@@ -17,6 +19,7 @@ vi.mock('../../../src/config/index.js', () => ({
   }
 }))
 
+// Things under test
 const { getOidcConfig } = await import('../../../src/auth/get-oidc-config.js')
 
 describe('getOidcConfig', () => {

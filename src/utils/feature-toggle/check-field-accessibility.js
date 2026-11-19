@@ -30,14 +30,14 @@ const BUSINESS_FIELDS = {
  * @returns {boolean} true if field is accessible, false if disabled
  */
 const isPersonalFieldAccessible = (field) => {
-  const masterToggle = config.get('featureToggle.personalDetails.updatePersonalDetails')
-  if (!masterToggle) {
-    return false
-  }
-
   const fieldToggleName = PERSONAL_FIELDS[field]
   if (!fieldToggleName) {
     throw new Error(`Unknown personal field: ${field}`)
+  }
+
+  const masterToggle = config.get('featureToggle.personalDetails.updatePersonalDetails')
+  if (!masterToggle) {
+    return false
   }
 
   return config.get(`featureToggle.personalDetails.${fieldToggleName}`)
@@ -51,14 +51,14 @@ const isPersonalFieldAccessible = (field) => {
  * @returns {boolean} true if field is accessible, false if disabled
  */
 const isBusinessFieldAccessible = (field) => {
-  const masterToggle = config.get('featureToggle.businessDetails.updateBusinessDetails')
-  if (!masterToggle) {
-    return false
-  }
-
   const fieldToggleName = BUSINESS_FIELDS[field]
   if (!fieldToggleName) {
     throw new Error(`Unknown business field: ${field}`)
+  }
+
+  const masterToggle = config.get('featureToggle.businessDetails.updateBusinessDetails')
+  if (!masterToggle) {
+    return false
   }
 
   return config.get(`featureToggle.businessDetails.${fieldToggleName}`)

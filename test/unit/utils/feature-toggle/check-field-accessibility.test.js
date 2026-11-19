@@ -91,9 +91,43 @@ describe('checkFieldAccessibility', () => {
         expect(isPersonalFieldAccessible('name')).toBe(false)
       })
 
-      test('supports all personal field types', () => {
-        Object.keys(PERSONAL_FIELDS).forEach((field) => {
-          expect(() => isPersonalFieldAccessible(field)).not.toThrow()
+      describe('and the field is "name"', () => {
+        test('it returns true', () => {
+          const result = isPersonalFieldAccessible('name')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "dob"', () => {
+        test('it returns true', () => {
+          const result = isPersonalFieldAccessible('dob')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "address"', () => {
+        test('it returns true', () => {
+          const result = isPersonalFieldAccessible('address')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "phone"', () => {
+        test('it returns true', () => {
+          const result = isPersonalFieldAccessible('phone')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "email"', () => {
+        test('it returns true', () => {
+          const result = isPersonalFieldAccessible('email')
+
+          expect(result).toBe(true)
         })
       })
     })
@@ -104,7 +138,33 @@ describe('checkFieldAccessibility', () => {
       })
 
       test('throws an error for unknown personal fields', () => {
-        expect(() => isPersonalFieldAccessible('invalidField')).toThrow('Unknown personal field: invalidField')
+        let error
+
+        try {
+          isPersonalFieldAccessible('invalidField')
+        } catch (thrownError) {
+          error = thrownError
+        }
+
+        expect(error.message).toBe('Unknown personal field: invalidField')
+      })
+    })
+
+    describe('with an invalid field name and the master toggle disabled', () => {
+      beforeEach(() => {
+        config.get.mockReturnValue(false)
+      })
+
+      test('throws an error for unknown personal fields', () => {
+        let error
+
+        try {
+          isPersonalFieldAccessible('invalidField')
+        } catch (thrownError) {
+          error = thrownError
+        }
+
+        expect(error.message).toBe('Unknown personal field: invalidField')
       })
     })
   })
@@ -151,9 +211,51 @@ describe('checkFieldAccessibility', () => {
         expect(isBusinessFieldAccessible('name')).toBe(false)
       })
 
-      test('supports all business field types', () => {
-        Object.keys(BUSINESS_FIELDS).forEach((field) => {
-          expect(() => isBusinessFieldAccessible(field)).not.toThrow()
+      describe('and the field is "name"', () => {
+        test('it returns true', () => {
+          const result = isBusinessFieldAccessible('name')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "address"', () => {
+        test('it returns true', () => {
+          const result = isBusinessFieldAccessible('address')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "phone"', () => {
+        test('it returns true', () => {
+          const result = isBusinessFieldAccessible('phone')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "email"', () => {
+        test('it returns true', () => {
+          const result = isBusinessFieldAccessible('email')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "vat"', () => {
+        test('it returns true', () => {
+          const result = isBusinessFieldAccessible('vat')
+
+          expect(result).toBe(true)
+        })
+      })
+
+      describe('and the field is "registrationNumber"', () => {
+        test('it returns true', () => {
+          const result = isBusinessFieldAccessible('registrationNumber')
+
+          expect(result).toBe(true)
         })
       })
     })
@@ -164,7 +266,33 @@ describe('checkFieldAccessibility', () => {
       })
 
       test('throws an error for unknown business fields', () => {
-        expect(() => isBusinessFieldAccessible('invalidField')).toThrow('Unknown business field: invalidField')
+        let error
+
+        try {
+          isBusinessFieldAccessible('invalidField')
+        } catch (thrownError) {
+          error = thrownError
+        }
+
+        expect(error.message).toBe('Unknown business field: invalidField')
+      })
+    })
+
+    describe('with an invalid field name and the master toggle disabled', () => {
+      beforeEach(() => {
+        config.get.mockReturnValue(false)
+      })
+
+      test('throws an error for unknown business fields', () => {
+        let error
+
+        try {
+          isBusinessFieldAccessible('invalidField')
+        } catch (thrownError) {
+          error = thrownError
+        }
+
+        expect(error.message).toBe('Unknown business field: invalidField')
       })
     })
   })
@@ -182,18 +310,47 @@ describe('checkFieldAccessibility', () => {
       )
     })
 
-    test('works with various field labels', () => {
-      const labels = [
-        'full name',
-        'date of birth',
-        'personal address',
-        'business name',
-        'business VAT registration number'
-      ]
+    describe('when the label is "full name"', () => {
+      test('it includes the label in the message', () => {
+        const message = getDisabledFieldMessage('full name')
 
-      labels.forEach((label) => {
-        const message = getDisabledFieldMessage(label)
-        expect(message).toContain(label)
+        expect(message).toContain('full name')
+        expect(message).toContain('cannot update your')
+      })
+    })
+
+    describe('when the label is "date of birth"', () => {
+      test('it includes the label in the message', () => {
+        const message = getDisabledFieldMessage('date of birth')
+
+        expect(message).toContain('date of birth')
+        expect(message).toContain('cannot update your')
+      })
+    })
+
+    describe('when the label is "personal address"', () => {
+      test('it includes the label in the message', () => {
+        const message = getDisabledFieldMessage('personal address')
+
+        expect(message).toContain('personal address')
+        expect(message).toContain('cannot update your')
+      })
+    })
+
+    describe('when the label is "business name"', () => {
+      test('it includes the label in the message', () => {
+        const message = getDisabledFieldMessage('business name')
+
+        expect(message).toContain('business name')
+        expect(message).toContain('cannot update your')
+      })
+    })
+
+    describe('when the label is "business VAT registration number"', () => {
+      test('it includes the label in the message', () => {
+        const message = getDisabledFieldMessage('business VAT registration number')
+
+        expect(message).toContain('business VAT registration number')
         expect(message).toContain('cannot update your')
       })
     })
@@ -216,14 +373,33 @@ describe('checkFieldAccessibility', () => {
       )
     })
 
-    test('works with various field labels', () => {
-      const labels = ['personal address', 'business email address', 'date of birth']
+    describe('when the label is "personal address"', () => {
+      test('it returns an error notification containing the label', () => {
+        const notification = getDisabledFieldNotification('personal address')
 
-      labels.forEach((label) => {
-        const notification = getDisabledFieldNotification(label)
         expect(notification.type).toBe('error')
         expect(notification.titleText).toBe('Important')
-        expect(notification.text).toContain(label)
+        expect(notification.text).toContain('personal address')
+      })
+    })
+
+    describe('when the label is "business email address"', () => {
+      test('it returns an error notification containing the label', () => {
+        const notification = getDisabledFieldNotification('business email address')
+
+        expect(notification.type).toBe('error')
+        expect(notification.titleText).toBe('Important')
+        expect(notification.text).toContain('business email address')
+      })
+    })
+
+    describe('when the label is "date of birth"', () => {
+      test('it returns an error notification containing the label', () => {
+        const notification = getDisabledFieldNotification('date of birth')
+
+        expect(notification.type).toBe('error')
+        expect(notification.titleText).toBe('Important')
+        expect(notification.text).toContain('date of birth')
       })
     })
   })

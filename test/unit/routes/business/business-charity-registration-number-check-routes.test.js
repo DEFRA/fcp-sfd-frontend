@@ -56,15 +56,22 @@ describe('business charity commission registration number check', () => {
         expect(getBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(getBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = getBusinessCharityRegistrationNumberCheck.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
         test('should redirect to /business-details when session data is missing', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const redirectStub = {}
-          const preHandler = getBusinessCharityRegistrationNumberCheck.options.pre[0]
+          const preHandler = getBusinessCharityRegistrationNumberCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {
             redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
           })
@@ -74,7 +81,7 @@ describe('business charity commission registration number check', () => {
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessCharityRegistrationNumber: '12345678' }) } }
-          const preHandler = getBusinessCharityRegistrationNumberCheck.options.pre[0]
+          const preHandler = getBusinessCharityRegistrationNumberCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)
@@ -204,8 +211,8 @@ describe('business charity commission registration number check', () => {
         expect(postBusinessCharityRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(postBusinessCharityRegistrationNumberCheck.options.pre).toHaveLength(2)
       })
 
       test('it redirects to the /business-details page', async () => {

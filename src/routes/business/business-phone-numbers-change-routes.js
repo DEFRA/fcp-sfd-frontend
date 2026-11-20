@@ -4,12 +4,14 @@ import { businessPhoneNumbersChangePresenter } from '../../presenters/business/b
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessPhoneNumbersChange = {
   method: 'GET',
   path: '/business-phone-numbers-change',
   options: {
-    auth: { scope: AMEND_PERMISSIONS }
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('phone')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -25,6 +27,7 @@ const postBusinessPhoneNumbersChange = {
   path: '/business-phone-numbers-change',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('phone')],
     validate: {
       payload: schemas.business.details.phone,
       options: { abortEarly: false },

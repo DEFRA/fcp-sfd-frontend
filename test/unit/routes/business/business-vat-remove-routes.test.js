@@ -62,6 +62,14 @@ describe('business VAT remove', () => {
         expect(getBusinessVatRemove.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessVatRemove.options.pre[0]
+
+        expect(getBusinessVatRemove.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchBusinessDetailService', async () => {
         await getBusinessVatRemove.handler(request, h)
 
@@ -82,6 +90,14 @@ describe('business VAT remove', () => {
         expect(postBusinessVatRemove.method).toBe('POST')
         expect(postBusinessVatRemove.path).toBe('/business-vat-registration-remove')
         expect(postBusinessVatRemove.options.auth.scope).toBe(LEGAL_PERMISSIONS)
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessVatRemove.options.pre[0]
+
+        expect(postBusinessVatRemove.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the payload confirmRemove property is "yes"', () => {

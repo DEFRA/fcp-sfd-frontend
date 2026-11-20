@@ -62,6 +62,14 @@ describe('business email change', () => {
         expect(getBusinessEmailChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessEmailChange.options.pre[0]
+
+        expect(getBusinessEmailChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchBusinessChangeService', async () => {
         await getBusinessEmailChange.handler(request, h)
 
@@ -88,6 +96,14 @@ describe('business email change', () => {
         expect(postBusinessEmailChange.method).toBe('POST')
         expect(postBusinessEmailChange.path).toBe('/business-email-change')
         expect(postBusinessEmailChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessEmailChange.options.pre[0]
+
+        expect(postBusinessEmailChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

@@ -5,12 +5,14 @@ import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
 import { businessAddressChangeErrorService } from '../../services/business/business-address-change-error-service.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessAddressChange = {
   method: 'GET',
   path: '/business-address-change',
   options: {
-    auth: { scope: AMEND_PERMISSIONS }
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -26,6 +28,7 @@ const postBusinessAddressChange = {
   path: '/business-address-change',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('address')],
     validate: {
       payload: schemas.osPlaces.ukPostcode,
       options: { abortEarly: false },

@@ -3,14 +3,14 @@ import { updateBusinessEmailChangeService } from '../../services/business/update
 import { businessEmailCheckPresenter } from '../../presenters/business/business-email-check-presenter.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkBusinessFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessEmailCheck = {
   method: 'GET',
   path: '/business-email-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail')]
+    pre: [checkBusinessFieldAccessibleGuard('email'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessEmailCheck = {
   path: '/business-email-check',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail')]
+    pre: [checkBusinessFieldAccessibleGuard('email'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessEmail')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

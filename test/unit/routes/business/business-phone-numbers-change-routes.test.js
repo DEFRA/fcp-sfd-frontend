@@ -63,6 +63,14 @@ describe('business phone numbers change', () => {
         expect(getBusinessPhoneNumbersChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessPhoneNumbersChange.options.pre[0]
+
+        expect(getBusinessPhoneNumbersChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchBusinessChangeService', async () => {
         await getBusinessPhoneNumbersChange.handler(request, h)
 
@@ -89,6 +97,14 @@ describe('business phone numbers change', () => {
         expect(postBusinessPhoneNumbersChange.method).toBe('POST')
         expect(postBusinessPhoneNumbersChange.path).toBe('/business-phone-numbers-change')
         expect(postBusinessPhoneNumbersChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessPhoneNumbersChange.options.pre[0]
+
+        expect(postBusinessPhoneNumbersChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

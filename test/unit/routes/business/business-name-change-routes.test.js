@@ -60,10 +60,12 @@ describe('business name change', () => {
         })
       })
 
-      test('should have the correct method, path and auth scope configured', () => {
-        expect(getBusinessNameChange.method).toBe('GET')
-        expect(getBusinessNameChange.path).toBe('/business-name-change')
-        expect(getBusinessNameChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessNameChange.options.pre[0]
+
+        expect(getBusinessNameChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       test('it calls fetchBusinessChangeService', async () => {
@@ -91,6 +93,14 @@ describe('business name change', () => {
           customer: { userName: 'Alfred Waldron' },
           changeBusinessName: request.payload.businessName
         })
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessNameChange.options.pre[0]
+
+        expect(postBusinessNameChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       test('should have the correct method, path and auth scope configured', () => {

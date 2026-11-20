@@ -3,12 +3,14 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessCharityRegistrationNumberChangePresenter } from '../../presenters/business/business-charity-registration-number-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessCharityRegistrationNumberChange = {
   method: 'GET',
   path: '/business-charity-registration-number-change',
   options: {
-    auth: { scope: LEGAL_PERMISSIONS }
+    auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('registrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -30,6 +32,7 @@ const postBusinessCharityRegistrationNumberChange = {
   path: '/business-charity-registration-number-change',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('registrationNumber')],
     validate: {
       payload: schemas.business.legalStatusRegistration.charity,
       options: { abortEarly: false },

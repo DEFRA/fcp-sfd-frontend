@@ -3,14 +3,14 @@ import { updateBusinessNameChangeService } from '../../services/business/update-
 import { businessNameCheckPresenter } from '../../presenters/business/business-name-check-presenter.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkBusinessFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessNameCheck = {
   method: 'GET',
   path: '/business-name-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName')]
+    pre: [checkBusinessFieldAccessibleGuard('name'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -27,7 +27,7 @@ const postBusinessNameCheck = {
   path: '/business-name-check',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName')]
+    pre: [checkBusinessFieldAccessibleGuard('name'), checkSessionDataGuard(BUSINESS_JOURNEY, 'changeBusinessName')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

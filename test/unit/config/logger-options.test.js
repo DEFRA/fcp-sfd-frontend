@@ -1,17 +1,15 @@
-import { vi, beforeAll, beforeEach, describe, test, expect } from 'vitest'
+// Test framework dependencies
+import { vi, beforeEach, describe, test, expect } from 'vitest'
 
+// Mocks
 const mockGetTraceId = vi.fn()
 
 vi.mock('@defra/hapi-tracing', () => ({
   getTraceId: mockGetTraceId
 }))
 
-let loggerOptions
-
-beforeAll(async () => {
-  const loggerOptionsModule = await import('../../../src/config/logger-options.js')
-  loggerOptions = loggerOptionsModule.loggerOptions
-})
+// Things under test
+const { loggerOptions } = await import('../../../src/config/logger-options.js')
 
 describe('logger-options', () => {
   beforeEach(() => {

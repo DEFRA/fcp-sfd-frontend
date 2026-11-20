@@ -1,19 +1,7 @@
+// Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
-const mockOidcConfig = { token_endpoint: 'https://example.com/token' }
-const mockGetOidcConfig = vi.fn()
-vi.mock('../../../src/auth/get-oidc-config.js', () => ({
-  getOidcConfig: mockGetOidcConfig
-}))
-
-const mockWreckPost = vi.fn()
-const mockTokenPayload = { access_token: 'DEFRA_ID_JWT', refresh_token: 'DEFRA_ID_REFRESH_TOKEN_NEW' }
-vi.mock('@hapi/wreck', () => ({
-  default: {
-    post: mockWreckPost
-  }
-}))
-
+// Mocks
 const mockConfigGet = vi.fn()
 vi.mock('../../../src/config/index.js', () => ({
   config: {
@@ -21,9 +9,25 @@ vi.mock('../../../src/config/index.js', () => ({
   }
 }))
 
-const { refreshTokens } = await import('../../../src/auth/refresh-tokens.js')
+const mockGetOidcConfig = vi.fn()
+vi.mock('../../../src/auth/get-oidc-config.js', () => ({
+  getOidcConfig: mockGetOidcConfig
+}))
 
+const mockWreckPost = vi.fn()
+vi.mock('@hapi/wreck', () => ({
+  default: {
+    post: mockWreckPost
+  }
+}))
+
+// Test helpers
+const mockOidcConfig = { token_endpoint: 'https://example.com/token' }
+const mockTokenPayload = { access_token: 'DEFRA_ID_JWT', refresh_token: 'DEFRA_ID_REFRESH_TOKEN_NEW' }
 const refreshToken = 'DEFRA_ID_REFRESH_TOKEN'
+
+// Things under test
+const { refreshTokens } = await import('../../../src/auth/refresh-tokens.js')
 
 describe('refreshTokens', () => {
   beforeEach(() => {

@@ -1,5 +1,6 @@
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
+// Mocks
 const mockConfigGet = vi.fn()
 vi.mock('../../../src/config/index.js', () => ({
   config: {
@@ -7,6 +8,7 @@ vi.mock('../../../src/config/index.js', () => ({
   }
 }))
 
+// Things under test
 let cookiesModule
 
 describe('cookies', () => {

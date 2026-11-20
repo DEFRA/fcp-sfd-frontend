@@ -1,6 +1,14 @@
+// Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
-const mockOidcConfig = { end_session_endpoint: 'https://example.com/sign-out' }
+// Mocks
+const mockConfigGet = vi.fn()
+vi.mock('../../../src/config/index.js', () => ({
+  config: {
+    get: mockConfigGet
+  }
+}))
+
 const mockGetOidcConfig = vi.fn()
 vi.mock('../../../src/auth/get-oidc-config.js', () => ({
   getOidcConfig: mockGetOidcConfig
@@ -11,18 +19,14 @@ vi.mock('../../../src/auth/state.js', () => ({
   createState: mockCreateState
 }))
 
+// Test helpers
+const mockOidcConfig = { end_session_endpoint: 'https://example.com/sign-out' }
 const mockSignOutRedirectUrl = 'https://example.com/sign-out-redirect'
-const mockConfigGet = vi.fn()
-vi.mock('../../../src/config/index.js', () => ({
-  config: {
-    get: mockConfigGet
-  }
-}))
-
-const { getSignOutUrl } = await import('../../../src/auth/get-sign-out-url.js')
-
 const request = { mock: 'request' }
 const token = 'DEFRA-ID-JWT'
+
+// Things under test
+const { getSignOutUrl } = await import('../../../src/auth/get-sign-out-url.js')
 
 describe('getSignOutUrl', () => {
   beforeEach(() => {

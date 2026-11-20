@@ -1,8 +1,8 @@
 import { vi, describe, test, expect, beforeEach } from 'vitest'
 import { config } from '../../../src/config/index.js'
 
-let mockLogger, provideProxy, proxyFetch
-
+// Mocks
+let mockLogger
 vi.mock('../../../src/utils/logger.js', () => {
   mockLogger = {
     debug: vi.fn()
@@ -39,6 +39,7 @@ vi.mock('https-proxy-agent', () => {
 
 global.fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true })))
 
+// Test helpers
 const httpProxyUrl = 'http://proxy.example.com'
 const httpsProxyUrl = 'https://proxy.example.com'
 const httpPort = 80
@@ -46,15 +47,14 @@ const httpsPort = 443
 const testUrl = 'https://example.com/api'
 const testOptions = { method: 'GET', headers: { 'Content-Type': 'application/json' } }
 
+// Things under test
+const { provideProxy, proxyFetch } = await import('../../../src/utils/proxy.js')
+
 describe('#proxy', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks()
     config.set('server.httpProxy', null)
     config.set('server.httpsProxy', null)
-
-    const proxyModule = await import('../../../src/utils/proxy.js')
-    provideProxy = proxyModule.provideProxy
-    proxyFetch = proxyModule.proxyFetch
   })
 
   describe('#provideProxy', () => {

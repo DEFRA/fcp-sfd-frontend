@@ -1,27 +1,7 @@
+// Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
-const mockOidcConfig = { jwks_uri: 'https://example.com/jwks' }
-const mockGetOidcConfig = vi.fn()
-vi.mock('../../../src/auth/get-oidc-config.js', () => ({
-  getOidcConfig: mockGetOidcConfig
-}))
-
-const mockJwkKey = { kty: 'RSA', n: 'mock-n', e: 'AQAB' }
-const mockWreckGet = vi.fn()
-vi.mock('@hapi/wreck', () => ({
-  default: {
-    get: mockWreckGet
-  }
-}))
-
-const mockPem = '-----BEGIN PUBLIC KEY-----\nmock-pem\n-----END PUBLIC KEY-----'
-const mockExport = vi.fn()
-const mockCreatePublicKey = vi.fn()
-vi.mock('node:crypto', () => ({
-  createPublicKey: mockCreatePublicKey
-}))
-
-const mockDecoded = { header: {}, payload: {}, signature: '' }
+// Mocks
 const mockJwtDecode = vi.fn()
 const mockJwtVerify = vi.fn()
 vi.mock('@hapi/jwt', () => ({
@@ -33,9 +13,33 @@ vi.mock('@hapi/jwt', () => ({
   }
 }))
 
-const { verifyToken } = await import('../../../src/auth/verify-token.js')
+const mockWreckGet = vi.fn()
+vi.mock('@hapi/wreck', () => ({
+  default: {
+    get: mockWreckGet
+  }
+}))
 
+const mockCreatePublicKey = vi.fn()
+vi.mock('node:crypto', () => ({
+  createPublicKey: mockCreatePublicKey
+}))
+
+const mockGetOidcConfig = vi.fn()
+vi.mock('../../../src/auth/get-oidc-config.js', () => ({
+  getOidcConfig: mockGetOidcConfig
+}))
+
+// Test helpers
+const mockOidcConfig = { jwks_uri: 'https://example.com/jwks' }
+const mockJwkKey = { kty: 'RSA', n: 'mock-n', e: 'AQAB' }
+const mockPem = '-----BEGIN PUBLIC KEY-----\nmock-pem\n-----END PUBLIC KEY-----'
+const mockExport = vi.fn()
+const mockDecoded = { header: {}, payload: {}, signature: '' }
 const mockToken = 'mock.jwt.token'
+
+// Things under test
+const { verifyToken } = await import('../../../src/auth/verify-token.js')
 
 describe('verifyToken', () => {
   beforeEach(() => {

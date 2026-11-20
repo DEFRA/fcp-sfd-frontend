@@ -1,12 +1,14 @@
 import { fetchBusinessDetailsService } from '../../services/business/fetch-business-details-service.js'
 import { businessTypeChangePresenter } from '../../presenters/business/business-type-change-presenter.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessTypeChange = {
   method: 'GET',
   path: '/business-type-change',
   options: {
-    auth: { scope: LEGAL_PERMISSIONS }
+    auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('type')]
   },
   handler: async (request, h) => {
     const { auth } = request

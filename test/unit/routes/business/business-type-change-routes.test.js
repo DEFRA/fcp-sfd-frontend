@@ -50,6 +50,14 @@ describe('business type change', () => {
         expect(getBusinessTypeChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessTypeChange.options.pre[0]
+
+        expect(getBusinessTypeChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it fetches the data from the fetchBusinessDetailsService', async () => {
         await getBusinessTypeChange.handler(request, h)
 

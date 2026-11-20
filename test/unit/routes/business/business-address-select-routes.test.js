@@ -137,7 +137,7 @@ describe('business address select change', () => {
               })
             }
           }
-          const preHandler = getBusinessAddressSelect.options.pre[0]
+          const preHandler = getBusinessAddressSelect.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -152,7 +152,7 @@ describe('business address select change', () => {
               })
             }
           }
-          const preHandler = getBusinessAddressSelect.options.pre[0]
+          const preHandler = getBusinessAddressSelect.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -164,7 +164,7 @@ describe('business address select change', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = getBusinessAddressSelect.options.pre[0]
+          const preHandler = getBusinessAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/business-details')
@@ -254,7 +254,7 @@ describe('business address select change', () => {
               })
             }
           }
-          const preHandler = postBusinessAddressSelect.options.pre[0]
+          const preHandler = postBusinessAddressSelect.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -266,7 +266,7 @@ describe('business address select change', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = postBusinessAddressSelect.options.pre[0]
+          const preHandler = postBusinessAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/business-details')

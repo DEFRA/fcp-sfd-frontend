@@ -58,6 +58,14 @@ describe('personal date of birth change', () => {
         expect(getPersonalDobChange.path).toBe('/account-date-of-birth-change')
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getPersonalDobChange.options.pre[0]
+
+        expect(getPersonalDobChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it fetches the data from the session', async () => {
         await getPersonalDobChange.handler(request, h)
 
@@ -83,6 +91,14 @@ describe('personal date of birth change', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalDobChange.method).toBe('POST')
         expect(postPersonalDobChange.path).toBe('/account-date-of-birth-change')
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postPersonalDobChange.options.pre[0]
+
+        expect(postPersonalDobChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

@@ -50,15 +50,22 @@ describe('personal phone numbers check', () => {
         expect(getPersonalPhoneNumbersCheck.path).toBe('/account-phone-numbers-check')
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalPhoneNumbersCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(getPersonalPhoneNumbersCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = getPersonalPhoneNumbersCheck.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
         test('should redirect to /personal-details when session data is missing', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const redirectStub = {}
-          const preHandler = getPersonalPhoneNumbersCheck.options.pre[0]
+          const preHandler = getPersonalPhoneNumbersCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {
             redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
           })
@@ -68,7 +75,7 @@ describe('personal phone numbers check', () => {
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalPhoneNumbers: { landline: '01234567890' } }) } }
-          const preHandler = getPersonalPhoneNumbersCheck.options.pre[0]
+          const preHandler = getPersonalPhoneNumbersCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)
@@ -102,15 +109,22 @@ describe('personal phone numbers check', () => {
         expect(postPersonalPhoneNumbersCheck.path).toBe('/account-phone-numbers-check')
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalPhoneNumbersCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(postPersonalPhoneNumbersCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = postPersonalPhoneNumbersCheck.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
         test('should redirect to /personal-details when session data is missing', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const redirectStub = {}
-          const preHandler = postPersonalPhoneNumbersCheck.options.pre[0]
+          const preHandler = postPersonalPhoneNumbersCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {
             redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
           })
@@ -120,7 +134,7 @@ describe('personal phone numbers check', () => {
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalPhoneNumbers: { landline: '01234567890' } }) } }
-          const preHandler = postPersonalPhoneNumbersCheck.options.pre[0]
+          const preHandler = postPersonalPhoneNumbersCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)

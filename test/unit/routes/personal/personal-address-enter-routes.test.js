@@ -57,6 +57,14 @@ describe('personal address enter', () => {
         expect(getPersonalAddressEnter.path).toBe('/account-address-enter')
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getPersonalAddressEnter.options.pre[0]
+
+        expect(getPersonalAddressEnter.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchPersonalChangeService', async () => {
         await getPersonalAddressEnter.handler(request, h)
 
@@ -90,6 +98,14 @@ describe('personal address enter', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalAddressEnter.method).toBe('POST')
         expect(postPersonalAddressEnter.path).toBe('/account-address-enter')
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postPersonalAddressEnter.options.pre[0]
+
+        expect(postPersonalAddressEnter.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

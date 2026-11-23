@@ -559,6 +559,48 @@ describe('businessDetailsPresenter', () => {
       })
     })
 
+    describe('and the user has view permission', () => {
+      beforeEach(() => {
+        permissionLevel = PERMISSION_GROUP.VIEW
+        findDisabledBusinessField.mockReturnValue({ field: 'email', displayName: 'business email address' })
+      })
+
+      test('it should not show the disabled banner', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(findDisabledBusinessField).not.toHaveBeenCalled()
+        expect(result.disabledFieldNotification).toBeNull()
+      })
+    })
+
+    describe('and the user has amend permission', () => {
+      beforeEach(() => {
+        permissionLevel = PERMISSION_GROUP.AMEND
+        findDisabledBusinessField.mockReturnValue({ field: 'email', displayName: 'business email address' })
+        getDisabledFieldNotification.mockReturnValue({ titleText: 'Important', text: 'Disabled message' })
+      })
+
+      test('it should only check the fields amend users can update', () => {
+        businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(findDisabledBusinessField).toHaveBeenCalledWith(['address', 'phone', 'email'])
+      })
+
+      test('it should show the disabled banner', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.disabledFieldNotification).toEqual({ titleText: 'Important', text: 'Disabled message' })
+      })
+    })
+
+    describe('and the user has legal permission', () => {
+      test('it should check every field', () => {
+        businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat', 'registrationNumber'])
+      })
+    })
+
     describe('and the registration number is not accessible', () => {
       beforeEach(() => {
         isBusinessFieldAccessible.mockReturnValue(false)

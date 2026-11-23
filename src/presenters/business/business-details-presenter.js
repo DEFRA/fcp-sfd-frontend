@@ -25,7 +25,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
-    disabledFieldNotification: getDisabledFieldNotificationIfNeeded(),
+    disabledFieldNotification: getDisabledFieldNotificationIfNeeded(permissionLevel),
     pageTitle: getPageTitle(permissionLevel),
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
@@ -47,11 +47,17 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
 }
 
 /**
- * Checks if any business field is currently disabled by feature toggle
+ * Checks if any business field the user can update is currently disabled by feature toggle
  * Returns a notification banner if a field is disabled, otherwise null
  */
-const getDisabledFieldNotificationIfNeeded = () => {
-  const fieldsToCheck = ['name', 'address', 'phone', 'email', 'vat', 'registrationNumber']
+const getDisabledFieldNotificationIfNeeded = (permissionLevel) => {
+  const fieldsToCheck = getUpdatableFields(permissionLevel)
+
+  // Users who cannot update anything never need to see the banner
+  if (fieldsToCheck.length === 0) {
+    return null
+  }
+
   const disabledField = findDisabledBusinessField(fieldsToCheck)
 
   if (disabledField) {
@@ -59,6 +65,19 @@ const getDisabledFieldNotificationIfNeeded = () => {
   }
 
   return null
+}
+
+// The fields each permission level is allowed to update
+const getUpdatableFields = (permissionLevel) => {
+  if (permissionLevel === PERMISSION_GROUP.LEGAL) {
+    return ['name', 'address', 'phone', 'email', 'vat', 'registrationNumber']
+  }
+
+  if (permissionLevel === PERMISSION_GROUP.AMEND) {
+    return ['address', 'phone', 'email']
+  }
+
+  return []
 }
 
 const buildBusinessAddressField = (data, changeLinks) => {

@@ -5,6 +5,11 @@
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
+import {
+  isPersonalFieldAccessible,
+  getDisabledFieldNotification,
+  findDisabledPersonalField
+} from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const { PERSONAL: PERSONAL_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
@@ -19,6 +24,7 @@ const personalDetailsPresenter = (data, yar, hasValidPersonalDetails, sectionsNe
       href: '/home'
     },
     notification: yar ? yar.flash('notification')[0] : null,
+    disabledFieldNotification: getDisabledFieldNotificationIfNeeded(),
     pageTitle: 'View and update your personal details',
     metaDescription: 'View and update your personal details.',
     userName: data.userName ?? null,
@@ -67,23 +73,42 @@ const getActionText = (value) => {
 }
 
 /**
+ * Checks if any personal field is currently disabled by feature toggle
+ * Returns a notification banner if a field is disabled, otherwise null
+ */
+const getDisabledFieldNotificationIfNeeded = () => {
+  const fieldsToCheck = ['name', 'dob', 'address', 'phone', 'email']
+  const disabledField = findDisabledPersonalField(fieldsToCheck)
+
+  if (disabledField) {
+    return getDisabledFieldNotification(disabledField.displayName)
+  }
+
+  return null
+}
+
+/**
  * Builds change links for personal details based on whether the
- * personal details interrupter is enabled and the validity of the data.
+ * personal details interrupter is enabled, feature toggles are set,
+ * and the validity of the data.
  *
- * When the interrupter is disabled or all personal details are valid,
- * standard change links are returned.
+ * When the interrupter is disabled, feature toggles are all enabled,
+ * and all personal details are valid, standard change links are returned.
  *
  * When the interrupter is enabled and details are invalid:
  * - If only one section needs updating, its normal change link is used
  * - Otherwise, all links point to the personal details fix journey
+ *
+ * When a field is disabled by feature toggle:
+ * - That field's change link is set to null (hidden)
  */
 const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) => {
   const CHANGE_LINKS = {
-    name: PERSONAL_CHANGE_LINKS.personalName,
-    address: PERSONAL_CHANGE_LINKS.personalAddress,
-    phone: PERSONAL_CHANGE_LINKS.personalPhone,
-    email: PERSONAL_CHANGE_LINKS.personalEmail,
-    dob: PERSONAL_CHANGE_LINKS.personalDateOfBirth
+    name: isPersonalFieldAccessible('name') ? PERSONAL_CHANGE_LINKS.personalName : null,
+    address: isPersonalFieldAccessible('address') ? PERSONAL_CHANGE_LINKS.personalAddress : null,
+    phone: isPersonalFieldAccessible('phone') ? PERSONAL_CHANGE_LINKS.personalPhone : null,
+    email: isPersonalFieldAccessible('email') ? PERSONAL_CHANGE_LINKS.personalEmail : null,
+    dob: isPersonalFieldAccessible('dob') ? PERSONAL_CHANGE_LINKS.personalDateOfBirth : null
   }
 
   const personalDetailsInterrupterEnabled = config.get('featureToggle.personalDetailsInterrupterEnabled')
@@ -97,12 +122,30 @@ const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) 
   const singleSection = sectionsNeedingUpdate.length === 1 ? sectionsNeedingUpdate[0] : null
 
   return {
-    name: singleSection === 'name' ? CHANGE_LINKS.name : '/personal-fix?source=name',
-    address: singleSection === 'address' ? CHANGE_LINKS.address : '/personal-fix?source=address',
-    phone: singleSection === 'phone' ? CHANGE_LINKS.phone : '/personal-fix?source=phone',
-    email: singleSection === 'email' ? CHANGE_LINKS.email : '/personal-fix?source=email',
-    dob: singleSection === 'dob' ? CHANGE_LINKS.dob : '/personal-fix?source=dob'
+    name: resolveInterrupterLink('name', singleSection, CHANGE_LINKS.name),
+    address: resolveInterrupterLink('address', singleSection, CHANGE_LINKS.address),
+    phone: resolveInterrupterLink('phone', singleSection, CHANGE_LINKS.phone),
+    email: resolveInterrupterLink('email', singleSection, CHANGE_LINKS.email),
+    dob: resolveInterrupterLink('dob', singleSection, CHANGE_LINKS.dob)
   }
+}
+
+/**
+ * Works out the change link for one field while the interrupter is active.
+ * - A disabled field has no link, so the link stays hidden
+ * - The one section that needs fixing links to its normal change page
+ * - Every other section links to the personal details fix page
+ */
+const resolveInterrupterLink = (field, singleSection, normalLink) => {
+  if (!normalLink) {
+    return null
+  }
+
+  if (singleSection === field) {
+    return normalLink
+  }
+
+  return `/personal-fix?source=${field}`
 }
 
 const formatDob = (dob) => {

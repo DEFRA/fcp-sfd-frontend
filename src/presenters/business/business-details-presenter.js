@@ -9,6 +9,8 @@ import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 // Presenters and constants
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
+import { getDisabledFieldNotification, findDisabledBusinessField, isBusinessFieldAccessible } from '../../utils/feature-toggle/check-field-accessibility.js'
+
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
 
@@ -23,6 +25,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
+    disabledFieldNotification: getDisabledFieldNotificationIfNeeded(),
     pageTitle: getPageTitle(permissionLevel),
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
@@ -41,6 +44,21 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data, permissionLevel),
     businessType: buildBusinessTypeField(data, permissionLevel)
   }
+}
+
+/**
+ * Checks if any business field is currently disabled by feature toggle
+ * Returns a notification banner if a field is disabled, otherwise null
+ */
+const getDisabledFieldNotificationIfNeeded = () => {
+  const fieldsToCheck = ['name', 'address', 'phone', 'email', 'vat', 'registrationNumber']
+  const disabledField = findDisabledBusinessField(fieldsToCheck)
+
+  if (disabledField) {
+    return getDisabledFieldNotification(disabledField.displayName)
+  }
+
+  return null
 }
 
 const buildBusinessAddressField = (data, changeLinks) => {
@@ -123,6 +141,11 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
     changeLink = BUSINESS_CHANGE_LINKS.businessCompanyRegistrationNumber
   } else {
     return null
+  }
+
+  // Hide the change link when the registration number is switched off by a feature toggle
+  if (!isBusinessFieldAccessible('registrationNumber')) {
+    changeLink = null
   }
 
   return {

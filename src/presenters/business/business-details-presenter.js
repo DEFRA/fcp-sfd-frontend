@@ -46,40 +46,6 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
   }
 }
 
-/**
- * Checks if any business field the user can update is currently disabled by feature toggle
- * Returns a notification banner if a field is disabled, otherwise null
- */
-const getDisabledFieldNotificationIfNeeded = (permissionLevel) => {
-  const fieldsToCheck = getUpdatableFields(permissionLevel)
-
-  // Users who cannot update anything never need to see the banner
-  if (fieldsToCheck.length === 0) {
-    return null
-  }
-
-  const disabledField = findDisabledBusinessField(fieldsToCheck)
-
-  if (disabledField) {
-    return getDisabledFieldNotification(disabledField.displayName)
-  }
-
-  return null
-}
-
-// The fields each permission level is allowed to update
-const getUpdatableFields = (permissionLevel) => {
-  if (permissionLevel === PERMISSION_GROUP.LEGAL) {
-    return ['name', 'address', 'phone', 'email', 'vat', 'registrationNumber']
-  }
-
-  if (permissionLevel === PERMISSION_GROUP.AMEND) {
-    return ['address', 'phone', 'email']
-  }
-
-  return []
-}
-
 const buildBusinessAddressField = (data, changeLinks) => {
   return {
     value: formatAddress(data.address),
@@ -264,6 +230,27 @@ const formatAddress = (businessAddress) => {
   return lines.length > 0 ? lines : NOT_ADDED_TEXT
 }
 
+/**
+ * Checks if any business field the user can update is currently disabled by feature toggle
+ * Returns a notification banner if a field is disabled, otherwise null
+ */
+const getDisabledFieldNotificationIfNeeded = (permissionLevel) => {
+  const fieldsToCheck = getUpdatableFields(permissionLevel)
+
+  // Users who cannot update anything never need to see the banner
+  if (fieldsToCheck.length === 0) {
+    return null
+  }
+
+  const disabledField = findDisabledBusinessField(fieldsToCheck)
+
+  if (disabledField) {
+    return getDisabledFieldNotification(disabledField.displayName)
+  }
+
+  return null
+}
+
 // Only users with the legal permission level can change these fields
 const getLegalOnlyChangeLink = (permissionLevel, changeLink) => {
   return permissionLevel === PERMISSION_GROUP.LEGAL ? changeLink : null
@@ -271,6 +258,19 @@ const getLegalOnlyChangeLink = (permissionLevel, changeLink) => {
 
 const getPageTitle = (permissionLevel) => {
   return permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details'
+}
+
+// The fields each permission level is allowed to update
+const getUpdatableFields = (permissionLevel) => {
+  if (permissionLevel === PERMISSION_GROUP.LEGAL) {
+    return ['name', 'address', 'phone', 'email', 'vat', 'registrationNumber']
+  }
+
+  if (permissionLevel === PERMISSION_GROUP.AMEND) {
+    return ['address', 'phone', 'email']
+  }
+
+  return []
 }
 
 const setPermissionsText = (permissionLevel) => {

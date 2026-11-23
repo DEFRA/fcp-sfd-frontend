@@ -6,20 +6,53 @@
 import { config } from '../../config/index.js'
 
 const PERSONAL_FIELDS = {
-  name: 'updatePersonalDetailsName',
-  dob: 'updatePersonalDetailsDob',
-  address: 'updatePersonalDetailsAddress',
-  phone: 'updatePersonalDetailsPhone',
-  email: 'updatePersonalDetailsEmail'
+  name: {
+    toggleName: 'updatePersonalDetailsName',
+    displayName: 'full name'
+  },
+  dob: {
+    toggleName: 'updatePersonalDetailsDob',
+    displayName: 'date of birth'
+  },
+  address: {
+    toggleName: 'updatePersonalDetailsAddress',
+    displayName: 'personal address'
+  },
+  phone: {
+    toggleName: 'updatePersonalDetailsPhone',
+    displayName: 'personal phone numbers'
+  },
+  email: {
+    toggleName: 'updatePersonalDetailsEmail',
+    displayName: 'personal email address'
+  }
 }
 
 const BUSINESS_FIELDS = {
-  name: 'updateBusinessDetailsName',
-  address: 'updateBusinessDetailsAddress',
-  phone: 'updateBusinessDetailsPhone',
-  email: 'updateBusinessDetailsEmail',
-  vat: 'updateBusinessDetailsVat',
-  registrationNumber: 'updateBusinessDetailsRegistrationNumber'
+  name: {
+    toggleName: 'updateBusinessDetailsName',
+    displayName: 'business name'
+  },
+  address: {
+    toggleName: 'updateBusinessDetailsAddress',
+    displayName: 'business address'
+  },
+  phone: {
+    toggleName: 'updateBusinessDetailsPhone',
+    displayName: 'business phone numbers'
+  },
+  email: {
+    toggleName: 'updateBusinessDetailsEmail',
+    displayName: 'business email address'
+  },
+  vat: {
+    toggleName: 'updateBusinessDetailsVat',
+    displayName: 'business VAT registration number'
+  },
+  registrationNumber: {
+    toggleName: 'updateBusinessDetailsRegistrationNumber',
+    displayName: 'business registration number'
+  }
 }
 
 /**
@@ -30,8 +63,8 @@ const BUSINESS_FIELDS = {
  * @returns {boolean} true if field is accessible, false if disabled
  */
 const isPersonalFieldAccessible = (field) => {
-  const fieldToggleName = PERSONAL_FIELDS[field]
-  if (!fieldToggleName) {
+  const fieldConfig = PERSONAL_FIELDS[field]
+  if (!fieldConfig) {
     throw new Error(`Unknown personal field: ${field}`)
   }
 
@@ -40,7 +73,7 @@ const isPersonalFieldAccessible = (field) => {
     return false
   }
 
-  return config.get(`featureToggle.personalDetails.${fieldToggleName}`)
+  return config.get(`featureToggle.personalDetails.${fieldConfig.toggleName}`)
 }
 
 /**
@@ -51,8 +84,8 @@ const isPersonalFieldAccessible = (field) => {
  * @returns {boolean} true if field is accessible, false if disabled
  */
 const isBusinessFieldAccessible = (field) => {
-  const fieldToggleName = BUSINESS_FIELDS[field]
-  if (!fieldToggleName) {
+  const fieldConfig = BUSINESS_FIELDS[field]
+  if (!fieldConfig) {
     throw new Error(`Unknown business field: ${field}`)
   }
 
@@ -61,17 +94,39 @@ const isBusinessFieldAccessible = (field) => {
     return false
   }
 
-  return config.get(`featureToggle.businessDetails.${fieldToggleName}`)
+  return config.get(`featureToggle.businessDetails.${fieldConfig.toggleName}`)
 }
 
 /**
- * Gets the warning message for a disabled field
+ * Gets the display name for a personal field
  *
- * @param {string} fieldLabel - The human-readable field label
- * @returns {string} The warning message
+ * @param {string} field - The field to get the display name for
+ * @returns {string} The human-readable field name
  */
-const getDisabledFieldMessage = (fieldLabel) => {
-  return `Sorry, there is a problem with the service. You cannot update your ${fieldLabel} right now. Please try again later.`
+const getPersonalFieldDisplayName = (field) => {
+  const fieldConfig = PERSONAL_FIELDS[field]
+
+  if (!fieldConfig) {
+    throw new Error(`Unknown personal field: ${field}`)
+  }
+
+  return fieldConfig.displayName
+}
+
+/**
+ * Gets the display name for a business field
+ *
+ * @param {string} field - The field to get the display name for
+ * @returns {string} The human-readable field name
+ */
+const getBusinessFieldDisplayName = (field) => {
+  const fieldConfig = BUSINESS_FIELDS[field]
+
+  if (!fieldConfig) {
+    throw new Error(`Unknown business field: ${field}`)
+  }
+
+  return fieldConfig.displayName
 }
 
 /**
@@ -82,17 +137,67 @@ const getDisabledFieldMessage = (fieldLabel) => {
  */
 const getDisabledFieldNotification = (fieldLabel) => {
   return {
-    type: 'error',
     titleText: 'Important',
-    text: getDisabledFieldMessage(fieldLabel)
+    text: `Sorry, there is a problem with the service. You cannot update your ${fieldLabel} right now. Please try again later.`
   }
+}
+
+/**
+ * Finds the first disabled personal field from a list of fields
+ * Returns the field name and display name, or null if all are accessible
+ *
+ * @param {string[]} fields - Array of personal fields to check
+ * @returns {{field: string, displayName: string} | null} The first disabled field or null
+ */
+const findDisabledPersonalField = (fields) => {
+  const masterToggle = config.get('featureToggle.personalDetails.updatePersonalDetails')
+  if (!masterToggle) {
+    return { field: 'all', displayName: 'personal details' }
+  }
+
+  for (const field of fields) {
+    if (!isPersonalFieldAccessible(field)) {
+      return {
+        field,
+        displayName: getPersonalFieldDisplayName(field)
+      }
+    }
+  }
+  return null
+}
+
+/**
+ * Finds the first disabled business field from a list of fields
+ * Returns the field name and display name, or null if all are accessible
+ *
+ * @param {string[]} fields - Array of business fields to check
+ * @returns {{field: string, displayName: string} | null} The first disabled field or null
+ */
+const findDisabledBusinessField = (fields) => {
+  const masterToggle = config.get('featureToggle.businessDetails.updateBusinessDetails')
+  if (!masterToggle) {
+    return { field: 'all', displayName: 'business details' }
+  }
+
+  for (const field of fields) {
+    if (!isBusinessFieldAccessible(field)) {
+      return {
+        field,
+        displayName: getBusinessFieldDisplayName(field)
+      }
+    }
+  }
+  return null
 }
 
 export {
   isPersonalFieldAccessible,
   isBusinessFieldAccessible,
-  getDisabledFieldMessage,
+  getPersonalFieldDisplayName,
+  getBusinessFieldDisplayName,
   getDisabledFieldNotification,
+  findDisabledPersonalField,
+  findDisabledBusinessField,
   PERSONAL_FIELDS,
   BUSINESS_FIELDS
 }

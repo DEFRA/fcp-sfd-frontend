@@ -8,8 +8,11 @@ import { config } from '../../../../src/config/index.js'
 import {
   isPersonalFieldAccessible,
   isBusinessFieldAccessible,
-  getDisabledFieldMessage,
+  getPersonalFieldDisplayName,
+  getBusinessFieldDisplayName,
   getDisabledFieldNotification,
+  findDisabledPersonalField,
+  findDisabledBusinessField,
   PERSONAL_FIELDS,
   BUSINESS_FIELDS
 } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
@@ -26,26 +29,59 @@ describe('checkFieldAccessibility', () => {
   })
 
   describe('PERSONAL_FIELDS', () => {
-    test('contains all personal field mappings', () => {
+    test('contains all personal field mappings with display names', () => {
       expect(PERSONAL_FIELDS).toEqual({
-        name: 'updatePersonalDetailsName',
-        dob: 'updatePersonalDetailsDob',
-        address: 'updatePersonalDetailsAddress',
-        phone: 'updatePersonalDetailsPhone',
-        email: 'updatePersonalDetailsEmail'
+        name: {
+          toggleName: 'updatePersonalDetailsName',
+          displayName: 'full name'
+        },
+        dob: {
+          toggleName: 'updatePersonalDetailsDob',
+          displayName: 'date of birth'
+        },
+        address: {
+          toggleName: 'updatePersonalDetailsAddress',
+          displayName: 'personal address'
+        },
+        phone: {
+          toggleName: 'updatePersonalDetailsPhone',
+          displayName: 'personal phone numbers'
+        },
+        email: {
+          toggleName: 'updatePersonalDetailsEmail',
+          displayName: 'personal email address'
+        }
       })
     })
   })
 
   describe('BUSINESS_FIELDS', () => {
-    test('contains all business field mappings', () => {
+    test('contains all business field mappings with display names', () => {
       expect(BUSINESS_FIELDS).toEqual({
-        name: 'updateBusinessDetailsName',
-        address: 'updateBusinessDetailsAddress',
-        phone: 'updateBusinessDetailsPhone',
-        email: 'updateBusinessDetailsEmail',
-        vat: 'updateBusinessDetailsVat',
-        registrationNumber: 'updateBusinessDetailsRegistrationNumber'
+        name: {
+          toggleName: 'updateBusinessDetailsName',
+          displayName: 'business name'
+        },
+        address: {
+          toggleName: 'updateBusinessDetailsAddress',
+          displayName: 'business address'
+        },
+        phone: {
+          toggleName: 'updateBusinessDetailsPhone',
+          displayName: 'business phone numbers'
+        },
+        email: {
+          toggleName: 'updateBusinessDetailsEmail',
+          displayName: 'business email address'
+        },
+        vat: {
+          toggleName: 'updateBusinessDetailsVat',
+          displayName: 'business VAT registration number'
+        },
+        registrationNumber: {
+          toggleName: 'updateBusinessDetailsRegistrationNumber',
+          displayName: 'business registration number'
+        }
       })
     })
   })
@@ -297,70 +333,10 @@ describe('checkFieldAccessibility', () => {
     })
   })
 
-  describe('getDisabledFieldMessage', () => {
-    test('returns a message containing the field label', () => {
-      const message = getDisabledFieldMessage('full name')
-      expect(message).toContain('full name')
-    })
-
-    test('returns the expected error message format', () => {
-      const message = getDisabledFieldMessage('full name')
-      expect(message).toBe(
-        'Sorry, there is a problem with the service. You cannot update your full name right now. Please try again later.'
-      )
-    })
-
-    describe('when the label is "full name"', () => {
-      test('it includes the label in the message', () => {
-        const message = getDisabledFieldMessage('full name')
-
-        expect(message).toContain('full name')
-        expect(message).toContain('cannot update your')
-      })
-    })
-
-    describe('when the label is "date of birth"', () => {
-      test('it includes the label in the message', () => {
-        const message = getDisabledFieldMessage('date of birth')
-
-        expect(message).toContain('date of birth')
-        expect(message).toContain('cannot update your')
-      })
-    })
-
-    describe('when the label is "personal address"', () => {
-      test('it includes the label in the message', () => {
-        const message = getDisabledFieldMessage('personal address')
-
-        expect(message).toContain('personal address')
-        expect(message).toContain('cannot update your')
-      })
-    })
-
-    describe('when the label is "business name"', () => {
-      test('it includes the label in the message', () => {
-        const message = getDisabledFieldMessage('business name')
-
-        expect(message).toContain('business name')
-        expect(message).toContain('cannot update your')
-      })
-    })
-
-    describe('when the label is "business VAT registration number"', () => {
-      test('it includes the label in the message', () => {
-        const message = getDisabledFieldMessage('business VAT registration number')
-
-        expect(message).toContain('business VAT registration number')
-        expect(message).toContain('cannot update your')
-      })
-    })
-  })
-
   describe('getDisabledFieldNotification', () => {
     test('returns a notification object with error type', () => {
       const notification = getDisabledFieldNotification('full name')
 
-      expect(notification).toHaveProperty('type', 'error')
       expect(notification).toHaveProperty('titleText', 'Important')
       expect(notification).toHaveProperty('text')
     })
@@ -377,7 +353,6 @@ describe('checkFieldAccessibility', () => {
       test('it returns an error notification containing the label', () => {
         const notification = getDisabledFieldNotification('personal address')
 
-        expect(notification.type).toBe('error')
         expect(notification.titleText).toBe('Important')
         expect(notification.text).toContain('personal address')
       })
@@ -387,7 +362,6 @@ describe('checkFieldAccessibility', () => {
       test('it returns an error notification containing the label', () => {
         const notification = getDisabledFieldNotification('business email address')
 
-        expect(notification.type).toBe('error')
         expect(notification.titleText).toBe('Important')
         expect(notification.text).toContain('business email address')
       })
@@ -397,9 +371,205 @@ describe('checkFieldAccessibility', () => {
       test('it returns an error notification containing the label', () => {
         const notification = getDisabledFieldNotification('date of birth')
 
-        expect(notification.type).toBe('error')
         expect(notification.titleText).toBe('Important')
         expect(notification.text).toContain('date of birth')
+      })
+    })
+  })
+
+  describe('getPersonalFieldDisplayName', () => {
+    test('returns the display name for "name"', () => {
+      const displayName = getPersonalFieldDisplayName('name')
+      expect(displayName).toBe('full name')
+    })
+
+    test('returns the display name for "dob"', () => {
+      const displayName = getPersonalFieldDisplayName('dob')
+      expect(displayName).toBe('date of birth')
+    })
+
+    test('returns the display name for "address"', () => {
+      const displayName = getPersonalFieldDisplayName('address')
+      expect(displayName).toBe('personal address')
+    })
+
+    test('returns the display name for "phone"', () => {
+      const displayName = getPersonalFieldDisplayName('phone')
+      expect(displayName).toBe('personal phone numbers')
+    })
+
+    test('returns the display name for "email"', () => {
+      const displayName = getPersonalFieldDisplayName('email')
+      expect(displayName).toBe('personal email address')
+    })
+
+    test('throws an error for unknown fields', () => {
+      let error
+
+      try {
+        getPersonalFieldDisplayName('unknown')
+      } catch (thrownError) {
+        error = thrownError
+      }
+
+      expect(error.message).toBe('Unknown personal field: unknown')
+    })
+  })
+
+  describe('getBusinessFieldDisplayName', () => {
+    test('returns the display name for "name"', () => {
+      const displayName = getBusinessFieldDisplayName('name')
+      expect(displayName).toBe('business name')
+    })
+
+    test('returns the display name for "address"', () => {
+      const displayName = getBusinessFieldDisplayName('address')
+      expect(displayName).toBe('business address')
+    })
+
+    test('returns the display name for "vat"', () => {
+      const displayName = getBusinessFieldDisplayName('vat')
+      expect(displayName).toBe('business VAT registration number')
+    })
+
+    test('throws an error for unknown fields', () => {
+      let error
+
+      try {
+        getBusinessFieldDisplayName('unknown')
+      } catch (thrownError) {
+        error = thrownError
+      }
+
+      expect(error.message).toBe('Unknown business field: unknown')
+    })
+  })
+
+  describe('findDisabledPersonalField', () => {
+    beforeEach(() => {
+      config.get.mockReturnValue(true)
+    })
+
+    describe('when all fields are accessible', () => {
+      test('returns null', () => {
+        const result = findDisabledPersonalField(['name', 'dob', 'address'])
+
+        expect(result).toBeNull()
+      })
+    })
+
+    describe('when one field is disabled', () => {
+      beforeEach(() => {
+        config.get.mockImplementation((key) => {
+          if (key === 'featureToggle.personalDetails.updatePersonalDetailsName') {
+            return false
+          }
+          return true
+        })
+      })
+
+      test('returns the first disabled field with its display name', () => {
+        const result = findDisabledPersonalField(['name', 'dob', 'address'])
+
+        expect(result).toEqual({
+          field: 'name',
+          displayName: 'full name'
+        })
+      })
+    })
+
+    describe('when multiple fields are disabled', () => {
+      beforeEach(() => {
+        config.get.mockImplementation((key) => {
+          if (key === 'featureToggle.personalDetails.updatePersonalDetailsName' ||
+              key === 'featureToggle.personalDetails.updatePersonalDetailsDob') {
+            return false
+          }
+          return true
+        })
+      })
+
+      test('returns the first disabled field only', () => {
+        const result = findDisabledPersonalField(['name', 'dob', 'address'])
+
+        expect(result).toEqual({
+          field: 'name',
+          displayName: 'full name'
+        })
+      })
+    })
+
+    describe('when the master toggle is disabled', () => {
+      beforeEach(() => {
+        config.get.mockImplementation((key) => {
+          if (key === 'featureToggle.personalDetails.updatePersonalDetails') {
+            return false
+          }
+          return true
+        })
+      })
+
+      test('returns the whole section as disabled', () => {
+        const result = findDisabledPersonalField(['name', 'dob', 'address'])
+
+        expect(result).toEqual({
+          field: 'all',
+          displayName: 'personal details'
+        })
+      })
+    })
+  })
+
+  describe('findDisabledBusinessField', () => {
+    beforeEach(() => {
+      config.get.mockReturnValue(true)
+    })
+
+    describe('when all fields are accessible', () => {
+      test('returns null', () => {
+        const result = findDisabledBusinessField(['name', 'address', 'vat'])
+
+        expect(result).toBeNull()
+      })
+    })
+
+    describe('when one field is disabled', () => {
+      beforeEach(() => {
+        config.get.mockImplementation((key) => {
+          if (key === 'featureToggle.businessDetails.updateBusinessDetailsVat') {
+            return false
+          }
+          return true
+        })
+      })
+
+      test('returns the first disabled field with its display name', () => {
+        const result = findDisabledBusinessField(['name', 'address', 'vat'])
+
+        expect(result).toEqual({
+          field: 'vat',
+          displayName: 'business VAT registration number'
+        })
+      })
+    })
+
+    describe('when the master toggle is disabled', () => {
+      beforeEach(() => {
+        config.get.mockImplementation((key) => {
+          if (key === 'featureToggle.businessDetails.updateBusinessDetails') {
+            return false
+          }
+          return true
+        })
+      })
+
+      test('returns the whole section as disabled', () => {
+        const result = findDisabledBusinessField(['name', 'address', 'vat'])
+
+        expect(result).toEqual({
+          field: 'all',
+          displayName: 'business details'
+        })
       })
     })
   })

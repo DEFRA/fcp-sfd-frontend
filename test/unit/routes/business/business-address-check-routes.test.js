@@ -55,16 +55,15 @@ describe('business address check', () => {
         expect(getBusinessAddressCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessAddressCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(getBusinessAddressCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
-        test('should have the pre-handler defined', () => {
-          const preHandler = getBusinessAddressCheck.options.pre[0]
-
-          expect(preHandler).toBeDefined()
-          expect(preHandler.method).toBeDefined()
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = getBusinessAddressCheck.options.pre[0]
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
         })
 
         test('should redirect to /business-details when session data is missing', async () => {
@@ -73,7 +72,7 @@ describe('business address check', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = getBusinessAddressCheck.options.pre[0]
+          const preHandler = getBusinessAddressCheck.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/business-details')
@@ -84,7 +83,7 @@ describe('business address check', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }) }
 
-          const preHandler = getBusinessAddressCheck.options.pre[0]
+          const preHandler = getBusinessAddressCheck.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(sessionRequest.yar.get).toHaveBeenCalledWith('businessDetailsUpdate')
@@ -92,7 +91,7 @@ describe('business address check', () => {
 
         test('should allow access when required session field exists with valid data', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessAddress: { postcode: 'SW1A 1AA' } }) } }
-          const preHandler = getBusinessAddressCheck.options.pre[0]
+          const preHandler = getBusinessAddressCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -100,7 +99,7 @@ describe('business address check', () => {
 
         test('should allow access when session field has empty string (falsy but valid)', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessAddress: '' }) } }
-          const preHandler = getBusinessAddressCheck.options.pre[0]
+          const preHandler = getBusinessAddressCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -108,7 +107,7 @@ describe('business address check', () => {
 
         test('should allow access when session field has false (falsy but valid)', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessAddress: false }) } }
-          const preHandler = getBusinessAddressCheck.options.pre[0]
+          const preHandler = getBusinessAddressCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -120,7 +119,7 @@ describe('business address check', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = getBusinessAddressCheck.options.pre[0]
+          const preHandler = getBusinessAddressCheck.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/business-details')
@@ -155,15 +154,15 @@ describe('business address check', () => {
         expect(postBusinessAddressCheck.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessAddressCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(postBusinessAddressCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
-        test('should have the pre-handler defined', () => {
-          const preHandler = postBusinessAddressCheck.options.pre[0]
-          expect(preHandler).toBeDefined()
-          expect(preHandler.method).toBeDefined()
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = postBusinessAddressCheck.options.pre[0]
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
         })
 
         test('should redirect to /business-details when session data is missing', async () => {
@@ -172,7 +171,7 @@ describe('business address check', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = postBusinessAddressCheck.options.pre[0]
+          const preHandler = postBusinessAddressCheck.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/business-details')
@@ -183,7 +182,7 @@ describe('business address check', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }) }
 
-          const preHandler = postBusinessAddressCheck.options.pre[0]
+          const preHandler = postBusinessAddressCheck.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(sessionRequest.yar.get).toHaveBeenCalledWith('businessDetailsUpdate')
@@ -191,7 +190,7 @@ describe('business address check', () => {
 
         test('should allow access when required session field exists with valid data', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessAddress: { postcode: 'SW1A 1AA' } }) } }
-          const preHandler = postBusinessAddressCheck.options.pre[0]
+          const preHandler = postBusinessAddressCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -199,7 +198,7 @@ describe('business address check', () => {
 
         test('should allow access when session field has empty string (falsy but valid)', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessAddress: '' }) } }
-          const preHandler = postBusinessAddressCheck.options.pre[0]
+          const preHandler = postBusinessAddressCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -207,7 +206,7 @@ describe('business address check', () => {
 
         test('should allow access when session field has false (falsy but valid)', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessAddress: false }) } }
-          const preHandler = postBusinessAddressCheck.options.pre[0]
+          const preHandler = postBusinessAddressCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -219,10 +218,11 @@ describe('business address check', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = postBusinessAddressCheck.options.pre[0]
+          const preHandler = postBusinessAddressCheck.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/business-details')
+          expect(takeoverFn).toHaveBeenCalled()
         })
       })
 

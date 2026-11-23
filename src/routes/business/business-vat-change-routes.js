@@ -3,12 +3,14 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessVatChangePresenter } from '../../presenters/business/business-vat-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessVatChange = {
   method: 'GET',
   path: '/business-vat-registration-number-change',
   options: {
-    auth: { scope: LEGAL_PERMISSIONS }
+    auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('vat')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,6 +26,7 @@ const postBusinessVatChange = {
   path: '/business-vat-registration-number-change',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('vat')],
     validate: {
       payload: schemas.business.vat.change,
       options: { abortEarly: false },

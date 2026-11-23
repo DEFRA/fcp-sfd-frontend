@@ -3,10 +3,14 @@ import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 import { personalPhoneNumbersChangePresenter } from '../../presenters/personal/personal-phone-numbers-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { checkPersonalFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getPersonalPhoneNumbersChange = {
   method: 'GET',
   path: '/account-phone-numbers-change',
+  options: {
+    pre: [checkPersonalFieldAccessibleGuard('phone')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalPhoneNumbers')
@@ -20,6 +24,7 @@ const postPersonalPhoneNumbersChange = {
   method: 'POST',
   path: '/account-phone-numbers-change',
   options: {
+    pre: [checkPersonalFieldAccessibleGuard('phone')],
     validate: {
       payload: schemas.personal.phone,
       options: { abortEarly: false },

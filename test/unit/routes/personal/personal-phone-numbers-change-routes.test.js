@@ -58,6 +58,14 @@ describe('personal phone numbers change', () => {
         expect(getPersonalPhoneNumbersChange.path).toBe('/account-phone-numbers-change')
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getPersonalPhoneNumbersChange.options.pre[0]
+
+        expect(getPersonalPhoneNumbersChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it fetches the data from the session', async () => {
         await getPersonalPhoneNumbersChange.handler(request, h)
 
@@ -83,6 +91,14 @@ describe('personal phone numbers change', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalPhoneNumbersChange.method).toBe('POST')
         expect(postPersonalPhoneNumbersChange.path).toBe('/account-phone-numbers-change')
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postPersonalPhoneNumbersChange.options.pre[0]
+
+        expect(postPersonalPhoneNumbersChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

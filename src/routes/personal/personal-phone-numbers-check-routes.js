@@ -2,13 +2,13 @@ import { personalPhoneNumbersCheckPresenter } from '../../presenters/personal/pe
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { updatePersonalPhoneNumbersChangeService } from '../../services/personal/update-personal-phone-numbers-change-service.js'
 import { PERSONAL_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkPersonalFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getPersonalPhoneNumbersCheck = {
   method: 'GET',
   path: '/account-phone-numbers-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers')]
+    pre: [checkPersonalFieldAccessibleGuard('phone'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,7 +24,7 @@ const postPersonalPhoneNumbersCheck = {
   method: 'POST',
   path: '/account-phone-numbers-check',
   options: {
-    pre: [checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers')]
+    pre: [checkPersonalFieldAccessibleGuard('phone'), checkSessionDataGuard(PERSONAL_JOURNEY, 'changePersonalPhoneNumbers')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request

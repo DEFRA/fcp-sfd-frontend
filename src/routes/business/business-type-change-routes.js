@@ -2,6 +2,7 @@ import { fetchBusinessDetailsService } from '../../services/business/fetch-busin
 import { businessTypeChangePresenter } from '../../presenters/business/business-type-change-presenter.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
 
+// No pre-handlers required for this route as its only purpose is to display the business type information page
 const getBusinessTypeChange = {
   method: 'GET',
   path: '/business-type-change',

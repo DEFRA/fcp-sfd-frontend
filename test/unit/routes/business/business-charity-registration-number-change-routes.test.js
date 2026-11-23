@@ -63,6 +63,14 @@ describe('business charity commission registration number change', () => {
         expect(getBusinessCharityRegistrationNumberChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessCharityRegistrationNumberChange.options.pre[0]
+
+        expect(getBusinessCharityRegistrationNumberChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchBusinessChangeService', async () => {
         await getBusinessCharityRegistrationNumberChange.handler(request, h)
 
@@ -181,6 +189,14 @@ describe('business charity commission registration number change', () => {
         expect(postBusinessCharityRegistrationNumberChange.method).toBe('POST')
         expect(postBusinessCharityRegistrationNumberChange.path).toBe('/business-charity-registration-number-change')
         expect(postBusinessCharityRegistrationNumberChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessCharityRegistrationNumberChange.options.pre[0]
+
+        expect(postBusinessCharityRegistrationNumberChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

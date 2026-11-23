@@ -57,6 +57,14 @@ describe('personal email change', () => {
         expect(getPersonalEmailChange.path).toBe('/account-email-change')
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getPersonalEmailChange.options.pre[0]
+
+        expect(getPersonalEmailChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchPersonalChangeService', async () => {
         await getPersonalEmailChange.handler(request, h)
 
@@ -82,6 +90,14 @@ describe('personal email change', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalEmailChange.method).toBe('POST')
         expect(postPersonalEmailChange.path).toBe('/account-email-change')
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postPersonalEmailChange.options.pre[0]
+
+        expect(postPersonalEmailChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

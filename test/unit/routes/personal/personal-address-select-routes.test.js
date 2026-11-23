@@ -58,14 +58,22 @@ describe('personal address select routes', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalAddressSelect.options.pre).toHaveLength(1)
+        expect(getPersonalAddressSelect.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
-        test('should have the pre-handler defined', () => {
-          const preHandler = getPersonalAddressSelect.options.pre[0]
-          expect(preHandler).toBeDefined()
-          expect(preHandler.method).toBeDefined()
+        test('should have field accessibility guard as first pre-handler', () => {
+          const fieldGuard = getPersonalAddressSelect.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
+        test('should have session data guard as second pre-handler', () => {
+          const sessionGuard = getPersonalAddressSelect.options.pre[1]
+
+          expect(sessionGuard).toBeDefined()
+          expect(sessionGuard.method).toBeDefined()
         })
 
         test('should redirect to /personal-details when session data is missing', async () => {
@@ -74,7 +82,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = getPersonalAddressSelect.options.pre[0]
+          const preHandler = getPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/personal-details')
@@ -87,7 +95,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalAddresses: [] }) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = getPersonalAddressSelect.options.pre[0]
+          const preHandler = getPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/personal-details')
@@ -99,7 +107,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalPostcode: 'SW1A 1AA' }) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = getPersonalAddressSelect.options.pre[0]
+          const preHandler = getPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/personal-details')
@@ -109,7 +117,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }) }
 
-          const preHandler = getPersonalAddressSelect.options.pre[0]
+          const preHandler = getPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(sessionRequest.yar.get).toHaveBeenCalledWith('personalDetailsUpdate')
@@ -124,7 +132,7 @@ describe('personal address select routes', () => {
               })
             }
           }
-          const preHandler = getPersonalAddressSelect.options.pre[0]
+          const preHandler = getPersonalAddressSelect.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -139,7 +147,7 @@ describe('personal address select routes', () => {
               })
             }
           }
-          const preHandler = getPersonalAddressSelect.options.pre[0]
+          const preHandler = getPersonalAddressSelect.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -151,7 +159,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = getPersonalAddressSelect.options.pre[0]
+          const preHandler = getPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/personal-details')
@@ -192,14 +200,20 @@ describe('personal address select routes', () => {
       })
 
       test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalAddressSelect.options.pre).toHaveLength(1)
+        expect(postPersonalAddressSelect.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
-        test('should have the pre-handler defined', () => {
-          const preHandler = postPersonalAddressSelect.options.pre[0]
-          expect(preHandler).toBeDefined()
-          expect(preHandler.method).toBeDefined()
+        test('should have field accessibility guard as first pre-handler', () => {
+          const fieldGuard = postPersonalAddressSelect.options.pre[0]
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
+        test('should have session data guard as second pre-handler', () => {
+          const sessionGuard = postPersonalAddressSelect.options.pre[1]
+          expect(sessionGuard).toBeDefined()
+          expect(sessionGuard.method).toBeDefined()
         })
 
         test('should redirect to /personal-details when session data is missing', async () => {
@@ -208,7 +222,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = postPersonalAddressSelect.options.pre[0]
+          const preHandler = postPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/personal-details')
@@ -219,7 +233,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const h = { redirect: vi.fn().mockReturnValue({ takeover: vi.fn() }) }
 
-          const preHandler = postPersonalAddressSelect.options.pre[0]
+          const preHandler = postPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(sessionRequest.yar.get).toHaveBeenCalledWith('personalDetailsUpdate')
@@ -234,7 +248,7 @@ describe('personal address select routes', () => {
               })
             }
           }
-          const preHandler = postPersonalAddressSelect.options.pre[0]
+          const preHandler = postPersonalAddressSelect.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {})
 
           expect(preResponse).toBe(true)
@@ -246,7 +260,7 @@ describe('personal address select routes', () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue(null) } }
           const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
 
-          const preHandler = postPersonalAddressSelect.options.pre[0]
+          const preHandler = postPersonalAddressSelect.options.pre[1]
           await preHandler.method(sessionRequest, h)
 
           expect(redirectFn).toHaveBeenCalledWith('/personal-details')

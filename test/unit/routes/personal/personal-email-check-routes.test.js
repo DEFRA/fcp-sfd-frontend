@@ -50,15 +50,22 @@ describe('personal email check', () => {
         expect(getPersonalEmailCheck.path).toBe('/account-email-check')
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(getPersonalEmailCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(getPersonalEmailCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = getPersonalEmailCheck.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
         test('should redirect to /personal-details when session data is missing', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const redirectStub = {}
-          const preHandler = getPersonalEmailCheck.options.pre[0]
+          const preHandler = getPersonalEmailCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {
             redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
           })
@@ -68,7 +75,7 @@ describe('personal email check', () => {
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalEmail: 'test@example.com' }) } }
-          const preHandler = getPersonalEmailCheck.options.pre[0]
+          const preHandler = getPersonalEmailCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)
@@ -102,15 +109,22 @@ describe('personal email check', () => {
         expect(postPersonalEmailCheck.path).toBe('/account-email-check')
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(postPersonalEmailCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(postPersonalEmailCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = postPersonalEmailCheck.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
         test('should redirect to /personal-details when session data is missing', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const redirectStub = {}
-          const preHandler = postPersonalEmailCheck.options.pre[0]
+          const preHandler = postPersonalEmailCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {
             redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
           })
@@ -120,7 +134,7 @@ describe('personal email check', () => {
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changePersonalEmail: 'test@example.com' }) } }
-          const preHandler = postPersonalEmailCheck.options.pre[0]
+          const preHandler = postPersonalEmailCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)

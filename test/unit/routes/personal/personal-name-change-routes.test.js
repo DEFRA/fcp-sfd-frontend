@@ -58,6 +58,14 @@ describe('personal name change', () => {
         expect(getPersonalNameChange.path).toBe('/account-name-change')
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getPersonalNameChange.options.pre[0]
+
+        expect(getPersonalNameChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it fetches the data from the session', async () => {
         await getPersonalNameChange.handler(request, h)
 
@@ -87,6 +95,14 @@ describe('personal name change', () => {
       test('should have the correct method and path configured', () => {
         expect(postPersonalNameChange.method).toBe('POST')
         expect(postPersonalNameChange.path).toBe('/account-name-change')
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postPersonalNameChange.options.pre[0]
+
+        expect(postPersonalNameChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

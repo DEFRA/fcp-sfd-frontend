@@ -73,6 +73,14 @@ describe('business address change routes', () => {
         expect(getBusinessAddressChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessAddressChange.options.pre[0]
+
+        expect(getBusinessAddressChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchBusinessChangeService', async () => {
         await getBusinessAddressChange.handler(request, h)
 
@@ -103,6 +111,14 @@ describe('business address change routes', () => {
         expect(postBusinessAddressChange.method).toBe('POST')
         expect(postBusinessAddressChange.path).toBe('/business-address-change')
         expect(postBusinessAddressChange.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessAddressChange.options.pre[0]
+
+        expect(postBusinessAddressChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

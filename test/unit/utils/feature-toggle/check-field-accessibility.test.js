@@ -76,11 +76,11 @@ describe('checkFieldAccessibility', () => {
         },
         vat: {
           toggleName: 'updateBusinessDetailsVat',
-          displayName: 'business VAT registration number'
+          displayName: 'VAT registration number'
         },
         registrationNumber: {
           toggleName: 'updateBusinessDetailsRegistrationNumber',
-          displayName: 'business registration number'
+          displayName: 'registration number'
         }
       })
     })
@@ -429,7 +429,7 @@ describe('checkFieldAccessibility', () => {
 
     test('returns the display name for "vat"', () => {
       const displayName = getBusinessFieldDisplayName('vat')
-      expect(displayName).toBe('business VAT registration number')
+      expect(displayName).toBe('VAT registration number')
     })
 
     test('throws an error for unknown fields', () => {
@@ -548,7 +548,7 @@ describe('checkFieldAccessibility', () => {
 
         expect(result).toEqual({
           field: 'vat',
-          displayName: 'business VAT registration number'
+          displayName: 'VAT registration number'
         })
       })
     })

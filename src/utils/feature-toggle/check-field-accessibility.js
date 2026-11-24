@@ -47,11 +47,11 @@ const BUSINESS_FIELDS = {
   },
   vat: {
     toggleName: 'updateBusinessDetailsVat',
-    displayName: 'business VAT registration number'
+    displayName: 'VAT registration number'
   },
   registrationNumber: {
     toggleName: 'updateBusinessDetailsRegistrationNumber',
-    displayName: 'business registration number'
+    displayName: 'registration number'
   }
 }
 

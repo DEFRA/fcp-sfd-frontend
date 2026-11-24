@@ -5,7 +5,7 @@
 
 import { services } from '@defra/fcp-sfd-frontend-engine'
 import { checkBusinessPermissionGroupService } from '../services/business/check-business-permission-group-service.js'
-import { LEGAL_ONLY_FIX_SECTIONS, PERMISSION_GROUP } from '../constants/scope/business-details.js'
+import { LEGAL_ONLY_BUSINESS_SECTIONS, PERMISSION_GROUP } from '../constants/scope/business-details.js'
 import { isBusinessFieldAccessible, isPersonalFieldAccessible } from '../utils/feature-toggle/check-field-accessibility.js'
 
 /**
@@ -183,7 +183,7 @@ export const checkBusinessFixPermissionsPreHandler = (journey) => {
       // The fix journey adds `source` to the sections to fix when it starts, so it must be checked too
       const allSectionsToCheck = sectionsNeedingUpdate.concat(orderedSectionsToFix, query?.source ?? [])
 
-      const requiresLegalPermission = allSectionsToCheck.some(section => LEGAL_ONLY_FIX_SECTIONS.includes(section))
+      const requiresLegalPermission = allSectionsToCheck.some(section => LEGAL_ONLY_BUSINESS_SECTIONS.includes(section))
 
       if (requiresLegalPermission) {
         return h.redirect(journey.redirectPath).takeover()

@@ -6,6 +6,54 @@
 import { services } from '@defra/fcp-sfd-frontend-engine'
 import { checkBusinessPermissionGroupService } from '../services/business/check-business-permission-group-service.js'
 import { LEGAL_ONLY_FIX_SECTIONS, PERMISSION_GROUP } from '../constants/scope/business-details.js'
+import { isBusinessFieldAccessible, isPersonalFieldAccessible } from '../utils/feature-toggle/check-field-accessibility.js'
+
+/**
+ * Creates a pre-handler that blocks a business journey route when its field is switched off by a feature toggle.
+ * Redirects to the business details page, which shows the disabled-field notification.
+ *
+ * Note: Hapi validates payloads before `options.pre`, so an invalid POST to a disabled field
+ * returns the form with a 400 from `failAction` rather than redirecting. This is a known and accepted
+ * trade-off: the handler never runs so nothing is saved, and genuine users navigate via GET, which is
+ * redirected correctly. The toggle only steers users away from error pages when an upstream issue is known.
+ *
+ * @param {string} field - The business field to check (name, address, phone, email, vat, registrationNumber)
+ * @returns {Object} Hapi pre-handler object
+ */
+export const checkBusinessFieldAccessibleGuard = (field) => {
+  return {
+    method: (_request, h) => {
+      if (!isBusinessFieldAccessible(field)) {
+        return h.redirect('/business-details').takeover()
+      }
+
+      return true
+    }
+  }
+}
+
+/**
+ * Creates a pre-handler that blocks a personal journey route when its field is switched off by a feature toggle.
+ * Redirects to the personal details page, which shows the disabled-field notification.
+ *
+ * Note: Hapi validates payloads before `options.pre`, so an invalid POST to a disabled field
+ * returns the form with a 400 from `failAction` rather than redirecting. See
+ * `checkBusinessFieldAccessibleGuard` for why this is accepted.
+ *
+ * @param {string} field - The personal field to check (name, dob, address, phone, email)
+ * @returns {Object} Hapi pre-handler object
+ */
+export const checkPersonalFieldAccessibleGuard = (field) => {
+  return {
+    method: (_request, h) => {
+      if (!isPersonalFieldAccessible(field)) {
+        return h.redirect('/personal-details').takeover()
+      }
+
+      return true
+    }
+  }
+}
 
 /**
  * Creates a pre-handler that validates required session data exists before allowing access to a route.

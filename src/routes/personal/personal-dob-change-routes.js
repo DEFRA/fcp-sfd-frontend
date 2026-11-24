@@ -3,10 +3,14 @@ import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
 import { personalDobChangePresenter } from '../../presenters/personal/personal-dob-change-presenter.js'
 import { fetchPersonalChangeService } from '../../services/personal/fetch-personal-change-service.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
+import { checkPersonalFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getPersonalDobChange = {
   method: 'GET',
   path: '/account-date-of-birth-change',
+  options: {
+    pre: [checkPersonalFieldAccessibleGuard('dob')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalDob')
@@ -19,6 +23,7 @@ const postPersonalDobChange = {
   method: 'POST',
   path: '/account-date-of-birth-change',
   options: {
+    pre: [checkPersonalFieldAccessibleGuard('dob')],
     validate: {
       payload: schemas.personal.dob,
       options: { abortEarly: false },

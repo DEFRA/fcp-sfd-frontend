@@ -1,28 +1,27 @@
 // Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
-// Things we need to mock
-import { mapPermissions } from '../../../src/mappers/permissions-mapper.js'
-import { permissionsQuery } from '../../../src/dal/queries/permissions-query.js'
-
-// Test helpers
-import { getDalData, getMappedData } from '../../mocks/mock-permissions.js'
-
+// Mocks
 const mockDalConnector = { query: vi.fn() }
 
 vi.mock('../../../src/dal/connector.js', () => ({
   getDalConnector: vi.fn(() => mockDalConnector)
 }))
 
-vi.mock('../../../src/mappers/permissions-mapper.js', () => ({
-  mapPermissions: vi.fn()
-}))
-
 vi.mock('../../../src/dal/queries/permissions-query.js', () => ({
   permissionsQuery: vi.fn()
 }))
 
-// Thing under test
+vi.mock('../../../src/mappers/permissions-mapper.js', () => ({
+  mapPermissions: vi.fn()
+}))
+
+// Test helpers
+import { getDalData, getMappedData } from '../../mocks/mock-permissions.js'
+import { mapPermissions } from '../../../src/mappers/permissions-mapper.js'
+import { permissionsQuery } from '../../../src/dal/queries/permissions-query.js'
+
+// Things under test
 const { getPermissions } = await import('../../../src/auth/get-permissions.js')
 
 let sbi

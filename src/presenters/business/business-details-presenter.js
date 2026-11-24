@@ -3,11 +3,12 @@
  * @module businessDetailsPresenter
  */
 
-import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
-import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
-import { REGISTRATION_NUMBER_CHANGE_LINKS } from '../../constants/change-links.js'
+// Permissions
 import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 
+// Presenters and constants
+import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
+import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
 
@@ -22,54 +23,73 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
-    pageTitle: permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details',
+    pageTitle: getPageTitle(permissionLevel),
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
     permissionsText: setPermissionsText(permissionLevel),
-    businessAddress: {
-      value: formatAddress(data.address),
-      changeLink: changeLinks.businessAddress,
-      action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
-    },
-    businessName: {
-      value: data.businessName || NOT_ADDED_TEXT,
-      changeLink: changeLinks.businessName,
-      action: presenters.getActionText(data.businessName)
-    },
-    businessTelephone: {
-      telephone: data.landline || NOT_ADDED_TEXT,
-      mobile: data.mobile || NOT_ADDED_TEXT,
-      action: presenters.getActionText(data.landline || data.mobile),
-      changeLink: changeLinks.businessTelephone
-    },
-    businessEmail: {
-      value: data.email || NOT_ADDED_TEXT,
-      action: presenters.getActionText(data.email),
-      changeLink: changeLinks.businessEmail
-    },
+    businessAddress: buildBusinessAddressField(data, changeLinks),
+    businessName: buildBusinessNameField(data, changeLinks),
+    businessTelephone: buildBusinessTelephoneField(data, changeLinks),
+    businessEmail: buildBusinessEmailField(data, changeLinks),
     sbi: data.sbi,
     vatNumber: buildVatDisplay(data.vat, changeLinks.vat),
     tradeNumber: data.traderNumber ?? null,
     vendorNumber: data.vendorNumber ?? null,
     countyParishHoldingNumbers,
     countyParishHoldingNumbersText: presenters.formatCphText(countyParishHoldingNumbers.length),
-    businessLegalStatus: {
-      value: data.legalStatus ?? NOT_ADDED_TEXT,
-      action: presenters.getActionText(data.legalStatus),
-      changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? BUSINESS_CHANGE_LINKS.businessLegalStatus : null
-    },
+    businessLegalStatus: buildLegalStatusField(data, permissionLevel),
     legalStatusRegistrationNumber: buildLegalStatusRegistrationNumberDisplay(data, permissionLevel),
-    businessType: {
-      value: data.type ?? NOT_ADDED_TEXT,
-      action: presenters.getActionText(data.type),
-      changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? BUSINESS_CHANGE_LINKS.businessType : null
-    }
+    businessType: buildBusinessTypeField(data, permissionLevel)
   }
 }
 
-const formatAddress = (businessAddress) => {
-  const lines = presenters.formatBusinessAddress(businessAddress)
-  return lines.length > 0 ? lines : NOT_ADDED_TEXT
+const buildBusinessAddressField = (data, changeLinks) => {
+  return {
+    value: formatAddress(data.address),
+    changeLink: changeLinks.businessAddress,
+    action: presenters.getActionText(data.address?.lookup?.uprn || data.address?.manual?.line1)
+  }
+}
+
+const buildBusinessEmailField = (data, changeLinks) => {
+  return {
+    value: data.email || NOT_ADDED_TEXT,
+    action: presenters.getActionText(data.email),
+    changeLink: changeLinks.businessEmail
+  }
+}
+
+const buildBusinessNameField = (data, changeLinks) => {
+  return {
+    value: data.businessName || NOT_ADDED_TEXT,
+    changeLink: changeLinks.businessName,
+    action: presenters.getActionText(data.businessName)
+  }
+}
+
+const buildBusinessTelephoneField = (data, changeLinks) => {
+  return {
+    telephone: data.landline || NOT_ADDED_TEXT,
+    mobile: data.mobile || NOT_ADDED_TEXT,
+    action: presenters.getActionText(data.landline || data.mobile),
+    changeLink: changeLinks.businessTelephone
+  }
+}
+
+const buildBusinessTypeField = (data, permissionLevel) => {
+  return {
+    value: data.type ?? NOT_ADDED_TEXT,
+    action: presenters.getActionText(data.type),
+    changeLink: getLegalOnlyChangeLink(permissionLevel, BUSINESS_CHANGE_LINKS.businessType)
+  }
+}
+
+const buildLegalStatusField = (data, permissionLevel) => {
+  return {
+    value: data.legalStatus ?? NOT_ADDED_TEXT,
+    action: presenters.getActionText(data.legalStatus),
+    changeLink: getLegalOnlyChangeLink(permissionLevel, BUSINESS_CHANGE_LINKS.businessLegalStatus)
+  }
 }
 
 /**
@@ -96,11 +116,11 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
   if (constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Charity commission registration number'
     number = registrationNumbers.charityCommission
-    changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCharityRegistrationNumber
+    changeLink = BUSINESS_CHANGE_LINKS.businessCharityRegistrationNumber
   } else if (constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)) {
     label = 'Company registration number'
     number = registrationNumbers.companiesHouse
-    changeLink = REGISTRATION_NUMBER_CHANGE_LINKS.businessCompanyRegistrationNumber
+    changeLink = BUSINESS_CHANGE_LINKS.businessCompanyRegistrationNumber
   } else {
     return null
   }
@@ -109,7 +129,7 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
     label,
     value: number || NOT_ADDED_TEXT,
     action: presenters.getActionText(number),
-    changeLink: permissionLevel === PERMISSION_GROUP.LEGAL ? changeLink : null
+    changeLink: getLegalOnlyChangeLink(permissionLevel, changeLink)
   }
 }
 
@@ -139,7 +159,6 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
 const buildVatDisplay = (vatNumber, vatChangeState) => {
   const hasVat = Boolean(vatNumber)
   const value = vatNumber || NOT_ADDED_TEXT
-  const linkStyling = 'govuk-link--no-visited-state'
 
   // If no vatChangeState it means the user does not have permission to change VAT details
   if (!vatChangeState) {
@@ -166,22 +185,7 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
     return {
       value: vatNumber,
       action: 'Change',
-      changeLink: {
-        items: [
-          {
-            href: changeLink,
-            text: 'Change',
-            visuallyHiddenText: 'VAT registration number',
-            classes: linkStyling
-          },
-          {
-            href: changeLink,
-            text: 'Remove',
-            visuallyHiddenText: 'VAT registration number',
-            classes: linkStyling
-          }
-        ]
-      }
+      changeLink: buildVatLinks(changeLink, changeLink)
     }
   }
 
@@ -197,23 +201,34 @@ const buildVatDisplay = (vatNumber, vatChangeState) => {
   return {
     value,
     action: 'Change',
-    changeLink: {
-      items: [
-        {
-          href: BUSINESS_CHANGE_LINKS.businessVat,
-          text: 'Change',
-          visuallyHiddenText: 'VAT registration number',
-          classes: linkStyling
-        },
-        {
-          href: BUSINESS_CHANGE_LINKS.businessVatRemove,
-          text: 'Remove',
-          visuallyHiddenText: 'VAT registration number',
-          classes: linkStyling
-        }
-      ]
-    }
+    changeLink: buildVatLinks(BUSINESS_CHANGE_LINKS.businessVat, BUSINESS_CHANGE_LINKS.businessVatRemove)
   }
+}
+
+const buildVatLinks = (changeHref, removeHref) => {
+  const classes = 'govuk-link--no-visited-state'
+  const visuallyHiddenText = 'VAT registration number'
+
+  return {
+    items: [
+      { href: changeHref, text: 'Change', visuallyHiddenText, classes },
+      { href: removeHref, text: 'Remove', visuallyHiddenText, classes }
+    ]
+  }
+}
+
+const formatAddress = (businessAddress) => {
+  const lines = presenters.formatBusinessAddress(businessAddress)
+  return lines.length > 0 ? lines : NOT_ADDED_TEXT
+}
+
+// Only users with the legal permission level can change these fields
+const getLegalOnlyChangeLink = (permissionLevel, changeLink) => {
+  return permissionLevel === PERMISSION_GROUP.LEGAL ? changeLink : null
+}
+
+const getPageTitle = (permissionLevel) => {
+  return permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details'
 }
 
 const setPermissionsText = (permissionLevel) => {

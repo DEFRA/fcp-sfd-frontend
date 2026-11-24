@@ -3,12 +3,14 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessCompanyRegistrationNumberChangePresenter } from '../../presenters/business/business-company-registration-number-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { LEGAL_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessCompanyRegistrationNumberChange = {
   method: 'GET',
   path: '/business-company-registration-number-change',
   options: {
-    auth: { scope: LEGAL_PERMISSIONS }
+    auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('registrationNumber')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -30,6 +32,7 @@ const postBusinessCompanyRegistrationNumberChange = {
   path: '/business-company-registration-number-change',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('registrationNumber')],
     validate: {
       payload: schemas.business.legalStatusRegistration.company,
       options: { abortEarly: false },

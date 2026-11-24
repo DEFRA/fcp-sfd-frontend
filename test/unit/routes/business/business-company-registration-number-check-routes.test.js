@@ -56,15 +56,22 @@ describe('business company registration number check', () => {
         expect(getBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(getBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
       })
 
       describe('pre-handler execution', () => {
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = getBusinessCompanyRegistrationNumberCheck.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
         test('should redirect to /business-details when session data is missing', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
           const redirectStub = {}
-          const preHandler = getBusinessCompanyRegistrationNumberCheck.options.pre[0]
+          const preHandler = getBusinessCompanyRegistrationNumberCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, {
             redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
           })
@@ -74,7 +81,7 @@ describe('business company registration number check', () => {
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessCompanyRegistrationNumber: '12345678' }) } }
-          const preHandler = getBusinessCompanyRegistrationNumberCheck.options.pre[0]
+          const preHandler = getBusinessCompanyRegistrationNumberCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)
@@ -204,8 +211,30 @@ describe('business company registration number check', () => {
         expect(postBusinessCompanyRegistrationNumberCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(postBusinessCompanyRegistrationNumberCheck.options.pre).toHaveLength(2)
+      })
+
+      describe('pre-handler execution', () => {
+        test('should have a field accessibility guard pre-handler', () => {
+          const fieldGuard = postBusinessCompanyRegistrationNumberCheck.options.pre[0]
+
+          expect(fieldGuard).toBeDefined()
+          expect(fieldGuard.method).toBeDefined()
+        })
+
+        test('should redirect to /business-details when session data is missing', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = postBusinessCompanyRegistrationNumberCheck.options.pre[1]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+          expect(takeoverFn).toHaveBeenCalled()
+        })
       })
 
       test('it redirects to the /business-details page', async () => {

@@ -4,14 +4,14 @@ import { businessAddressSelectPresenter } from '../../presenters/business/busine
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
 import { BUSINESS_JOURNEY } from '../../constants/journeys.js'
-import { checkSessionDataGuard } from '../pre-handlers.js'
+import { checkBusinessFieldAccessibleGuard, checkSessionDataGuard } from '../pre-handlers.js'
 
 const getBusinessAddressSelect = {
   method: 'GET',
   path: '/business-address-select',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])]
+    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -28,7 +28,7 @@ const postBusinessAddressSelect = {
   path: '/business-address-select',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
-    pre: [checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])],
+    pre: [checkBusinessFieldAccessibleGuard('address'), checkSessionDataGuard(BUSINESS_JOURNEY, ['changeBusinessPostcode', 'changeBusinessAddresses'])],
     validate: {
       payload: schemas.osPlaces.addresses,
       options: { abortEarly: false },

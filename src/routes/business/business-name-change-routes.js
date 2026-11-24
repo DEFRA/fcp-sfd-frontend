@@ -1,4 +1,5 @@
 import { utils, schemas, constants } from '@defra/fcp-sfd-frontend-engine'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 import { fetchBusinessChangeService } from '../../services/business/fetch-business-change-service.js'
 import { businessNameChangePresenter } from '../../presenters/business/business-name-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
@@ -8,7 +9,8 @@ const getBusinessNameChange = {
   method: 'GET',
   path: '/business-name-change',
   options: {
-    auth: { scope: LEGAL_PERMISSIONS }
+    auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('name')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,6 +26,7 @@ const postBusinessNameChange = {
   path: '/business-name-change',
   options: {
     auth: { scope: LEGAL_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('name')],
     validate: {
       payload: schemas.business.details.name,
       options: { abortEarly: false },

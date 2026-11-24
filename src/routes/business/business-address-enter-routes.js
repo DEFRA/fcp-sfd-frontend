@@ -3,12 +3,14 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessAddressEnterPresenter } from '../../presenters/business/business-address-enter-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessAddressEnter = {
   method: 'GET',
   path: '/business-address-enter',
   options: {
-    auth: { scope: AMEND_PERMISSIONS }
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('address')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,6 +26,7 @@ const postBusinessAddressEnter = {
   path: '/business-address-enter',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('address')],
     validate: {
       payload: schemas.business.details.address,
       options: { abortEarly: false },

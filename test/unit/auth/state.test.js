@@ -1,15 +1,20 @@
-import crypto from 'node:crypto'
+// Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 
-const cryptoSpy = vi.spyOn(crypto, 'randomUUID')
-
+// Mocks
 const mockSet = vi.fn()
 const mockGet = vi.fn()
 const mockClear = vi.fn()
 
+// Test helpers
+import crypto from 'node:crypto'
+
+const cryptoSpy = vi.spyOn(crypto, 'randomUUID')
+
 const mockRequest = { yar: { set: mockSet, get: mockGet, clear: mockClear } }
 let mockState
 
+// Things under test
 const { createState, validateState } = await import('../../../src/auth/state.js')
 
 beforeEach(() => {

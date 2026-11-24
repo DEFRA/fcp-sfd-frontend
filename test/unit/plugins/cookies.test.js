@@ -2,6 +2,7 @@ import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { vi, beforeEach, describe, test, expect } from 'vitest'
 import { getCurrentPolicy, removeAnalytics } from '../../../src/utils/cookies.js'
 
+// Mocks
 const mockConfigGet = vi.fn()
 vi.mock('../../../src/config/index.js', () => ({
   config: {
@@ -14,6 +15,7 @@ vi.mock('../../../src/utils/cookies.js', () => ({
   removeAnalytics: vi.fn()
 }))
 
+// Things under test
 let cookiesPlugin
 
 describe('cookies plugin', () => {

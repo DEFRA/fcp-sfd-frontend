@@ -62,6 +62,14 @@ describe('business VAT change', () => {
         expect(getBusinessVatChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessVatChange.options.pre[0]
+
+        expect(getBusinessVatChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
       test('it calls fetchBusinessChangeService', async () => {
         await getBusinessVatChange.handler(request, h)
 
@@ -88,6 +96,14 @@ describe('business VAT change', () => {
         expect(postBusinessVatChange.method).toBe('POST')
         expect(postBusinessVatChange.path).toBe('/business-vat-registration-number-change')
         expect(postBusinessVatChange.options.auth.scope).toBe(LEGAL_PERMISSIONS)
+      })
+
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessVatChange.options.pre[0]
+
+        expect(postBusinessVatChange.options.pre).toHaveLength(1)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
       })
 
       describe('and the validation passes', () => {

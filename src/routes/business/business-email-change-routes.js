@@ -3,12 +3,14 @@ import { fetchBusinessChangeService } from '../../services/business/fetch-busine
 import { businessEmailChangePresenter } from '../../presenters/business/business-email-change-presenter.js'
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
+import { checkBusinessFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getBusinessEmailChange = {
   method: 'GET',
   path: '/business-email-change',
   options: {
-    auth: { scope: AMEND_PERMISSIONS }
+    auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('email')]
   },
   handler: async (request, h) => {
     const { yar, auth } = request
@@ -24,6 +26,7 @@ const postBusinessEmailChange = {
   path: '/business-email-change',
   options: {
     auth: { scope: AMEND_PERMISSIONS },
+    pre: [checkBusinessFieldAccessibleGuard('email')],
     validate: {
       payload: schemas.business.details.email,
       options: {

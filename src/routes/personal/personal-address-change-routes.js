@@ -4,10 +4,14 @@ import { personalAddressChangePresenter } from '../../presenters/personal/person
 import { setSessionData } from '../../utils/session/set-session-data.js'
 import { addressLookupService } from '../../services/os-places/address-lookup-service.js'
 import { personalAddressChangeErrorService } from '../../services/personal/personal-address-change-error-service.js'
+import { checkPersonalFieldAccessibleGuard } from '../pre-handlers.js'
 
 const getPersonalAddressChange = {
   method: 'GET',
   path: '/account-address-change',
+  options: {
+    pre: [checkPersonalFieldAccessibleGuard('address')]
+  },
   handler: async (request, h) => {
     const { yar, auth } = request
     const personalDetails = await fetchPersonalChangeService(yar, auth.credentials, 'changePersonalPostcode')
@@ -21,6 +25,7 @@ const postPersonalAddressChange = {
   method: 'POST',
   path: '/account-address-change',
   options: {
+    pre: [checkPersonalFieldAccessibleGuard('address')],
     validate: {
       payload: schemas.osPlaces.ukPostcode,
       options: { abortEarly: false },

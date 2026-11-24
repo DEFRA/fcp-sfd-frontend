@@ -55,25 +55,34 @@ describe('business name check', () => {
         expect(getBusinessNameCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(getBusinessNameCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(getBusinessNameCheck.options.pre).toHaveLength(2)
       })
 
-      describe('pre-handler execution', () => {
-        test('should redirect to /business-details when session data is missing', async () => {
-          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
-          const redirectStub = {}
-          const preHandler = getBusinessNameCheck.options.pre[0]
-          const preResponse = await preHandler.method(sessionRequest, {
-            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
-          })
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = getBusinessNameCheck.options.pre[0]
 
-          expect(preResponse).toBe(redirectStub)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
+      describe('session data guard execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = getBusinessNameCheck.options.pre[1]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+          expect(takeoverFn).toHaveBeenCalled()
         })
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessName: 'New Name Ltd' }) } }
-          const preHandler = getBusinessNameCheck.options.pre[0]
+          const preHandler = getBusinessNameCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)
@@ -108,25 +117,34 @@ describe('business name check', () => {
         expect(postBusinessNameCheck.options.auth.scope).toBe(LEGAL_PERMISSIONS)
       })
 
-      test('should have a pre-handler to guard against missing session data', () => {
-        expect(postBusinessNameCheck.options.pre).toHaveLength(1)
+      test('should have pre-handlers to guard field access and session data', () => {
+        expect(postBusinessNameCheck.options.pre).toHaveLength(2)
       })
 
-      describe('pre-handler execution', () => {
-        test('should redirect to /business-details when session data is missing', async () => {
-          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
-          const redirectStub = {}
-          const preHandler = postBusinessNameCheck.options.pre[0]
-          const preResponse = await preHandler.method(sessionRequest, {
-            redirect: vi.fn().mockReturnValue({ takeover: vi.fn().mockReturnValue(redirectStub) })
-          })
+      test('should have a field accessibility guard pre-handler', () => {
+        const fieldGuard = postBusinessNameCheck.options.pre[0]
 
-          expect(preResponse).toBe(redirectStub)
+        expect(fieldGuard).toBeDefined()
+        expect(fieldGuard.method).toBeDefined()
+      })
+
+      describe('session data guard execution', () => {
+        test('should redirect to /business-details when session data is missing', async () => {
+          const redirectFn = vi.fn()
+          const takeoverFn = vi.fn().mockReturnValue({})
+          const sessionRequest = { yar: { get: vi.fn().mockReturnValue({}) } }
+          const h = { redirect: redirectFn.mockReturnValue({ takeover: takeoverFn }) }
+
+          const preHandler = postBusinessNameCheck.options.pre[1]
+          await preHandler.method(sessionRequest, h)
+
+          expect(redirectFn).toHaveBeenCalledWith('/business-details')
+          expect(takeoverFn).toHaveBeenCalled()
         })
 
         test('should allow access when required session field exists', async () => {
           const sessionRequest = { yar: { get: vi.fn().mockReturnValue({ changeBusinessName: 'New Name Ltd' }) } }
-          const preHandler = postBusinessNameCheck.options.pre[0]
+          const preHandler = postBusinessNameCheck.options.pre[1]
           const preResponse = await preHandler.method(sessionRequest, { continue: {} })
 
           expect(preResponse).toBe(true)

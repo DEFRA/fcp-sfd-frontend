@@ -93,6 +93,86 @@ describe('businessDetailsChangeLinksPresenter', () => {
       })
     })
 
+    describe('and the user has blocked sections and a field is disabled by a feature toggle', () => {
+      beforeEach(() => {
+        sectionsNeedingUpdate = ['name'] // Amend cannot update 'name'
+      })
+
+      describe('and the address toggle is disabled', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockImplementation((fieldName) => {
+            return fieldName !== 'address'
+          })
+        })
+
+        test('it hides the address link and keeps the other placeholder links', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: null,
+            businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            vat: null
+          })
+        })
+      })
+
+      describe('and the phone toggle is disabled', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockImplementation((fieldName) => {
+            return fieldName !== 'phone'
+          })
+        })
+
+        test('it hides the phone link and keeps the other placeholder links', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessTelephone: null,
+            businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            vat: null
+          })
+        })
+      })
+
+      describe('and the email toggle is disabled', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockImplementation((fieldName) => {
+            return fieldName !== 'email'
+          })
+        })
+
+        test('it hides the email link and keeps the other placeholder links', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessEmail: null,
+            vat: null
+          })
+        })
+      })
+
+      describe('and the parent toggle disables all business updates', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockReturnValue(false)
+        })
+
+        test('it hides every link', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: null,
+            businessTelephone: null,
+            businessEmail: null,
+            vat: null
+          })
+        })
+      })
+    })
+
     describe('when the interrupter feature toggle is ON', () => {
       beforeEach(() => {
         config.get.mockReturnValue(true)

@@ -44,9 +44,9 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
 
   if (hasBlockedSections(permissionLevel, sectionsNeedingUpdate)) {
     return {
-      businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
-      businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
-      businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+      businessAddress: resolveNoPermissionLink('address'),
+      businessTelephone: resolveNoPermissionLink('phone'),
+      businessEmail: resolveNoPermissionLink('email'),
       vat: null
     }
   }
@@ -112,6 +112,19 @@ const resolveChangeLink = (interrupter, section, normalLink, fieldName) => {
   }
 
   return interrupter.singleSection === section ? normalLink : `/business-fix?source=${section}`
+}
+
+/**
+ * Works out the change link for a section the user is blocked from fixing.
+ * A field disabled by feature toggle has no link, otherwise the user is sent
+ * to the page explaining they do not have permission.
+ */
+const resolveNoPermissionLink = (fieldName) => {
+  if (!isBusinessFieldAccessible(fieldName)) {
+    return null
+  }
+
+  return BUSINESS_CHANGE_LINKS.businessFixNameNoPermission
 }
 
 /**

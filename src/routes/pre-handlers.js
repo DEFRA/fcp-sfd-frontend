@@ -169,6 +169,7 @@ export const checkBusinessFixPermissionsPreHandler = (journey) => {
 
       const permissionGroup = checkBusinessPermissionGroupService(auth.credentials.scope)
 
+      // The legal group covers both make legal changes and full permission
       if (permissionGroup === PERMISSION_GROUP.LEGAL) {
         return true
       }

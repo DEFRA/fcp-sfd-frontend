@@ -5,6 +5,7 @@
   {% if disabledFieldNotification %}
     {{ govukNotificationBanner({
       titleText: disabledFieldNotification.titleText,
+      titleId: "disabled-field-banner-title",
       text: disabledFieldNotification.text
     }) }}
   {% endif %}

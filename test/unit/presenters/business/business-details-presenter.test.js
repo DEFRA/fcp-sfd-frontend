@@ -14,9 +14,17 @@ import { getMappedData } from '../../../mocks/mock-business-details.js'
 // Mock dependencies
 import { businessDetailsChangeLinksPresenter } from '../../../../src/presenters/business/business-details-change-links-presenter.js'
 
+import { findDisabledBusinessField, getDisabledFieldNotification, isBusinessFieldAccessible } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
+
 // Mock imports
 vi.mock('../../../../src/presenters/business/business-details-change-links-presenter.js', () => ({
   businessDetailsChangeLinksPresenter: vi.fn()
+}))
+
+vi.mock('../../../../src/utils/feature-toggle/check-field-accessibility.js', () => ({
+  findDisabledBusinessField: vi.fn(),
+  getDisabledFieldNotification: vi.fn(),
+  isBusinessFieldAccessible: vi.fn()
 }))
 
 const { NOT_ADDED_TEXT } = constants
@@ -42,6 +50,10 @@ describe('businessDetailsPresenter', () => {
     hasValidBusinessDetails = true
     sectionsNeedingUpdate = []
     businessDetailsChangeLinksPresenter.mockReturnValue({ vat: null })
+
+    // Default: every field is enabled
+    findDisabledBusinessField.mockReturnValue(null)
+    isBusinessFieldAccessible.mockReturnValue(true)
   })
 
   describe('when provided with business details data and view permission level', () => {
@@ -55,6 +67,7 @@ describe('businessDetailsPresenter', () => {
         },
         businessNameHeader: data.businessName,
         notification: { title: 'Update', text: 'Business details updated successfully' },
+        disabledFieldNotification: null,
         pageTitle: 'View business details',
         metaDescription: 'View and update your business details.',
         userName: data.customer.userName,
@@ -520,6 +533,118 @@ describe('businessDetailsPresenter', () => {
         const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
 
         expect(result.notification).toEqual(null)
+      })
+    })
+  })
+
+  describe('when a feature toggle disables updates', () => {
+    beforeEach(() => {
+      permissionLevel = 'legal'
+      data.legalStatusCode = 102109
+      data.registrationNumbers = { companiesHouse: '12345678', charityCommission: null }
+    })
+
+    describe('and a field is disabled', () => {
+      beforeEach(() => {
+        findDisabledBusinessField.mockReturnValue({ field: 'email', displayName: 'business email address' })
+        getDisabledFieldNotification.mockReturnValue({ titleText: 'Important', text: 'Disabled message' })
+      })
+
+      test('it should show the disabled banner alongside the flash notification', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(getDisabledFieldNotification).toHaveBeenCalledWith('business email address')
+        expect(result.notification).toEqual({ title: 'Update', text: 'Business details updated successfully' })
+        expect(result.disabledFieldNotification).toEqual({ titleText: 'Important', text: 'Disabled message' })
+      })
+    })
+
+    describe('and the user has view permission', () => {
+      beforeEach(() => {
+        permissionLevel = PERMISSION_GROUP.VIEW
+        findDisabledBusinessField.mockReturnValue({ field: 'email', displayName: 'business email address' })
+      })
+
+      test('it should not show the disabled banner', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(findDisabledBusinessField).not.toHaveBeenCalled()
+        expect(result.disabledFieldNotification).toBeNull()
+      })
+    })
+
+    describe('and the user has amend permission', () => {
+      beforeEach(() => {
+        permissionLevel = PERMISSION_GROUP.AMEND
+        findDisabledBusinessField.mockReturnValue({ field: 'email', displayName: 'business email address' })
+        getDisabledFieldNotification.mockReturnValue({ titleText: 'Important', text: 'Disabled message' })
+      })
+
+      test('it should only check the fields amend users can update', () => {
+        businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(findDisabledBusinessField).toHaveBeenCalledWith(['address', 'phone', 'email'])
+      })
+
+      test('it should show the disabled banner', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.disabledFieldNotification).toEqual({ titleText: 'Important', text: 'Disabled message' })
+      })
+    })
+
+    describe('and the user has legal permission', () => {
+      describe('and the legal status is a company', () => {
+        test('it should check every field including the registration number', () => {
+          data.legalStatusCode = 102109
+
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat', 'registrationNumber'])
+        })
+      })
+
+      describe('and the legal status is a charity', () => {
+        test('it should check every field including the registration number', () => {
+          data.legalStatusCode = 102101
+
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat', 'registrationNumber'])
+        })
+      })
+
+      describe('and the legal status has no registration number', () => {
+        test('it should check every field except the registration number', () => {
+          data.legalStatusCode = 102111
+
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat'])
+        })
+      })
+
+      describe('and there is no legal status code', () => {
+        test('it should check every field except the registration number', () => {
+          data.legalStatusCode = null
+
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat'])
+        })
+      })
+    })
+
+    describe('and the registration number is not accessible', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockReturnValue(false)
+      })
+
+      test('it should hide the registration number change link', () => {
+        const result = businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(isBusinessFieldAccessible).toHaveBeenCalledWith('registrationNumber')
+        expect(result.legalStatusRegistrationNumber.changeLink).toBeNull()
       })
     })
   })

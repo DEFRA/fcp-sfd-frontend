@@ -2,8 +2,8 @@
  * Business details change links presenter
  *
  * This module generates the "change links" for the business details page based on the
- * user's permission level, the state of the business details, and any sections that
- * need updating.
+ * user's permission level, the state of the business details, feature toggles, and any
+ * sections that need updating.
  *
  * Key points:
  * - Users with "view" permission do not see any change links.
@@ -14,6 +14,7 @@
  * - The "business details interrupter" can step in when something is invalid,
  *   forcing the user to fix that specific section before they’re allowed to
  *   change anything else.
+ * - Feature toggles can disable individual fields or all business details updates.
  *
  * VAT handling:
  * - VAT does not return a direct link.
@@ -28,6 +29,7 @@
 import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
 import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
+import { isBusinessFieldAccessible } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
@@ -42,22 +44,22 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
 
   if (hasBlockedSections(permissionLevel, sectionsNeedingUpdate)) {
     return {
-      businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
-      businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
-      businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+      businessAddress: resolveNoPermissionLink('address'),
+      businessTelephone: resolveNoPermissionLink('phone'),
+      businessEmail: resolveNoPermissionLink('email'),
       vat: null
     }
   }
 
   const links = {
-    businessAddress: resolveChangeLink(interrupter, 'address', BUSINESS_CHANGE_LINKS.businessAddress),
-    businessTelephone: resolveChangeLink(interrupter, 'phone', BUSINESS_CHANGE_LINKS.businessPhone),
-    businessEmail: resolveChangeLink(interrupter, 'email', BUSINESS_CHANGE_LINKS.businessEmail),
+    businessAddress: resolveChangeLink(interrupter, 'address', BUSINESS_CHANGE_LINKS.businessAddress, 'address'),
+    businessTelephone: resolveChangeLink(interrupter, 'phone', BUSINESS_CHANGE_LINKS.businessPhone, 'phone'),
+    businessEmail: resolveChangeLink(interrupter, 'email', BUSINESS_CHANGE_LINKS.businessEmail, 'email'),
     vat: resolveVatLink(permissionLevel, interrupter)
   }
 
   if (permissionLevel === PERMISSION_GROUP.LEGAL) {
-    links.businessName = resolveChangeLink(interrupter, 'name', BUSINESS_CHANGE_LINKS.businessName)
+    links.businessName = resolveChangeLink(interrupter, 'name', BUSINESS_CHANGE_LINKS.businessName, 'name')
   }
 
   return links
@@ -65,12 +67,16 @@ const businessDetailsChangeLinksPresenter = (permissionLevel, hasValidBusinessDe
 
 /**
  * Determines whether VAT change links should be:
- * - null - user cannot change VAT
+ * - null - user cannot change VAT or field is disabled
  * - 'normal' - direct add/change/remove links
  * - 'interrupter' - forced via business-fix
  */
 const resolveVatLink = (permissionLevel, interrupter) => {
   if (permissionLevel !== PERMISSION_GROUP.LEGAL) {
+    return null
+  }
+
+  if (!isBusinessFieldAccessible('vat')) {
     return null
   }
 
@@ -84,20 +90,41 @@ const resolveVatLink = (permissionLevel, interrupter) => {
 /**
  * Works out which change link to show for a specific business details section.
  *
- * When the business details interrupter is NOT active, this just returns the
- * normal change link for the section.
+ * When the business details interrupter is NOT active and the field is accessible,
+ * this just returns the normal change link for the section.
  *
- * When the interrupter IS active, the user is being forced to fix invalid data:
+ * When the field is disabled by feature toggle:
+ * - Returns null to hide the change link
+ *
+ * When the interrupter IS active and field is accessible, the user is being forced
+ * to fix invalid data:
  * - The one section that needs fixing can link directly to its change page.
  * - All other sections send the user to the business-fix page instead, so they
  *   can’t skip ahead or edit unrelated details.
  */
-const resolveChangeLink = (interrupter, section, normalLink) => {
+const resolveChangeLink = (interrupter, section, normalLink, fieldName) => {
+  if (!isBusinessFieldAccessible(fieldName)) {
+    return null
+  }
+
   if (!interrupter.active) {
     return normalLink
   }
 
   return interrupter.singleSection === section ? normalLink : `/business-fix?source=${section}`
+}
+
+/**
+ * Works out the change link for a section the user is blocked from fixing.
+ * A field disabled by feature toggle has no link, otherwise the user is sent
+ * to the page explaining they do not have permission.
+ */
+const resolveNoPermissionLink = (fieldName) => {
+  if (!isBusinessFieldAccessible(fieldName)) {
+    return null
+  }
+
+  return BUSINESS_CHANGE_LINKS.businessFixNameNoPermission
 }
 
 /**

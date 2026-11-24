@@ -1,0 +1,28 @@
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{# Shows the feature toggle banner and the flash success banner. Both can appear together. #}
+{% macro pageBanners(disabledFieldNotification, notification) %}
+  {% if disabledFieldNotification %}
+    {{ govukNotificationBanner({
+      titleText: disabledFieldNotification.titleText,
+      titleId: "disabled-field-banner-title",
+      text: disabledFieldNotification.text
+    }) }}
+  {% endif %}
+
+  {% if notification %}
+    {% if notification.html %}
+      {{ govukNotificationBanner({
+        type: "success",
+        titleText: notification.title,
+        html: notification.html
+      }) }}
+    {% else %}
+      {{ govukNotificationBanner({
+        type: "success",
+        titleText: notification.title,
+        text: notification.text
+      }) }}
+    {% endif %}
+  {% endif %}
+{% endmacro %}

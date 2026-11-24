@@ -1,7 +1,7 @@
 {% extends 'common/layout.njk' %}
 
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "common/notifications/page-banners.njk" import pageBanners %}
 {% from "common/sub-header/macro.njk" import subHeader %}
 {% from "common/navigation/back-sign-out-link.njk" import appBackSignOutLink with context %}
 
@@ -13,22 +13,7 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-      {# Notification banner #}
-      {% if notification %}
-        {% if notification.html %}
-          {{ govukNotificationBanner({
-            type: "success",
-            titleText: notification.title,
-            html: notification.html
-          })}}
-        {% else %}
-          {{ govukNotificationBanner({
-            type: "success",
-            titleText: notification.title,
-            text: notification.text
-          })}}
-        {% endif %}
-      {% endif %}
+      {{ pageBanners(disabledFieldNotification, notification) }}
 
     <h1 class="govuk-heading-l">
       {{ pageTitle }}

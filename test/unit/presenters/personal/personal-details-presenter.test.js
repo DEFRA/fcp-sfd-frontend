@@ -52,6 +52,7 @@ describe('personalDetailsPresenter', () => {
           href: '/home'
         },
         notification: { title: 'Update', text: 'Personal details updated successfully' },
+        disabledFieldNotification: null,
         pageTitle: 'View and update your personal details',
         metaDescription: 'View and update your personal details.',
         userName: 'John Doe',
@@ -94,6 +95,57 @@ describe('personalDetailsPresenter', () => {
           changeLink: '/account-email-change'
         }
       })
+    })
+  })
+
+  describe('when a field is disabled by a feature toggle', () => {
+    beforeEach(() => {
+      config.get.mockImplementation((key) => {
+        return key !== 'featureToggle.personalDetails.updatePersonalDetailsEmail'
+      })
+    })
+
+    test('it returns the disabled banner alongside the flash notification', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.notification).toEqual({ title: 'Update', text: 'Personal details updated successfully' })
+      expect(result.disabledFieldNotification).toEqual({
+        titleText: 'Important',
+        text: 'Sorry, there is a problem with the service. You cannot update your personal email address right now. Please try again later.'
+      })
+    })
+
+    test('it removes the change link for the disabled field only', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.personalEmail.changeLink).toBeNull()
+      expect(result.personalName.changeLink).toBe('/account-name-change')
+    })
+  })
+
+  describe('when the personal master toggle is disabled', () => {
+    beforeEach(() => {
+      config.get.mockImplementation((key) => {
+        return key !== 'featureToggle.personalDetails.updatePersonalDetails'
+      })
+    })
+
+    test('it shows the personal details banner', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.disabledFieldNotification.text).toEqual(
+        'Sorry, there is a problem with the service. You cannot update your personal details right now. Please try again later.'
+      )
+    })
+
+    test('it removes every change link', () => {
+      const result = personalDetailsPresenter(data, yar, hasValidPersonalDetails, sectionsNeedingUpdate)
+
+      expect(result.personalName.changeLink).toBeNull()
+      expect(result.dob.changeLink).toBeNull()
+      expect(result.personalAddress.changeLink).toBeNull()
+      expect(result.personalTelephone.changeLink).toBeNull()
+      expect(result.personalEmail.changeLink).toBeNull()
     })
   })
 

@@ -9,6 +9,8 @@ import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 // Presenters and constants
 import { businessDetailsChangeLinksPresenter } from './business-details-change-links-presenter.js'
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
+import { getDisabledFieldNotification, findDisabledBusinessField, isBusinessFieldAccessible } from '../../utils/feature-toggle/check-field-accessibility.js'
+
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 const { NOT_ADDED_TEXT } = constants
 
@@ -23,6 +25,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
+    disabledFieldNotification: getDisabledFieldNotificationIfNeeded(permissionLevel, data),
     pageTitle: getPageTitle(permissionLevel),
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
@@ -125,6 +128,11 @@ const buildLegalStatusRegistrationNumberDisplay = (data, permissionLevel) => {
     return null
   }
 
+  // Hide the change link when the registration number is switched off by a feature toggle
+  if (!isBusinessFieldAccessible('registrationNumber')) {
+    changeLink = null
+  }
+
   return {
     label,
     value: number || NOT_ADDED_TEXT,
@@ -222,6 +230,27 @@ const formatAddress = (businessAddress) => {
   return lines.length > 0 ? lines : NOT_ADDED_TEXT
 }
 
+/**
+ * Checks if any business field the user can update is currently disabled by feature toggle
+ * Returns a notification banner if a field is disabled, otherwise null
+ */
+const getDisabledFieldNotificationIfNeeded = (permissionLevel, data) => {
+  const fieldsToCheck = getUpdatableFields(permissionLevel, data)
+
+  // Users who cannot update anything never need to see the banner
+  if (fieldsToCheck.length === 0) {
+    return null
+  }
+
+  const disabledField = findDisabledBusinessField(fieldsToCheck)
+
+  if (disabledField) {
+    return getDisabledFieldNotification(disabledField.displayName)
+  }
+
+  return null
+}
+
 // Only users with the legal permission level can change these fields
 const getLegalOnlyChangeLink = (permissionLevel, changeLink) => {
   return permissionLevel === PERMISSION_GROUP.LEGAL ? changeLink : null
@@ -229,6 +258,34 @@ const getLegalOnlyChangeLink = (permissionLevel, changeLink) => {
 
 const getPageTitle = (permissionLevel) => {
   return permissionLevel === PERMISSION_GROUP.VIEW ? 'View business details' : 'View and update your business details'
+}
+
+// The fields each permission level is allowed to update
+const getUpdatableFields = (permissionLevel, data) => {
+  if (permissionLevel === PERMISSION_GROUP.LEGAL) {
+    const fields = ['name', 'address', 'phone', 'email', 'vat']
+
+    if (hasRegistrationNumberRow(data)) {
+      fields.push('registrationNumber')
+    }
+
+    return fields
+  }
+
+  if (permissionLevel === PERMISSION_GROUP.AMEND) {
+    return ['address', 'phone', 'email']
+  }
+
+  return []
+}
+
+// Only charity and company legal statuses show a registration number row
+const hasRegistrationNumberRow = (data) => {
+  // The DAL returns the legal status code as a number, the engine codes are strings
+  const legalStatusCode = String(data.legalStatusCode ?? '')
+
+  return constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode) ||
+    constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)
 }
 
 const setPermissionsText = (permissionLevel) => {

@@ -10,6 +10,7 @@ import { PERMISSION_GROUP } from '../../../../src/constants/scope/business-detai
 
 // Mock dependencies
 import { config } from '../../../../src/config/index.js'
+import { isBusinessFieldAccessible } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
@@ -18,6 +19,10 @@ vi.mock('../../../../src/config/index.js', () => ({
   config: {
     get: vi.fn()
   }
+}))
+
+vi.mock('../../../../src/utils/feature-toggle/check-field-accessibility.js', () => ({
+  isBusinessFieldAccessible: vi.fn()
 }))
 
 describe('businessDetailsChangeLinksPresenter', () => {
@@ -30,6 +35,9 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
     // Default: interrupter ON
     config.get.mockReturnValue(true)
+
+    // Default: every field is enabled by feature toggles
+    isBusinessFieldAccessible.mockReturnValue(true)
 
     permissionLevel = PERMISSION_GROUP.VIEW
     hasValidBusinessDetails = true
@@ -98,6 +106,86 @@ describe('businessDetailsChangeLinksPresenter', () => {
           businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
           businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
           vat: null
+        })
+      })
+    })
+
+    describe('and the user has blocked sections and a field is disabled by a feature toggle', () => {
+      beforeEach(() => {
+        sectionsNeedingUpdate = ['name'] // Amend cannot update 'name'
+      })
+
+      describe('and the address toggle is disabled', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockImplementation((fieldName) => {
+            return fieldName !== 'address'
+          })
+        })
+
+        test('it hides the address link and keeps the other placeholder links', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: null,
+            businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            vat: null
+          })
+        })
+      })
+
+      describe('and the phone toggle is disabled', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockImplementation((fieldName) => {
+            return fieldName !== 'phone'
+          })
+        })
+
+        test('it hides the phone link and keeps the other placeholder links', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessTelephone: null,
+            businessEmail: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            vat: null
+          })
+        })
+      })
+
+      describe('and the email toggle is disabled', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockImplementation((fieldName) => {
+            return fieldName !== 'email'
+          })
+        })
+
+        test('it hides the email link and keeps the other placeholder links', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessTelephone: BUSINESS_CHANGE_LINKS.businessFixNameNoPermission,
+            businessEmail: null,
+            vat: null
+          })
+        })
+      })
+
+      describe('and the parent toggle disables all business updates', () => {
+        beforeEach(() => {
+          isBusinessFieldAccessible.mockReturnValue(false)
+        })
+
+        test('it hides every link', () => {
+          const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(result).toEqual({
+            businessAddress: null,
+            businessTelephone: null,
+            businessEmail: null,
+            vat: null
+          })
         })
       })
     })
@@ -282,6 +370,153 @@ describe('businessDetailsChangeLinksPresenter', () => {
           expect(result.vat).toBe('normal')
         })
       })
+    })
+  })
+
+  describe('when a business field is disabled by a feature toggle', () => {
+    beforeEach(() => {
+      permissionLevel = PERMISSION_GROUP.LEGAL
+    })
+
+    describe('and the business name toggle is disabled', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockImplementation((fieldName) => {
+          return fieldName !== 'name'
+        })
+      })
+
+      test('it hides the business name link', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessName).toBeNull()
+      })
+
+      test('it keeps the other links', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessAddress).not.toBeNull()
+        expect(result.businessTelephone).not.toBeNull()
+        expect(result.businessEmail).not.toBeNull()
+        expect(result.vat).not.toBeNull()
+      })
+    })
+
+    describe('and the business address toggle is disabled', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockImplementation((fieldName) => {
+          return fieldName !== 'address'
+        })
+      })
+
+      test('it hides the business address link', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessAddress).toBeNull()
+      })
+
+      test('it keeps the other links', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessName).not.toBeNull()
+        expect(result.businessTelephone).not.toBeNull()
+        expect(result.businessEmail).not.toBeNull()
+        expect(result.vat).not.toBeNull()
+      })
+    })
+
+    describe('and the business phone toggle is disabled', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockImplementation((fieldName) => {
+          return fieldName !== 'phone'
+        })
+      })
+
+      test('it hides the business phone link', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessTelephone).toBeNull()
+      })
+
+      test('it keeps the other links', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessName).not.toBeNull()
+        expect(result.businessAddress).not.toBeNull()
+        expect(result.businessEmail).not.toBeNull()
+        expect(result.vat).not.toBeNull()
+      })
+    })
+
+    describe('and the business email toggle is disabled', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockImplementation((fieldName) => {
+          return fieldName !== 'email'
+        })
+      })
+
+      test('it hides the business email link', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessEmail).toBeNull()
+      })
+
+      test('it keeps the other links', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessName).not.toBeNull()
+        expect(result.businessAddress).not.toBeNull()
+        expect(result.businessTelephone).not.toBeNull()
+        expect(result.vat).not.toBeNull()
+      })
+    })
+
+    describe('and the VAT toggle is disabled', () => {
+      beforeEach(() => {
+        isBusinessFieldAccessible.mockImplementation((fieldName) => {
+          return fieldName !== 'vat'
+        })
+      })
+
+      test('it hides the VAT link', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.vat).toBeNull()
+      })
+
+      test('it keeps the other links', () => {
+        const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+        expect(result.businessName).not.toBeNull()
+        expect(result.businessAddress).not.toBeNull()
+        expect(result.businessTelephone).not.toBeNull()
+        expect(result.businessEmail).not.toBeNull()
+      })
+    })
+
+    test('it hides every link when no field is accessible', () => {
+      isBusinessFieldAccessible.mockReturnValue(false)
+
+      const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+      expect(result).toEqual({
+        businessAddress: null,
+        businessTelephone: null,
+        businessEmail: null,
+        businessName: null,
+        vat: null
+      })
+    })
+
+    test('it still hides the link when the interrupter is active', () => {
+      isBusinessFieldAccessible.mockImplementation((fieldName) => {
+        return fieldName !== 'email'
+      })
+      hasValidBusinessDetails = false
+      sectionsNeedingUpdate = ['email']
+
+      const result = businessDetailsChangeLinksPresenter(permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+      expect(result.businessEmail).toBeNull()
     })
   })
 })

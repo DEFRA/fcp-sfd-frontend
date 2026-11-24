@@ -25,7 +25,7 @@ const businessDetailsPresenter = (data, yar, permissionLevel, hasValidBusinessDe
     },
     businessNameHeader: data.businessName ?? null,
     notification: yar ? yar.flash('notification')[0] : null,
-    disabledFieldNotification: getDisabledFieldNotificationIfNeeded(permissionLevel),
+    disabledFieldNotification: getDisabledFieldNotificationIfNeeded(permissionLevel, data),
     pageTitle: getPageTitle(permissionLevel),
     metaDescription: 'View and update your business details.',
     userName: data.customer.userName ?? null,
@@ -234,8 +234,8 @@ const formatAddress = (businessAddress) => {
  * Checks if any business field the user can update is currently disabled by feature toggle
  * Returns a notification banner if a field is disabled, otherwise null
  */
-const getDisabledFieldNotificationIfNeeded = (permissionLevel) => {
-  const fieldsToCheck = getUpdatableFields(permissionLevel)
+const getDisabledFieldNotificationIfNeeded = (permissionLevel, data) => {
+  const fieldsToCheck = getUpdatableFields(permissionLevel, data)
 
   // Users who cannot update anything never need to see the banner
   if (fieldsToCheck.length === 0) {
@@ -261,9 +261,15 @@ const getPageTitle = (permissionLevel) => {
 }
 
 // The fields each permission level is allowed to update
-const getUpdatableFields = (permissionLevel) => {
+const getUpdatableFields = (permissionLevel, data) => {
   if (permissionLevel === PERMISSION_GROUP.LEGAL) {
-    return ['name', 'address', 'phone', 'email', 'vat', 'registrationNumber']
+    const fields = ['name', 'address', 'phone', 'email', 'vat']
+
+    if (hasRegistrationNumberRow(data)) {
+      fields.push('registrationNumber')
+    }
+
+    return fields
   }
 
   if (permissionLevel === PERMISSION_GROUP.AMEND) {
@@ -271,6 +277,15 @@ const getUpdatableFields = (permissionLevel) => {
   }
 
   return []
+}
+
+// Only charity and company legal statuses show a registration number row
+const hasRegistrationNumberRow = (data) => {
+  // The DAL returns the legal status code as a number, the engine codes are strings
+  const legalStatusCode = String(data.legalStatusCode ?? '')
+
+  return constants.business.CHARITY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode) ||
+    constants.business.COMPANY_REGISTRATION_LEGAL_STATUS_CODES.includes(legalStatusCode)
 }
 
 const setPermissionsText = (permissionLevel) => {

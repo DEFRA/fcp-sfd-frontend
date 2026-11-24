@@ -594,10 +594,44 @@ describe('businessDetailsPresenter', () => {
     })
 
     describe('and the user has legal permission', () => {
-      test('it should check every field', () => {
-        businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+      describe('and the legal status is a company', () => {
+        test('it should check every field including the registration number', () => {
+          data.legalStatusCode = 102109
 
-        expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat', 'registrationNumber'])
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat', 'registrationNumber'])
+        })
+      })
+
+      describe('and the legal status is a charity', () => {
+        test('it should check every field including the registration number', () => {
+          data.legalStatusCode = 102101
+
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat', 'registrationNumber'])
+        })
+      })
+
+      describe('and the legal status has no registration number', () => {
+        test('it should check every field except the registration number', () => {
+          data.legalStatusCode = 102111
+
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat'])
+        })
+      })
+
+      describe('and there is no legal status code', () => {
+        test('it should check every field except the registration number', () => {
+          data.legalStatusCode = null
+
+          businessDetailsPresenter(data, yar, permissionLevel, hasValidBusinessDetails, sectionsNeedingUpdate)
+
+          expect(findDisabledBusinessField).toHaveBeenCalledWith(['name', 'address', 'phone', 'email', 'vat'])
+        })
       })
     })
 

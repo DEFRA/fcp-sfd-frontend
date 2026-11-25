@@ -9,10 +9,6 @@ export const VIEW_PERMISSIONS = [VIEW_LEVEL_PERMISSION, AMEND_LEVEL_PERMISSION, 
 export const AMEND_PERMISSIONS = [AMEND_LEVEL_PERMISSION, MAKE_LEGAL_CHANGES_PERMISSION, FULL_PERMISSION]
 export const LEGAL_PERMISSIONS = [MAKE_LEGAL_CHANGES_PERMISSION, FULL_PERMISSION]
 
-// Business details sections that only users with a legal permission
-// (make legal changes or full) can change. Amend users can change the rest.
-export const LEGAL_ONLY_BUSINESS_SECTIONS = ['name', 'vat']
-
 export const PERMISSION_GROUP = Object.freeze({
   VIEW: 'view',
   AMEND: 'amend',

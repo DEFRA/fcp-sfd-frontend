@@ -4,7 +4,7 @@ import { businessFixListPresenter } from '../../presenters/business/business-fix
 import { fetchBusinessFixService } from '../../services/business/fetch-business-fix-service.js'
 import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
 import { AMEND_PERMISSIONS } from '../../constants/scope/business-details.js'
-import { checkInterrupterJourneyPreHandler, checkBusinessFixPermissionsPreHandler } from '../pre-handlers.js'
+import { checkInterrupterJourneyPreHandler, checkBusinessFixLegalSectionsPreHandler } from '../pre-handlers.js'
 
 const getBusinessFixList = {
   method: 'GET',
@@ -13,7 +13,7 @@ const getBusinessFixList = {
     auth: { scope: AMEND_PERMISSIONS },
     pre: [
       checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY),
-      checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+      checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
     ]
   },
   handler: async (request, h) => {
@@ -34,7 +34,7 @@ const postBusinessFixList = {
     auth: { scope: AMEND_PERMISSIONS },
     pre: [
       checkInterrupterJourneyPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY),
-      checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+      checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
     ]
   },
   handler: async (request, h) => {

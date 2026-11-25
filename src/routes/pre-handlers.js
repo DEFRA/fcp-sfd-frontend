@@ -5,7 +5,7 @@
 
 import { services } from '@defra/fcp-sfd-frontend-engine'
 import { checkBusinessPermissionGroupService } from '../services/business/check-business-permission-group-service.js'
-import { LEGAL_ONLY_BUSINESS_SECTIONS, PERMISSION_GROUP } from '../constants/scope/business-details.js'
+import { PERMISSION_GROUP } from '../constants/scope/business-details.js'
 import { isBusinessFieldAccessible, isPersonalFieldAccessible } from '../utils/feature-toggle/check-field-accessibility.js'
 
 /**
@@ -151,18 +151,18 @@ export const checkInterrupterJourneyPreHandler = (journey) => {
  *
  * @example
  * import { BUSINESS_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
- * import { checkBusinessFixPermissionsPreHandler } from '../pre-handlers.js'
+ * import { checkBusinessFixLegalSectionsPreHandler } from '../pre-handlers.js'
  *
  * const postFixList = {
  *   method: 'POST',
  *   path: '/business-fix-list',
  *   options: {
- *     pre: [checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
+ *     pre: [checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)]
  *   },
  *   handler: async (request, h) => { ... }
  * }
  */
-export const checkBusinessFixPermissionsPreHandler = (journey) => {
+export const checkBusinessFixLegalSectionsPreHandler = (journey) => {
   return {
     method: (request, h) => {
       const { yar, auth, query } = request
@@ -176,17 +176,22 @@ export const checkBusinessFixPermissionsPreHandler = (journey) => {
 
       const sessionData = yar.get(journey.journeyKey) || {}
 
-      // Either list may be missing from the session, so fall back to an empty list
-      const sectionsNeedingUpdate = sessionData.sectionsNeedingUpdate ?? []
-      const orderedSectionsToFix = sessionData.orderedSectionsToFix ?? []
+      // The journey has not been initialised yet, so check the raw sections needing update and the raw source
+      if (sessionData.sectionsNeedingUpdate) {
+        const { sectionsNeedingUpdate } = sessionData
 
-      // The fix journey adds `source` to the sections to fix when it starts, so it must be checked too
-      const allSectionsToCheck = sectionsNeedingUpdate.concat(orderedSectionsToFix, query?.source ?? [])
+        if (sectionsNeedingUpdate.includes('name') || sectionsNeedingUpdate.includes('vat') || query?.source === 'name' || query?.source === 'vat') {
+          return h.redirect(journey.redirectPath).takeover()
+        }
+      }
 
-      const requiresLegalPermission = allSectionsToCheck.some(section => LEGAL_ONLY_BUSINESS_SECTIONS.includes(section))
+      // orderedSectionsToFix already has the source at the start of the array, so it needs no separate check
+      if (sessionData.orderedSectionsToFix) {
+        const { orderedSectionsToFix } = sessionData
 
-      if (requiresLegalPermission) {
-        return h.redirect(journey.redirectPath).takeover()
+        if (orderedSectionsToFix.includes('name') || orderedSectionsToFix.includes('vat')) {
+          return h.redirect(journey.redirectPath).takeover()
+        }
       }
 
       return true

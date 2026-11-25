@@ -33,7 +33,7 @@ import {
   checkInterrupterJourneyPreHandler,
   checkBusinessFieldAccessibleGuard,
   checkPersonalFieldAccessibleGuard,
-  checkBusinessFixPermissionsPreHandler
+  checkBusinessFixLegalSectionsPreHandler
 } from '../../../src/routes/pre-handlers.js'
 
 describe('pre-handlers', () => {
@@ -547,7 +547,7 @@ describe('pre-handlers', () => {
     })
   })
 
-  describe('checkBusinessFixPermissionsPreHandler', () => {
+  describe('checkBusinessFixLegalSectionsPreHandler', () => {
     let request
     let sessionData
 
@@ -573,7 +573,7 @@ describe('pre-handlers', () => {
       })
 
       test('it should allow the request to continue', () => {
-        const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+        const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
         const result = preHandler.method(request, h)
 
         expect(result).toBe(true)
@@ -588,7 +588,7 @@ describe('pre-handlers', () => {
       })
 
       test('it should allow the request to continue', () => {
-        const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+        const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
         const result = preHandler.method(request, h)
 
         expect(result).toBe(true)
@@ -603,7 +603,7 @@ describe('pre-handlers', () => {
         })
 
         test('it should redirect to the business details page', () => {
-          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
           preHandler.method(request, h)
 
           expect(request.yar.get).toHaveBeenCalledWith('businessDetailsValidation')
@@ -618,7 +618,7 @@ describe('pre-handlers', () => {
         })
 
         test('it should redirect to the business details page', () => {
-          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
           preHandler.method(request, h)
 
           expect(h.redirect).toHaveBeenCalledWith('/business-details')
@@ -633,7 +633,7 @@ describe('pre-handlers', () => {
         })
 
         test('it should redirect to the business details page', () => {
-          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
           preHandler.method(request, h)
 
           expect(h.redirect).toHaveBeenCalledWith('/business-details')
@@ -648,7 +648,7 @@ describe('pre-handlers', () => {
         })
 
         test('it should allow the request to continue', () => {
-          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
           const result = preHandler.method(request, h)
 
           expect(result).toBe(true)
@@ -662,7 +662,7 @@ describe('pre-handlers', () => {
         })
 
         test('it should allow the request to continue', () => {
-          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
           const result = preHandler.method(request, h)
 
           expect(result).toBe(true)
@@ -676,7 +676,7 @@ describe('pre-handlers', () => {
         })
 
         test('it should allow the request to continue', () => {
-          const preHandler = checkBusinessFixPermissionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
+          const preHandler = checkBusinessFixLegalSectionsPreHandler(BUSINESS_DETAILS_VALIDATION_JOURNEY)
           const result = preHandler.method(request, h)
 
           expect(result).toBe(true)

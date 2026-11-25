@@ -28,7 +28,7 @@
 
 import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { config } from '../../config/index.js'
-import { LEGAL_ONLY_BUSINESS_SECTIONS, PERMISSION_GROUP } from '../../constants/scope/business-details.js'
+import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
 import { isBusinessFieldAccessible } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
@@ -133,7 +133,7 @@ const resolveNoPermissionLink = (fieldName) => {
  */
 const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
   if (permissionLevel === PERMISSION_GROUP.AMEND) {
-    return sectionsNeedingUpdate.some(section => LEGAL_ONLY_BUSINESS_SECTIONS.includes(section))
+    return sectionsNeedingUpdate.includes('name') || sectionsNeedingUpdate.includes('vat')
   }
 
   return false

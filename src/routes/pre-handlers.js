@@ -166,6 +166,7 @@ export const checkBusinessFixLegalSectionsPreHandler = (journey) => {
   return {
     method: (request, h) => {
       const { yar, auth, query } = request
+      const source = query?.source
 
       const permissionGroup = checkBusinessPermissionGroupService(auth.credentials.scope)
 
@@ -180,7 +181,7 @@ export const checkBusinessFixLegalSectionsPreHandler = (journey) => {
       if (sessionData.sectionsNeedingUpdate) {
         const { sectionsNeedingUpdate } = sessionData
 
-        if (sectionsNeedingUpdate.includes('name') || sectionsNeedingUpdate.includes('vat') || query?.source === 'name' || query?.source === 'vat') {
+        if (sectionsNeedingUpdate.includes('name') || sectionsNeedingUpdate.includes('vat') || source === 'name' || source === 'vat') {
           return h.redirect(journey.redirectPath).takeover()
         }
       }

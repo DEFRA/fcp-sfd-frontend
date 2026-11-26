@@ -25,7 +25,6 @@ describe('routes', () => {
       const paths = await importRoutesFor('prod')
 
       expect(paths).not.toContain('/bank-details-check')
-      expect(paths).not.toContain('/bank-details-check/{sbi}')
     })
   })
 
@@ -34,7 +33,6 @@ describe('routes', () => {
       const paths = await importRoutesFor('ext-test')
 
       expect(paths).not.toContain('/bank-details-check')
-      expect(paths).not.toContain('/bank-details-check/{sbi}')
     })
   })
 
@@ -43,7 +41,6 @@ describe('routes', () => {
       const paths = await importRoutesFor('perf-test')
 
       expect(paths).not.toContain('/bank-details-check')
-      expect(paths).not.toContain('/bank-details-check/{sbi}')
     })
   })
 
@@ -52,7 +49,6 @@ describe('routes', () => {
       const paths = await importRoutesFor('local')
 
       expect(paths).toContain('/bank-details-check')
-      expect(paths).toContain('/bank-details-check/{sbi}')
     })
   })
 
@@ -61,7 +57,6 @@ describe('routes', () => {
       const paths = await importRoutesFor('dev')
 
       expect(paths).toContain('/bank-details-check')
-      expect(paths).toContain('/bank-details-check/{sbi}')
     })
   })
 
@@ -70,7 +65,6 @@ describe('routes', () => {
       const paths = await importRoutesFor('test')
 
       expect(paths).toContain('/bank-details-check')
-      expect(paths).toContain('/bank-details-check/{sbi}')
     })
   })
 })

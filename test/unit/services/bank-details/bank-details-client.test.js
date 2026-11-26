@@ -23,8 +23,7 @@ vi.mock('../../../../src/utils/logger.js', () => ({
 
 // Thing under test
 const {
-  checkBankDetailsServiceHealth,
-  getBankDetails
+  checkBankDetailsServiceHealth
 } = await import('../../../../src/services/bank-details/bank-details-client.js')
 
 const endpoint = 'https://fcp-sfd-bank-details.test'
@@ -131,100 +130,6 @@ describe('bank details client', () => {
         const result = await checkBankDetailsServiceHealth(mockStsClient)
 
         expect(result).toBe(false)
-      })
-    })
-  })
-
-  describe('getBankDetails', () => {
-    const sbi = '800000001'
-
-    describe('when the endpoint is not configured', () => {
-      test('should return null without requesting a token or calling the service', async () => {
-        mockConfigGet.mockReturnValue(null)
-
-        const result = await getBankDetails(sbi, mockStsClient)
-
-        expect(result).toBeNull()
-        expect(mockGetWebIdentityToken).not.toHaveBeenCalled()
-        expect(mockFetch).not.toHaveBeenCalled()
-      })
-    })
-
-    describe('when a token is available', () => {
-      test('should request the token using the STS client', async () => {
-        await getBankDetails(sbi, mockStsClient)
-
-        expect(mockGetWebIdentityToken).toHaveBeenCalledWith(mockStsClient)
-      })
-
-      test('should call the bank details endpoint for the SBI with the bearer token', async () => {
-        await getBankDetails(sbi, mockStsClient)
-
-        expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/bank-details/${sbi}`, {
-          headers: { Authorization: `Bearer ${mockToken}` },
-          signal: expect.any(AbortSignal)
-        })
-      })
-
-      test('should encode the SBI so an encoded traversal cannot reach another path', async () => {
-        await getBankDetails('..%2Fhealth', mockStsClient)
-
-        const [url] = mockFetch.mock.calls[0]
-
-        expect(url).toBe(`${endpoint}/bank-details/..%252Fhealth`)
-        expect(new URL(url).pathname).toBe('/bank-details/..%252Fhealth')
-      })
-
-      test('should return the bank details when the service responds ok', async () => {
-        const result = await getBankDetails(sbi, mockStsClient)
-
-        expect(result).toEqual(mockBankDetails)
-      })
-    })
-
-    describe('when no token is returned (local)', () => {
-      test('should call the bank details endpoint without an Authorization header', async () => {
-        mockGetWebIdentityToken.mockResolvedValue(null)
-
-        await getBankDetails(sbi, mockStsClient)
-
-        expect(mockFetch).toHaveBeenCalledWith(`${endpoint}/bank-details/${sbi}`, {
-          headers: {},
-          signal: expect.any(AbortSignal)
-        })
-      })
-    })
-
-    describe('when requesting the token fails', () => {
-      test('should return null without calling the service', async () => {
-        mockGetWebIdentityToken.mockRejectedValue(new Error('AccessDenied'))
-
-        const result = await getBankDetails(sbi, mockStsClient)
-
-        expect(result).toBeNull()
-        expect(mockFetch).not.toHaveBeenCalled()
-        expect(mockLogger.error).toHaveBeenCalled()
-      })
-    })
-
-    describe('when the service responds with an error status', () => {
-      test('should return null', async () => {
-        mockFetch.mockResolvedValue({ ok: false, status: 401 })
-
-        const result = await getBankDetails(sbi, mockStsClient)
-
-        expect(result).toBeNull()
-        expect(mockLogger.error).toHaveBeenCalled()
-      })
-    })
-
-    describe('when the request to the service fails', () => {
-      test('should return null', async () => {
-        mockFetch.mockRejectedValue(new Error('ECONNREFUSED'))
-
-        const result = await getBankDetails(sbi, mockStsClient)
-
-        expect(result).toBeNull()
       })
     })
   })

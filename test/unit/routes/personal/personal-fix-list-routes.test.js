@@ -4,6 +4,7 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { utils, services } from '@defra/fcp-sfd-frontend-engine'
 import { fetchPersonalFixService } from '../../../../src/services/personal/fetch-personal-fix-service.js'
+import { checkPersonalEmailRegisteredService } from '../../../../src/services/personal/check-personal-email-registered-service.js'
 import { personalFixListPresenter } from '../../../../src/presenters/personal/personal-fix-list-presenter.js'
 
 // Thing under test
@@ -23,6 +24,10 @@ vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
 
 vi.mock('../../../../src/services/personal/fetch-personal-fix-service.js', () => ({
   fetchPersonalFixService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/personal/check-personal-email-registered-service.js', () => ({
+  checkPersonalEmailRegisteredService: vi.fn()
 }))
 
 vi.mock('../../../../src/presenters/personal/personal-fix-list-presenter.js', () => ({
@@ -100,6 +105,7 @@ describe('personal fix list routes', () => {
         }
 
         services.validateFixDetails.mockReturnValue({})
+        checkPersonalEmailRegisteredService.mockResolvedValue({})
       })
 
       test('should have the correct method and path configured', () => {
@@ -108,11 +114,64 @@ describe('personal fix list routes', () => {
       })
 
       describe('when validation passes', () => {
+        test('it checks whether the personal email is already registered', async () => {
+          await postPersonalFixList.handler(request, h)
+
+          expect(checkPersonalEmailRegisteredService).toHaveBeenCalledWith('john@example.com', credentials)
+        })
+
         test('it stores the session data and redirects', async () => {
           await postPersonalFixList.handler(request, h)
 
           expect(services.setFixSessionData).toHaveBeenCalledWith(request.yar, sessionData, request.payload, 'personalDetailsValidation', 'personalFixUpdates')
           expect(h.redirect).toHaveBeenCalledWith('/personal-fix-check')
+        })
+      })
+
+      describe('when email is not a section to fix', () => {
+        beforeEach(() => {
+          sessionData.orderedSectionsToFix = ['name']
+        })
+
+        test('it does not check whether the personal email is already registered', async () => {
+          await postPersonalFixList.handler(request, h)
+
+          expect(checkPersonalEmailRegisteredService).not.toHaveBeenCalled()
+        })
+      })
+
+      describe('and the personal email is already registered', () => {
+        let emailError
+        let errors
+
+        beforeEach(() => {
+          emailError = [{ message: 'This email address is already in use for another personal account. Enter a different email address.', path: ['personalEmail'] }]
+          errors = { personalEmail: { text: 'This email address is already in use for another personal account. Enter a different email address.' } }
+
+          checkPersonalEmailRegisteredService.mockResolvedValue({ error: emailError })
+          utils.formatValidationErrors.mockReturnValue(errors)
+          fetchPersonalFixService.mockResolvedValue({ some: 'data' })
+          personalFixListPresenter.mockReturnValue({ page: 'data', errors })
+        })
+
+        test('it formats the email error', async () => {
+          await postPersonalFixList.handler(request, h)
+
+          expect(utils.formatValidationErrors).toHaveBeenCalledWith(emailError)
+        })
+
+        test('it returns the page with the email error and a bad request status', async () => {
+          await postPersonalFixList.handler(request, h)
+
+          expect(h.view).toHaveBeenCalledWith('personal/personal-fix-list.njk', { page: 'data', errors })
+          expect(h.view().code).toHaveBeenCalledWith(400)
+        })
+
+        test('it does not store the session data or redirect', async () => {
+          await postPersonalFixList.handler(request, h)
+
+          expect(services.setFixSessionData).not.toHaveBeenCalled()
+          expect(h.redirect).not.toHaveBeenCalled()
         })
       })
 
@@ -144,6 +203,12 @@ describe('personal fix list routes', () => {
           await postPersonalFixList.handler(request, h)
 
           expect(utils.formatValidationErrors).toHaveBeenCalledWith(validationError.details)
+        })
+
+        test('it does not check whether the personal email is already registered', async () => {
+          await postPersonalFixList.handler(request, h)
+
+          expect(checkPersonalEmailRegisteredService).not.toHaveBeenCalled()
         })
 
         test('it fetches personal fix data', async () => {

@@ -4,6 +4,8 @@ import { describe, test, expect, vi, beforeEach } from 'vitest'
 // Things we need to mock
 import { setSessionData } from '../../../../src/utils/session/set-session-data.js'
 import { fetchPersonalChangeService } from '../../../../src/services/personal/fetch-personal-change-service.js'
+import { checkPersonalEmailRegisteredService } from '../../../../src/services/personal/check-personal-email-registered-service.js'
+import { personalEmailChangeErrorService } from '../../../../src/services/personal/personal-email-change-error-service.js'
 
 // Thing under test
 import { personalEmailChangeRoutes } from '../../../../src/routes/personal/personal-email-change-routes.js'
@@ -16,6 +18,14 @@ vi.mock('../../../../src/utils/session/set-session-data.js', () => ({
 
 vi.mock('../../../../src/services/personal/fetch-personal-change-service.js', () => ({
   fetchPersonalChangeService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/personal/check-personal-email-registered-service.js', () => ({
+  checkPersonalEmailRegisteredService: vi.fn()
+}))
+
+vi.mock('../../../../src/services/personal/personal-email-change-error-service.js', () => ({
+  personalEmailChangeErrorService: vi.fn()
 }))
 
 describe('personal email change', () => {
@@ -101,21 +111,82 @@ describe('personal email change', () => {
       })
 
       describe('and the validation passes', () => {
-        test('it redirects to the /account-email-check page', async () => {
-          await postPersonalEmailChange.options.handler(request, h)
+        describe('and the email is not already registered', () => {
+          beforeEach(() => {
+            checkPersonalEmailRegisteredService.mockResolvedValue({})
+          })
 
-          expect(h.redirect).toHaveBeenCalledWith('/account-email-check')
+          test('it checks whether the email is already registered', async () => {
+            await postPersonalEmailChange.options.handler(request, h)
+
+            expect(checkPersonalEmailRegisteredService).toHaveBeenCalledWith(
+              request.payload.personalEmail,
+              request.auth.credentials
+            )
+          })
+
+          test('it redirects to the /account-email-check page', async () => {
+            await postPersonalEmailChange.options.handler(request, h)
+
+            expect(h.redirect).toHaveBeenCalledWith('/account-email-check')
+          })
+
+          test('sets the payload on the yar state', async () => {
+            await postPersonalEmailChange.options.handler(request, h)
+
+            expect(setSessionData).toHaveBeenCalledWith(
+              request.yar,
+              'personalDetailsUpdate',
+              'changePersonalEmail',
+              request.payload.personalEmail
+            )
+          })
         })
 
-        test('sets the payload on the yar state', async () => {
-          await postPersonalEmailChange.options.handler(request, h)
+        describe('and the email is already registered', () => {
+          let error
 
-          expect(setSessionData).toHaveBeenCalledWith(
-            request.yar,
-            'personalDetailsUpdate',
-            'changePersonalEmail',
-            request.payload.personalEmail
-          )
+          beforeEach(() => {
+            error = [
+              {
+                message: 'This email address is already in use for another personal account. Enter a different email address.',
+                path: ['personalEmail']
+              }
+            ]
+
+            checkPersonalEmailRegisteredService.mockResolvedValue({ error })
+            personalEmailChangeErrorService.mockResolvedValue(getPageDataRegisteredError())
+          })
+
+          test('it calls personalEmailChangeErrorService with the registered email error', async () => {
+            await postPersonalEmailChange.options.handler(request, h)
+
+            expect(personalEmailChangeErrorService).toHaveBeenCalledWith(
+              request.yar,
+              request.auth.credentials,
+              request.payload.personalEmail,
+              error
+            )
+          })
+
+          test('it returns the page with the error summary banner and a bad request status', async () => {
+            await postPersonalEmailChange.options.handler(request, h)
+
+            expect(h.view).toHaveBeenCalledWith('personal/personal-email-change', getPageDataRegisteredError())
+            expect(h.view.mock.results[0].value.code).toHaveBeenCalledWith(400)
+          })
+
+          test('it does not set the payload on the yar state', async () => {
+            await postPersonalEmailChange.options.handler(request, h)
+
+            expect(setSessionData).not.toHaveBeenCalled()
+          })
+
+          test('it does not redirect to the /account-email-check page', async () => {
+            await postPersonalEmailChange.options.handler(request, h)
+
+            expect(h.redirect).not.toHaveBeenCalled()
+          })
         })
       })
 
@@ -132,31 +203,26 @@ describe('personal email change', () => {
               }
             ]
           }
+
+          personalEmailChangeErrorService.mockResolvedValue(getPageDataError())
         })
 
-        test('it fetches the personal details', async () => {
+        test('it calls personalEmailChangeErrorService with the validation errors', async () => {
           await postPersonalEmailChange.options.validate.failAction(request, h, err)
 
-          expect(fetchPersonalChangeService).toHaveBeenCalledWith(
+          expect(personalEmailChangeErrorService).toHaveBeenCalledWith(
             request.yar,
             request.auth.credentials,
-            'changePersonalEmail'
+            request.payload.personalEmail,
+            err.details
           )
         })
 
-        test('it returns the page successfully with the error summary banner', async () => {
+        test('it returns the page with the error summary banner and a bad request status', async () => {
           await postPersonalEmailChange.options.validate.failAction(request, h, err)
 
           expect(h.view).toHaveBeenCalledWith('personal/personal-email-change', getPageDataError())
-        })
-
-        test('it should handle undefined errors', async () => {
-          await postPersonalEmailChange.options.validate.failAction(request, h, [])
-
-          const pageData = getPageDataError()
-          pageData.errors = {}
-
-          expect(h.view).toHaveBeenCalledWith('personal/personal-email-change', pageData)
+          expect(h.view.mock.results[0].value.code).toHaveBeenCalledWith(400)
         })
       })
     })
@@ -194,6 +260,21 @@ const getPageDataError = () => {
     errors: {
       personalEmail: {
         text: 'Enter a personal email address'
+      }
+    }
+  }
+}
+
+const getPageDataRegisteredError = () => {
+  return {
+    backLink: { href: '/personal-details' },
+    pageTitle: 'What is your personal email address?',
+    metaDescription: 'Update the email address for your personal account.',
+    userName: 'Alfred Waldron',
+    personalEmail: 'new-email@test.com',
+    errors: {
+      personalEmail: {
+        text: 'This email address is already in use for another personal account. Enter a different email address.'
       }
     }
   }

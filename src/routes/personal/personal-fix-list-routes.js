@@ -2,6 +2,7 @@ import { utils, schemas, constants, services } from '@defra/fcp-sfd-frontend-eng
 
 import { personalFixListPresenter } from '../../presenters/personal/personal-fix-list-presenter.js'
 import { fetchPersonalFixService } from '../../services/personal/fetch-personal-fix-service.js'
+import { checkPersonalEmailRegisteredService } from '../../services/personal/check-personal-email-registered-service.js'
 import { PERSONAL_DETAILS_VALIDATION_JOURNEY } from '../../constants/journeys.js'
 import { checkInterrupterJourneyPreHandler } from '../pre-handlers.js'
 
@@ -33,9 +34,13 @@ const postPersonalFixList = {
 
     const sessionData = yar.get('personalDetailsValidation')
     const validation = services.validateFixDetails(payload, sessionData.orderedSectionsToFix, schemas.personal)
+    const emailCheck = !validation.error && sessionData.orderedSectionsToFix.includes('email')
+      ? await checkPersonalEmailRegisteredService(payload.personalEmail, auth.credentials)
+      : {}
+    const error = validation.error?.details ?? emailCheck.error
 
-    if (validation.error) {
-      const errors = utils.formatValidationErrors(validation.error.details || [])
+    if (error) {
+      const errors = utils.formatValidationErrors(error)
       const personalDetails = await fetchPersonalFixService(auth.credentials, sessionData)
       const pageData = personalFixListPresenter(personalDetails, payload, errors)
 

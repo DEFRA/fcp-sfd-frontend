@@ -1,23 +1,40 @@
 // Test framework dependencies
-import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest'
+import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Thing under test
 import { homePresenter } from '../../../src/presenters/home-presenter.js'
 
 // Test helpers
-import { config } from '../../../src/config/index.js'
 import {
   VIEW_LEVEL_PERMISSION,
   AMEND_LEVEL_PERMISSION
 } from '../../../src/constants/scope/business-details.js'
+
+// Mock dependencies
+import { getConfigService } from '../../../src/services/get-config-service.js'
+
+// Mock imports
+vi.mock('../../../src/services/get-config-service.js', () => ({
+  getConfigService: vi.fn()
+}))
 
 describe('homePresenter', () => {
   let data
   let permissionGroups
   let enrolmentCount
   let isOnWoodlandManagementAllowList
+  let configValues
 
   beforeEach(() => {
+    vi.clearAllMocks()
+
+    configValues = {
+      'featureToggle.waterManagementEnabled': true,
+      'servicesConfig.WMPEndpoint': 'https://grants-ui.test.cdp-int.defra.cloud/woodland',
+      'servicesConfig.waterManagementEndpoint': 'https://grants-ui.test.cdp-int.defra.cloud/water-management'
+    }
+    getConfigService.mockImplementation((configPath) => configValues[configPath])
+
     data = {
       userName: 'Alfred Waldron',
       business: {
@@ -178,15 +195,7 @@ describe('homePresenter', () => {
 
     describe('when the water management toggle is off', () => {
       beforeEach(() => {
-        const originalGet = config.get.bind(config)
-
-        vi.spyOn(config, 'get').mockImplementation((key) => {
-          return key === 'featureToggle.waterManagementEnabled' ? false : originalGet(key)
-        })
-      })
-
-      afterEach(() => {
-        vi.restoreAllMocks()
+        configValues['featureToggle.waterManagementEnabled'] = false
       })
 
       test('it should not include any grants when not on the woodland management allow list', () => {

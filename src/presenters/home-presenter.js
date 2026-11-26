@@ -4,7 +4,7 @@
  */
 
 import { VIEW_LEVEL_PERMISSION } from '../constants/scope/business-details.js'
-import { config } from '../config/index.js'
+import { getConfigService } from '../services/get-config-service.js'
 
 const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList) => {
   const { name, sbi, organisationId } = data.business
@@ -45,7 +45,7 @@ const setGrants = (organisationId, isOnWoodlandManagementAllowList) => {
 
   if (isOnWoodlandManagementAllowList) {
     grants.push({
-      link: buildGrantLink(config.get('servicesConfig.WMPEndpoint'), organisationId),
+      link: buildGrantLink(getConfigService('servicesConfig.WMPEndpoint'), organisationId),
       title: 'Woodland Management Plan',
       // Status hidden for now; endpoint from grants not available yet. Will update in a future ticket.
       status: 'do-not-show'
@@ -53,9 +53,9 @@ const setGrants = (organisationId, isOnWoodlandManagementAllowList) => {
   }
 
   // Access is managed by the grants team, so there is no allow list; the toggle only controls rollout
-  if (config.get('featureToggle.waterManagementEnabled')) {
+  if (getConfigService('featureToggle.waterManagementEnabled')) {
     grants.push({
-      link: buildGrantLink(config.get('servicesConfig.waterManagementEndpoint'), organisationId),
+      link: buildGrantLink(getConfigService('servicesConfig.waterManagementEndpoint'), organisationId),
       title: 'Water Management grant round 3',
       status: 'do-not-show'
     })

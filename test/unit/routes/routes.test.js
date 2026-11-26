@@ -11,6 +11,15 @@ const importRoutesFor = async (environment) => {
   return routes.map((route) => route.path)
 }
 
+const importRoutesWithViewLandToggle = async (toggleValue) => {
+  vi.stubEnv('VIEW_LAND_ENABLED', toggleValue)
+  vi.resetModules()
+
+  const { routes } = await import('../../../src/routes/routes.js')
+
+  return routes.map((route) => route.path)
+}
+
 describe('routes', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -18,6 +27,22 @@ describe('routes', () => {
 
   afterEach(() => {
     vi.unstubAllEnvs()
+  })
+
+  describe('when the viewLand feature toggle is on', () => {
+    test('it registers the view land route', async () => {
+      const paths = await importRoutesWithViewLandToggle('true')
+
+      expect(paths).toContain('/view-land')
+    })
+  })
+
+  describe('when the viewLand feature toggle is off', () => {
+    test('it does not register the view land route', async () => {
+      const paths = await importRoutesWithViewLandToggle('false')
+
+      expect(paths).not.toContain('/view-land')
+    })
   })
 
   describe('when the environment is "prod"', () => {

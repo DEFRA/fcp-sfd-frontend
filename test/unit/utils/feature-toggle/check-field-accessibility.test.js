@@ -2,7 +2,7 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest'
 
 // Mocks
-import { config } from '../../../../src/config/index.js'
+import { getConfigService } from '../../../../src/services/get-config-service.js'
 
 // Thing under test
 import {
@@ -17,10 +17,8 @@ import {
   BUSINESS_FIELDS
 } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
 
-vi.mock('../../../../src/config/index.js', () => ({
-  config: {
-    get: vi.fn()
-  }
+vi.mock('../../../../src/services/get-config-service.js', () => ({
+  getConfigService: vi.fn()
 }))
 
 describe('checkFieldAccessibility', () => {
@@ -89,7 +87,7 @@ describe('checkFieldAccessibility', () => {
   describe('isPersonalFieldAccessible', () => {
     describe('when the master toggle is disabled', () => {
       beforeEach(() => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           // Only the master toggle is off, every field-level toggle is on
           if (key === 'featureToggle.personalDetails.updatePersonalDetails') {
             return false
@@ -109,7 +107,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('when the master toggle is enabled', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(true)
+        getConfigService.mockReturnValue(true)
       })
 
       test('returns true when field-level toggle is enabled', () => {
@@ -117,7 +115,7 @@ describe('checkFieldAccessibility', () => {
       })
 
       test('returns false when field-level toggle is disabled', () => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           if (key === 'featureToggle.personalDetails.updatePersonalDetailsName') {
             return false
           }
@@ -170,7 +168,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('with invalid field names', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(true)
+        getConfigService.mockReturnValue(true)
       })
 
       test('throws an error for unknown personal fields', () => {
@@ -188,7 +186,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('with an invalid field name and the master toggle disabled', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(false)
+        getConfigService.mockReturnValue(false)
       })
 
       test('throws an error for unknown personal fields', () => {
@@ -208,7 +206,7 @@ describe('checkFieldAccessibility', () => {
   describe('isBusinessFieldAccessible', () => {
     describe('when the master toggle is disabled', () => {
       beforeEach(() => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           // Only the master toggle is off, every field-level toggle is on
           if (key === 'featureToggle.businessDetails.updateBusinessDetails') {
             return false
@@ -229,7 +227,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('when the master toggle is enabled', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(true)
+        getConfigService.mockReturnValue(true)
       })
 
       test('returns true when field-level toggle is enabled', () => {
@@ -237,7 +235,7 @@ describe('checkFieldAccessibility', () => {
       })
 
       test('returns false when field-level toggle is disabled', () => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           if (key === 'featureToggle.businessDetails.updateBusinessDetailsName') {
             return false
           }
@@ -298,7 +296,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('with invalid field names', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(true)
+        getConfigService.mockReturnValue(true)
       })
 
       test('throws an error for unknown business fields', () => {
@@ -316,7 +314,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('with an invalid field name and the master toggle disabled', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(false)
+        getConfigService.mockReturnValue(false)
       })
 
       test('throws an error for unknown business fields', () => {
@@ -447,7 +445,7 @@ describe('checkFieldAccessibility', () => {
 
   describe('findDisabledPersonalField', () => {
     beforeEach(() => {
-      config.get.mockReturnValue(true)
+      getConfigService.mockReturnValue(true)
     })
 
     describe('when all fields are accessible', () => {
@@ -460,7 +458,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('when one field is disabled', () => {
       beforeEach(() => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           if (key === 'featureToggle.personalDetails.updatePersonalDetailsName') {
             return false
           }
@@ -480,7 +478,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('when multiple fields are disabled', () => {
       beforeEach(() => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           if (key === 'featureToggle.personalDetails.updatePersonalDetailsName' ||
               key === 'featureToggle.personalDetails.updatePersonalDetailsDob') {
             return false
@@ -501,7 +499,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('when the master toggle is disabled', () => {
       beforeEach(() => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           if (key === 'featureToggle.personalDetails.updatePersonalDetails') {
             return false
           }
@@ -522,7 +520,7 @@ describe('checkFieldAccessibility', () => {
 
   describe('findDisabledBusinessField', () => {
     beforeEach(() => {
-      config.get.mockReturnValue(true)
+      getConfigService.mockReturnValue(true)
     })
 
     describe('when all fields are accessible', () => {
@@ -535,7 +533,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('when one field is disabled', () => {
       beforeEach(() => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           if (key === 'featureToggle.businessDetails.updateBusinessDetailsVat') {
             return false
           }
@@ -555,7 +553,7 @@ describe('checkFieldAccessibility', () => {
 
     describe('when the master toggle is disabled', () => {
       beforeEach(() => {
-        config.get.mockImplementation((key) => {
+        getConfigService.mockImplementation((key) => {
           if (key === 'featureToggle.businessDetails.updateBusinessDetails') {
             return false
           }

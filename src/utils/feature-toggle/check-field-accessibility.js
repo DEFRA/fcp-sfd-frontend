@@ -3,7 +3,7 @@
  * @module checkFieldAccessibility
  */
 
-import { config } from '../../config/index.js'
+import { getConfigService } from '../../services/get-config-service.js'
 
 const PERSONAL_FIELDS = {
   name: {
@@ -68,12 +68,12 @@ const isPersonalFieldAccessible = (field) => {
     throw new Error(`Unknown personal field: ${field}`)
   }
 
-  const masterToggle = config.get('featureToggle.personalDetails.updatePersonalDetails')
+  const masterToggle = getConfigService('featureToggle.personalDetails.updatePersonalDetails')
   if (!masterToggle) {
     return false
   }
 
-  return config.get(`featureToggle.personalDetails.${fieldConfig.toggleName}`)
+  return getConfigService(`featureToggle.personalDetails.${fieldConfig.toggleName}`)
 }
 
 /**
@@ -89,12 +89,12 @@ const isBusinessFieldAccessible = (field) => {
     throw new Error(`Unknown business field: ${field}`)
   }
 
-  const masterToggle = config.get('featureToggle.businessDetails.updateBusinessDetails')
+  const masterToggle = getConfigService('featureToggle.businessDetails.updateBusinessDetails')
   if (!masterToggle) {
     return false
   }
 
-  return config.get(`featureToggle.businessDetails.${fieldConfig.toggleName}`)
+  return getConfigService(`featureToggle.businessDetails.${fieldConfig.toggleName}`)
 }
 
 /**
@@ -150,7 +150,7 @@ const getDisabledFieldNotification = (fieldLabel) => {
  * @returns {{field: string, displayName: string} | null} The first disabled field or null
  */
 const findDisabledPersonalField = (fields) => {
-  const masterToggle = config.get('featureToggle.personalDetails.updatePersonalDetails')
+  const masterToggle = getConfigService('featureToggle.personalDetails.updatePersonalDetails')
   if (!masterToggle) {
     return { field: 'all', displayName: 'personal details' }
   }
@@ -174,7 +174,7 @@ const findDisabledPersonalField = (fields) => {
  * @returns {{field: string, displayName: string} | null} The first disabled field or null
  */
 const findDisabledBusinessField = (fields) => {
-  const masterToggle = config.get('featureToggle.businessDetails.updateBusinessDetails')
+  const masterToggle = getConfigService('featureToggle.businessDetails.updateBusinessDetails')
   if (!masterToggle) {
     return { field: 'all', displayName: 'business details' }
   }

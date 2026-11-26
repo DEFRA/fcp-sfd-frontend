@@ -11,13 +11,11 @@ import { personalDetailsPresenter } from '../../../../src/presenters/personal/pe
 import { getMappedData } from '../../../mocks/mock-personal-details.js'
 
 // Mock dependencies
-import { config } from '../../../../src/config/index.js'
+import { getConfigService } from '../../../../src/services/get-config-service.js'
 
 // Mock imports
-vi.mock('../../../../src/config/index.js', () => ({
-  config: {
-    get: vi.fn()
-  }
+vi.mock('../../../../src/services/get-config-service.js', () => ({
+  getConfigService: vi.fn()
 }))
 
 const { NOT_ADDED_TEXT } = constants
@@ -31,8 +29,8 @@ describe('personalDetailsPresenter', () => {
   beforeEach(async () => {
     vi.clearAllMocks()
 
-    // Default: interrupter OFF
-    config.get.mockReturnValue(true)
+    // Default: all feature toggles ON
+    getConfigService.mockReturnValue(true)
 
     data = getMappedData()
 
@@ -100,9 +98,15 @@ describe('personalDetailsPresenter', () => {
 
   describe('when a field is disabled by a feature toggle', () => {
     beforeEach(() => {
-      config.get.mockImplementation((key) => {
-        return key !== 'featureToggle.personalDetails.updatePersonalDetailsEmail'
-      })
+      // Call order: change links (master + field toggle per field, email's field toggle is the 8th call), the
+      // interrupter toggle, then the disabled banner check (email's field toggle is the 22nd call)
+      getConfigService
+        .mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true)
+        .mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(false)
+        .mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true)
+        .mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true)
+        .mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true)
+        .mockReturnValueOnce(true).mockReturnValueOnce(false)
     })
 
     test('it returns the disabled banner alongside the flash notification', () => {
@@ -125,9 +129,7 @@ describe('personalDetailsPresenter', () => {
 
   describe('when the personal master toggle is disabled', () => {
     beforeEach(() => {
-      config.get.mockImplementation((key) => {
-        return key !== 'featureToggle.personalDetails.updatePersonalDetails'
-      })
+      getConfigService.mockReturnValue(false)
     })
 
     test('it shows the personal details banner', () => {
@@ -408,7 +410,7 @@ describe('personalDetailsPresenter', () => {
     describe('when the personal details interrupter is enabled', () => {
       beforeEach(() => {
         // Enable the personal details interrupter feature toggle
-        config.get.mockReturnValue(true)
+        getConfigService.mockReturnValue(true)
       })
 
       describe('and all details are valid', () => {

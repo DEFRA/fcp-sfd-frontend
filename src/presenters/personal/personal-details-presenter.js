@@ -4,7 +4,7 @@
  */
 
 import { constants, presenters } from '@defra/fcp-sfd-frontend-engine'
-import { config } from '../../config/index.js'
+import { getConfigService } from '../../services/get-config-service.js'
 import {
   isPersonalFieldAccessible,
   getDisabledFieldNotification,
@@ -111,7 +111,7 @@ const formatChangeLinks = (hasValidPersonalDetails, sectionsNeedingUpdate = []) 
     dob: isPersonalFieldAccessible('dob') ? PERSONAL_CHANGE_LINKS.personalDateOfBirth : null
   }
 
-  const personalDetailsInterrupterEnabled = config.get('featureToggle.personalDetailsInterrupterEnabled')
+  const personalDetailsInterrupterEnabled = getConfigService('featureToggle.personalDetailsInterrupterEnabled')
 
   // Happy path – interrupter off or data is valid
   if (!personalDetailsInterrupterEnabled || hasValidPersonalDetails || sectionsNeedingUpdate.length === 0) {

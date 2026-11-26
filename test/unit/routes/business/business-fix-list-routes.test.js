@@ -10,6 +10,8 @@ import { businessFixListPresenter } from '../../../../src/presenters/business/bu
 import { businessFixListRoutes } from '../../../../src/routes/business/business-fix-list-routes.js'
 const [getBusinessFixList, postBusinessFixList] = businessFixListRoutes
 
+import { AMEND_PERMISSIONS } from '../../../../src/constants/scope/business-details.js'
+
 // Mocks
 vi.mock('@defra/fcp-sfd-frontend-engine', () => ({
   utils: { formatValidationErrors: vi.fn() },
@@ -82,9 +84,14 @@ describe('business fix list routes', () => {
         businessFixListPresenter.mockReturnValue({ page: 'data' })
       })
 
-      test('should have the correct method and path configured', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(getBusinessFixList.method).toBe('GET')
         expect(getBusinessFixList.path).toBe('/business-fix-list')
+        expect(getBusinessFixList.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have pre-handlers to guard the interrupted journey session and business fix permissions', () => {
+        expect(getBusinessFixList.options.pre).toHaveLength(2)
       })
 
       test('it fetches business fix data', async () => {
@@ -112,9 +119,14 @@ describe('business fix list routes', () => {
         services.validateFixDetails.mockReturnValue({})
       })
 
-      test('should have the correct method and path configured', () => {
+      test('should have the correct method, path and auth scope configured', () => {
         expect(postBusinessFixList.method).toBe('POST')
         expect(postBusinessFixList.path).toBe('/business-fix-list')
+        expect(postBusinessFixList.options.auth.scope).toBe(AMEND_PERMISSIONS)
+      })
+
+      test('should have pre-handlers to guard the interrupted journey session and business fix permissions', () => {
+        expect(postBusinessFixList.options.pre).toHaveLength(2)
       })
 
       describe('when validation passes', () => {

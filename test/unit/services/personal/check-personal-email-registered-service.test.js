@@ -26,8 +26,8 @@ describe('checkPersonalEmailRegisteredService', () => {
     vi.clearAllMocks()
 
     credentials = {
-      crn: '1234567890',
-      sbi: '123456789',
+      crn: '9123456789',
+      sbi: '812345678',
       sessionId: 'test-session-id'
     }
 

@@ -26,7 +26,7 @@ describe('personalEmailChangeErrorService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    credentials = { crn: '1234567890' }
+    credentials = { crn: '9123456789' }
     personalEmail = 'new-email@test.com'
 
     fetchPersonalChangeService.mockResolvedValue(mockPersonalDetails())

@@ -1,6 +1,5 @@
 // Test framework dependencies
 import { vi, beforeEach, describe, test, expect } from 'vitest'
-import Hapi from '@hapi/hapi'
 
 // Things we need to mock
 const mockCheckBankDetailsServiceHealth = vi.fn()
@@ -13,8 +12,6 @@ vi.mock('../../../src/services/bank-details/bank-details-client.js', () => ({
 const { bankDetailsRoutes } = await import('../../../src/routes/bank-details-routes.js')
 
 const mockStsClient = { send: vi.fn() }
-const mockBankDetails = { sbi: '800000001', bankName: 'Test Bank' }
-
 const mockResponse = {
   code: vi.fn().mockReturnThis()
 }

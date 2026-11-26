@@ -61,6 +61,39 @@ describe('homePresenter', () => {
     })
   })
 
+  describe('the "viewLand" property', () => {
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    const mockViewLandToggle = (enabled) => {
+      const originalGet = config.get.bind(config)
+
+      vi.spyOn(config, 'get').mockImplementation((key) => {
+        return key === 'featureToggle.viewLand' ? enabled : originalGet(key)
+      })
+    }
+
+    test('it should link to /view-land when the toggle is on', () => {
+      mockViewLandToggle(true)
+
+      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+      expect(result.viewLand).toEqual({
+        link: '/view-land',
+        text: 'View land'
+      })
+    })
+
+    test('it should not be present when the toggle is off', () => {
+      mockViewLandToggle(false)
+
+      const result = homePresenter(data, permissionGroups, enrolmentCount, isOnWoodlandManagementAllowList)
+
+      expect(result).not.toHaveProperty('viewLand')
+    })
+  })
+
   describe('the "businessDetails" property', () => {
     describe('when the user has only view-level permissions', () => {
       beforeEach(() => {

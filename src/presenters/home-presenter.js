@@ -24,6 +24,13 @@ const homePresenter = (data, permissionGroups, enrolmentCount, isOnWoodlandManag
     grants: setGrants(organisationId, isOnWoodlandManagementAllowList)
   }
 
+  if (config.get('featureToggle.viewLand')) {
+    presentedData.viewLand = {
+      link: '/view-land',
+      text: 'View land'
+    }
+  }
+
   if (enrolmentCount && enrolmentCount > 1) {
     presentedData.backLink = {
       text: 'Choose another business',

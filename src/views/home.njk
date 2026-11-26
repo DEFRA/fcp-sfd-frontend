@@ -55,6 +55,13 @@
     <p>
       <a href="{{ personalDetails.link }}" class="govuk-link govuk-link--no-visited-state">{{ personalDetails.text }}</a>
     </p>
+
+    {% if viewLand %}
+      <h3 class="govuk-heading-m">Land</h3>
+      <p>
+        <a href="{{ viewLand.link }}" class="govuk-link govuk-link--no-visited-state">{{ viewLand.text }}</a>
+      </p>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

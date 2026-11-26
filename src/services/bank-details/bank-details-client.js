@@ -44,44 +44,6 @@ export const checkBankDetailsServiceHealth = async (stsClient) => {
 }
 
 /**
- * Calls the fcp-sfd-bank-details service's bank details endpoint for a given SBI.
- *
- * Currently returns a hardcoded fake data set from fcp-sfd-bank-details; this
- * exists to prove the frontend can call and consume real endpoints from that
- * service, ahead of any real data being available.
- *
- * @param {string} sbi
- * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object
- * @returns {Promise<object|null>} the bank details, or null if the call failed
- */
-export const getBankDetails = async (sbi, stsClient) => {
-  const endpoint = config.get('bankDetails.endpoint')
-
-  if (!endpoint) {
-    logger.info('BANK_DETAILS_ENDPOINT not configured, skipping bank details fetch')
-    return null
-  }
-
-  try {
-    const headers = await buildAuthorizationHeaders(stsClient)
-
-    const response = await fetch(`${endpoint}/bank-details/${encodeURIComponent(sbi)}`, {
-      headers,
-      signal: AbortSignal.timeout(BANK_DETAILS_TIMEOUT_MS)
-    })
-
-    if (!response.ok) {
-      throw new Error(`Unexpected status code: ${response.status}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    logger.error(error, 'fcp-sfd-bank-details bank details fetch failed')
-    return null
-  }
-}
-
-/**
  * Shared helper to build the authorization headers for calls to fcp-sfd-bank-details.
  *
  * @param {import('@aws-sdk/client-sts').STSClient} stsClient - The `STSClient` object

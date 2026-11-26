@@ -9,16 +9,14 @@ import { constants } from '@defra/fcp-sfd-frontend-engine'
 import { PERMISSION_GROUP } from '../../../../src/constants/scope/business-details.js'
 
 // Mock dependencies
-import { config } from '../../../../src/config/index.js'
+import { getConfigService } from '../../../../src/services/get-config-service.js'
 import { isBusinessFieldAccessible } from '../../../../src/utils/feature-toggle/check-field-accessibility.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
 
 // Mock imports
-vi.mock('../../../../src/config/index.js', () => ({
-  config: {
-    get: vi.fn()
-  }
+vi.mock('../../../../src/services/get-config-service.js', () => ({
+  getConfigService: vi.fn()
 }))
 
 vi.mock('../../../../src/utils/feature-toggle/check-field-accessibility.js', () => ({
@@ -34,7 +32,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
     vi.clearAllMocks()
 
     // Default: interrupter ON
-    config.get.mockReturnValue(true)
+    getConfigService.mockReturnValue(true)
 
     // Default: every field is enabled by feature toggles
     isBusinessFieldAccessible.mockReturnValue(true)
@@ -175,7 +173,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
 
     describe('when the interrupter feature toggle is ON', () => {
       beforeEach(() => {
-        config.get.mockReturnValue(true)
+        getConfigService.mockReturnValue(true)
         sectionsNeedingUpdate = ['name']
       })
 
@@ -317,7 +315,7 @@ describe('businessDetailsChangeLinksPresenter', () => {
     describe('and the interrupter feature toggle is OFF', () => {
       beforeEach(() => {
         // interrupter OFF
-        config.get.mockReturnValue(false)
+        getConfigService.mockReturnValue(false)
       })
 
       describe('all sections valid', () => {

@@ -27,8 +27,8 @@
  */
 
 import { constants } from '@defra/fcp-sfd-frontend-engine'
-import { config } from '../../config/index.js'
 import { PERMISSION_GROUP } from '../../constants/scope/business-details.js'
+import { getConfigService } from '../../services/get-config-service.js'
 import { isBusinessFieldAccessible } from '../../utils/feature-toggle/check-field-accessibility.js'
 
 const { BUSINESS: BUSINESS_CHANGE_LINKS } = constants.changeLinks.external
@@ -152,7 +152,7 @@ const hasBlockedSections = (permissionLevel, sectionsNeedingUpdate) => {
  *   or null if more than one section needs fixing, or the interrupter is not active.
  */
 const getInterrupterState = (hasValidBusinessDetails, sectionsNeedingUpdate) => {
-  const enabled = config.get('featureToggle.businessDetailsInterrupterEnabled')
+  const enabled = getConfigService('featureToggle.businessDetailsInterrupterEnabled')
 
   return {
     active: enabled && !hasValidBusinessDetails && sectionsNeedingUpdate.length > 0,

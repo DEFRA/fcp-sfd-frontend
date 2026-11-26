@@ -274,7 +274,7 @@ const getPageDataRegisteredError = () => {
     personalEmail: 'new-email@test.com',
     errors: {
       personalEmail: {
-        text: 'This email address is already linked to another account'
+        text: 'This email address is already in use for another personal account. Enter a different email address.'
       }
     }
   }

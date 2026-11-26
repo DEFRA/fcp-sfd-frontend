@@ -145,8 +145,8 @@ describe('personal fix list routes', () => {
         let errors
 
         beforeEach(() => {
-          emailError = [{ message: 'This email address is already linked to another account', path: ['personalEmail'] }]
-          errors = { personalEmail: { text: 'This email address is already linked to another account' } }
+          emailError = [{ message: 'This email address is already in use for another personal account. Enter a different email address.', path: ['personalEmail'] }]
+          errors = { personalEmail: { text: 'This email address is already in use for another personal account. Enter a different email address.' } }
 
           checkPersonalEmailRegisteredService.mockResolvedValue({ error: emailError })
           utils.formatValidationErrors.mockReturnValue(errors)
